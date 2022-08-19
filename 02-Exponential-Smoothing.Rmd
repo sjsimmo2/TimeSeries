@@ -1,0 +1,186 @@
+# Exponential Smoothing
+
+
+```{r libraries, message=FALSE,echo=FALSE}
+library(tseries)
+library(forecast)
+library(haven)
+library(fma)
+library(expsmooth)
+library(lmtest)
+library(zoo)
+library(seasonal)
+library(ggplot2)
+library(seasonalview)
+library(aTSA)
+library(imputeTS)
+file.dir = "Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\" 
+input.file1 = "usairlines.csv"
+input.file2 = "steel.csv"
+input.file3 = "leadyear.csv"
+input.file4 = "ebay9899.csv"
+input.file5 = "fpp_insurance.csv" 
+input.file6 = "ar2.csv"
+input.file7 = "MA2.csv"
+input.file8 = "hurrican.csv"
+
+# Reads the data at specified directory
+# If the file directory is incorrect, then this won't run
+USAirlines = read.table(paste(file.dir, input.file1,sep = ""),sep=",", header=T)
+Steel = read.table(paste(file.dir, input.file2, sep = ""),sep=",",header=T)
+Lead.Year = read.table(paste(file.dir, input.file3, sep = ""),sep=",",header=T)
+Ebay = read.table(paste(file.dir, input.file4, sep = ""),sep=",",header=T)
+Quotes= read.table(paste(file.dir, input.file5, sep = ""),sep=",",header=T)
+Y= read.table(paste(file.dir, input.file6, sep = ""),sep=",",header=T)
+x=read.table(paste(file.dir, input.file7, sep = ""),sep=",",header=T)
+hurricane=read.table(paste(file.dir, input.file8, sep = ""),sep=",",header=T)
+SteelShp <- ts(Steel$steelshp, start = 1984, frequency = 12)
+Passenger <- ts(USAirlines$Passengers, start = 1990, frequency =12)
+library(reticulate)
+use_python("C:\\ProgramData\\Anaconda3\\python.exe")
+```
+
+In R, we are able to do Simple (or Single) Exponential Smoothing Models, Holt Exponential Smoothing Models and Holt-Winters Exponential Smoothing Models.  For the first two (Simple and Holt), we will be using the Steel data set and for the last one (Holt-Winters), we will be using the airline data set (we will also use the airline data set to illustrate the damped trend model).  Each of these are shown below.  
+
+## Simple Exponential Smoothing
+
+For Simple Exponential Smoothing Models (SES), we have only one component, referred to as the level component.
+$$\hat{Y}_{t+1}= L_{t}\\
+  L_{t} = \theta Y_{t} + (1-\theta)L_{t-1}$$
+  
+This is basically a weighted average with the last observation and the last predicted value.  Since this only has a level component, forecasts from SES models will be a horizontal line (hence why this method is called "one-step ahead" forecasting).  
+
+In the R code, you can choose how the initial values are selected.  If you specify simple, then the first few observations will be used to estimate the starting value.  If you select optimal, then the algorithm uses the ets algorithm (will be discussed later) to optimize the starting values and the smoothing parameters.  You can also specify the value for "h", which is the number of forecasts to create (take a look at the forecast...do you see a horizontal line?).
+
+```{r ses}
+
+# Building a Single Exponential Smoothing (SES) Model - Steel Data #
+SES.Steel <- ses(SteelShp, initial = "simple", h = 24)
+summary(SES.Steel)
+
+# Plot the SES model on steel data
+autoplot(SES.Steel)+
+  autolayer(fitted(SES.Steel),series="Fitted")+ylab("US Steel Shipments") + geom_vline(xintercept = 1992,color="orange",linetype="dashed")
+
+
+# Computes accuracy statistics for SES model on steel data (training data...NOT validation nor test)
+round(accuracy(SES.Steel),2) 
+
+```
+
+## Holt ESM
+
+The Holt model incorporates trend information.  So, now there are two components: level and trend.  For each component, there will be a smoothing coefficient (or weight).  CAREFUL, when you look at parameter estimates, these are NOT the estimates for the mean nor the linear trend...you should be thinking of them as weights (between 0 and 1).  The overall form for Holt's method is:
+
+$$\hat{Y}_{t+h}= L_{t}+hT_{t}\\
+  L_{t} = \theta Y_{t} + (1-\theta)(L_{t-1}+T_{t-1})\\
+  T_{t} = \gamma (L_{t}-L_{t-1}) + (1-\gamma) T_{t-1}$$
+  
+For the Holt's method, when you forecast, you will see a trending line.  
+
+```{r Holt}
+# Building a Linear Exponential Smoothing Model - Steel Data #
+LES.Steel <- holt(SteelShp, initial = "optimal", h = 24)
+summary(LES.Steel)
+
+# Plote the LES model on steel data
+
+autoplot(LES.Steel)+
+  autolayer(fitted(LES.Steel),series="Fitted")+labs(title="US Steel Shipment with Holt forecasts",y="US Steel Shipments") + geom_vline(xintercept = 1992,color="orange",linetype="dashed")
+
+```
+
+We can also perform Holt's method with a damped trend.  You will see the formula for the damped trend is similar to the previous Holt formula with an addition of a dampening parameter.
+
+$$\hat{Y}_{t+h}= L_{t}+\sum_{i}^{k}\phi^{i}T_{t}\\
+  L_{t} = \theta Y_{t} + (1-\theta)(L_{t-1}+\phi T_{t-1})\\
+  T_{t} = \gamma (L_{t}-L_{t-1}) + (1-\gamma) \phi T_{t-1}$$
+
+We will illustrate the damped trend on both the Steel and Airline data sets.
+
+```{r damped trend}
+LDES.Steel <- holt(SteelShp, initial = "optimal", h = 24, damped = TRUE)
+summary(LDES.Steel)
+autoplot(LDES.Steel)+
+  autolayer(fitted(LDES.Steel),series="Fitted")+labs(title="US Steel Shipment Linear Damped ESM Forecast") + geom_vline(xintercept = 1992,color="orange",linetype="dashed")
+
+LDES.USAir <- holt(Passenger, initial = "optimal", h = 24, damped = TRUE)
+summary(LDES.USAir)
+autoplot(LDES.USAir)+
+  autolayer(fitted(LDES.USAir),series="Fitted")+labs(title="US Airline Passengers with Linear Damped ESM Forecast") + geom_vline(xintercept = 2008.25,color="orange",linetype="dashed")
+```
+
+## Holt-Winters
+
+The Holt-Winters (HW) model has three components to it (level, trend and seasonality).  Seasonality is an interesting component to model since we can have an additive seasonal component or a multiplicative seasonal component.  Both models are shown below:
+
+Additive HW
+$$\hat{Y}_{t+h}= L_{t}+hT_{t} + S_{t-p+h}\\
+  L_{t} = \theta (Y_{t} - S_{t-p}) + (1-\theta)(L_{t-1}+T_{t-1})\\
+  T_{t} = \gamma (L_{t}-L_{t-1}) + (1-\gamma) T_{t-1}\\
+  S_{t} = \delta (Y_{t}-L_{t-1}-T_{t-1}) + (1-\delta) S_{t-p}$$
+
+Multiplicative HW
+$$\hat{Y}_{t+h}= (L_{t}+hT_{t}) S_{t-p+h}\\
+  L_{t} = \theta \frac{Y_{t}} {S_{t-p}} + (1-\theta)(L_{t-1}+T_{t-1})\\
+  T_{t} = \gamma (L_{t}-L_{t-1}) + (1-\gamma) T_{t-1}\\
+  S_{t} = \delta \frac{Y_{t}}{L_{t-1}+T_{t-1}} + (1-\delta) S_{t-p}$$
+
+Where p is the frequency of the seasonality (i.e. how many "seasons" there are within one year).  
+
+
+```{r Seasonal models}
+# Building a Holt-Winters ESM - US Airlines Data - Additive Seasonality
+HWES.USAir <- hw(Passenger, seasonal = "additive")
+summary(HWES.USAir)
+
+autoplot(HWES.USAir)+
+  autolayer(fitted(HWES.USAir),series="Fitted")+ylab("Airlines Passengers")+ geom_vline(xintercept = 2008.25,color="orange",linetype="dashed")
+
+# Building a Holt-Winters ESM - US Airlines Data - Multiplicative Seasonality
+HWES.USAir <- hw(Passenger, seasonal = "multiplicative")
+summary(HWES.USAir)
+
+
+autoplot(HWES.USAir)+
+  autolayer(fitted(HWES.USAir),series="Fitted")+ylab("Airlines Passengers")+ geom_vline(xintercept = 2008.25,color="orange",linetype="dashed")
+```
+
+## Evaluating forecasts
+
+In order to get a better idea of the forecasting properties of the algorithms, it is best to divide your data into a training data set and a test data set.  Time series is VERY different than other algorithms in which you have done.  The test data set should come at the END of the time series (to truly see how well you can forecast!).  An example code is shown below in which the last 12 observations are used as the test data set:
+
+```{r forecasts}
+# Create training set from overall Airlines Data
+training=subset(Passenger,end=length(Passenger)-12)
+
+# Create test set from overall Airlines Data
+test=subset(Passenger,start=length(Passenger)-11)
+
+# Fit Holt-Winters ESM (multiplicative seasonality) on training data
+HWES.USAir.train <- hw(training, seasonal = "multiplicative",initial='optimal',h=12)
+
+
+# Calculate prediction errors from forecast
+error=test-HWES.USAir.train$mean
+
+# Calculate prediction error statistics (MAE and MAPE)
+MAE=mean(abs(error))
+MAPE=mean(abs(error)/abs(test))
+
+MAE
+MAPE
+```
+
+## ETS
+
+You can also allow the computer to search for the best model.  The ETS (Error, Trend, Seasonality) algorithm will search for the best model and estimate the parameters.  For the error term, we can have either an additive or multiplicative error structure.  For the trend, we can have none, additive, multiplicative, damped additive or damped multiplicative . For the seasonal component, we can have none, additive or multiplicative (lots of choices!). An example of how to run this is:
+
+```{r ets}
+ets.passenger<-ets(training)
+summary(ets.passenger)
+ets.forecast.passenger<-ets.passenger%>%forecast::forecast(h=12)
+error=mean(abs(test-ets.forecast.passenger$mean))
+error
+```
+

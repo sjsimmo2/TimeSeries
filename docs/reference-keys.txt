@@ -4,3 +4,9 @@ getting-started
 a-caucus-race-and-a-long-tale
 time-series-decomposition
 self-study
+exponential-smoothing
+simple-exponential-smoothing
+holt-esm
+holt-winters
+evaluating-forecasts
+ets

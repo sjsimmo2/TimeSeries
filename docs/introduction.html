@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="index.html"/>
-<link rel="next" href="getting-started.html"/>
+<link rel="next" href="exponential-smoothing.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -137,13 +137,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Time series 1</a></li>
-<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
-<li class="chapter" data-level="3" data-path="getting-started.html"><a href="getting-started.html"><i class="fa fa-check"></i><b>3</b> Getting Started</a></li>
-<li class="chapter" data-level="4" data-path="time-series-decomposition.html"><a href="time-series-decomposition.html"><i class="fa fa-check"></i><b>4</b> Time series decomposition</a>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="time-series-decomposition.html"><a href="time-series-decomposition.html#self-study"><i class="fa fa-check"></i><b>4.1</b> Self-study</a></li>
+<li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#time-series-decomposition"><i class="fa fa-check"></i><b>2.1</b> Time series decomposition</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#self-study"><i class="fa fa-check"></i><b>2.2</b> Self-study</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="a-caucus-race-and-a-long-tale.html"><a href="a-caucus-race-and-a-long-tale.html"><i class="fa fa-check"></i><b>5</b> A caucus-race and a long tale</a></li>
+<li class="chapter" data-level="3" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html"><i class="fa fa-check"></i><b>3</b> Exponential Smoothing</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#simple-exponential-smoothing"><i class="fa fa-check"></i><b>3.1</b> Simple Exponential Smoothing</a></li>
+<li class="chapter" data-level="3.2" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#holt-esm"><i class="fa fa-check"></i><b>3.2</b> Holt ESM</a></li>
+<li class="chapter" data-level="3.3" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#holt-winters"><i class="fa fa-check"></i><b>3.3</b> Holt-Winters</a></li>
+<li class="chapter" data-level="3.4" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#evaluating-forecasts"><i class="fa fa-check"></i><b>3.4</b> Evaluating forecasts</a></li>
+<li class="chapter" data-level="3.5" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#ets"><i class="fa fa-check"></i><b>3.5</b> ETS</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -165,6 +171,135 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="introduction" class="section level1 hasAnchor" number="2">
 <h1><span class="header-section-number">Chapter 2</span> Introduction<a href="introduction.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This document provides the code and output from Time Series I class. This is a living document and may be updated throughout the semester (when this occurs, you will be notified that it has been updated). First, here is a list of all the libraries that you will need:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="introduction.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tseries)</span>
+<span id="cb1-2"><a href="introduction.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
+<span id="cb1-3"><a href="introduction.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb1-4"><a href="introduction.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fma)</span>
+<span id="cb1-5"><a href="introduction.html#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(expsmooth)</span>
+<span id="cb1-6"><a href="introduction.html#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span>
+<span id="cb1-7"><a href="introduction.html#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(zoo)</span>
+<span id="cb1-8"><a href="introduction.html#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(seasonal)</span>
+<span id="cb1-9"><a href="introduction.html#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-10"><a href="introduction.html#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(seasonalview)</span>
+<span id="cb1-11"><a href="introduction.html#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(aTSA)</span>
+<span id="cb1-12"><a href="introduction.html#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(imputeTS)</span>
+<span id="cb1-13"><a href="introduction.html#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
+<span id="cb1-14"><a href="introduction.html#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">use_python</span>(<span class="st">&quot;C:</span><span class="sc">\\</span><span class="st">ProgramData</span><span class="sc">\\</span><span class="st">Anaconda3</span><span class="sc">\\</span><span class="st">python.exe&quot;</span>)</span></code></pre></div>
+<p>The data sets that you will need are as follows (be sure to put the correct location and file name for your computer):</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="introduction.html#cb2-1" aria-hidden="true" tabindex="-1"></a>file.dir <span class="ot">=</span> <span class="st">&quot;Q:</span><span class="sc">\\</span><span class="st">My Drive</span><span class="sc">\\</span><span class="st">Fall 2017 - Time Series</span><span class="sc">\\</span><span class="st">DataR</span><span class="sc">\\</span><span class="st">&quot;</span> </span>
+<span id="cb2-2"><a href="introduction.html#cb2-2" aria-hidden="true" tabindex="-1"></a>input.file1 <span class="ot">=</span> <span class="st">&quot;usairlines.csv&quot;</span></span>
+<span id="cb2-3"><a href="introduction.html#cb2-3" aria-hidden="true" tabindex="-1"></a>input.file2 <span class="ot">=</span> <span class="st">&quot;steel.csv&quot;</span></span>
+<span id="cb2-4"><a href="introduction.html#cb2-4" aria-hidden="true" tabindex="-1"></a>input.file3 <span class="ot">=</span> <span class="st">&quot;leadyear.csv&quot;</span></span>
+<span id="cb2-5"><a href="introduction.html#cb2-5" aria-hidden="true" tabindex="-1"></a>input.file4 <span class="ot">=</span> <span class="st">&quot;ebay9899.csv&quot;</span></span>
+<span id="cb2-6"><a href="introduction.html#cb2-6" aria-hidden="true" tabindex="-1"></a>input.file5 <span class="ot">=</span> <span class="st">&quot;fpp_insurance.csv&quot;</span> </span>
+<span id="cb2-7"><a href="introduction.html#cb2-7" aria-hidden="true" tabindex="-1"></a>input.file6 <span class="ot">=</span> <span class="st">&quot;ar2.csv&quot;</span></span>
+<span id="cb2-8"><a href="introduction.html#cb2-8" aria-hidden="true" tabindex="-1"></a>input.file7 <span class="ot">=</span> <span class="st">&quot;MA2.csv&quot;</span></span>
+<span id="cb2-9"><a href="introduction.html#cb2-9" aria-hidden="true" tabindex="-1"></a>input.file8 <span class="ot">=</span> <span class="st">&quot;hurrican.csv&quot;</span></span>
+<span id="cb2-10"><a href="introduction.html#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="introduction.html#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Reads the data at specified directory</span></span>
+<span id="cb2-12"><a href="introduction.html#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># If the file directory is incorrect, then this won&#39;t run</span></span>
+<span id="cb2-13"><a href="introduction.html#cb2-13" aria-hidden="true" tabindex="-1"></a>USAirlines <span class="ot">=</span> <span class="fu">read.table</span>(<span class="fu">paste</span>(file.dir, input.file1,<span class="at">sep =</span> <span class="st">&quot;&quot;</span>),<span class="at">sep=</span><span class="st">&quot;,&quot;</span>, <span class="at">header=</span>T)</span>
+<span id="cb2-14"><a href="introduction.html#cb2-14" aria-hidden="true" tabindex="-1"></a>Steel <span class="ot">=</span> <span class="fu">read.table</span>(<span class="fu">paste</span>(file.dir, input.file2, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>),<span class="at">sep=</span><span class="st">&quot;,&quot;</span>,<span class="at">header=</span>T)</span>
+<span id="cb2-15"><a href="introduction.html#cb2-15" aria-hidden="true" tabindex="-1"></a>Lead.Year <span class="ot">=</span> <span class="fu">read.table</span>(<span class="fu">paste</span>(file.dir, input.file3, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>),<span class="at">sep=</span><span class="st">&quot;,&quot;</span>,<span class="at">header=</span>T)</span>
+<span id="cb2-16"><a href="introduction.html#cb2-16" aria-hidden="true" tabindex="-1"></a>Ebay <span class="ot">=</span> <span class="fu">read.table</span>(<span class="fu">paste</span>(file.dir, input.file4, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>),<span class="at">sep=</span><span class="st">&quot;,&quot;</span>,<span class="at">header=</span>T)</span>
+<span id="cb2-17"><a href="introduction.html#cb2-17" aria-hidden="true" tabindex="-1"></a>Quotes<span class="ot">=</span> <span class="fu">read.table</span>(<span class="fu">paste</span>(file.dir, input.file5, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>),<span class="at">sep=</span><span class="st">&quot;,&quot;</span>,<span class="at">header=</span>T)</span>
+<span id="cb2-18"><a href="introduction.html#cb2-18" aria-hidden="true" tabindex="-1"></a>Y<span class="ot">=</span> <span class="fu">read.table</span>(<span class="fu">paste</span>(file.dir, input.file6, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>),<span class="at">sep=</span><span class="st">&quot;,&quot;</span>,<span class="at">header=</span>T)</span>
+<span id="cb2-19"><a href="introduction.html#cb2-19" aria-hidden="true" tabindex="-1"></a>x<span class="ot">=</span><span class="fu">read.table</span>(<span class="fu">paste</span>(file.dir, input.file7, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>),<span class="at">sep=</span><span class="st">&quot;,&quot;</span>,<span class="at">header=</span>T)</span>
+<span id="cb2-20"><a href="introduction.html#cb2-20" aria-hidden="true" tabindex="-1"></a>hurricane<span class="ot">=</span><span class="fu">read.table</span>(<span class="fu">paste</span>(file.dir, input.file8, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>),<span class="at">sep=</span><span class="st">&quot;,&quot;</span>,<span class="at">header=</span>T)</span></code></pre></div>
+<p>For many time series applications, you will need a time series object in R. This is created using the function ts. For example, the time series data set in the airlines data frame is in the column “passengers”. Let’s go ahead and create the time series object for this data set and graph it.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="introduction.html#cb3-1" aria-hidden="true" tabindex="-1"></a>Passenger <span class="ot">&lt;-</span> <span class="fu">ts</span>(USAirlines<span class="sc">$</span>Passengers, <span class="at">start =</span> <span class="dv">1990</span>, <span class="at">frequency =</span><span class="dv">12</span>)</span>
+<span id="cb3-2"><a href="introduction.html#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="introduction.html#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(Passenger)<span class="sc">+</span><span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Time Series plot for Passengers&quot;</span>, <span class="at">x=</span><span class="st">&quot;Date&quot;</span>,<span class="at">y=</span><span class="st">&quot;Passengers&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/Time%20Series%20object-1.png" width="672" /></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="introduction.html#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="introduction.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb4-3"><a href="introduction.html#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb4-4"><a href="introduction.html#cb4-4" aria-hidden="true" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
+<span id="cb4-5"><a href="introduction.html#cb4-5" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb4-6"><a href="introduction.html#cb4-6" aria-hidden="true" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb4-7"><a href="introduction.html#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(usair_p.head())</span></code></pre></div>
+<pre><code>##             Year  Month  Passengers
+## 1990-01-01  1990      1       34348
+## 1990-02-01  1990      2       33536
+## 1990-03-01  1990      3       40578
+## 1990-04-01  1990      4       38267
+## 1990-05-01  1990      5       38249</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="introduction.html#cb6-1" aria-hidden="true" tabindex="-1"></a>usair_p.plot()</span>
+<span id="cb6-2"><a href="introduction.html#cb6-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>Within the ts command, the only required argument is the vector of data that contains the time series information (in this case USAirlines$Passengers). The optional arguments of “start” is for nice plotting purposes (it has the correct time frame when it plots instead of just using 1,2,3 for time). The last argument shown is “frequency”, which is for seasonal data. If your time series object has a seasonality to it, then you should specify the length of the season (it does not know this unless you provide it). For future analysis, we will need to create the time series objects for Steel (this data is monthly, so we will set frequency to 12, since there are 12 months in a year).</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="introduction.html#cb7-1" aria-hidden="true" tabindex="-1"></a>SteelShp <span class="ot">&lt;-</span> <span class="fu">ts</span>(Steel<span class="sc">$</span>steelshp, <span class="at">start =</span> <span class="dv">1984</span>, <span class="at">frequency =</span> <span class="dv">12</span>)</span></code></pre></div>
+<div id="time-series-decomposition" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Time series decomposition<a href="introduction.html#time-series-decomposition" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>IF your time series has a seasonal component to it, a useful visualization is the decomposition. We will be using the STL decomposition (which can only do the additive decomposition, NOT multiplicative!). The following code creates the decomposition and then plots it:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="introduction.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Time Series Decomposition ...STL#</span></span>
+<span id="cb8-2"><a href="introduction.html#cb8-2" aria-hidden="true" tabindex="-1"></a>decomp_stl <span class="ot">&lt;-</span> <span class="fu">stl</span>(Passenger, <span class="at">s.window =</span> <span class="dv">7</span>)</span>
+<span id="cb8-3"><a href="introduction.html#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="introduction.html#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the individual components of the time series</span></span>
+<span id="cb8-5"><a href="introduction.html#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(decomp_stl)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/decomposition-1.png" width="672" /></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="introduction.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(decomp_stl)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/decomposition-2.png" width="672" /></p>
+<p>You can pull off the different components (Seasonal, Trend or Remainder). The below command provides the first few rows of the decomposition (you can see what information is contained within the decomposition…season, trend and remainder).</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="introduction.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(decomp_stl<span class="sc">$</span>time.series)</span></code></pre></div>
+<pre><code>##            seasonal    trend remainder
+## Jan 1990 -4526.7610 39081.77 -207.0131
+## Feb 1990 -5827.5592 38942.75  420.8128
+## Mar 1990   560.4986 38803.72 1213.7829
+## Apr 1990  -802.2312 38664.69  404.5406
+## May 1990   139.2095 38533.15 -423.3574
+## Jun 1990  2953.8857 38401.61 -563.4910</code></pre>
+<p>Which means we can overlay the original data with the trend component (which is the second column.)</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="introduction.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(Passenger)<span class="sc">+</span><span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>decomp_stl<span class="sc">$</span>time.series[,<span class="dv">2</span>]),<span class="at">color=</span><span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/overlay%20trend-1.png" width="672" /></p>
+<p>Notice that the trend component is VERY similar to the “seasonally adjusted” data! Do you know what the difference between the two series is?</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="introduction.html#cb13-1" aria-hidden="true" tabindex="-1"></a>seas_adj<span class="ot">=</span>Passenger<span class="sc">-</span>decomp_stl<span class="sc">$</span>time.series[,<span class="dv">1</span>]</span>
+<span id="cb13-2"><a href="introduction.html#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="introduction.html#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(Passenger) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="introduction.html#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>decomp_stl<span class="sc">$</span>time.series[,<span class="dv">2</span>]),<span class="at">color=</span><span class="st">&quot;blue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="introduction.html#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>seas_adj),<span class="at">color=</span><span class="st">&quot;orange&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/seasonally%20adjusted-1.png" width="672" /></p>
+<p>Another interesting plot is the subseries plot. This looks at the individual series (in this case, the series for January, the series for February, etc….).</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="introduction.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot seasonal subseries by months</span></span>
+<span id="cb14-2"><a href="introduction.html#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsubseriesplot</span>(Passenger)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/subseries-1.png" width="672" />
+Just a quick note. STL ONLY does additive seasonal decomposition. There is a decompose library that will do both additive AND multiplicative decomposition.</p>
+</div>
+<div id="self-study" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Self-study<a href="introduction.html#self-study" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Here is something to get you started if you want to take a look at the X13 decomposition!</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="introduction.html#cb15-1" aria-hidden="true" tabindex="-1"></a>decomp_x13<span class="ot">=</span><span class="fu">seas</span>(Passenger)</span>
+<span id="cb15-2"><a href="introduction.html#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(decomp_x13)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## seas(x = Passenger)
+## 
+## Coefficients:
+##                     Estimate Std. Error z value Pr(&gt;|z|)    
+## Leap Year          1.610e+03  4.003e+02   4.021 5.79e-05 ***
+## Weekday            5.586e+01  1.890e+01   2.956  0.00312 ** 
+## LS1992.Jun         4.006e+03  8.439e+02   4.747 2.07e-06 ***
+## LS1992.Oct        -3.511e+03  8.409e+02  -4.176 2.97e-05 ***
+## LS2001.Sep        -1.580e+04  8.633e+02 -18.296  &lt; 2e-16 ***
+## LS2001.Nov         5.492e+03  8.629e+02   6.365 1.96e-10 ***
+## AO2002.Dec         4.412e+03  8.402e+02   5.251 1.51e-07 ***
+## MA-Nonseasonal-01  5.073e-01  5.991e-02   8.468  &lt; 2e-16 ***
+## MA-Seasonal-12     4.981e-01  6.133e-02   8.121 4.62e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## SEATS adj.  ARIMA: (0 1 1)(0 1 1)  Obs.: 219  Transform: none
+## AICc:  3501, BIC:  3533  QS (no seasonality in final):    0  
+## Box-Ljung (no autocorr.): 22.77   Shapiro (normality): 0.9914  
+## Messages generated by X-13:
+## Warnings:
+## - At least one visually significant trading day peak has been
+##   found in one or more of the estimated spectra.</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="introduction.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Neat R shiny application....run OUTSIDE of RMarkdown</span></span>
+<span id="cb17-2"><a href="introduction.html#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#view(decomp_x13)</span></span></code></pre></div>
+
+</div>
 </div>
             </section>
 
@@ -172,7 +307,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         </div>
       </div>
 <a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="getting-started.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="exponential-smoothing.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

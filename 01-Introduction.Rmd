@@ -1,9 +1,6 @@
 # Introduction
 
 
-
-# Getting Started
-
 This document provides the code and output from Time Series I class. This is a living document and may be updated throughout the semester (when this occurs, you will be notified that it has been updated).  First, here is a list of all the libraries that you will need:
 
 ```{r libraries, message=FALSE}
@@ -83,7 +80,7 @@ SteelShp <- ts(Steel$steelshp, start = 1984, frequency = 12)
 
 
 
-# Time series decomposition
+## Time series decomposition
 
 
 IF your time series has a seasonal component to it, a useful visualization is the decomposition.  We will be using the STL decomposition (which can only do the additive decomposition, NOT multiplicative!).  The following code creates the decomposition and then plots it:
