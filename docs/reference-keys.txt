@@ -10,3 +10,11 @@ holt-esm
 holt-winters
 evaluating-forecasts
 ets
+arima
+stationarity
+correlation-functions
+autoregressive-models-ar
+moving-average-model-ma
+white-noise
+trending-series
+fitting-arima-models
