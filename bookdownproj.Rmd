@@ -1,0 +1,718 @@
+--- 
+title: "Time Series 1"
+author: "by Dr. Susan Simmons"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+---
+
+# Time series 1
+
+This is your introduction in Time Series.  By the end of this course, you should be able to understand time series data and different formats for doing time series; understand and identify the different characteristics of a time series (trend, cycle, seasonality, etc); perform a time series decomposition on seasonal data; perform numerous exponential smoothing models; understand stationarity and how to test for it; understand AR, MA and mixed models and when to use differencing; and be able to identify if a series has white noise.  All of the data sets needed for this class are on the github repository.  Enjoy your TIME in Time Series!!
+
+
+<!--chapter:end:index.Rmd-->
+
+# Introduction
+
+
+This document provides the code and output from Time Series I class. This is a living document and may be updated throughout the semester (when this occurs, you will be notified that it has been updated).  First, here is a list of all the libraries that you will need:
+
+```{r libraries, message=FALSE}
+library(tseries)
+library(forecast)
+library(haven)
+library(fma)
+library(expsmooth)
+library(lmtest)
+library(zoo)
+library(seasonal)
+library(ggplot2)
+library(seasonalview)
+library(aTSA)
+library(imputeTS)
+library(reticulate)
+use_python("C:\\ProgramData\\Anaconda3\\python.exe")
+```
+
+The data sets that you will need are as follows (be sure to put the correct location and file name for your computer):
+
+```{r data sets}
+
+file.dir = "Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\" 
+input.file1 = "usairlines.csv"
+input.file2 = "steel.csv"
+input.file3 = "leadyear.csv"
+input.file4 = "ebay9899.csv"
+input.file5 = "fpp_insurance.csv" 
+input.file6 = "ar2.csv"
+input.file7 = "MA2.csv"
+input.file8 = "hurrican.csv"
+
+# Reads the data at specified directory
+# If the file directory is incorrect, then this won't run
+USAirlines = read.table(paste(file.dir, input.file1,sep = ""),sep=",", header=T)
+Steel = read.table(paste(file.dir, input.file2, sep = ""),sep=",",header=T)
+Lead.Year = read.table(paste(file.dir, input.file3, sep = ""),sep=",",header=T)
+Ebay = read.table(paste(file.dir, input.file4, sep = ""),sep=",",header=T)
+Quotes= read.table(paste(file.dir, input.file5, sep = ""),sep=",",header=T)
+Y= read.table(paste(file.dir, input.file6, sep = ""),sep=",",header=T)
+x=read.table(paste(file.dir, input.file7, sep = ""),sep=",",header=T)
+hurricane=read.table(paste(file.dir, input.file8, sep = ""),sep=",",header=T)
+```
+
+
+For many time series applications, you will need a time series object in R.  This is created using the function ts.  For example, the time series data set in the airlines data frame is in the column "passengers".  Let's go ahead and create the time series object for this data set and graph it.
+
+```{r Time Series object}
+
+Passenger <- ts(USAirlines$Passengers, start = 1990, frequency =12)
+
+autoplot(Passenger)+labs(title="Time Series plot for Passengers", x="Date",y="Passengers")
+
+```
+
+
+```{python}
+
+import pandas as pd
+import matplotlib.pyplot as plt
+usair_p=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\usairlines.csv")
+df=pd.date_range(start='1/1/1990', end='3/1/2008', freq='MS')
+usair_p.index=pd.to_datetime(df)
+print(usair_p.head())
+usair_p.plot()
+plt.show()
+```
+
+
+Within the ts command, the only required argument is the vector of data that contains the time series information (in this case USAirlines$Passengers).  The optional arguments of "start" is for nice plotting purposes (it has the correct time frame when it plots instead of just using 1,2,3 for time).  The last argument shown is "frequency", which is for seasonal data.  If your time series object has a seasonality to it, then you should specify the length of the season (it does not know this unless you provide it).  For future analysis, we will need to create the time series objects for Steel (this data is monthly, so we will set frequency to 12, since there are 12 months in a year).
+
+```{r ts2}
+SteelShp <- ts(Steel$steelshp, start = 1984, frequency = 12)
+
+```
+
+
+
+## Time series decomposition
+
+
+IF your time series has a seasonal component to it, a useful visualization is the decomposition.  We will be using the STL decomposition (which can only do the additive decomposition, NOT multiplicative!).  The following code creates the decomposition and then plots it:
+
+```{r decomposition}
+# Time Series Decomposition ...STL#
+decomp_stl <- stl(Passenger, s.window = 7)
+
+# Plot the individual components of the time series
+plot(decomp_stl)
+
+autoplot(decomp_stl)
+
+```
+
+You can pull off the different components (Seasonal, Trend or Remainder). The below command provides the first few rows of the decomposition (you can see what information is contained within the decomposition...season, trend and remainder).
+
+```{r decomposition components}
+
+head(decomp_stl$time.series)
+
+```
+
+Which means we can overlay the original data with the trend component (which is the second column.)
+
+```{r overlay trend}
+
+autoplot(Passenger)+geom_line(aes(y=decomp_stl$time.series[,2]),color="blue")
+
+```
+
+Notice that the trend component is VERY similar to the "seasonally adjusted" data!  Do you know what the difference between the two series is?
+
+```{r seasonally adjusted}
+
+seas_adj=Passenger-decomp_stl$time.series[,1]
+
+autoplot(Passenger) +
+  geom_line(aes(y=decomp_stl$time.series[,2]),color="blue") +
+  geom_line(aes(y=seas_adj),color="orange")
+
+```
+
+Another interesting plot is the subseries plot.  This looks at the individual series (in this case, the series for January, the series for February, etc....).
+
+```{r subseries}
+
+# Plot seasonal subseries by months
+ggsubseriesplot(Passenger)
+
+```
+Just a quick note.  STL ONLY does additive seasonal decomposition.  There is a decompose library that will do both additive AND multiplicative decomposition.
+
+## Self-study
+
+Here is something to get you started if you want to take a look at the X13 decomposition!
+
+```{r X13,message=FALSE}
+
+decomp_x13=seas(Passenger)
+summary(decomp_x13)
+
+## Neat R shiny application....run OUTSIDE of RMarkdown
+#view(decomp_x13)
+
+```
+
+
+<!--chapter:end:01-Introduction.Rmd-->
+
+# Exponential Smoothing
+
+
+```{r libraries, message=FALSE,echo=FALSE}
+library(tseries)
+library(forecast)
+library(haven)
+library(fma)
+library(expsmooth)
+library(lmtest)
+library(zoo)
+library(seasonal)
+library(ggplot2)
+library(seasonalview)
+library(aTSA)
+library(imputeTS)
+file.dir = "Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\" 
+input.file1 = "usairlines.csv"
+input.file2 = "steel.csv"
+input.file3 = "leadyear.csv"
+input.file4 = "ebay9899.csv"
+input.file5 = "fpp_insurance.csv" 
+input.file6 = "ar2.csv"
+input.file7 = "MA2.csv"
+input.file8 = "hurrican.csv"
+
+# Reads the data at specified directory
+# If the file directory is incorrect, then this won't run
+USAirlines = read.table(paste(file.dir, input.file1,sep = ""),sep=",", header=T)
+Steel = read.table(paste(file.dir, input.file2, sep = ""),sep=",",header=T)
+Lead.Year = read.table(paste(file.dir, input.file3, sep = ""),sep=",",header=T)
+Ebay = read.table(paste(file.dir, input.file4, sep = ""),sep=",",header=T)
+Quotes= read.table(paste(file.dir, input.file5, sep = ""),sep=",",header=T)
+Y= read.table(paste(file.dir, input.file6, sep = ""),sep=",",header=T)
+x=read.table(paste(file.dir, input.file7, sep = ""),sep=",",header=T)
+hurricane=read.table(paste(file.dir, input.file8, sep = ""),sep=",",header=T)
+SteelShp <- ts(Steel$steelshp, start = 1984, frequency = 12)
+Passenger <- ts(USAirlines$Passengers, start = 1990, frequency =12)
+library(reticulate)
+use_python("C:\\ProgramData\\Anaconda3\\python.exe")
+```
+
+In R, we are able to do Simple (or Single) Exponential Smoothing Models, Holt Exponential Smoothing Models and Holt-Winters Exponential Smoothing Models.  For the first two (Simple and Holt), we will be using the Steel data set and for the last one (Holt-Winters), we will be using the airline data set (we will also use the airline data set to illustrate the damped trend model).  Each of these are shown below.  
+
+## Simple Exponential Smoothing
+
+For Simple Exponential Smoothing Models (SES), we have only one component, referred to as the level component.
+$$\hat{Y}_{t+1}= L_{t}\\
+  L_{t} = \theta Y_{t} + (1-\theta)L_{t-1}$$
+  
+This is basically a weighted average with the last observation and the last predicted value.  Since this only has a level component, forecasts from SES models will be a horizontal line (hence why this method is called "one-step ahead" forecasting).  
+
+In the R code, you can choose how the initial values are selected.  If you specify simple, then the first few observations will be used to estimate the starting value.  If you select optimal, then the algorithm uses the ets algorithm (will be discussed later) to optimize the starting values and the smoothing parameters.  You can also specify the value for "h", which is the number of forecasts to create (take a look at the forecast...do you see a horizontal line?).
+
+```{r ses}
+
+# Building a Single Exponential Smoothing (SES) Model - Steel Data #
+SES.Steel <- ses(SteelShp, initial = "simple", h = 24)
+summary(SES.Steel)
+
+# Plot the SES model on steel data
+autoplot(SES.Steel)+
+  autolayer(fitted(SES.Steel),series="Fitted")+ylab("US Steel Shipments") + geom_vline(xintercept = 1992,color="orange",linetype="dashed")
+
+
+# Computes accuracy statistics for SES model on steel data (training data...NOT validation nor test)
+round(accuracy(SES.Steel),2) 
+
+```
+
+## Holt ESM
+
+The Holt model incorporates trend information.  So, now there are two components: level and trend.  For each component, there will be a smoothing coefficient (or weight).  CAREFUL, when you look at parameter estimates, these are NOT the estimates for the mean nor the linear trend...you should be thinking of them as weights (between 0 and 1).  The overall form for Holt's method is:
+
+$$\hat{Y}_{t+h}= L_{t}+hT_{t}\\
+  L_{t} = \theta Y_{t} + (1-\theta)(L_{t-1}+T_{t-1})\\
+  T_{t} = \gamma (L_{t}-L_{t-1}) + (1-\gamma) T_{t-1}$$
+  
+For the Holt's method, when you forecast, you will see a trending line.  
+
+```{r Holt}
+# Building a Linear Exponential Smoothing Model - Steel Data #
+LES.Steel <- holt(SteelShp, initial = "optimal", h = 24)
+summary(LES.Steel)
+
+# Plote the LES model on steel data
+
+autoplot(LES.Steel)+
+  autolayer(fitted(LES.Steel),series="Fitted")+labs(title="US Steel Shipment with Holt forecasts",y="US Steel Shipments") + geom_vline(xintercept = 1992,color="orange",linetype="dashed")
+
+```
+
+We can also perform Holt's method with a damped trend.  You will see the formula for the damped trend is similar to the previous Holt formula with an addition of a dampening parameter.
+
+$$\hat{Y}_{t+h}= L_{t}+\sum_{i}^{k}\phi^{i}T_{t}\\
+  L_{t} = \theta Y_{t} + (1-\theta)(L_{t-1}+\phi T_{t-1})\\
+  T_{t} = \gamma (L_{t}-L_{t-1}) + (1-\gamma) \phi T_{t-1}$$
+
+We will illustrate the damped trend on both the Steel and Airline data sets.
+
+```{r damped trend}
+LDES.Steel <- holt(SteelShp, initial = "optimal", h = 24, damped = TRUE)
+summary(LDES.Steel)
+autoplot(LDES.Steel)+
+  autolayer(fitted(LDES.Steel),series="Fitted")+labs(title="US Steel Shipment Linear Damped ESM Forecast") + geom_vline(xintercept = 1992,color="orange",linetype="dashed")
+
+LDES.USAir <- holt(Passenger, initial = "optimal", h = 24, damped = TRUE)
+summary(LDES.USAir)
+autoplot(LDES.USAir)+
+  autolayer(fitted(LDES.USAir),series="Fitted")+labs(title="US Airline Passengers with Linear Damped ESM Forecast") + geom_vline(xintercept = 2008.25,color="orange",linetype="dashed")
+```
+
+## Holt-Winters
+
+The Holt-Winters (HW) model has three components to it (level, trend and seasonality).  Seasonality is an interesting component to model since we can have an additive seasonal component or a multiplicative seasonal component.  Both models are shown below:
+
+Additive HW
+$$\hat{Y}_{t+h}= L_{t}+hT_{t} + S_{t-p+h}\\
+  L_{t} = \theta (Y_{t} - S_{t-p}) + (1-\theta)(L_{t-1}+T_{t-1})\\
+  T_{t} = \gamma (L_{t}-L_{t-1}) + (1-\gamma) T_{t-1}\\
+  S_{t} = \delta (Y_{t}-L_{t-1}-T_{t-1}) + (1-\delta) S_{t-p}$$
+
+Multiplicative HW
+$$\hat{Y}_{t+h}= (L_{t}+hT_{t}) S_{t-p+h}\\
+  L_{t} = \theta \frac{Y_{t}} {S_{t-p}} + (1-\theta)(L_{t-1}+T_{t-1})\\
+  T_{t} = \gamma (L_{t}-L_{t-1}) + (1-\gamma) T_{t-1}\\
+  S_{t} = \delta \frac{Y_{t}}{L_{t-1}+T_{t-1}} + (1-\delta) S_{t-p}$$
+
+Where p is the frequency of the seasonality (i.e. how many "seasons" there are within one year).  
+
+
+```{r Seasonal models}
+# Building a Holt-Winters ESM - US Airlines Data - Additive Seasonality
+HWES.USAir <- hw(Passenger, seasonal = "additive")
+summary(HWES.USAir)
+
+autoplot(HWES.USAir)+
+  autolayer(fitted(HWES.USAir),series="Fitted")+ylab("Airlines Passengers")+ geom_vline(xintercept = 2008.25,color="orange",linetype="dashed")
+
+# Building a Holt-Winters ESM - US Airlines Data - Multiplicative Seasonality
+HWES.USAir <- hw(Passenger, seasonal = "multiplicative")
+summary(HWES.USAir)
+
+
+autoplot(HWES.USAir)+
+  autolayer(fitted(HWES.USAir),series="Fitted")+ylab("Airlines Passengers")+ geom_vline(xintercept = 2008.25,color="orange",linetype="dashed")
+```
+
+## Evaluating forecasts
+
+In order to get a better idea of the forecasting properties of the algorithms, it is best to divide your data into a training data set and a test data set.  Time series is VERY different than other algorithms in which you have done.  The test data set should come at the END of the time series (to truly see how well you can forecast!).  An example code is shown below in which the last 12 observations are used as the test data set:
+
+```{r forecasts}
+# Create training set from overall Airlines Data
+training=subset(Passenger,end=length(Passenger)-12)
+
+# Create test set from overall Airlines Data
+test=subset(Passenger,start=length(Passenger)-11)
+
+# Fit Holt-Winters ESM (multiplicative seasonality) on training data
+HWES.USAir.train <- hw(training, seasonal = "multiplicative",initial='optimal',h=12)
+
+
+# Calculate prediction errors from forecast
+error=test-HWES.USAir.train$mean
+
+# Calculate prediction error statistics (MAE and MAPE)
+MAE=mean(abs(error))
+MAPE=mean(abs(error)/abs(test))
+
+MAE
+MAPE
+```
+
+## ETS
+
+You can also allow the computer to search for the best model.  The ETS (Error, Trend, Seasonality) algorithm will search for the best model and estimate the parameters.  For the error term, we can have either an additive or multiplicative error structure.  For the trend, we can have none, additive, multiplicative, damped additive or damped multiplicative . For the seasonal component, we can have none, additive or multiplicative (lots of choices!). An example of how to run this is:
+
+```{r ets}
+ets.passenger<-ets(training)
+summary(ets.passenger)
+ets.forecast.passenger<-ets.passenger%>%forecast::forecast(h=12)
+error=mean(abs(test-ets.forecast.passenger$mean))
+error
+```
+
+
+<!--chapter:end:02-Exponential-Smoothing.Rmd-->
+
+# ARIMA
+
+
+
+
+```{r libraries, message=FALSE,echo=FALSE}
+library(tseries)
+library(forecast)
+library(haven)
+library(fma)
+library(expsmooth)
+library(lmtest)
+library(zoo)
+library(seasonal)
+library(ggplot2)
+library(seasonalview)
+library(aTSA)
+library(imputeTS)
+file.dir = "Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\" 
+input.file1 = "usairlines.csv"
+input.file2 = "steel.csv"
+input.file3 = "leadyear.csv"
+input.file4 = "ebay9899.csv"
+input.file5 = "fpp_insurance.csv" 
+input.file6 = "ar2.csv"
+input.file7 = "MA2.csv"
+input.file8 = "hurrican.csv"
+
+# Reads the data at specified directory
+# If the file directory is incorrect, then this won't run
+USAirlines = read.table(paste(file.dir, input.file1,sep = ""),sep=",", header=T)
+Steel = read.table(paste(file.dir, input.file2, sep = ""),sep=",",header=T)
+Lead.Year = read.table(paste(file.dir, input.file3, sep = ""),sep=",",header=T)
+Ebay = read.table(paste(file.dir, input.file4, sep = ""),sep=",",header=T)
+Quotes= read.table(paste(file.dir, input.file5, sep = ""),sep=",",header=T)
+Y= read.table(paste(file.dir, input.file6, sep = ""),sep=",",header=T)
+x=read.table(paste(file.dir, input.file7, sep = ""),sep=",",header=T)
+hurricane=read.table(paste(file.dir, input.file8, sep = ""),sep=",",header=T)
+SteelShp <- ts(Steel$steelshp, start = 1984, frequency = 12)
+Passenger <- ts(USAirlines$Passengers, start = 1990, frequency =12)
+library(reticulate)
+use_python("C:\\ProgramData\\Anaconda3\\python.exe")
+```
+
+We will now be switching over to doing ARMA/ARIMA models!!  There are a number of different concepts you will need in order to do this type of modeling.
+
+## Stationarity
+
+Before we can try to model the dependency structure (the AR and MA terms), we must first have a stationarity!  The ADF test is one of the most well-known and accepted test for testing stationarity.  There are several packages that will do this for you, however, below, I am focusing on the ADF test within the package aTSA.
+
+```{r plot}
+
+Quotes.ts<-ts(Quotes$Quotes,start=2002,frequency=12)
+autoplot(Quotes.ts)+labs(title="Time Series of Daily Stock quotes", x="Time", y="Quotes")
+```
+
+
+The following code produces output similar to the output seen in SAS (under the tau test).
+
+
+```{r stationarity}
+
+
+# Perform the ADF test (k=0)
+aTSA::adf.test(Quotes.ts)
+
+```
+
+
+## Correlation Functions
+
+
+The Acf and the Pacf in R will calculate the autocorrelation (up to the lag you specify) and the partial autocorrelation, respectively.  You can either output these values to look at them or plot them (see code below).
+
+```{r correlation functions}
+acf1=Acf(Y, lag=10)$acf
+pacf1=Pacf(Y, lag=10)$acf
+
+index1=seq(1,length(pacf1))
+
+all.dat=data.frame(cbind(acf1[2:11],pacf1,index1))
+colnames(all.dat)=c("acf","pacf","index")
+
+ggplot(all.dat,aes(x=factor(index),y=acf))+geom_col()+labs(x="Lags")
+```
+
+
+## AutoRegressive Models (AR)
+
+AutoRegressive (AR) models involve modeling the lags of Y.  We can write an autoregressive model as
+
+$$ Y_{t} = c + \phi_{1}Y_{t-1}+\phi_{2}Y_{t-2}+...\phi_{p}Y_{t-p}+\epsilon_{t} $$
+Where there are *p* lags of *Y*.  Below is the code to fit an AR(2) model. The *order* in the *Arima* function needs the p,d,q values (p=# of AR terms, d=how many differences should be taken and q=# of MA terms).
+
+```{r AR2}
+
+ggAcf(Y)
+ggPacf(Y)
+
+Y.ts <- ts(Y)
+Y.ARIMA <- Arima(Y.ts, order=c(2,0,0))
+
+ggAcf(Y.ARIMA$residuals)
+ggPacf(Y.ARIMA$residuals)
+
+```
+
+
+## Moving Average model (MA)
+
+Moving average (MA) models involve modeling the lags of the error.  We can write a moving average model as
+
+$$ Y_{t} = c - \theta_{1}\epsilon_{t-1}-\theta_{2}\epsilon_{t-2}-...\theta_{q}\epsilon_{t-q}+\epsilon_{t} $$
+Where there are *q* lags of $\epsilon$.  Below is code to fit an MA(2) model.
+
+```{r MA2}
+
+ggAcf(x)
+ggPacf(x)
+
+x.ts <- ts(x)
+x.ARIMA <- Arima(x.ts, order=c(0,0,2))
+summary(x.ARIMA)
+ggAcf(x.ARIMA$residuals)
+ggPacf(x.ARIMA$residuals)
+
+```
+
+
+## White noise
+
+For residuals to exhibit white noise, they must be "independent" and normally distributed with mean 0 and constant variance.  You already know how to assess normality and constant variance, however, we need to focus on assessing "independence".  We can assess if there is significant dependence through the Ljung-Box test. The hypotheses being tested are
+
+$$H_{0}:No\quad significant\quad autocorrelation\\
+H_{A}:Significant\qquad autocorrletion $$
+
+This should be assessed on a stationary time series.  Looking at a stationary time series, going back 10 lags should be sufficient (this will be different when we get to seasonal models).  We would like for all of the p-values (for lags 1-10) to be insignificant (large p-values).  However, keep in mind that sample size will matter when assessing significance.
+
+```{r Ljung-Box test}
+
+White.LB <- rep(NA, 10)
+for(i in 1:10){
+  White.LB[i] <- Box.test(Y, lag=i, type="Ljung-Box", fitdf = 0)$p.value
+}
+
+white.dat=data.frame(cbind(White.LB,index1))
+colnames(white.dat)=c("pvalues","Lag")
+
+ggplot(white.dat,aes(x=factor(Lag),y=pvalues))+geom_col()+labs(title="Ljung-Box test p-values",x="Lags",y="p-values")+coord_cartesian(ylim = c(0, 0.025))
+
+
+####Fit appropriate model
+Y.ARIMA=Arima(Y,order=c(2,0,0))
+White.LB <- rep(NA, 10)
+for(i in 3:10){
+  White.LB[i] <- Box.test(Y.ARIMA$residuals, lag=i, type="Ljung-Box", fitdf = 2)$p.value
+}
+
+white.dat=data.frame(cbind(White.LB[3:10],index1[3:10]))
+colnames(white.dat)=c("pvalues","Lag") 
+
+
+ggplot(white.dat,aes(x=factor(Lag),y=pvalues))+geom_col()+labs(title="Ljung-Box test when there is white noise",x="Lags",y="p-values")
+
+```
+
+
+## Trending Series
+
+If the series is trending then it is NOT stationary.  You will NEED to do something to the series in order to make it stationary!!  You will either fit a linear regression line (then use the residuals to model dependencies) or take differences and use the differenced series to model dependencies.  We will be using the Ebay stock data of "Daily High" (however, this data has missing values!!).  If you do not impute missing values, it simply ignores the missing values (could create an issue).  I would recommend FIRST imputing those values BEFORE doing the ADF test (in the na_interpolation algorithm, missing values are imputed).
+
+```{r adf test with missing values}
+Daily.High <- ts(Ebay$DailyHigh)
+###NOT appropriate since there are missing values!!
+aTSA::adf.test(Daily.High)
+
+ggplot_na_distribution(Daily.High)+labs(y="Stock prices for Ebay")
+
+# Interpolate the missing observations in this data set
+Daily.High<-Daily.High %>% na_interpolation(option = "spline")
+
+autoplot(Daily.High)+labs(title="Daily high stock quotes",x="Time",y="Quotes")
+
+# Perform an ADF test
+aTSA::adf.test(Daily.High)
+### Definitely a Random Walk!!
+```
+
+
+How do we fit each situation?  If the series is stationary about the line, we need to fit a line (and then model the AR and MA terms on the residuals).  If series is a random walk with drift, then need to take differences.  Here is the R code for each situation.
+
+```{r ARIMA with trend}
+
+###Fitting a regression line...
+
+time.high=seq(1,length(Daily.High))
+ARIMA.line=Arima(Daily.High,order=c(0,0,0),xreg=time.high)
+summary(ARIMA.line)
+#### Now model residuals (ARIMA.line$residuals) with AR and MA terms...can also send residuals through an automatic procedure to help!
+
+####Fitting a random walk with drift
+
+ARIMA.RW=Arima(Daily.High,order=c(0,1,0))
+summary(ARIMA.RW)
+####  automatic procedure will determine if you need differencing or not!
+
+```
+
+
+## Fitting ARIMA models
+
+We can use an automatic procedure to help us find a model. For this illustration, we will be using the mean of the maximum velocity in the hurricane data set.  This data also has some missing values which we need to look into first.
+
+```{r visualize missing values}
+
+max.velocity=hurricane$MeanVMax
+
+ggplot_na_distribution(max.velocity)+labs(y="Mean Max Velocity")
+
+```
+
+This is yearly data and the reason those values are missing is because there were no hurricanes recorded for that year.  Since there is no trend (nor seasonality), I am going to remove these NA values and then run the Dickey-Fuller test.
+
+```{r hurrican ADF test}
+
+max.velocity=na.omit(max.velocity)
+hurrican.ts=ts(max.velocity)
+aTSA::adf.test(hurrican.ts)
+
+```
+
+Series is stationary!! Let's see if there is any significant dependecies here...
+
+```{r Ljung-Box for Hurricane data}
+index1=seq(1,10)
+White.LB <- rep(NA, 10)
+for(i in 1:10){
+  White.LB[i] <- Box.test(hurrican.ts, lag=i, type="Ljung-Box", fitdf = 0)$p.value
+}
+
+white.dat=data.frame(cbind(White.LB[1:10],index1[1:10]))
+colnames(white.dat)=c("pvalues","Lag") 
+
+
+ggplot(white.dat,aes(x=factor(Lag),y=pvalues))+geom_col()+labs(title="Hurricane data",x="Lags",y="p-values")
+
+```
+
+There is definitely something to be modeled here!!  Let's try an automated search first...
+
+```{r auto.arima for Hurricane data}
+
+model1=auto.arima(hurrican.ts)
+model2=auto.arima(hurrican.ts,d=0)
+
+```
+
+Let's take a look at ACF and PACF plots and see how well we do manually..
+
+```{r Correlation plots hurricane data}
+
+ggAcf(hurrican.ts)
+ggPacf(hurrican.ts)
+
+```
+
+
+Using the graphs and some trial and error, here was the model I chose...
+
+
+
+```{r by hand hurricane model}
+
+model3=Arima(hurrican.ts,order=c(2,0,3))
+summary(model3)
+
+```
+
+
+Comparing the ACF and PACF plots for these models:
+
+```{r comparing ACF and PACF}
+
+ggAcf(model1$residuals,lag.max = 10)
+ggPacf(model1$residuals,lag.max = 10)
+ggAcf(model2$residuals,lag.max = 10)
+ggPacf(model2$residuals,lag.max = 10)
+ggAcf(model3$residuals,lag.max = 10)
+ggPacf(model3$residuals,lag.max = 10)
+
+```
+
+
+Let's take a look at white noise for each model:
+
+
+```{r white noise}
+
+index1=seq(1,10)
+White.LB <- rep(NA, 10)
+for(i in 2:10){
+  White.LB[i] <- Box.test(model1$residuals, lag=i, type="Ljung-Box", fitdf = 1)$p.value
+}
+
+white.dat=data.frame(cbind(White.LB[2:10],index1[2:10]))
+colnames(white.dat)=c("pvalues","Lag") 
+
+
+ggplot(white.dat,aes(x=factor(Lag),y=pvalues))+geom_col()+labs(title="Model 1",x="Lags",y="p-values")
+
+White.LB <- rep(NA, 10)
+for(i in 3:10){
+  White.LB[i] <- Box.test(model2$residuals, lag=i, type="Ljung-Box", fitdf = 2)$p.value
+}
+
+white.dat=data.frame(cbind(White.LB[3:10],index1[3:10]))
+colnames(white.dat)=c("pvalues","Lag") 
+
+
+ggplot(white.dat,aes(x=factor(Lag),y=pvalues))+geom_col()+labs(title="Model 2",x="Lags",y="p-values")
+
+White.LB <- rep(NA, 10)
+for(i in 6:10){
+  White.LB[i] <- Box.test(model3$residuals, lag=i, type="Ljung-Box", fitdf = 5)$p.value
+}
+
+white.dat=data.frame(cbind(White.LB[6:10],index1[6:10]))
+colnames(white.dat)=c("pvalues","Lag") 
+
+
+ggplot(white.dat,aes(x=factor(Lag),y=pvalues))+geom_col()+labs(title="Model 3",x="Lags",y="p-values")
+
+ggplot(data =hurrican.ts, aes(x = model1$residuals)) +
+    geom_histogram() +
+    labs(title = 'Histogram of Residuals for Model 1', x = 'Residuals', y = 'Frequency')
+ggplot(data =hurrican.ts, aes(x = model2$residuals)) +
+    geom_histogram() +
+    labs(title = 'Histogram of Residuals for Model 2', x = 'Residuals', y = 'Frequency')
+
+ggplot(data =hurrican.ts, aes(x = model3$residuals)) +
+    geom_histogram() +
+    labs(title = 'Histogram of Residuals for Model 3', x = 'Residuals', y = 'Frequency')
+
+
+```
+
+
+You can now forecast the data with these models:
+
+
+```{r forecast ARIMA}
+
+forecast::forecast(model1, h = 10)
+autoplot(forecast::forecast(model1, h = 10))
+autoplot(forecast::forecast(model2, h = 10))
+autoplot(forecast::forecast(model3, h = 10))
+
+```
+
+
+<!--chapter:end:03-ARIMA.Rmd-->
+
