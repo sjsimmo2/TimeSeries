@@ -81,3 +81,73 @@ SteelShp <- ts(Steel$steelshp, start = 1984, frequency = 12)
 
 ```
 
+
+
+# Time series decomposition
+
+
+IF your time series has a seasonal component to it, a useful visualization is the decomposition.  We will be using the STL decomposition (which can only do the additive decomposition, NOT multiplicative!).  The following code creates the decomposition and then plots it:
+
+```{r decomposition}
+# Time Series Decomposition ...STL#
+decomp_stl <- stl(Passenger, s.window = 7)
+
+# Plot the individual components of the time series
+plot(decomp_stl)
+
+autoplot(decomp_stl)
+
+```
+
+You can pull off the different components (Seasonal, Trend or Remainder). The below command provides the first few rows of the decomposition (you can see what information is contained within the decomposition...season, trend and remainder).
+
+```{r decomposition components}
+
+head(decomp_stl$time.series)
+
+```
+
+Which means we can overlay the original data with the trend component (which is the second column.)
+
+```{r overlay trend}
+
+autoplot(Passenger)+geom_line(aes(y=decomp_stl$time.series[,2]),color="blue")
+
+```
+
+Notice that the trend component is VERY similar to the "seasonally adjusted" data!  Do you know what the difference between the two series is?
+
+```{r seasonally adjusted}
+
+seas_adj=Passenger-decomp_stl$time.series[,1]
+
+autoplot(Passenger) +
+  geom_line(aes(y=decomp_stl$time.series[,2]),color="blue") +
+  geom_line(aes(y=seas_adj),color="orange")
+
+```
+
+Another interesting plot is the subseries plot.  This looks at the individual series (in this case, the series for January, the series for February, etc....).
+
+```{r subseries}
+
+# Plot seasonal subseries by months
+ggsubseriesplot(Passenger)
+
+```
+Just a quick note.  STL ONLY does additive seasonal decomposition.  There is a decompose library that will do both additive AND multiplicative decomposition.
+
+## Self-study
+
+Here is something to get you started if you want to take a look at the X13 decomposition!
+
+```{r X13,message=FALSE}
+
+decomp_x13=seas(Passenger)
+summary(decomp_x13)
+
+## Neat R shiny application....run OUTSIDE of RMarkdown
+#view(decomp_x13)
+
+```
+

@@ -2,3 +2,5 @@ time-series-1
 introduction
 getting-started
 a-caucus-race-and-a-long-tale
+time-series-decomposition
+self-study
