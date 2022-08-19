@@ -1,0 +1,83 @@
+# Introduction
+
+
+
+# Getting Started
+
+This document provides the code and output from Time Series I class. This is a living document and may be updated throughout the semester (when this occurs, you will be notified that it has been updated).  First, here is a list of all the libraries that you will need:
+
+```{r libraries, message=FALSE}
+library(tseries)
+library(forecast)
+library(haven)
+library(fma)
+library(expsmooth)
+library(lmtest)
+library(zoo)
+library(seasonal)
+library(ggplot2)
+library(seasonalview)
+library(aTSA)
+library(imputeTS)
+library(reticulate)
+use_python("C:\\ProgramData\\Anaconda3\\python.exe")
+```
+
+The data sets that you will need are as follows (be sure to put the correct location and file name for your computer):
+
+```{r data sets}
+
+file.dir = "Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\" 
+input.file1 = "usairlines.csv"
+input.file2 = "steel.csv"
+input.file3 = "leadyear.csv"
+input.file4 = "ebay9899.csv"
+input.file5 = "fpp_insurance.csv" 
+input.file6 = "ar2.csv"
+input.file7 = "MA2.csv"
+input.file8 = "hurrican.csv"
+
+# Reads the data at specified directory
+# If the file directory is incorrect, then this won't run
+USAirlines = read.table(paste(file.dir, input.file1,sep = ""),sep=",", header=T)
+Steel = read.table(paste(file.dir, input.file2, sep = ""),sep=",",header=T)
+Lead.Year = read.table(paste(file.dir, input.file3, sep = ""),sep=",",header=T)
+Ebay = read.table(paste(file.dir, input.file4, sep = ""),sep=",",header=T)
+Quotes= read.table(paste(file.dir, input.file5, sep = ""),sep=",",header=T)
+Y= read.table(paste(file.dir, input.file6, sep = ""),sep=",",header=T)
+x=read.table(paste(file.dir, input.file7, sep = ""),sep=",",header=T)
+hurricane=read.table(paste(file.dir, input.file8, sep = ""),sep=",",header=T)
+```
+
+
+For many time series applications, you will need a time series object in R.  This is created using the function ts.  For example, the time series data set in the airlines data frame is in the column "passengers".  Let's go ahead and create the time series object for this data set and graph it.
+
+```{r Time Series object}
+
+Passenger <- ts(USAirlines$Passengers, start = 1990, frequency =12)
+
+autoplot(Passenger)+labs(title="Time Series plot for Passengers", x="Date",y="Passengers")
+
+```
+
+
+```{python}
+
+import pandas as pd
+import matplotlib.pyplot as plt
+usair_p=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\usairlines.csv")
+df=pd.date_range(start='1/1/1990', end='3/1/2008', freq='MS')
+usair_p.index=pd.to_datetime(df)
+print(usair_p.head())
+usair_p.plot()
+plt.show()
+```
+
+
+Within the ts command, the only required argument is the vector of data that contains the time series information (in this case USAirlines$Passengers).  The optional arguments of "start" is for nice plotting purposes (it has the correct time frame when it plots instead of just using 1,2,3 for time).  The last argument shown is "frequency", which is for seasonal data.  If your time series object has a seasonality to it, then you should specify the length of the season (it does not know this unless you provide it).  For future analysis, we will need to create the time series objects for Steel (this data is monthly, so we will set frequency to 12, since there are 12 months in a year).
+
+```{r ts2}
+SteelShp <- ts(Steel$steelshp, start = 1984, frequency = 12)
+
+```
+

@@ -1,9 +1,11 @@
 --- 
-title: "YOUR TITLE HERE"
-author: "YOUR NAME HERE"
+title: "Time Series 1"
+author: "by Dr. Susan Simmons"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
 
-# Down the rabbit-hole
+# Time series 1
+
+This is your introduction in Time Series.  By the end of this course, you should be able to understand time series data and different formats for doing time series; understand and identify the different characteristics of a time series (trend, cycle, seasonality, etc); perform a time series decomposition on seasonal data; perform numerous exponential smoothing models; understand stationarity and how to test for it; understand AR, MA and mixed models and when to use differencing; and be able to identify if a series has white noise.  All of the data sets needed for this class are on the github repository.  Enjoy your TIME in Time Series!!
 
