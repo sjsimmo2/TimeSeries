@@ -186,7 +186,7 @@ error
 
 ## Python Code for Exponential Smoothing
 
-The following code produces the simple exponential smoothing model in Python and predicts Steel Imports (in tons).
+The following Python codes will produce exponential smoothing models.  I do recommend that you take some time to understand some of the differences between the models fit in R versus Python.
 
 ```{python simple exponential smoothing}
 
@@ -251,7 +251,7 @@ plt.show()
 
 
 ```
-Seasonal models:
+Seasonal models in Python:
 
 ```{python seasonal models}
 
@@ -312,4 +312,128 @@ MAE
 MAPE=np.mean(abs(error)/test['Passengers'])
 MAPE
 ```
+
+
+## SAS Code for Exponential Smoothing Models
+
+The following code is for Exponential Smoothing models in SAS.
+
+
+_Create library for data sets_
+libname Time 'Q:\My Drive\Fall 2017 - Time Series\Data'; \  
+run;
+
+_SIMPLE EXPONENTIAL SMOOTHING MODEL_
+
+_Create a simple exponential smoothing model_ \  
+
+
+proc esm data=Time.Steel print=all plot=all lead=24; \  
+	forecast steelshp / model=simple; \  
+run; \  
+
+_Create a simple exponential smoothing model with ID statement_ \  
+
+proc esm data=Time.USAirlines print=all plot=all lead=24; \  
+	id date interval=month; \  
+	forecast Passengers / model=simple; \  
+run; \  
+
+
+_LINEAR TREND FOR EXPONENTIAL SMOOTHING_ \  
+
+_Double exponential smoothing_ \  
+
+proc esm data=Time.Steel print=all plot=all lead=24; \  
+	forecast steelshp / model=double; \  
+run; \  
+
+_linear exponential smoothing_ \  
+
+proc esm data=Time.Steel print=all plot=all lead=24; \  
+	forecast steelshp / model=linear; \  
+	run; \  
+	
+
+_damped trend exponential smoothing_ \  
+
+proc esm data=Time.Steel print=all plot=all lead=24; \  
+	forecast steelshp / model=damptrend; \  
+	run; \  
+	
+
+_linear exponential smoothign with interval = month_ \  
+
+proc esm data=Time.USAirlines print=all plot=all lead=24; \  
+	id date interval=month; \  
+		forecast Passengers / model=linear; \  
+		run; \  
+		
+
+_SEASONAL EXPONENTIAL SMOOTHING MODEL_ \  
+
+_Additive seasonal exponential smoothing model_ \  
+
+proc esm data=Time.USAirlines print=all plot=all \  
+		 seasonality=12 lead=24 outfor=test1; \  
+		 forecast Passengers / model=addseasonal; \  
+		 run; \  
+		 
+_mulitplicative seasonal exponential smoothing model_ \  
+
+proc esm data=Time.USAirlines print=all plot=all \  
+		 seasonality=12 lead=24; \  
+		 	forecast Passengers / model=multseasonal; \  
+		 	run; \  
+		 	
+
+_Winters additive exponential smoothing model (includes trend)_ \  
+
+proc esm data=Time.USAirlines print=all plot=all \  
+		 seasonality=12 lead=24; \  
+		 forecast Passengers / model=addwinters; \  
+		 run; \  
+		 
+_Winters multiplicative exponential smoothing model (includes trend) (Lead = 24)_ \  
+
+proc esm data=Time.USAirlines print=all plot=all \  
+		 seasonality=12 lead=24; \  
+		 forecast Passengers / model=multwinters; \  
+		 run; \  
+		 
+_Winters multiplicative exponential smoothing model (includes trend) Lead = 12_ \  
+
+proc esm data=Time.USAirlines print=all plot=all lead=12 \  
+  back=12 seasonality=12; \  
+  forecast Passengers / model=multwinters; \  
+  run; \  
+  
+
+_EXPLORATION of SEASONAL EXPONENTIAL SMOOTHING MODEL_ \  
+
+
+_Winters multiplicative exponential smoothing model (includes trend) Lead = 12, uses outfor statement to output forecasts_ \  
+
+proc esm data=Time.USAirlines print=all plot=all \
+		 seasonality=12 lead=12 back=12 outfor=test; \  
+		 	forecast Passengers / model=multwinters; \  
+		 	run; \ 
+
+_calculate |error|/|actual value|_ \  
+
+data test2; \  
+set test; \  
+if _TIMEID_>207; \  
+abs_error=abs(error); \  
+abs_err_obs=abs_error/abs(actual); \  
+run; \  
+
+
+_mean of |error|/|actual value| for this forecast_ \  
+
+proc means data=test2 mean; \  
+var abs_error abs_err_obs; \  
+run;
+
+
 
