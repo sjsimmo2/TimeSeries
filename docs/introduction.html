@@ -237,7 +237,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="bookdownproj_files/figure-html/decomposition-1.png" width="672" /></p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="introduction.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(decomp_stl)</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/decomposition-2.png" width="672" /></p>
-<p>You can pull off the different components (Seasonal, Trend or Remainder). The below command provides the first few rows of the decomposition (you can see what information is contained within the decomposition…season, trend and remainder).</p>
+<p>NOTE: You will need to specify the length of the seasonal window for STL…this is done by specifying s.window = “size of window”. Your window should be an odd number.\
+You can pull off the different components (Seasonal, Trend or Remainder). The below command provides the first few rows of the decomposition (you can see what information is contained within the decomposition…season, trend and remainder).</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="introduction.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(decomp_stl<span class="sc">$</span>time.series)</span></code></pre></div>
 <pre><code>##            seasonal    trend remainder
 ## Jan 1990 -4526.7610 39081.77 -207.0131
@@ -264,15 +265,17 @@ Just a quick note. STL ONLY does additive seasonal decomposition. There is a dec
 </div>
 <div id="python-code-and-results-for-time-series-plot" class="section level2 hasAnchor" number="2.2">
 <h2><span class="header-section-number">2.2</span> Python code and results for Time Series plot<a href="introduction.html#python-code-and-results-for-time-series-plot" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The following code shows the time series plot and classical decomposition (using additive model).</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="introduction.html#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-2"><a href="introduction.html#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb12-3"><a href="introduction.html#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb12-4"><a href="introduction.html#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
 <span id="cb12-5"><a href="introduction.html#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
-<span id="cb12-6"><a href="introduction.html#cb12-6" aria-hidden="true" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
-<span id="cb12-7"><a href="introduction.html#cb12-7" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
-<span id="cb12-8"><a href="introduction.html#cb12-8" aria-hidden="true" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
-<span id="cb12-9"><a href="introduction.html#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(usair_p.head())</span></code></pre></div>
+<span id="cb12-6"><a href="introduction.html#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
+<span id="cb12-7"><a href="introduction.html#cb12-7" aria-hidden="true" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
+<span id="cb12-8"><a href="introduction.html#cb12-8" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb12-9"><a href="introduction.html#cb12-9" aria-hidden="true" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb12-10"><a href="introduction.html#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(usair_p.head())</span></code></pre></div>
 <pre><code>##             Year  Month  Passengers
 ## 1990-01-01  1990      1       34348
 ## 1990-02-01  1990      2       33536
@@ -283,39 +286,57 @@ Just a quick note. STL ONLY does additive seasonal decomposition. There is a dec
 <span id="cb14-2"><a href="introduction.html#cb14-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">&quot;Date&quot;</span>)</span>
 <span id="cb14-3"><a href="introduction.html#cb14-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">&quot;Passengers&quot;</span>)</span>
 <span id="cb14-4"><a href="introduction.html#cb14-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">&quot;Airline Passengers&quot;</span>)</span>
-<span id="cb14-5"><a href="introduction.html#cb14-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<span id="cb14-5"><a href="introduction.html#cb14-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-6"><a href="introduction.html#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="introduction.html#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">## Classical Decomposition</span></span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="introduction.html#cb15-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> seasonal_decompose(usair_p[<span class="st">&quot;Passengers&quot;</span>], model<span class="op">=</span><span class="st">&#39;additive&#39;</span>, period<span class="op">=</span><span class="dv">12</span>)</span>
 <span id="cb15-2"><a href="introduction.html#cb15-2" aria-hidden="true" tabindex="-1"></a>result.plot()</span>
 <span id="cb15-3"><a href="introduction.html#cb15-3" aria-hidden="true" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-1-2.png" width="672" /></p>
+<p>You can also specify multiplicative by changing “additive” to “multiplicative” in the Python code. If you want to do the STL decomposition, then you can apply the following code:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="introduction.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb16-2"><a href="introduction.html#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb16-3"><a href="introduction.html#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
+<span id="cb16-4"><a href="introduction.html#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
+<span id="cb16-5"><a href="introduction.html#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
+<span id="cb16-6"><a href="introduction.html#cb16-6" aria-hidden="true" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
+<span id="cb16-7"><a href="introduction.html#cb16-7" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb16-8"><a href="introduction.html#cb16-8" aria-hidden="true" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb16-9"><a href="introduction.html#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="introduction.html#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="introduction.html#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co">## STL Decomposition</span></span>
+<span id="cb16-12"><a href="introduction.html#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="introduction.html#cb16-13" aria-hidden="true" tabindex="-1"></a>stl <span class="op">=</span> STL(usair_p[<span class="st">&quot;Passengers&quot;</span>], period<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb16-14"><a href="introduction.html#cb16-14" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> stl.fit()</span>
+<span id="cb16-15"><a href="introduction.html#cb16-15" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> res.plot()</span>
+<span id="cb16-16"><a href="introduction.html#cb16-16" aria-hidden="true" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/STL%20decomposition-5.png" width="672" /></p>
 </div>
 <div id="sas-code-for-time-series-plot-and-decomposition" class="section level2 hasAnchor" number="2.3">
 <h2><span class="header-section-number">2.3</span> SAS code for time series plot and decomposition<a href="introduction.html#sas-code-for-time-series-plot-and-decomposition" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The following code is in SAS (creates the time series plot and the decomposition…which is the next section). The use of the id statement can only be used if the series has a properly formatted date column. Great thing about SAS is that if there is a missing value (or missing date), it will impute it for you. It can also aggregate easily in SAS. If you do not have a date column, you can still use this command, you will use seasonality = and then set the length of the season. However, if you use the seasonality option, SAS will not recognize missing dates.</p>
-<p>/* Create library for data sets */
-libname Time ‘Q:Drive - Time Series’;
-run;</p>
-<p>/* Time series plot and decomposition of Airline Passengers */
-proc timeseries data=Time.USAirlines plots=(series decomp sc);
-id date interval=month;
-var Passengers;
-run;</p>
-<p>/* Time series and decomposition of Airline Passengers, but
-now the seasonal cycle is set to a year
-*/
-proc timeseries data=Time.USAirlines plots=(series decomp sc) seasonality=12;
-var Passengers;
-run;</p>
-<p>proc timeseries data=Time.Steel plots=(series decomp sc) seasonality=12;
-var steelshp;
-run;</p>
+<p><em>Create library for data sets</em>  </p>
+<p>libname Time ‘Q:Drive - Time Series’;  
+run;  </p>
+<p><em>Time series plot and decomposition of Airline Passengers</em>  </p>
+<p>proc timeseries data=Time.USAirlines plots=(series decomp sc);  
+id date interval=month;  
+var Passengers;  
+run;  </p>
+<p><em>Time series and decomposition of Airline Passengers, but now the seasonal cycle is set to a year</em>  </p>
+<p>proc timeseries data=Time.USAirlines plots=(series decomp sc) seasonality=12;  
+var Passengers;  
+run;  </p>
+<p>proc timeseries data=Time.Steel plots=(series decomp sc) seasonality=12;  
+var steelshp;  
+run;  </p>
 </div>
 <div id="self-study" class="section level2 hasAnchor" number="2.4">
 <h2><span class="header-section-number">2.4</span> Self-study<a href="introduction.html#self-study" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Here is something to get you started if you want to take a look at the X13 decomposition!</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="introduction.html#cb16-1" aria-hidden="true" tabindex="-1"></a>decomp_x13<span class="ot">=</span><span class="fu">seas</span>(Passenger)</span>
-<span id="cb16-2"><a href="introduction.html#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(decomp_x13)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="introduction.html#cb17-1" aria-hidden="true" tabindex="-1"></a>decomp_x13<span class="ot">=</span><span class="fu">seas</span>(Passenger)</span>
+<span id="cb17-2"><a href="introduction.html#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(decomp_x13)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## seas(x = Passenger)
@@ -341,8 +362,8 @@ run;</p>
 ## Warnings:
 ## - At least one visually significant trading day peak has been
 ##   found in one or more of the estimated spectra.</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="introduction.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Neat R shiny application....run OUTSIDE of RMarkdown</span></span>
-<span id="cb18-2"><a href="introduction.html#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#view(decomp_x13)</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="introduction.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Neat R shiny application....run OUTSIDE of RMarkdown</span></span>
+<span id="cb19-2"><a href="introduction.html#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#view(decomp_x13)</span></span></code></pre></div>
 
 </div>
 </div>
