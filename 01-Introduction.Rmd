@@ -79,11 +79,13 @@ df=pd.date_range(start='1/1/1990', end='3/1/2008', freq='MS')
 usair_p.index=pd.to_datetime(df)
 print(usair_p.head())
 plt.plot(usair_p["Passengers"])
-plt.show()
 plt.xlabel("Date")
 plt.ylabel("Passengers")
 plt.title("Airline Passengers")
+plt.show()
 ```
+
+
 ###SAS code
 
 The following code is in SAS (creates the time series plot and the decomposition...which is the next section).  The use of the id statement can only be used if the series has a properly formatted date column.  Great thing about SAS is that if there is a missing value (or missing date), it will impute it for you.  It can also aggregate easily in SAS.  If you do not have a date column, you can still use this command, you will use seasonality = and then set the length of the season.  However, if you use the seasonality option, SAS will not recognize missing dates.

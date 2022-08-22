@@ -241,13 +241,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 1990-04-01  1990      4       38267
 ## 1990-05-01  1990      5       38249</code></pre>
 <div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="introduction.html#cb7-1" aria-hidden="true" tabindex="-1"></a>plt.plot(usair_p[<span class="st">&quot;Passengers&quot;</span>])</span>
-<span id="cb7-2"><a href="introduction.html#cb7-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<span id="cb7-2"><a href="introduction.html#cb7-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">&quot;Date&quot;</span>)</span>
+<span id="cb7-3"><a href="introduction.html#cb7-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">&quot;Passengers&quot;</span>)</span>
+<span id="cb7-4"><a href="introduction.html#cb7-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">&quot;Airline Passengers&quot;</span>)</span>
+<span id="cb7-5"><a href="introduction.html#cb7-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="introduction.html#cb8-1" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">&quot;Date&quot;</span>)</span>
-<span id="cb8-2"><a href="introduction.html#cb8-2" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">&quot;Passengers&quot;</span>)</span>
-<span id="cb8-3"><a href="introduction.html#cb8-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">&quot;Airline Passengers&quot;</span>)</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-1-2.png" width="672" />
-###SAS code</p>
+<p>###SAS code</p>
 <p>The following code is in SAS (creates the time series plot and the decomposition…which is the next section). The use of the id statement can only be used if the series has a properly formatted date column. Great thing about SAS is that if there is a missing value (or missing date), it will impute it for you. It can also aggregate easily in SAS. If you do not have a date column, you can still use this command, you will use seasonality = and then set the length of the season. However, if you use the seasonality option, SAS will not recognize missing dates.</p>
 <p>/* Create library for data sets */
 libname Time ‘Q:Drive - Time Series’;
@@ -270,16 +269,16 @@ run;</p>
 <div id="time-series-decomposition" class="section level2 hasAnchor" number="2.1">
 <h2><span class="header-section-number">2.1</span> Time series decomposition<a href="introduction.html#time-series-decomposition" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>IF your time series has a seasonal component to it, a useful visualization is the decomposition. We will be using the STL decomposition (which can only do the additive decomposition, NOT multiplicative!). The following code creates the decomposition and then plots it:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="introduction.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Time Series Decomposition ...STL#</span></span>
-<span id="cb9-2"><a href="introduction.html#cb9-2" aria-hidden="true" tabindex="-1"></a>decomp_stl <span class="ot">&lt;-</span> <span class="fu">stl</span>(Passenger, <span class="at">s.window =</span> <span class="dv">7</span>)</span>
-<span id="cb9-3"><a href="introduction.html#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="introduction.html#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the individual components of the time series</span></span>
-<span id="cb9-5"><a href="introduction.html#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(decomp_stl)</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/decomposition-5.png" width="672" /></p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="introduction.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(decomp_stl)</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/decomposition-6.png" width="672" /></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="introduction.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Time Series Decomposition ...STL#</span></span>
+<span id="cb8-2"><a href="introduction.html#cb8-2" aria-hidden="true" tabindex="-1"></a>decomp_stl <span class="ot">&lt;-</span> <span class="fu">stl</span>(Passenger, <span class="at">s.window =</span> <span class="dv">7</span>)</span>
+<span id="cb8-3"><a href="introduction.html#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="introduction.html#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the individual components of the time series</span></span>
+<span id="cb8-5"><a href="introduction.html#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(decomp_stl)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/decomposition-3.png" width="672" /></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="introduction.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(decomp_stl)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/decomposition-4.png" width="672" /></p>
 <p>You can pull off the different components (Seasonal, Trend or Remainder). The below command provides the first few rows of the decomposition (you can see what information is contained within the decomposition…season, trend and remainder).</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="introduction.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(decomp_stl<span class="sc">$</span>time.series)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="introduction.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(decomp_stl<span class="sc">$</span>time.series)</span></code></pre></div>
 <pre><code>##            seasonal    trend remainder
 ## Jan 1990 -4526.7610 39081.77 -207.0131
 ## Feb 1990 -5827.5592 38942.75  420.8128
@@ -288,26 +287,26 @@ run;</p>
 ## May 1990   139.2095 38533.15 -423.3574
 ## Jun 1990  2953.8857 38401.61 -563.4910</code></pre>
 <p>Which means we can overlay the original data with the trend component (which is the second column.)</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="introduction.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(Passenger)<span class="sc">+</span><span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>decomp_stl<span class="sc">$</span>time.series[,<span class="dv">2</span>]),<span class="at">color=</span><span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="introduction.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(Passenger)<span class="sc">+</span><span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>decomp_stl<span class="sc">$</span>time.series[,<span class="dv">2</span>]),<span class="at">color=</span><span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/overlay%20trend-1.png" width="672" /></p>
 <p>Notice that the trend component is VERY similar to the “seasonally adjusted” data! Do you know what the difference between the two series is?</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="introduction.html#cb14-1" aria-hidden="true" tabindex="-1"></a>seas_adj<span class="ot">=</span>Passenger<span class="sc">-</span>decomp_stl<span class="sc">$</span>time.series[,<span class="dv">1</span>]</span>
-<span id="cb14-2"><a href="introduction.html#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="introduction.html#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(Passenger) <span class="sc">+</span></span>
-<span id="cb14-4"><a href="introduction.html#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>decomp_stl<span class="sc">$</span>time.series[,<span class="dv">2</span>]),<span class="at">color=</span><span class="st">&quot;blue&quot;</span>) <span class="sc">+</span></span>
-<span id="cb14-5"><a href="introduction.html#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>seas_adj),<span class="at">color=</span><span class="st">&quot;orange&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="introduction.html#cb13-1" aria-hidden="true" tabindex="-1"></a>seas_adj<span class="ot">=</span>Passenger<span class="sc">-</span>decomp_stl<span class="sc">$</span>time.series[,<span class="dv">1</span>]</span>
+<span id="cb13-2"><a href="introduction.html#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="introduction.html#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(Passenger) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="introduction.html#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>decomp_stl<span class="sc">$</span>time.series[,<span class="dv">2</span>]),<span class="at">color=</span><span class="st">&quot;blue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="introduction.html#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>seas_adj),<span class="at">color=</span><span class="st">&quot;orange&quot;</span>)</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/seasonally%20adjusted-1.png" width="672" /></p>
 <p>Another interesting plot is the subseries plot. This looks at the individual series (in this case, the series for January, the series for February, etc….).</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="introduction.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot seasonal subseries by months</span></span>
-<span id="cb15-2"><a href="introduction.html#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsubseriesplot</span>(Passenger)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="introduction.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot seasonal subseries by months</span></span>
+<span id="cb14-2"><a href="introduction.html#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsubseriesplot</span>(Passenger)</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/subseries-1.png" width="672" />
 Just a quick note. STL ONLY does additive seasonal decomposition. There is a decompose library that will do both additive AND multiplicative decomposition.</p>
 </div>
 <div id="self-study" class="section level2 hasAnchor" number="2.2">
 <h2><span class="header-section-number">2.2</span> Self-study<a href="introduction.html#self-study" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Here is something to get you started if you want to take a look at the X13 decomposition!</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="introduction.html#cb16-1" aria-hidden="true" tabindex="-1"></a>decomp_x13<span class="ot">=</span><span class="fu">seas</span>(Passenger)</span>
-<span id="cb16-2"><a href="introduction.html#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(decomp_x13)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="introduction.html#cb15-1" aria-hidden="true" tabindex="-1"></a>decomp_x13<span class="ot">=</span><span class="fu">seas</span>(Passenger)</span>
+<span id="cb15-2"><a href="introduction.html#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(decomp_x13)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## seas(x = Passenger)
@@ -333,8 +332,8 @@ Just a quick note. STL ONLY does additive seasonal decomposition. There is a dec
 ## Warnings:
 ## - At least one visually significant trading day peak has been
 ##   found in one or more of the estimated spectra.</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="introduction.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Neat R shiny application....run OUTSIDE of RMarkdown</span></span>
-<span id="cb18-2"><a href="introduction.html#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#view(decomp_x13)</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="introduction.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Neat R shiny application....run OUTSIDE of RMarkdown</span></span>
+<span id="cb17-2"><a href="introduction.html#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#view(decomp_x13)</span></span></code></pre></div>
 
 </div>
 </div>
