@@ -249,8 +249,41 @@ fcast4.plot(ax=ax,color="gray")
 plt.show()
 
 
+
+```
+Seasonal models:
+
+```{python seasonal models}
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib import pyplot
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.seasonal import STL
+usair_p=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\usairlines.csv")
+df=pd.date_range(start='1/1/1990', end='3/1/2008', freq='MS')
+usair_p.index=pd.to_datetime(df)
+
+
+usair_p['HWES_ADD'] = ExponentialSmoothing(usair_p['Passengers'],trend='add',seasonal='add',seasonal_periods=12).fit().fittedvalues
+
+usair_p['HWES_MUL'] = ExponentialSmoothing(usair_p['Passengers'],trend='mul',seasonal='mul',seasonal_periods=12).fit().fittedvalues
+
+usair_p[['Passengers','HWES_ADD','HWES_MUL']].plot(title='Holt Winters Exponential Smoothing: Additive and Multiplicative Seasonality')
 plt.show()
 
+fit1=ExponentialSmoothing(usair_p['Passengers'],trend='add',seasonal='mul',seasonal_periods=12).fit()
+fit1.summary()
 
+fit2=ExponentialSmoothing(usair_p['Passengers'],trend='add',seasonal='add',seasonal_periods=12).fit()
+fit2.summary()
+
+fcast1=fit1.forecast(24)
+fcast2=fit2.forecast(24)
+
+ax=usair_p["Passengers"].plot(color="black",figsize=(12,8))
+fcast1.plot(ax=ax,color="blue")
+fcast2.plot(ax=ax,color="orange")
+plt.show()
 ```
 

@@ -727,7 +727,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <th>Seasonal Periods:</th>   <td>None</td>   <th>  Date:              </th> <td>Mon, 22 Aug 2022</td>
 </tr>
 <tr>
-  <th>Box-Cox:</th>            <td>False</td>  <th>  Time:              </th>     <td>13:26:20</td>    
+  <th>Box-Cox:</th>            <td>False</td>  <th>  Time:              </th>     <td>15:20:36</td>    
 </tr>
 <tr>
   <th>Box-Cox Coeff.:</th>     <td>None</td>   <th>                     </th>         <td> </td>       
@@ -800,7 +800,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <th>Seasonal Periods:</th>      <td>None</td>      <th>  Date:              </th> <td>Mon, 22 Aug 2022</td>
 </tr>
 <tr>
-  <th>Box-Cox:</th>               <td>False</td>     <th>  Time:              </th>     <td>13:26:20</td>    
+  <th>Box-Cox:</th>               <td>False</td>     <th>  Time:              </th>     <td>15:20:36</td>    
 </tr>
 <tr>
   <th>Box-Cox Coeff.:</th>        <td>None</td>      <th>                     </th>         <td> </td>       
@@ -873,7 +873,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <th>Seasonal Periods:</th>   <td>None</td>   <th>  Date:              </th> <td>Mon, 22 Aug 2022</td>
 </tr>
 <tr>
-  <th>Box-Cox:</th>            <td>False</td>  <th>  Time:              </th>     <td>13:26:20</td>    
+  <th>Box-Cox:</th>            <td>False</td>  <th>  Time:              </th>     <td>15:20:36</td>    
 </tr>
 <tr>
   <th>Box-Cox Coeff.:</th>     <td>None</td>   <th>                     </th>         <td> </td>       
@@ -949,7 +949,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <th>Seasonal Periods:</th>      <td>None</td>      <th>  Date:              </th> <td>Mon, 22 Aug 2022</td>
 </tr>
 <tr>
-  <th>Box-Cox:</th>               <td>False</td>     <th>  Time:              </th>     <td>13:26:20</td>    
+  <th>Box-Cox:</th>               <td>False</td>     <th>  Time:              </th>     <td>15:20:36</td>    
 </tr>
 <tr>
   <th>Box-Cox Coeff.:</th>        <td>None</td>      <th>                     </th>         <td> </td>       
@@ -1008,9 +1008,211 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb48-4"><a href="exponential-smoothing.html#cb48-4" aria-hidden="true" tabindex="-1"></a>fcast3.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;purple&quot;</span>)</span>
 <span id="cb48-5"><a href="exponential-smoothing.html#cb48-5" aria-hidden="true" tabindex="-1"></a>fcast4.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;gray&quot;</span>)</span>
 <span id="cb48-6"><a href="exponential-smoothing.html#cb48-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/holt%20models-3.png" width="1152" /></p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb49-1"><a href="exponential-smoothing.html#cb49-1" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/holt%20models-4.png" width="1152" /></p>
+<p><img src="bookdownproj_files/figure-html/holt%20models-3.png" width="1152" />
+Seasonal models:</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb49-1"><a href="exponential-smoothing.html#cb49-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-2"><a href="exponential-smoothing.html#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb49-3"><a href="exponential-smoothing.html#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb49-4"><a href="exponential-smoothing.html#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
+<span id="cb49-5"><a href="exponential-smoothing.html#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
+<span id="cb49-6"><a href="exponential-smoothing.html#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
+<span id="cb49-7"><a href="exponential-smoothing.html#cb49-7" aria-hidden="true" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
+<span id="cb49-8"><a href="exponential-smoothing.html#cb49-8" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb49-9"><a href="exponential-smoothing.html#cb49-9" aria-hidden="true" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb49-10"><a href="exponential-smoothing.html#cb49-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-11"><a href="exponential-smoothing.html#cb49-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-12"><a href="exponential-smoothing.html#cb49-12" aria-hidden="true" tabindex="-1"></a>usair_p[<span class="st">&#39;HWES_ADD&#39;</span>] <span class="op">=</span> ExponentialSmoothing(usair_p[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit().fittedvalues</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\tsa\holtwinters.py:725: RuntimeWarning: invalid value encountered in less_equal
+##   loc = initial_p &lt;= lb
+## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\tsa\holtwinters.py:731: RuntimeWarning: invalid value encountered in greater_equal
+##   loc = initial_p &gt;= ub</code></pre>
+<div class="sourceCode" id="cb51"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb51-1"><a href="exponential-smoothing.html#cb51-1" aria-hidden="true" tabindex="-1"></a>usair_p[<span class="st">&#39;HWES_MUL&#39;</span>] <span class="op">=</span> ExponentialSmoothing(usair_p[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;mul&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;mul&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit().fittedvalues</span>
+<span id="cb51-2"><a href="exponential-smoothing.html#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="exponential-smoothing.html#cb51-3" aria-hidden="true" tabindex="-1"></a>usair_p[[<span class="st">&#39;Passengers&#39;</span>,<span class="st">&#39;HWES_ADD&#39;</span>,<span class="st">&#39;HWES_MUL&#39;</span>]].plot(title<span class="op">=</span><span class="st">&#39;Holt Winters Exponential Smoothing: Additive and Multiplicative Seasonality&#39;</span>)</span>
+<span id="cb51-4"><a href="exponential-smoothing.html#cb51-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/seasonal%20models-5.png" width="672" /></p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb52-1"><a href="exponential-smoothing.html#cb52-1" aria-hidden="true" tabindex="-1"></a>fit1<span class="op">=</span>ExponentialSmoothing(usair_p[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;mul&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit()</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\tsa\holtwinters.py:725: RuntimeWarning: invalid value encountered in less_equal
+##   loc = initial_p &lt;= lb
+## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\tsa\holtwinters.py:731: RuntimeWarning: invalid value encountered in greater_equal
+##   loc = initial_p &gt;= ub</code></pre>
+<div class="sourceCode" id="cb54"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb54-1"><a href="exponential-smoothing.html#cb54-1" aria-hidden="true" tabindex="-1"></a>fit1.summary()</span></code></pre></div>
+<table class="simpletable">
+<caption>ExponentialSmoothing Model Results</caption>
+<tr>
+  <th>Dep. Variable:</th>            <td>endog</td>        <th>  No. Observations:  </th>        <td>219</td>      
+</tr>
+<tr>
+  <th>Model:</th>            <td>ExponentialSmoothing</td> <th>  SSE                </th>   <td>632372040.907</td> 
+</tr>
+<tr>
+  <th>Optimized:</th>                <td>True</td>         <th>  AIC                </th>     <td>3289.826</td>    
+</tr>
+<tr>
+  <th>Trend:</th>                  <td>Additive</td>       <th>  BIC                </th>     <td>3344.051</td>    
+</tr>
+<tr>
+  <th>Seasonal:</th>            <td>Multiplicative</td>    <th>  AICC               </th>     <td>3293.246</td>    
+</tr>
+<tr>
+  <th>Seasonal Periods:</th>          <td>12</td>          <th>  Date:              </th> <td>Mon, 22 Aug 2022</td>
+</tr>
+<tr>
+  <th>Box-Cox:</th>                  <td>False</td>        <th>  Time:              </th>     <td>15:20:38</td>    
+</tr>
+<tr>
+  <th>Box-Cox Coeff.:</th>           <td>None</td>         <th>                     </th>         <td> </td>       
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+           <td></td>                  <th>coeff</th>                <th>code</th>               <th>optimized</th>     
+</tr>
+<tr>
+  <th>smoothing_level</th>    <td>           0.6227123</td> <td>               alpha</td> <td>                True</td>
+</tr>
+<tr>
+  <th>smoothing_slope</th>    <td>           0.0032747</td> <td>                beta</td> <td>                True</td>
+</tr>
+<tr>
+  <th>smoothing_seasonal</th> <td>            0.000000</td> <td>               gamma</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_level</th>      <td>           45010.105</td> <td>                 l.0</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_slope</th>      <td>           0.0102971</td> <td>                 b.0</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.0</th>  <td>           0.7587098</td> <td>                 s.0</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.1</th>  <td>           0.7406960</td> <td>                 s.1</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.2</th>  <td>           0.9018018</td> <td>                 s.2</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.3</th>  <td>           0.8586157</td> <td>                 s.3</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.4</th>  <td>           0.8766397</td> <td>                 s.4</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.5</th>  <td>           0.9231765</td> <td>                 s.5</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.6</th>  <td>           0.9660812</td> <td>                 s.6</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.7</th>  <td>           0.9558816</td> <td>                 s.7</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.8</th>  <td>           0.7747387</td> <td>                 s.8</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.9</th>  <td>           0.8474931</td> <td>                 s.9</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.10</th> <td>           0.8080530</td> <td>                s.10</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.11</th> <td>           0.8236796</td> <td>                s.11</td> <td>                True</td>
+</tr>
+</table>
+<div class="sourceCode" id="cb55"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb55-1"><a href="exponential-smoothing.html#cb55-1" aria-hidden="true" tabindex="-1"></a>fit2<span class="op">=</span>ExponentialSmoothing(usair_p[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit()</span>
+<span id="cb55-2"><a href="exponential-smoothing.html#cb55-2" aria-hidden="true" tabindex="-1"></a>fit2.summary()</span></code></pre></div>
+<table class="simpletable">
+<caption>ExponentialSmoothing Model Results</caption>
+<tr>
+  <th>Dep. Variable:</th>            <td>endog</td>        <th>  No. Observations:  </th>        <td>219</td>      
+</tr>
+<tr>
+  <th>Model:</th>            <td>ExponentialSmoothing</td> <th>  SSE                </th>   <td>779366955.393</td> 
+</tr>
+<tr>
+  <th>Optimized:</th>                <td>True</td>         <th>  AIC                </th>     <td>3335.598</td>    
+</tr>
+<tr>
+  <th>Trend:</th>                  <td>Additive</td>       <th>  BIC                </th>     <td>3389.823</td>    
+</tr>
+<tr>
+  <th>Seasonal:</th>               <td>Additive</td>       <th>  AICC               </th>     <td>3339.018</td>    
+</tr>
+<tr>
+  <th>Seasonal Periods:</th>          <td>12</td>          <th>  Date:              </th> <td>Mon, 22 Aug 2022</td>
+</tr>
+<tr>
+  <th>Box-Cox:</th>                  <td>False</td>        <th>  Time:              </th>     <td>15:20:38</td>    
+</tr>
+<tr>
+  <th>Box-Cox Coeff.:</th>           <td>None</td>         <th>                     </th>         <td> </td>       
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+           <td></td>                  <th>coeff</th>                <th>code</th>               <th>optimized</th>     
+</tr>
+<tr>
+  <th>smoothing_level</th>    <td>           0.4886167</td> <td>               alpha</td> <td>                True</td>
+</tr>
+<tr>
+  <th>smoothing_slope</th>    <td>          2.5882e-09</td> <td>                beta</td> <td>                True</td>
+</tr>
+<tr>
+  <th>smoothing_seasonal</th> <td>           0.2359358</td> <td>               gamma</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_level</th>      <td>           44992.621</td> <td>                 l.0</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_slope</th>      <td>           132.60863</td> <td>                 b.0</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.0</th>  <td>          -10634.382</td> <td>                 s.0</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.1</th>  <td>          -11430.110</td> <td>                 s.1</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.2</th>  <td>          -4468.8717</td> <td>                 s.2</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.3</th>  <td>          -6738.8862</td> <td>                 s.3</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.4</th>  <td>          -6604.9987</td> <td>                 s.4</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.5</th>  <td>          -4214.4889</td> <td>                 s.5</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.6</th>  <td>          -2689.8742</td> <td>                 s.6</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.7</th>  <td>          -484.79161</td> <td>                 s.7</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.8</th>  <td>          -9405.1624</td> <td>                 s.8</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.9</th>  <td>          -6707.8316</td> <td>                 s.9</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.10</th> <td>          -8821.8270</td> <td>                s.10</td> <td>                True</td>
+</tr>
+<tr>
+  <th>initial_seasons.11</th> <td>          -8323.4613</td> <td>                s.11</td> <td>                True</td>
+</tr>
+</table>
+<div class="sourceCode" id="cb56"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb56-1"><a href="exponential-smoothing.html#cb56-1" aria-hidden="true" tabindex="-1"></a>fcast1<span class="op">=</span>fit1.forecast(<span class="dv">24</span>)</span>
+<span id="cb56-2"><a href="exponential-smoothing.html#cb56-2" aria-hidden="true" tabindex="-1"></a>fcast2<span class="op">=</span>fit2.forecast(<span class="dv">24</span>)</span>
+<span id="cb56-3"><a href="exponential-smoothing.html#cb56-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-4"><a href="exponential-smoothing.html#cb56-4" aria-hidden="true" tabindex="-1"></a>ax<span class="op">=</span>usair_p[<span class="st">&quot;Passengers&quot;</span>].plot(color<span class="op">=</span><span class="st">&quot;black&quot;</span>,figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
+<span id="cb56-5"><a href="exponential-smoothing.html#cb56-5" aria-hidden="true" tabindex="-1"></a>fcast1.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb56-6"><a href="exponential-smoothing.html#cb56-6" aria-hidden="true" tabindex="-1"></a>fcast2.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;orange&quot;</span>)</span>
+<span id="cb56-7"><a href="exponential-smoothing.html#cb56-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/seasonal%20models-6.png" width="1152" /></p>
 
 </div>
 </div>
