@@ -184,3 +184,73 @@ error=mean(abs(test-ets.forecast.passenger$mean))
 error
 ```
 
+## Python Code for Exponential Smoothing
+
+The following code produces the simple exponential smoothing model in Python and predicts Steel Imports (in tons).
+
+```{python simple exponential smoothing}
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib import pyplot
+from statsmodels.tsa.api import ExponentialSmoothing, SimpleExpSmoothing, Holt
+
+steel=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\steel.csv")
+df=pd.date_range(start='1/1/1984', end='12/1/1991', freq='MS')
+steel.index=pd.to_datetime(df)
+
+fit = SimpleExpSmoothing(steel['steelshp']).fit()
+fit.params['smoothing_level']
+fcast = fit.forecast(24)
+fcast
+plt.plot(steel["steelshp"],color="black")
+plt.plot(fcast,color="blue")
+plt.show()
+```
+
+
+The Holt models in Python:
+
+```{python holt models}
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib import pyplot
+from statsmodels.tsa.api import ExponentialSmoothing, SimpleExpSmoothing, Holt
+
+steel=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\steel.csv")
+df=pd.date_range(start='1/1/1984', end='12/1/1991', freq='MS')
+steel.index=pd.to_datetime(df)
+
+fit1 = Holt(steel['steelshp']).fit()
+fit1.summary()
+fcast1 = fit1.forecast(24)
+fcast1
+fit2 = Holt(steel['steelshp'],exponential=True).fit()
+fit2.summary()
+fcast2 = fit2.forecast(24)
+fcast2
+fit3 = Holt(steel['steelshp'],damped=True).fit()
+fit3.summary()
+fcast3 = fit3.forecast(24)
+fcast3
+fit4 = Holt(steel['steelshp'],exponential=True,damped=True).fit()
+fit4.summary()
+fcast4 = fit4.forecast(24)
+fcast4
+
+ax=steel.plot(color="black",figsize=(12,8))
+fcast1.plot(ax=ax,color="blue")
+fcast2.plot(ax=ax,color="orange")
+fcast3.plot(ax=ax,color="purple")
+fcast4.plot(ax=ax,color="gray")
+plt.show()
+
+
+plt.show()
+
+
+```
+

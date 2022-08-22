@@ -151,6 +151,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.3" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#holt-winters"><i class="fa fa-check"></i><b>3.3</b> Holt-Winters</a></li>
 <li class="chapter" data-level="3.4" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#evaluating-forecasts"><i class="fa fa-check"></i><b>3.4</b> Evaluating forecasts</a></li>
 <li class="chapter" data-level="3.5" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#ets"><i class="fa fa-check"></i><b>3.5</b> ETS</a></li>
+<li class="chapter" data-level="3.6" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#python-code-for-exponential-smoothing"><i class="fa fa-check"></i><b>3.6</b> Python Code for Exponential Smoothing</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="arima.html"><a href="arima.html"><i class="fa fa-check"></i><b>4</b> ARIMA</a>
 <ul>
@@ -247,6 +248,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>
