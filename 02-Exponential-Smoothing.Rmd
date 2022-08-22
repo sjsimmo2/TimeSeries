@@ -286,4 +286,30 @@ fcast1.plot(ax=ax,color="blue")
 fcast2.plot(ax=ax,color="orange")
 plt.show()
 ```
+Evaluating forecasts in Python (and setting aside training/validation data):
+
+```{python Forecasts and train}
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import pyplot
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.seasonal import STL
+usair_p=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\usairlines.csv")
+df=pd.date_range(start='1/1/1990', end='3/1/2008', freq='MS')
+usair_p.index=pd.to_datetime(df)
+
+train=usair_p.iloc[:207]
+test=usair_p.iloc[207:]
+
+fit=ExponentialSmoothing(train['Passengers'],trend='add',seasonal='mul',seasonal_periods=12).fit()
+
+fcast=fit.forecast(12)
+error=test['Passengers']-fcast
+MAE=np.mean(abs(error))
+MAE
+MAPE=np.mean(abs(error)/test['Passengers'])
+MAPE
+```
 
