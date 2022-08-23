@@ -24,7 +24,7 @@ The data sets that you will need are as follows (be sure to put the correct loca
 
 ```{r data sets}
 
-file.dir = "Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\" 
+file.dir = "https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/" 
 input.file1 = "usairlines.csv"
 input.file2 = "steel.csv"
 input.file3 = "leadyear.csv"
@@ -36,14 +36,14 @@ input.file8 = "hurrican.csv"
 
 # Reads the data at specified directory
 # If the file directory is incorrect, then this won't run
-USAirlines = read.table(paste(file.dir, input.file1,sep = ""),sep=",", header=T)
-Steel = read.table(paste(file.dir, input.file2, sep = ""),sep=",",header=T)
-Lead.Year = read.table(paste(file.dir, input.file3, sep = ""),sep=",",header=T)
-Ebay = read.table(paste(file.dir, input.file4, sep = ""),sep=",",header=T)
-Quotes= read.table(paste(file.dir, input.file5, sep = ""),sep=",",header=T)
-Y= read.table(paste(file.dir, input.file6, sep = ""),sep=",",header=T)
-x=read.table(paste(file.dir, input.file7, sep = ""),sep=",",header=T)
-hurricane=read.table(paste(file.dir, input.file8, sep = ""),sep=",",header=T)
+USAirlines = read.csv(paste(file.dir, input.file1,sep = ""))
+Steel = read.csv(paste(file.dir, input.file2, sep = ""))
+Lead.Year = read.csv(paste(file.dir, input.file3, sep = ""))
+Ebay = read.csv(paste(file.dir, input.file4, sep = ""))
+Quotes= read.csv(paste(file.dir, input.file5, sep = ""))
+Y= read.csv(paste(file.dir, input.file6, sep = ""))
+x=read.csv(paste(file.dir, input.file7, sep = ""))
+hurricane=read.csv(paste(file.dir, input.file8, sep = ""))
 ```
 
 
