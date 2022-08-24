@@ -480,6 +480,7 @@ from statsmodels.tsa.stattools import adfuller
 from statsmodels.graphics.tsaplots import plot_acf
 from statsmodels.graphics.tsaplots import plot_pacf
 from statsmodels.tsa.arima.model import ARIMA
+#import pmdarima as pm
 
 
 hurricane=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\hurrican.csv")
@@ -491,10 +492,139 @@ max2=max_velocity.dropna()
 result=adfuller(max2)
 print(f'ADF p-value: {result[1]}')
 
-### Looks stationary (no trend and no random walk)
-## This version needs a stationary time series!
-res1 = sm.tsa.arma_order_select_ic(max2, max_ar=5, max_ma=5,ic="bic", trend="c")
-res1.bic_min_order
+### Same result as auto.arima in R!
+#model1=pm.auto_arima(max2, start_p=0,start_q=0,max_p=5,max_q=5,seasonal=False)
+#model1.summary()
 
+# Force d=0
+#model2=pm.auto_arima(max2, start_p=0,start_q=0,max_p=5,max_q=5,d=0,seasonal=False)
+#model2.summary()
 
 ```
+
+## SAS Code for ARMA/ARIMA
+
+
+_AUGMENTED DICKEY-FULLER TESTING_
+
+proc arima data=Time.fpp_insurance plot=all; \  
+	identify var=quotes nlag=10 stationarity=(adf=2); \  
+		identify var=quotes(1) nlag=10 stationarity=(adf=2); \  
+		run;
+quit;
+
+_CORRELATION FUNCTIONS_ \
+
+_Notice no model statement!_ \  
+
+proc arima data=Time.ar2 plot(unpack)=all; \  
+	identify var=y nlag=10 outcov=Corr; \  
+		estimate method=ML; \  
+		run;
+quit;
+
+_BUILDING AN AUTOREGRESSIVE MODEL_
+
+_Fit an AR2 model_ \  
+
+proc arima data=Time.AR2 plot=all; \  
+	identify var=y nlag=10; \  
+		estimate p=2 method=ML; \  
+		run;
+quit; \  
+
+
+_Add another estimate statement_ 
+proc arima data=Time.AR2 plot=all;
+	identify var=y nlag=10;
+	estimate p=(2) method=ML;
+	estimate p=(1,2,4) method=ML;
+run;
+quit; \  
+
+
+_BUILDING A MOVING AVERAGE MODEL_
+
+proc arima data=Time.ma2; \  
+	identify var=x; \  
+		estimate q=2 method=ML; \  
+		run;
+quit; \  
+
+_Need to check for how to take care of trend_
+
+proc arima data=Time.Ebay9899 plot=all; \  
+	identify var=DailyHigh nlag=10 stationarity=(adf=2); \  
+	run;
+quit;
+
+
+/* It is a random walk!!  The way to model a random walk is by using differences */
+
+proc arima data=Time.Ebay9899 plot=all;
+	identify var=DailyHigh(1) nlag=10 stationarity=(adf=2);
+run;
+quit;
+
+*IF it would have been deterministic...CAUTION, it is NOT deterministic!!
+
+*You would need to create an "x" variable for time;
+data newebay;
+set Time.Ebay9899;
+time=_n_;
+run;
+
+* Keep in mind that this data is not deterministic!!;
+ 
+proc arima data=newebay plot=all;
+	identify var=DailyHigh crosscorr=time;
+	estimate input=time;
+run;
+quit;
+
+
+
+/* BUILDING AN AUTOREGRESSIVE MOVING AVERAGE MODEL ---------- 
+   (AUTOMATIC SELECTION TECHNIQUES)                ---------- */
+
+
+* Fit an ARIMA model; 
+proc arima data=Time.Hurricanes plot=all;
+	identify var=MeanVMax nlag=12 stationarity=(adf=2);
+run;
+quit;
+
+* Model identification with minimum information criterion (MINIC); 
+proc arima data=Time.Hurricanes plot=all;
+	identify var=MeanVMax nlag=12 minic P=(0:12) Q=(0:12);
+run;
+quit;
+
+* Model identification with smallest canonical correlation (SCAN); 
+proc arima data=Time.Hurricanes plot=all;
+	identify var=MeanVMax nlag=12 scan P=(0:12) Q=(0:12);
+run;
+quit;
+
+* Model identificaiton with extended sample autocorrelation function (ESACF); 
+proc arima data=Time.Hurricanes plot=all;
+	identify var=MeanVMax nlag=12 esacf P=(0:12) Q=(0:12);
+run;
+quit;
+
+* Create estimates with our ARIMA model p=2, q=3; 
+proc arima data=Time.Hurricanes plot=all;
+	identify var=MeanVMax nlag=12;
+	estimate p=2 q=3 method=ML;
+run;
+quit;
+
+/* FORECASTING ---------------------------------------------- */
+proc arima data=Time.Hurricanes plot=all;
+	identify var=MeanVMax nlag=10 ;
+	estimate p=2 q=3 method=ML;
+	forecast lead=10;
+run;
+quit;
+
+
