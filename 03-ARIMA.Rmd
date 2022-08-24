@@ -1,8 +1,6 @@
 # ARIMA
 
 
-
-
 ```{r libraries, message=FALSE,echo=FALSE}
 library(tseries)
 library(forecast)
@@ -16,7 +14,7 @@ library(ggplot2)
 library(seasonalview)
 library(aTSA)
 library(imputeTS)
-file.dir = "Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\" 
+file.dir = "https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/" 
 input.file1 = "usairlines.csv"
 input.file2 = "steel.csv"
 input.file3 = "leadyear.csv"
@@ -28,14 +26,14 @@ input.file8 = "hurrican.csv"
 
 # Reads the data at specified directory
 # If the file directory is incorrect, then this won't run
-USAirlines = read.table(paste(file.dir, input.file1,sep = ""),sep=",", header=T)
-Steel = read.table(paste(file.dir, input.file2, sep = ""),sep=",",header=T)
-Lead.Year = read.table(paste(file.dir, input.file3, sep = ""),sep=",",header=T)
-Ebay = read.table(paste(file.dir, input.file4, sep = ""),sep=",",header=T)
-Quotes= read.table(paste(file.dir, input.file5, sep = ""),sep=",",header=T)
-Y= read.table(paste(file.dir, input.file6, sep = ""),sep=",",header=T)
-x=read.table(paste(file.dir, input.file7, sep = ""),sep=",",header=T)
-hurricane=read.table(paste(file.dir, input.file8, sep = ""),sep=",",header=T)
+USAirlines = read.csv(paste(file.dir, input.file1,sep = ""))
+Steel = read.csv(paste(file.dir, input.file2, sep = ""))
+Lead.Year = read.csv(paste(file.dir, input.file3, sep = ""))
+Ebay = read.csv(paste(file.dir, input.file4, sep = ""))
+Quotes= read.csv(paste(file.dir, input.file5, sep = ""))
+Y= read.csv(paste(file.dir, input.file6, sep = ""))
+x=read.csv(paste(file.dir, input.file7, sep = ""))
+hurricane=read.csv(paste(file.dir, input.file8, sep = ""))
 SteelShp <- ts(Steel$steelshp, start = 1984, frequency = 12)
 Passenger <- ts(USAirlines$Passengers, start = 1990, frequency =12)
 library(reticulate)
@@ -357,3 +355,146 @@ autoplot(forecast::forecast(model3, h = 10))
 
 ```
 
+
+## Python Code for ARMA/ARIMA models
+
+
+```{python ADF, correlation plots and ARIMA}
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib import pyplot
+from pandas import DataFrame
+from statsmodels.tsa.stattools import adfuller
+from statsmodels.graphics.tsaplots import plot_acf
+from statsmodels.graphics.tsaplots import plot_pacf
+from statsmodels.tsa.arima.model import ARIMA
+
+quotes=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\fpp_insurance.csv")
+y=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\ar2.csv")
+
+result=adfuller(quotes["Quotes"])
+print(f'ADF p-value: {result[1]}')
+
+plot_acf(quotes["Quotes"],lags=12)
+pyplot.show()
+plot_pacf(quotes["Quotes"],lags=12)
+pyplot.show
+
+model = ARIMA(y, order=(2,0,0))
+model_fit = model.fit()
+print(model_fit.summary())
+
+residuals = DataFrame(model_fit.resid)
+residuals.plot()
+pyplot.show()
+print(residuals.describe())
+
+plot_acf(residuals,lags=12)
+pyplot.show()
+plot_pacf(residuals,lags=12)
+pyplot.show()
+```
+
+
+Checking for white noise:
+The first value in the Ljung-Box test is the test statistic and the second value is the p-value.
+
+```{python white noise with Ljung-Box}
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib import pyplot
+from pandas import DataFrame
+import statsmodels.api as sm
+from statsmodels.tsa.stattools import adfuller
+from statsmodels.graphics.tsaplots import plot_acf
+from statsmodels.graphics.tsaplots import plot_pacf
+from statsmodels.tsa.arima.model import ARIMA
+
+quotes=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\fpp_insurance.csv")
+y=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\ar2.csv")
+
+
+model = ARIMA(y, order=(2,0,0))
+model_fit = model.fit()
+print(model_fit.summary())
+
+lag_test=[3,4,5,6,7,8,9,10]
+
+for x in lag_test:
+  sm.stats.acorr_ljungbox(model_fit.resid, lags=[x], model_df=2)
+  
+```
+
+Trending series...
+
+```{python Trending series}
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib import pyplot
+from pandas import DataFrame
+import statsmodels.api as sm
+from statsmodels.tsa.stattools import adfuller
+from statsmodels.graphics.tsaplots import plot_acf
+from statsmodels.graphics.tsaplots import plot_pacf
+from statsmodels.tsa.arima.model import ARIMA
+
+
+Daily_High_all=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\ebay9899.csv")
+Daily_High=Daily_High_all["DailyHigh"]
+Daily_High2=Daily_High.interpolate(option='spline')
+result=adfuller(Daily_High2)
+print(f'ADF p-value: {result[1]}')
+
+##Fitting a Random Walk
+model = ARIMA(y, order=(0,1,0))
+model_fit = model.fit()
+
+###NOT correct, but if you wanted to fit a regression to data
+x=pd.Series(range(318))
+model2=ARIMA(endog=Daily_High2,exog=x,order=[0,0,0])
+model2_fit=model2.fit()
+model2_fit
+
+### Now you can model residuals from the regression (if that is the route you took)
+  
+```
+
+
+Fitting ARIMA models:
+
+```{python fitting ARIMA in Python}
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib import pyplot
+from pandas import DataFrame
+import statsmodels.api as sm
+from statsmodels.tsa.stattools import adfuller
+from statsmodels.graphics.tsaplots import plot_acf
+from statsmodels.graphics.tsaplots import plot_pacf
+from statsmodels.tsa.arima.model import ARIMA
+
+
+hurricane=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\hurrican.csv")
+max_velocity=hurricane["MeanVMax"]
+max2=max_velocity.dropna()
+
+### Testing stationarity 
+
+result=adfuller(max2)
+print(f'ADF p-value: {result[1]}')
+
+### Looks stationary (no trend and no random walk)
+## This version needs a stationary time series!
+res1 = sm.tsa.arma_order_select_ic(max2, max_ar=5, max_ma=5,ic="bic", trend="c")
+res1.bic_min_order
+
+
+```

@@ -21,3 +21,4 @@ python-code-and-results-for-time-series-plot
 sas-code-for-time-series-plot-and-decomposition
 python-code-for-exponential-smoothing
 sas-code-for-exponential-smoothing-models
+python-code-for-armaarima-models

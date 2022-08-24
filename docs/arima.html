@@ -23,7 +23,7 @@
 <meta name="author" content="by Dr. Susan Simmons" />
 
 
-<meta name="date" content="2022-08-19" />
+<meta name="date" content="2022-08-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -140,7 +140,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#time-series-decomposition"><i class="fa fa-check"></i><b>2.1</b> Time series decomposition</a></li>
-<li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#self-study"><i class="fa fa-check"></i><b>2.2</b> Self-study</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#python-code-and-results-for-time-series-plot"><i class="fa fa-check"></i><b>2.2</b> Python code and results for Time Series plot</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction.html"><a href="introduction.html#sas-code-for-time-series-plot-and-decomposition"><i class="fa fa-check"></i><b>2.3</b> SAS code for time series plot and decomposition</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction.html"><a href="introduction.html#self-study"><i class="fa fa-check"></i><b>2.4</b> Self-study</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html"><i class="fa fa-check"></i><b>3</b> Exponential Smoothing</a>
 <ul>
@@ -149,6 +151,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.3" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#holt-winters"><i class="fa fa-check"></i><b>3.3</b> Holt-Winters</a></li>
 <li class="chapter" data-level="3.4" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#evaluating-forecasts"><i class="fa fa-check"></i><b>3.4</b> Evaluating forecasts</a></li>
 <li class="chapter" data-level="3.5" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#ets"><i class="fa fa-check"></i><b>3.5</b> ETS</a></li>
+<li class="chapter" data-level="3.6" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#python-code-for-exponential-smoothing"><i class="fa fa-check"></i><b>3.6</b> Python Code for Exponential Smoothing</a></li>
+<li class="chapter" data-level="3.7" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#sas-code-for-exponential-smoothing-models"><i class="fa fa-check"></i><b>3.7</b> SAS Code for Exponential Smoothing Models</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="arima.html"><a href="arima.html"><i class="fa fa-check"></i><b>4</b> ARIMA</a>
 <ul>
@@ -159,6 +163,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.5" data-path="arima.html"><a href="arima.html#white-noise"><i class="fa fa-check"></i><b>4.5</b> White noise</a></li>
 <li class="chapter" data-level="4.6" data-path="arima.html"><a href="arima.html#trending-series"><i class="fa fa-check"></i><b>4.6</b> Trending Series</a></li>
 <li class="chapter" data-level="4.7" data-path="arima.html"><a href="arima.html#fitting-arima-models"><i class="fa fa-check"></i><b>4.7</b> Fitting ARIMA models</a></li>
+<li class="chapter" data-level="4.8" data-path="arima.html"><a href="arima.html#python-code-for-armaarima-models"><i class="fa fa-check"></i><b>4.8</b> Python Code for ARMA/ARIMA models</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -585,6 +590,227 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 <p><img src="bookdownproj_files/figure-html/forecast%20ARIMA-2.png" width="672" /></p>
 <div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="arima.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(forecast<span class="sc">::</span><span class="fu">forecast</span>(model3, <span class="at">h =</span> <span class="dv">10</span>))</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/forecast%20ARIMA-3.png" width="672" /></p>
+</div>
+<div id="python-code-for-armaarima-models" class="section level2 hasAnchor" number="4.8">
+<h2><span class="header-section-number">4.8</span> Python Code for ARMA/ARIMA models<a href="arima.html#python-code-for-armaarima-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb61"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb61-1"><a href="arima.html#cb61-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-2"><a href="arima.html#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb61-3"><a href="arima.html#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb61-4"><a href="arima.html#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb61-5"><a href="arima.html#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
+<span id="cb61-6"><a href="arima.html#cb61-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pandas <span class="im">import</span> DataFrame</span>
+<span id="cb61-7"><a href="arima.html#cb61-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.stattools <span class="im">import</span> adfuller</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\lib\site-packages\scipy\__init__.py:138: UserWarning: A NumPy version &gt;=1.16.5 and &lt;1.23.0 is required for this version of SciPy (detected version 1.23.2)
+##   warnings.warn(f&quot;A NumPy version &gt;={np_minversion} and &lt;{np_maxversion} is required for this version of &quot;</code></pre>
+<div class="sourceCode" id="cb63"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb63-1"><a href="arima.html#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_acf</span>
+<span id="cb63-2"><a href="arima.html#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_pacf</span>
+<span id="cb63-3"><a href="arima.html#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima.model <span class="im">import</span> ARIMA</span>
+<span id="cb63-4"><a href="arima.html#cb63-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-5"><a href="arima.html#cb63-5" aria-hidden="true" tabindex="-1"></a>quotes<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">fpp_insurance.csv&quot;</span>)</span>
+<span id="cb63-6"><a href="arima.html#cb63-6" aria-hidden="true" tabindex="-1"></a>y<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">ar2.csv&quot;</span>)</span>
+<span id="cb63-7"><a href="arima.html#cb63-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-8"><a href="arima.html#cb63-8" aria-hidden="true" tabindex="-1"></a>result<span class="op">=</span>adfuller(quotes[<span class="st">&quot;Quotes&quot;</span>])</span>
+<span id="cb63-9"><a href="arima.html#cb63-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;ADF p-value: </span><span class="sc">{</span>result[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">&#39;</span>)</span></code></pre></div>
+<pre><code>## ADF p-value: 0.010194998749727959</code></pre>
+<div class="sourceCode" id="cb65"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb65-1"><a href="arima.html#cb65-1" aria-hidden="true" tabindex="-1"></a>plot_acf(quotes[<span class="st">&quot;Quotes&quot;</span>],lags<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb65-2"><a href="arima.html#cb65-2" aria-hidden="true" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/ADF,%20correlation%20plots%20and%20ARIMA-1.png" width="672" /></p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb66-1"><a href="arima.html#cb66-1" aria-hidden="true" tabindex="-1"></a>plot_pacf(quotes[<span class="st">&quot;Quotes&quot;</span>],lags<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb66-2"><a href="arima.html#cb66-2" aria-hidden="true" tabindex="-1"></a>pyplot.show</span></code></pre></div>
+<pre><code>## &lt;function make_python_function.&lt;locals&gt;.python_function at 0x00000000630BA940&gt;</code></pre>
+<div class="sourceCode" id="cb68"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb68-1"><a href="arima.html#cb68-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> ARIMA(y, order<span class="op">=</span>(<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb68-2"><a href="arima.html#cb68-2" aria-hidden="true" tabindex="-1"></a>model_fit <span class="op">=</span> model.fit()</span>
+<span id="cb68-3"><a href="arima.html#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model_fit.summary())</span></code></pre></div>
+<pre><code>##                                SARIMAX Results                                
+## ==============================================================================
+## Dep. Variable:                      Y   No. Observations:                 1000
+## Model:                 ARIMA(2, 0, 0)   Log Likelihood               -3695.014
+## Date:                Wed, 24 Aug 2022   AIC                           7398.028
+## Time:                        10:54:51   BIC                           7417.659
+## Sample:                             0   HQIC                          7405.489
+##                                - 1000                                         
+## Covariance Type:                  opg                                         
+## ==============================================================================
+##                  coef    std err          z      P&gt;|z|      [0.025      0.975]
+## ------------------------------------------------------------------------------
+## const         -0.1365      0.420     -0.325      0.745      -0.960       0.687
+## ar.L1          0.6406      0.030     21.165      0.000       0.581       0.700
+## ar.L2         -0.3759      0.030    -12.466      0.000      -0.435      -0.317
+## sigma2        94.7853      4.193     22.604      0.000      86.567     103.004
+## ===================================================================================
+## Ljung-Box (Q):                       28.18   Jarque-Bera (JB):                 0.26
+## Prob(Q):                              0.92   Prob(JB):                         0.88
+## Heteroskedasticity (H):               1.04   Skew:                            -0.03
+## Prob(H) (two-sided):                  0.73   Kurtosis:                         3.05
+## ===================================================================================
+## 
+## Warnings:
+## [1] Covariance matrix calculated using the outer product of gradients (complex-step).</code></pre>
+<div class="sourceCode" id="cb70"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb70-1"><a href="arima.html#cb70-1" aria-hidden="true" tabindex="-1"></a>residuals <span class="op">=</span> DataFrame(model_fit.resid)</span>
+<span id="cb70-2"><a href="arima.html#cb70-2" aria-hidden="true" tabindex="-1"></a>residuals.plot()</span>
+<span id="cb70-3"><a href="arima.html#cb70-3" aria-hidden="true" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/ADF,%20correlation%20plots%20and%20ARIMA-2.png" width="672" /></p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb71-1"><a href="arima.html#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(residuals.describe())</span></code></pre></div>
+<pre><code>##                  0
+## count  1000.000000
+## mean     -0.001313
+## std       9.747534
+## min     -33.282545
+## 25%      -6.475670
+## 50%       0.117391
+## 75%       6.510636
+## max      30.318100</code></pre>
+<div class="sourceCode" id="cb73"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb73-1"><a href="arima.html#cb73-1" aria-hidden="true" tabindex="-1"></a>plot_acf(residuals,lags<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb73-2"><a href="arima.html#cb73-2" aria-hidden="true" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/ADF,%20correlation%20plots%20and%20ARIMA-3.png" width="672" /></p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb74-1"><a href="arima.html#cb74-1" aria-hidden="true" tabindex="-1"></a>plot_pacf(residuals,lags<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb74-2"><a href="arima.html#cb74-2" aria-hidden="true" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/ADF,%20correlation%20plots%20and%20ARIMA-4.png" width="672" /></p>
+<p>Checking for white noise:
+The first value in the Ljung-Box test is the test statistic and the second value is the p-value.</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb75-1"><a href="arima.html#cb75-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-2"><a href="arima.html#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb75-3"><a href="arima.html#cb75-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb75-4"><a href="arima.html#cb75-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb75-5"><a href="arima.html#cb75-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
+<span id="cb75-6"><a href="arima.html#cb75-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pandas <span class="im">import</span> DataFrame</span>
+<span id="cb75-7"><a href="arima.html#cb75-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb75-8"><a href="arima.html#cb75-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.stattools <span class="im">import</span> adfuller</span>
+<span id="cb75-9"><a href="arima.html#cb75-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_acf</span>
+<span id="cb75-10"><a href="arima.html#cb75-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_pacf</span>
+<span id="cb75-11"><a href="arima.html#cb75-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima.model <span class="im">import</span> ARIMA</span>
+<span id="cb75-12"><a href="arima.html#cb75-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-13"><a href="arima.html#cb75-13" aria-hidden="true" tabindex="-1"></a>quotes<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">fpp_insurance.csv&quot;</span>)</span>
+<span id="cb75-14"><a href="arima.html#cb75-14" aria-hidden="true" tabindex="-1"></a>y<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">ar2.csv&quot;</span>)</span>
+<span id="cb75-15"><a href="arima.html#cb75-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-16"><a href="arima.html#cb75-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-17"><a href="arima.html#cb75-17" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> ARIMA(y, order<span class="op">=</span>(<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb75-18"><a href="arima.html#cb75-18" aria-hidden="true" tabindex="-1"></a>model_fit <span class="op">=</span> model.fit()</span>
+<span id="cb75-19"><a href="arima.html#cb75-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model_fit.summary())</span></code></pre></div>
+<pre><code>##                                SARIMAX Results                                
+## ==============================================================================
+## Dep. Variable:                      Y   No. Observations:                 1000
+## Model:                 ARIMA(2, 0, 0)   Log Likelihood               -3695.014
+## Date:                Wed, 24 Aug 2022   AIC                           7398.028
+## Time:                        10:54:53   BIC                           7417.659
+## Sample:                             0   HQIC                          7405.489
+##                                - 1000                                         
+## Covariance Type:                  opg                                         
+## ==============================================================================
+##                  coef    std err          z      P&gt;|z|      [0.025      0.975]
+## ------------------------------------------------------------------------------
+## const         -0.1365      0.420     -0.325      0.745      -0.960       0.687
+## ar.L1          0.6406      0.030     21.165      0.000       0.581       0.700
+## ar.L2         -0.3759      0.030    -12.466      0.000      -0.435      -0.317
+## sigma2        94.7853      4.193     22.604      0.000      86.567     103.004
+## ===================================================================================
+## Ljung-Box (Q):                       28.18   Jarque-Bera (JB):                 0.26
+## Prob(Q):                              0.92   Prob(JB):                         0.88
+## Heteroskedasticity (H):               1.04   Skew:                            -0.03
+## Prob(H) (two-sided):                  0.73   Kurtosis:                         3.05
+## ===================================================================================
+## 
+## Warnings:
+## [1] Covariance matrix calculated using the outer product of gradients (complex-step).</code></pre>
+<div class="sourceCode" id="cb77"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb77-1"><a href="arima.html#cb77-1" aria-hidden="true" tabindex="-1"></a>lag_test<span class="op">=</span>[<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">10</span>]</span>
+<span id="cb77-2"><a href="arima.html#cb77-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-3"><a href="arima.html#cb77-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> lag_test:</span>
+<span id="cb77-4"><a href="arima.html#cb77-4" aria-hidden="true" tabindex="-1"></a>  sm.stats.acorr_ljungbox(model_fit.resid, lags<span class="op">=</span>[x], model_df<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb77-5"><a href="arima.html#cb77-5" aria-hidden="true" tabindex="-1"></a>  </span></code></pre></div>
+<pre><code>## (array([0.31202552]), array([0.5764399]))
+## (array([0.48801976]), array([0.78347989]))
+## (array([0.51499794]), array([0.91558429]))
+## (array([4.11533556]), array([0.39062185]))
+## (array([4.12802033]), array([0.53113539]))
+## (array([4.25692091]), array([0.64195223]))
+## (array([4.31375708]), array([0.74301224]))
+## (array([6.36091615]), array([0.60687265]))
+## 
+## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\stats\diagnostic.py:524: FutureWarning: The value returned will change to a single DataFrame after 0.12 is released.  Set return_df to True to use to return a DataFrame now.  Set return_df to False to silence this warning.
+##   warnings.warn(msg, FutureWarning)</code></pre>
+<p>Trending series…</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb79-1"><a href="arima.html#cb79-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-2"><a href="arima.html#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb79-3"><a href="arima.html#cb79-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb79-4"><a href="arima.html#cb79-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb79-5"><a href="arima.html#cb79-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
+<span id="cb79-6"><a href="arima.html#cb79-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pandas <span class="im">import</span> DataFrame</span>
+<span id="cb79-7"><a href="arima.html#cb79-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb79-8"><a href="arima.html#cb79-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.stattools <span class="im">import</span> adfuller</span>
+<span id="cb79-9"><a href="arima.html#cb79-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_acf</span>
+<span id="cb79-10"><a href="arima.html#cb79-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_pacf</span>
+<span id="cb79-11"><a href="arima.html#cb79-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima.model <span class="im">import</span> ARIMA</span>
+<span id="cb79-12"><a href="arima.html#cb79-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-13"><a href="arima.html#cb79-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-14"><a href="arima.html#cb79-14" aria-hidden="true" tabindex="-1"></a>Daily_High_all<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">ebay9899.csv&quot;</span>)</span>
+<span id="cb79-15"><a href="arima.html#cb79-15" aria-hidden="true" tabindex="-1"></a>Daily_High<span class="op">=</span>Daily_High_all[<span class="st">&quot;DailyHigh&quot;</span>]</span>
+<span id="cb79-16"><a href="arima.html#cb79-16" aria-hidden="true" tabindex="-1"></a>Daily_High2<span class="op">=</span>Daily_High.interpolate(option<span class="op">=</span><span class="st">&#39;spline&#39;</span>)</span>
+<span id="cb79-17"><a href="arima.html#cb79-17" aria-hidden="true" tabindex="-1"></a>result<span class="op">=</span>adfuller(Daily_High2)</span>
+<span id="cb79-18"><a href="arima.html#cb79-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;ADF p-value: </span><span class="sc">{</span>result[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">&#39;</span>)</span>
+<span id="cb79-19"><a href="arima.html#cb79-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-20"><a href="arima.html#cb79-20" aria-hidden="true" tabindex="-1"></a><span class="co">##Fitting a Random Walk</span></span></code></pre></div>
+<pre><code>## ADF p-value: 0.2841870272737812</code></pre>
+<div class="sourceCode" id="cb81"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb81-1"><a href="arima.html#cb81-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> ARIMA(y, order<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>))</span>
+<span id="cb81-2"><a href="arima.html#cb81-2" aria-hidden="true" tabindex="-1"></a>model_fit <span class="op">=</span> model.fit()</span>
+<span id="cb81-3"><a href="arima.html#cb81-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-4"><a href="arima.html#cb81-4" aria-hidden="true" tabindex="-1"></a><span class="co">###NOT correct, but if you wanted to fit a regression to data</span></span>
+<span id="cb81-5"><a href="arima.html#cb81-5" aria-hidden="true" tabindex="-1"></a>x<span class="op">=</span>pd.Series(<span class="bu">range</span>(<span class="dv">318</span>))</span>
+<span id="cb81-6"><a href="arima.html#cb81-6" aria-hidden="true" tabindex="-1"></a>model2<span class="op">=</span>ARIMA(endog<span class="op">=</span>Daily_High2,exog<span class="op">=</span>x,order<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>])</span>
+<span id="cb81-7"><a href="arima.html#cb81-7" aria-hidden="true" tabindex="-1"></a>model2_fit<span class="op">=</span>model2.fit()</span>
+<span id="cb81-8"><a href="arima.html#cb81-8" aria-hidden="true" tabindex="-1"></a>model2_fit</span>
+<span id="cb81-9"><a href="arima.html#cb81-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-10"><a href="arima.html#cb81-10" aria-hidden="true" tabindex="-1"></a><span class="co">### Now you can model residuals from the regression (if that is the route you took)</span></span>
+<span id="cb81-11"><a href="arima.html#cb81-11" aria-hidden="true" tabindex="-1"></a>  </span></code></pre></div>
+<pre><code>## &lt;statsmodels.tsa.arima.model.ARIMAResultsWrapper object at 0x0000000067D4C1F0&gt;</code></pre>
+<p>Fitting ARIMA models:</p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb83-1"><a href="arima.html#cb83-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-2"><a href="arima.html#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb83-3"><a href="arima.html#cb83-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb83-4"><a href="arima.html#cb83-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb83-5"><a href="arima.html#cb83-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
+<span id="cb83-6"><a href="arima.html#cb83-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pandas <span class="im">import</span> DataFrame</span>
+<span id="cb83-7"><a href="arima.html#cb83-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb83-8"><a href="arima.html#cb83-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.stattools <span class="im">import</span> adfuller</span>
+<span id="cb83-9"><a href="arima.html#cb83-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_acf</span>
+<span id="cb83-10"><a href="arima.html#cb83-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_pacf</span>
+<span id="cb83-11"><a href="arima.html#cb83-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima.model <span class="im">import</span> ARIMA</span>
+<span id="cb83-12"><a href="arima.html#cb83-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-13"><a href="arima.html#cb83-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-14"><a href="arima.html#cb83-14" aria-hidden="true" tabindex="-1"></a>hurricane<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">hurrican.csv&quot;</span>)</span>
+<span id="cb83-15"><a href="arima.html#cb83-15" aria-hidden="true" tabindex="-1"></a>max_velocity<span class="op">=</span>hurricane[<span class="st">&quot;MeanVMax&quot;</span>]</span>
+<span id="cb83-16"><a href="arima.html#cb83-16" aria-hidden="true" tabindex="-1"></a>max2<span class="op">=</span>max_velocity.dropna()</span>
+<span id="cb83-17"><a href="arima.html#cb83-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-18"><a href="arima.html#cb83-18" aria-hidden="true" tabindex="-1"></a><span class="co">### Testing stationarity </span></span>
+<span id="cb83-19"><a href="arima.html#cb83-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-20"><a href="arima.html#cb83-20" aria-hidden="true" tabindex="-1"></a>result<span class="op">=</span>adfuller(max2)</span>
+<span id="cb83-21"><a href="arima.html#cb83-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;ADF p-value: </span><span class="sc">{</span>result[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">&#39;</span>)</span>
+<span id="cb83-22"><a href="arima.html#cb83-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-23"><a href="arima.html#cb83-23" aria-hidden="true" tabindex="-1"></a><span class="co">### Looks stationary (no trend and no random walk)</span></span>
+<span id="cb83-24"><a href="arima.html#cb83-24" aria-hidden="true" tabindex="-1"></a><span class="co">## This version needs a stationary time series!</span></span></code></pre></div>
+<pre><code>## ADF p-value: 0.0010116374636738128</code></pre>
+<div class="sourceCode" id="cb85"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb85-1"><a href="arima.html#cb85-1" aria-hidden="true" tabindex="-1"></a>res1 <span class="op">=</span> sm.tsa.arma_order_select_ic(max2, max_ar<span class="op">=</span><span class="dv">5</span>, max_ma<span class="op">=</span><span class="dv">5</span>,ic<span class="op">=</span><span class="st">&quot;bic&quot;</span>, trend<span class="op">=</span><span class="st">&quot;c&quot;</span>)</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\base\model.py:547: HessianInversionWarning: Inverting hessian failed, no bse or cov_params available
+##   warn(&#39;Inverting hessian failed, no bse or cov_params &#39;
+## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\base\model.py:547: HessianInversionWarning: Inverting hessian failed, no bse or cov_params available
+##   warn(&#39;Inverting hessian failed, no bse or cov_params &#39;
+## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\base\model.py:547: HessianInversionWarning: Inverting hessian failed, no bse or cov_params available
+##   warn(&#39;Inverting hessian failed, no bse or cov_params &#39;
+## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\tsa\tsatools.py:716: RuntimeWarning: divide by zero encountered in divide
+##   invmacoefs = -np.log((1-macoefs)/(1+macoefs))
+## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\tsa\tsatools.py:689: RuntimeWarning: invalid value encountered in divide
+##   newparams = ((1-np.exp(-params))/(1+np.exp(-params))).copy()
+## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\tsa\tsatools.py:690: RuntimeWarning: invalid value encountered in divide
+##   tmp = ((1-np.exp(-params))/(1+np.exp(-params))).copy()
+## C:\PROGRA~3\ANACON~1\lib\site-packages\scipy\optimize\_numdiff.py:470: RuntimeWarning: invalid value encountered in subtract
+##   dx = ((x0 + h) - x0)
+## C:\PROGRA~3\ANACON~1\lib\site-packages\scipy\optimize\_numdiff.py:556: RuntimeWarning: invalid value encountered in double_scalars
+##   dx = x[i] - x0[i]  # Recompute dx as exactly representable number.
+## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\base\model.py:547: HessianInversionWarning: Inverting hessian failed, no bse or cov_params available
+##   warn(&#39;Inverting hessian failed, no bse or cov_params &#39;
+## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\base\model.py:547: HessianInversionWarning: Inverting hessian failed, no bse or cov_params available
+##   warn(&#39;Inverting hessian failed, no bse or cov_params &#39;</code></pre>
+<div class="sourceCode" id="cb87"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb87-1"><a href="arima.html#cb87-1" aria-hidden="true" tabindex="-1"></a>res1.bic_min_order</span></code></pre></div>
+<pre><code>## (1, 1)</code></pre>
 
 </div>
 </div>
