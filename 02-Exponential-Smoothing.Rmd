@@ -1,7 +1,7 @@
 # Exponential Smoothing
 
 
-```{r libraries, message=FALSE,echo=FALSE}
+```{r, message=FALSE,echo=FALSE}
 library(tseries)
 library(forecast)
 library(haven)
