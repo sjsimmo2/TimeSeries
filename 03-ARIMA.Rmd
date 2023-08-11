@@ -466,10 +466,9 @@ model2_fit
 ```
 
 
-Fitting ARIMA models:
+Fitting ARIMA models.
 
-```{python fitting ARIMA in Python}
-
+```{python}
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -480,7 +479,7 @@ from statsmodels.tsa.stattools import adfuller
 from statsmodels.graphics.tsaplots import plot_acf
 from statsmodels.graphics.tsaplots import plot_pacf
 from statsmodels.tsa.arima.model import ARIMA
-#import pmdarima as pm
+import pmdarima as pm
 
 
 hurricane=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\hurrican.csv")
@@ -493,14 +492,17 @@ result=adfuller(max2)
 print(f'ADF p-value: {result[1]}')
 
 ### Same result as auto.arima in R!
-#model1=pm.auto_arima(max2, start_p=0,start_q=0,max_p=5,max_q=5,seasonal=False)
-#model1.summary()
+model1=pm.auto_arima(max2, start_p=0,start_q=0,max_p=5,max_q=5,seasonal=False)
+model1.summary()
 
 # Force d=0
-#model2=pm.auto_arima(max2, start_p=0,start_q=0,max_p=5,max_q=5,d=0,seasonal=False)
-#model2.summary()
+model2=pm.auto_arima(max2, start_p=0,start_q=0,max_p=5,max_q=5,d=0,seasonal=False)
+model2.summary()
+
+
 
 ```
+
 
 ## SAS Code for ARMA/ARIMA
 
@@ -559,72 +561,88 @@ proc arima data=Time.Ebay9899 plot=all; \
 quit;
 
 
-/* It is a random walk!!  The way to model a random walk is by using differences */
+_It is a random walk!!  The way to model a random walk is by using differences_ \  
 
-proc arima data=Time.Ebay9899 plot=all;
-	identify var=DailyHigh(1) nlag=10 stationarity=(adf=2);
-run;
+
+proc arima data=Time.Ebay9899 plot=all; \  
+	identify var=DailyHigh(1) nlag=10 stationarity=(adf=2); \  
+	run;
 quit;
 
-*IF it would have been deterministic...CAUTION, it is NOT deterministic!!
+_IF it would have been deterministic...CAUTION, it is NOT deterministic!!_ \  
 
-*You would need to create an "x" variable for time;
-data newebay;
-set Time.Ebay9899;
-time=_n_;
-run;
 
-* Keep in mind that this data is not deterministic!!;
+_You would need to create an "x" variable for time_ \  
+
+data newebay; \  
+set Time.Ebay9899; \  
+time=_n_; \  
+run; \  
+
+
+_Keep in mind that this data is not deterministic!!_ \  
+
  
-proc arima data=newebay plot=all;
-	identify var=DailyHigh crosscorr=time;
-	estimate input=time;
-run;
+proc arima data=newebay plot=all; \  
+	identify var=DailyHigh crosscorr=time; \  
+		estimate input=time; \  
+		run;
 quit;
 
 
 
-/* BUILDING AN AUTOREGRESSIVE MOVING AVERAGE MODEL ---------- 
-   (AUTOMATIC SELECTION TECHNIQUES)                ---------- */
+_BUILDING AN AUTOREGRESSIVE MOVING AVERAGE MODEL_ \  
+   _(AUTOMATIC SELECTION TECHNIQUES)_ \  
+   
 
 
-* Fit an ARIMA model; 
-proc arima data=Time.Hurricanes plot=all;
-	identify var=MeanVMax nlag=12 stationarity=(adf=2);
-run;
+_Fit an ARIMA model_ \  
+
+proc arima data=Time.Hurricanes plot=all; \  
+	identify var=MeanVMax nlag=12 stationarity=(adf=2); \  
+	run;
+quit; \  
+
+
+_Model identification with minimum information criterion (MINIC)_ \  
+
+proc arima data=Time.Hurricanes plot=all; \  
+	identify var=MeanVMax nlag=12 minic P=(0:12) Q=(0:12); \  
+	run;
+quit; \  
+
+
+_Model identification with smallest canonical correlation (SCAN);_ \  
+
+proc arima data=Time.Hurricanes plot=all; \  
+	identify var=MeanVMax nlag=12 scan P=(0:12) Q=(0:12); \  
+	run;
+quit; \  
+
+
+_Model identificaiton with extended sample autocorrelation function (ESACF)_ \  
+
+proc arima data=Time.Hurricanes plot=all; \  
+	identify var=MeanVMax nlag=12 esacf P=(0:12) Q=(0:12); \  
+	run;
+quit; \  
+
+
+_Create estimates with our ARIMA model p=2, q=3_ \  
+
+proc arima data=Time.Hurricanes plot=all; \  
+	identify var=MeanVMax nlag=12; \  
+		estimate p=2 q=3 method=ML; \  
+		run;
 quit;
 
-* Model identification with minimum information criterion (MINIC); 
-proc arima data=Time.Hurricanes plot=all;
-	identify var=MeanVMax nlag=12 minic P=(0:12) Q=(0:12);
-run;
-quit;
+_FORECASTING_ \ 
 
-* Model identification with smallest canonical correlation (SCAN); 
-proc arima data=Time.Hurricanes plot=all;
-	identify var=MeanVMax nlag=12 scan P=(0:12) Q=(0:12);
-run;
-quit;
-
-* Model identificaiton with extended sample autocorrelation function (ESACF); 
-proc arima data=Time.Hurricanes plot=all;
-	identify var=MeanVMax nlag=12 esacf P=(0:12) Q=(0:12);
-run;
-quit;
-
-* Create estimates with our ARIMA model p=2, q=3; 
-proc arima data=Time.Hurricanes plot=all;
-	identify var=MeanVMax nlag=12;
-	estimate p=2 q=3 method=ML;
-run;
-quit;
-
-/* FORECASTING ---------------------------------------------- */
-proc arima data=Time.Hurricanes plot=all;
-	identify var=MeanVMax nlag=10 ;
-	estimate p=2 q=3 method=ML;
-	forecast lead=10;
-run;
+proc arima data=Time.Hurricanes plot=all; \  
+	identify var=MeanVMax nlag=10 ; \  
+		estimate p=2 q=3 method=ML; \  
+		forecast lead=10; \  
+		run;
 quit;
 
 

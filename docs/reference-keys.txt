@@ -1,7 +1,8 @@
 time-series-1
 introduction
-python-code-and-results
 time-series-decomposition
+python-code-and-results-for-time-series-plot
+sas-code-for-time-series-plot-and-decomposition
 self-study
 exponential-smoothing
 simple-exponential-smoothing
@@ -9,6 +10,8 @@ holt-esm
 holt-winters
 evaluating-forecasts
 ets
+python-code-for-exponential-smoothing
+sas-code-for-exponential-smoothing-models
 arima
 stationarity
 correlation-functions
@@ -17,9 +20,5 @@ moving-average-model-ma
 white-noise
 trending-series
 fitting-arima-models
-python-code-and-results-for-time-series-plot
-sas-code-for-time-series-plot-and-decomposition
-python-code-for-exponential-smoothing
-sas-code-for-exponential-smoothing-models
 python-code-for-armaarima-models
 sas-code-for-armaarima

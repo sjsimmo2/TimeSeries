@@ -3,7 +3,7 @@
 
 This document provides the code and output from Time Series I class. This is a living document and may be updated throughout the semester (when this occurs, you will be notified that it has been updated).  First, here is a list of all the libraries that you will need:
 
-```{r libraries, message=FALSE}
+```{r libraries, message=FALSE,warning=FALSE}
 library(tseries)
 library(forecast)
 library(haven)
@@ -121,6 +121,18 @@ ggsubseriesplot(Passenger)
 
 ```
 Just a quick note.  STL ONLY does additive seasonal decomposition.  There is a decompose library that will do both additive AND multiplicative decomposition.
+
+To get a measure of strength for trend and seasonality using Hyndman and Athanasopoulos' technique:
+
+```{r}
+Ft=max(0,1-var(decomp_stl$time.series[,3])/(var(decomp_stl$time.series[,3])+var(decomp_stl$time.series[,2])))
+Ft
+
+Fs=max(0,1-var(decomp_stl$time.series[,3])/(var(decomp_stl$time.series[,3])+var(decomp_stl$time.series[,1])))
+Fs
+```
+
+
 
 
 ## Python code and results for Time Series plot
