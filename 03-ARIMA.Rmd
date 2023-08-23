@@ -190,15 +190,23 @@ How do we fit each situation?  If the series is stationary about the line, we ne
 ```{r ARIMA with trend}
 
 ###Fitting a regression line...
-
 time.high=seq(1,length(Daily.High))
-ARIMA.line=Arima(Daily.High,order=c(0,0,0),xreg=time.high)
-summary(ARIMA.line)
-#### Now model residuals (ARIMA.line$residuals) with AR and MA terms...can also send residuals through an automatic procedure to help!
+resid.y =lm(Daily.High ~ time.high)$resid
+#Now use resid.y to explore what p and q to fit
+ggAcf(resid.y)
+ggPacf(resid.y)
+### You can CLEARLY see this is a random walk...can't really fit p,q
+
+## DO NOT RUN!!
+#ARIMA.line=Arima(Daily.High,order=c(p,0,q),xreg=time.high)
+
+
 
 ####Fitting a random walk with drift
-
-ARIMA.RW=Arima(Daily.High,order=c(0,1,0))
+diff.y=diff(Daily.High)
+ggAcf(diff.y) 
+ggPacf(diff.y)
+ARIMA.RW=Arima(Daily.High,order=c(1,1,0))
 summary(ARIMA.RW)
 ####  automatic procedure will determine if you need differencing or not!
 
