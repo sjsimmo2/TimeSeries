@@ -125,10 +125,10 @@ Just a quick note.  STL ONLY does additive seasonal decomposition.  There is a d
 To get a measure of strength for trend and seasonality using Hyndman and Athanasopoulos' technique:
 
 ```{r}
-Ft=max(0,1-var(decomp_stl$time.series[,3])/(var(decomp_stl$time.series[,3])+var(decomp_stl$time.series[,2])))
+Ft=max(0,1-var(decomp_stl$time.series[,3])/(var(decomp_stl$time.series[,3])+var(decomp_stl$time.series[,2]) + 2*cov(decomp_stl$time.series[,3],decomp_stl$time.series[,2])))
 Ft
 
-Fs=max(0,1-var(decomp_stl$time.series[,3])/(var(decomp_stl$time.series[,3])+var(decomp_stl$time.series[,1])))
+Fs=max(0,1-var(decomp_stl$time.series[,3])/(var(decomp_stl$time.series[,3])+var(decomp_stl$time.series[,1])+2*cov(decomp_stl$time.series[,3],decomp_stl$time.series[,1])))
 Fs
 ```
 

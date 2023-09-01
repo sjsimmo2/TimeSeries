@@ -23,7 +23,7 @@
 <meta name="author" content="by Dr. Susan Simmons" />
 
 
-<meta name="date" content="2023-08-23" />
+<meta name="date" content="2023-09-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -271,12 +271,12 @@ You can pull off the different components (Seasonal, Trend or Remainder). The be
 <p><img src="bookdownproj_files/figure-html/subseries-1.png" width="672" />
 Just a quick note. STL ONLY does additive seasonal decomposition. There is a decompose library that will do both additive AND multiplicative decomposition.</p>
 <p>To get a measure of strength for trend and seasonality using Hyndman and Athanasopoulos’ technique:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="introduction.html#cb12-1" tabindex="-1"></a>Ft<span class="ot">=</span><span class="fu">max</span>(<span class="dv">0</span>,<span class="dv">1</span><span class="sc">-</span><span class="fu">var</span>(decomp_stl<span class="sc">$</span>time.series[,<span class="dv">3</span>])<span class="sc">/</span>(<span class="fu">var</span>(decomp_stl<span class="sc">$</span>time.series[,<span class="dv">3</span>])<span class="sc">+</span><span class="fu">var</span>(decomp_stl<span class="sc">$</span>time.series[,<span class="dv">2</span>])))</span>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="introduction.html#cb12-1" tabindex="-1"></a>Ft<span class="ot">=</span><span class="fu">max</span>(<span class="dv">0</span>,<span class="dv">1</span><span class="sc">-</span><span class="fu">var</span>(decomp_stl<span class="sc">$</span>time.series[,<span class="dv">3</span>])<span class="sc">/</span>(<span class="fu">var</span>(decomp_stl<span class="sc">$</span>time.series[,<span class="dv">3</span>])<span class="sc">+</span><span class="fu">var</span>(decomp_stl<span class="sc">$</span>time.series[,<span class="dv">2</span>]) <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">cov</span>(decomp_stl<span class="sc">$</span>time.series[,<span class="dv">3</span>],decomp_stl<span class="sc">$</span>time.series[,<span class="dv">2</span>])))</span>
 <span id="cb12-2"><a href="introduction.html#cb12-2" tabindex="-1"></a>Ft</span></code></pre></div>
-<pre><code>## [1] 0.9800185</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="introduction.html#cb14-1" tabindex="-1"></a>Fs<span class="ot">=</span><span class="fu">max</span>(<span class="dv">0</span>,<span class="dv">1</span><span class="sc">-</span><span class="fu">var</span>(decomp_stl<span class="sc">$</span>time.series[,<span class="dv">3</span>])<span class="sc">/</span>(<span class="fu">var</span>(decomp_stl<span class="sc">$</span>time.series[,<span class="dv">3</span>])<span class="sc">+</span><span class="fu">var</span>(decomp_stl<span class="sc">$</span>time.series[,<span class="dv">1</span>])))</span>
+<pre><code>## [1] 0.9803349</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="introduction.html#cb14-1" tabindex="-1"></a>Fs<span class="ot">=</span><span class="fu">max</span>(<span class="dv">0</span>,<span class="dv">1</span><span class="sc">-</span><span class="fu">var</span>(decomp_stl<span class="sc">$</span>time.series[,<span class="dv">3</span>])<span class="sc">/</span>(<span class="fu">var</span>(decomp_stl<span class="sc">$</span>time.series[,<span class="dv">3</span>])<span class="sc">+</span><span class="fu">var</span>(decomp_stl<span class="sc">$</span>time.series[,<span class="dv">1</span>])<span class="sc">+</span><span class="dv">2</span><span class="sc">*</span><span class="fu">cov</span>(decomp_stl<span class="sc">$</span>time.series[,<span class="dv">3</span>],decomp_stl<span class="sc">$</span>time.series[,<span class="dv">1</span>])))</span>
 <span id="cb14-2"><a href="introduction.html#cb14-2" tabindex="-1"></a>Fs</span></code></pre></div>
-<pre><code>## [1] 0.932775</code></pre>
+<pre><code>## [1] 0.9339462</code></pre>
 </div>
 <div id="python-code-and-results-for-time-series-plot" class="section level2 hasAnchor" number="2.2">
 <h2><span class="header-section-number">2.2</span> Python code and results for Time Series plot<a href="introduction.html#python-code-and-results-for-time-series-plot" class="anchor-section" aria-label="Anchor link to header"></a></h2>
