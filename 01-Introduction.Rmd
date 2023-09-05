@@ -17,6 +17,7 @@ library(seasonalview)
 library(aTSA)
 library(imputeTS)
 library(reticulate)
+library(prophet)
 use_python("C:\\ProgramData\\Anaconda3\\python.exe")
 ```
 
