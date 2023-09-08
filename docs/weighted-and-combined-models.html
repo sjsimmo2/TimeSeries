@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 9 Weighted and Combined Models | Time Series 1</title>
+  <meta name="description" content="Chapter 9 Weighted and Combined Models | Time Series 1" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 9 Weighted and Combined Models | Time Series 1" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 9 Weighted and Combined Models | Time Series 1" />
+  
+  
+  
+
+<meta name="author" content="by Dr. Susan Simmons" />
+
+
+<meta name="date" content="2023-09-07" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="neural-network-model.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">TimeSeries</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Time series 1</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#time-series-decomposition"><i class="fa fa-check"></i><b>2.1</b> Time series decomposition</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#python-code-and-results-for-time-series-plot"><i class="fa fa-check"></i><b>2.2</b> Python code and results for Time Series plot</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction.html"><a href="introduction.html#sas-code-for-time-series-plot-and-decomposition"><i class="fa fa-check"></i><b>2.3</b> SAS code for time series plot and decomposition</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction.html"><a href="introduction.html#self-study"><i class="fa fa-check"></i><b>2.4</b> Self-study</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html"><i class="fa fa-check"></i><b>3</b> Exponential Smoothing</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#simple-exponential-smoothing"><i class="fa fa-check"></i><b>3.1</b> Simple Exponential Smoothing</a></li>
+<li class="chapter" data-level="3.2" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#holt-esm"><i class="fa fa-check"></i><b>3.2</b> Holt ESM</a></li>
+<li class="chapter" data-level="3.3" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#holt-winters"><i class="fa fa-check"></i><b>3.3</b> Holt-Winters</a></li>
+<li class="chapter" data-level="3.4" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#evaluating-forecasts"><i class="fa fa-check"></i><b>3.4</b> Evaluating forecasts</a></li>
+<li class="chapter" data-level="3.5" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#ets"><i class="fa fa-check"></i><b>3.5</b> ETS</a></li>
+<li class="chapter" data-level="3.6" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#python-code-for-exponential-smoothing"><i class="fa fa-check"></i><b>3.6</b> Python Code for Exponential Smoothing</a></li>
+<li class="chapter" data-level="3.7" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#sas-code-for-exponential-smoothing-models"><i class="fa fa-check"></i><b>3.7</b> SAS Code for Exponential Smoothing Models</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="arima.html"><a href="arima.html"><i class="fa fa-check"></i><b>4</b> ARIMA</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="arima.html"><a href="arima.html#stationarity"><i class="fa fa-check"></i><b>4.1</b> Stationarity</a></li>
+<li class="chapter" data-level="4.2" data-path="arima.html"><a href="arima.html#correlation-functions"><i class="fa fa-check"></i><b>4.2</b> Correlation Functions</a></li>
+<li class="chapter" data-level="4.3" data-path="arima.html"><a href="arima.html#autoregressive-models-ar"><i class="fa fa-check"></i><b>4.3</b> AutoRegressive Models (AR)</a></li>
+<li class="chapter" data-level="4.4" data-path="arima.html"><a href="arima.html#moving-average-model-ma"><i class="fa fa-check"></i><b>4.4</b> Moving Average model (MA)</a></li>
+<li class="chapter" data-level="4.5" data-path="arima.html"><a href="arima.html#white-noise"><i class="fa fa-check"></i><b>4.5</b> White noise</a></li>
+<li class="chapter" data-level="4.6" data-path="arima.html"><a href="arima.html#trending-series"><i class="fa fa-check"></i><b>4.6</b> Trending Series</a></li>
+<li class="chapter" data-level="4.7" data-path="arima.html"><a href="arima.html#fitting-arima-models"><i class="fa fa-check"></i><b>4.7</b> Fitting ARIMA models</a></li>
+<li class="chapter" data-level="4.8" data-path="arima.html"><a href="arima.html#python-code-for-armaarima-models"><i class="fa fa-check"></i><b>4.8</b> Python Code for ARMA/ARIMA models</a></li>
+<li class="chapter" data-level="4.9" data-path="arima.html"><a href="arima.html#sas-code-for-armaarima"><i class="fa fa-check"></i><b>4.9</b> SAS Code for ARMA/ARIMA</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="seasonality.html"><a href="seasonality.html"><i class="fa fa-check"></i><b>5</b> Seasonality</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="seasonality.html"><a href="seasonality.html#seasonal-unit-root-testing"><i class="fa fa-check"></i><b>5.1</b> Seasonal Unit Root Testing</a></li>
+<li class="chapter" data-level="5.2" data-path="seasonality.html"><a href="seasonality.html#deterministic-solutions"><i class="fa fa-check"></i><b>5.2</b> Deterministic Solutions</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="seasonality.html"><a href="seasonality.html#seasonal-dummy-variables"><i class="fa fa-check"></i><b>5.2.1</b> Seasonal Dummy Variables</a></li>
+<li class="chapter" data-level="5.2.2" data-path="seasonality.html"><a href="seasonality.html#fourier-transforms"><i class="fa fa-check"></i><b>5.2.2</b> Fourier Transforms</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="seasonality.html"><a href="seasonality.html#stochastic-solutions"><i class="fa fa-check"></i><b>5.3</b> Stochastic Solutions</a></li>
+<li class="chapter" data-level="5.4" data-path="seasonality.html"><a href="seasonality.html#seasonal-arima-modeling"><i class="fa fa-check"></i><b>5.4</b> Seasonal ARIMA Modeling</a></li>
+<li class="chapter" data-level="5.5" data-path="seasonality.html"><a href="seasonality.html#python-code-for-seasonality"><i class="fa fa-check"></i><b>5.5</b> Python Code for Seasonality</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="seasonality.html"><a href="seasonality.html#seasonality-1"><i class="fa fa-check"></i><b>5.5.1</b> Seasonality</a></li>
+<li class="chapter" data-level="5.5.2" data-path="seasonality.html"><a href="seasonality.html#deterministic-solutions-1"><i class="fa fa-check"></i><b>5.5.2</b> Deterministic Solutions</a></li>
+<li class="chapter" data-level="5.5.3" data-path="seasonality.html"><a href="seasonality.html#stochastic-solution"><i class="fa fa-check"></i><b>5.5.3</b> Stochastic Solution</a></li>
+<li class="chapter" data-level="5.5.4" data-path="seasonality.html"><a href="seasonality.html#seasonal-arima"><i class="fa fa-check"></i><b>5.5.4</b> Seasonal ARIMA</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html"><i class="fa fa-check"></i><b>6</b> Dynamic Regression Models</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#intervention-variables"><i class="fa fa-check"></i><b>6.1</b> Intervention Variables</a></li>
+<li class="chapter" data-level="6.2" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#predictor-variables"><i class="fa fa-check"></i><b>6.2</b> Predictor Variables</a></li>
+<li class="chapter" data-level="6.3" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#python-code-for-dynamic-regression-models"><i class="fa fa-check"></i><b>6.3</b> Python Code for Dynamic Regression Models</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#intervention-variables-1"><i class="fa fa-check"></i><b>6.3.1</b> Intervention Variables</a></li>
+<li class="chapter" data-level="6.3.2" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#predictor-variables-1"><i class="fa fa-check"></i><b>6.3.2</b> Predictor Variables</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="prophet.html"><a href="prophet.html"><i class="fa fa-check"></i><b>7</b> Prophet</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="prophet.html"><a href="prophet.html#python-code-for-prophet"><i class="fa fa-check"></i><b>7.1</b> Python Code for Prophet</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="prophet.html"><a href="prophet.html#model-structure"><i class="fa fa-check"></i><b>7.1.1</b> Model Structure</a></li>
+<li class="chapter" data-level="7.1.2" data-path="prophet.html"><a href="prophet.html#forecasting"><i class="fa fa-check"></i><b>7.1.2</b> Forecasting</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="neural-network-model.html"><a href="neural-network-model.html"><i class="fa fa-check"></i><b>8</b> Neural Network Model</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="neural-network-model.html"><a href="neural-network-model.html#python-code-for-neural-networks"><i class="fa fa-check"></i><b>8.1</b> Python Code for Neural Networks</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="neural-network-model.html"><a href="neural-network-model.html#ar-neural-networks"><i class="fa fa-check"></i><b>8.1.1</b> AR Neural Networks</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="weighted-and-combined-models.html"><a href="weighted-and-combined-models.html"><i class="fa fa-check"></i><b>9</b> Weighted and Combined Models</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="weighted-and-combined-models.html"><a href="weighted-and-combined-models.html#python-code-for-weighted-and-combined-models"><i class="fa fa-check"></i><b>9.1</b> Python Code for Weighted and Combined Models</a>
+<ul>
+<li class="chapter" data-level="9.1.1" data-path="weighted-and-combined-models.html"><a href="weighted-and-combined-models.html#simple-average"><i class="fa fa-check"></i><b>9.1.1</b> Simple Average</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series 1</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="weighted-and-combined-models" class="section level1 hasAnchor" number="9">
+<h1><span class="header-section-number">Chapter 9</span> Weighted and Combined Models<a href="weighted-and-combined-models.html#weighted-and-combined-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The thought process around weighted and combined forecasting (also called <strong>composite forecasting</strong>) is not new. The topic has been studied for years, and empirical evidence indicates that the combination of forecast methods tends to outperform most single forecast methods.</p>
+<p>It is better to average forecasts in hope that by so doing, the biases among the methods and/or forecasters will compensate for one another. As a result, forecasts developed using different methods are expected to be more useful in cases of high uncertainty. The method is especially relevant for long-range forecasting, where uncertainty is extremely high. Many different studies have been done to show the value of combining forecasts.</p>
+<p>There are two basic weighting methods:</p>
+<ol style="list-style-type: decimal">
+<li><p>Simple Averaging of Forecasts</p></li>
+<li><p>Weighted Methods Based on Error</p></li>
+</ol>
+<p>The simple averaging approach is just as easy as it sounds. It takes the average of the forecasted values from each of the models being combined.</p>
+<p>The code below just takes the average of the four models we have been working with for this dataset - the Holt-Winters exponential smoothing model, the dynamic regression ARIMA model, the neural network model, and Prophet algorithm model. We then calculate the MAE and MAPE from this model.</p>
+<div class="sourceCode" id="cb335"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb335-1"><a href="weighted-and-combined-models.html#cb335-1" tabindex="-1"></a>For.Avg <span class="ot">&lt;-</span> (HWES.USAir.train<span class="sc">$</span>mean <span class="sc">+</span> </span>
+<span id="cb335-2"><a href="weighted-and-combined-models.html#cb335-2" tabindex="-1"></a>            forecast<span class="sc">::</span><span class="fu">forecast</span>(Full.ARIMA, <span class="at">xreg =</span> <span class="fu">cbind</span>(Sep11, Sep11.L1, Sep11.L2, Sep11.L3, Sep11.L4, Sep11.L5, Sep11.L6, Anniv), <span class="at">h =</span> <span class="dv">12</span>)<span class="sc">$</span>mean <span class="sc">+</span> </span>
+<span id="cb335-3"><a href="weighted-and-combined-models.html#cb335-3" tabindex="-1"></a>            Pass.Forecast <span class="sc">+</span></span>
+<span id="cb335-4"><a href="weighted-and-combined-models.html#cb335-4" tabindex="-1"></a>            <span class="fu">tail</span>(<span class="fu">predict</span>(Prof, forecast.data)<span class="sc">$</span>yhat, <span class="dv">12</span>))<span class="sc">/</span><span class="dv">4</span></span></code></pre></div>
+<div class="sourceCode" id="cb336"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb336-1"><a href="weighted-and-combined-models.html#cb336-1" tabindex="-1"></a>Avg.error <span class="ot">&lt;-</span> test <span class="sc">-</span> For.Avg</span>
+<span id="cb336-2"><a href="weighted-and-combined-models.html#cb336-2" tabindex="-1"></a></span>
+<span id="cb336-3"><a href="weighted-and-combined-models.html#cb336-3" tabindex="-1"></a>Avg.MAE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(Avg.error))</span>
+<span id="cb336-4"><a href="weighted-and-combined-models.html#cb336-4" tabindex="-1"></a>Avg.MAPE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(Avg.error)<span class="sc">/</span><span class="fu">abs</span>(test))<span class="sc">*</span><span class="dv">100</span></span>
+<span id="cb336-5"><a href="weighted-and-combined-models.html#cb336-5" tabindex="-1"></a></span>
+<span id="cb336-6"><a href="weighted-and-combined-models.html#cb336-6" tabindex="-1"></a>Avg.MAE</span></code></pre></div>
+<pre><code>## [1] 1039.604</code></pre>
+<div class="sourceCode" id="cb338"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb338-1"><a href="weighted-and-combined-models.html#cb338-1" tabindex="-1"></a>Avg.MAPE</span></code></pre></div>
+<pre><code>## [1] 1.576574</code></pre>
+<p>This average of the four models performs better than any of the individual models. However, maybe not all of the models are needed in this average. In fact, trying out many different combinations of models shows that only the exponential smoothing, neural network, and Prophet model are needed.</p>
+<div class="sourceCode" id="cb340"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb340-1"><a href="weighted-and-combined-models.html#cb340-1" tabindex="-1"></a>For.Avg <span class="ot">&lt;-</span> (HWES.USAir.train<span class="sc">$</span>mean <span class="sc">+</span> </span>
+<span id="cb340-2"><a href="weighted-and-combined-models.html#cb340-2" tabindex="-1"></a>              Pass.Forecast <span class="sc">+</span></span>
+<span id="cb340-3"><a href="weighted-and-combined-models.html#cb340-3" tabindex="-1"></a>              <span class="fu">tail</span>(<span class="fu">predict</span>(Prof, forecast.data)<span class="sc">$</span>yhat, <span class="dv">12</span>)</span>
+<span id="cb340-4"><a href="weighted-and-combined-models.html#cb340-4" tabindex="-1"></a>            )<span class="sc">/</span><span class="dv">3</span></span></code></pre></div>
+<div class="sourceCode" id="cb341"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb341-1"><a href="weighted-and-combined-models.html#cb341-1" tabindex="-1"></a>Avg.error <span class="ot">&lt;-</span> test <span class="sc">-</span> For.Avg</span>
+<span id="cb341-2"><a href="weighted-and-combined-models.html#cb341-2" tabindex="-1"></a></span>
+<span id="cb341-3"><a href="weighted-and-combined-models.html#cb341-3" tabindex="-1"></a>Avg.MAE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(Avg.error))</span>
+<span id="cb341-4"><a href="weighted-and-combined-models.html#cb341-4" tabindex="-1"></a>Avg.MAPE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(Avg.error)<span class="sc">/</span><span class="fu">abs</span>(test))<span class="sc">*</span><span class="dv">100</span></span>
+<span id="cb341-5"><a href="weighted-and-combined-models.html#cb341-5" tabindex="-1"></a></span>
+<span id="cb341-6"><a href="weighted-and-combined-models.html#cb341-6" tabindex="-1"></a>Avg.MAE</span></code></pre></div>
+<pre><code>## [1] 992.4662</code></pre>
+<div class="sourceCode" id="cb343"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb343-1"><a href="weighted-and-combined-models.html#cb343-1" tabindex="-1"></a>Avg.MAPE</span></code></pre></div>
+<pre><code>## [1] 1.502</code></pre>
+<p>The MAE and MAPE are lower than any of the individual models as well as the previous average across all models.</p>
+<p>The second method uses weighted averaging instead of simple averaging. In weighted averaging, the analysts select the weights to assign to the individual forecasts. Typically, we will assign weights that minimize the variance of the forecast errors over the forecasted period. With only two forecasts, there is an easily derived mathematical solution to what these weights should be to minimize variance. However, three or more forecasts being combined makes the mathematical equations much harder. In these scenarios we can use linear regression to help. We run a regression of the actual values of <span class="math inline">\(Y\)</span> against the forecasted values of <span class="math inline">\(Y\)</span> to let the regression choose the optimal weight for each. To make sure that the weights sum to one, we can use some algebra. By setting the weight (coefficients) of one of the models to one using the <code>offset</code> function, we can then use the <code>I</code> function to estimate the weights (coefficients) on the differences between the remaining models and the offset model. By working out the math algebraically, we can see that each model in an <code>I</code> function gets that weight, but the original model in the <code>offset</code> function gets the weight of 1 minus the remaining weights.</p>
+<div class="sourceCode" id="cb345"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb345-1"><a href="weighted-and-combined-models.html#cb345-1" tabindex="-1"></a>Pass.Fit.NN <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">207</span>)</span>
+<span id="cb345-2"><a href="weighted-and-combined-models.html#cb345-2" tabindex="-1"></a></span>
+<span id="cb345-3"><a href="weighted-and-combined-models.html#cb345-3" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">25</span><span class="sc">:</span><span class="dv">207</span>){</span>
+<span id="cb345-4"><a href="weighted-and-combined-models.html#cb345-4" tabindex="-1"></a>  Pass.Fit.NN[i] <span class="ot">&lt;-</span> training[i <span class="sc">-</span> <span class="dv">24</span>] <span class="sc">+</span> NN.Model<span class="sc">$</span>fitted[i <span class="sc">-</span> <span class="dv">12</span>]</span>
+<span id="cb345-5"><a href="weighted-and-combined-models.html#cb345-5" tabindex="-1"></a>}</span>
+<span id="cb345-6"><a href="weighted-and-combined-models.html#cb345-6" tabindex="-1"></a></span>
+<span id="cb345-7"><a href="weighted-and-combined-models.html#cb345-7" tabindex="-1"></a>Pass.Fit.ARIMA <span class="ot">&lt;-</span> Full.ARIMA<span class="sc">$</span>fitted</span>
+<span id="cb345-8"><a href="weighted-and-combined-models.html#cb345-8" tabindex="-1"></a>Pass.Fit.HWES <span class="ot">&lt;-</span> HWES.USAir.train<span class="sc">$</span>fitted</span>
+<span id="cb345-9"><a href="weighted-and-combined-models.html#cb345-9" tabindex="-1"></a>Pass.Fit.Prophet <span class="ot">&lt;-</span> <span class="fu">head</span>(<span class="fu">predict</span>(Prof, forecast.data)<span class="sc">$</span>yhat, <span class="dv">207</span>)</span></code></pre></div>
+<pre><code>## Warning in make_holidays_df(year.list, m$country_holidays):
+## Holidays for US are only supported from 1995 to 2044
+
+## Warning in make_holidays_df(year.list, m$country_holidays):
+## Holidays for US are only supported from 1995 to 2044</code></pre>
+<div class="sourceCode" id="cb347"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb347-1"><a href="weighted-and-combined-models.html#cb347-1" tabindex="-1"></a>WC.Model <span class="ot">&lt;-</span> <span class="fu">lm</span>(training <span class="sc">~</span> <span class="fu">offset</span>(Pass.Fit.HWES) <span class="sc">+</span> <span class="fu">I</span>(Pass.Fit.ARIMA <span class="sc">-</span> Pass.Fit.HWES) <span class="sc">+</span> <span class="fu">I</span>(Pass.Fit.NN <span class="sc">-</span> Pass.Fit.HWES) <span class="sc">+</span> <span class="fu">I</span>(Pass.Fit.Prophet <span class="sc">-</span> Pass.Fit.HWES) <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb347-2"><a href="weighted-and-combined-models.html#cb347-2" tabindex="-1"></a><span class="fu">summary</span>(WC.Model)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = training ~ offset(Pass.Fit.HWES) + I(Pass.Fit.ARIMA - 
+##     Pass.Fit.HWES) + I(Pass.Fit.NN - Pass.Fit.HWES) + I(Pass.Fit.Prophet - 
+##     Pass.Fit.HWES) - 1)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3157.8  -739.8   -43.1   729.2  3828.5 
+## 
+## Coefficients:
+##                                     Estimate Std. Error
+## I(Pass.Fit.ARIMA - Pass.Fit.HWES)    0.75022    0.06980
+## I(Pass.Fit.NN - Pass.Fit.HWES)      -0.02466    0.02487
+## I(Pass.Fit.Prophet - Pass.Fit.HWES)  0.28856    0.07249
+##                                     t value Pr(&gt;|t|)    
+## I(Pass.Fit.ARIMA - Pass.Fit.HWES)    10.747  &lt; 2e-16 ***
+## I(Pass.Fit.NN - Pass.Fit.HWES)       -0.992 0.322928    
+## I(Pass.Fit.Prophet - Pass.Fit.HWES)   3.981 0.000105 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1179 on 156 degrees of freedom
+##   (48 observations deleted due to missingness)
+## Multiple R-squared:  0.6843, Adjusted R-squared:  0.6783 
+## F-statistic: 112.7 on 3 and 156 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb349"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb349-1"><a href="weighted-and-combined-models.html#cb349-1" tabindex="-1"></a>ARIMA.coef <span class="ot">&lt;-</span> <span class="fu">coef</span>(WC.Model)[<span class="dv">1</span>]</span>
+<span id="cb349-2"><a href="weighted-and-combined-models.html#cb349-2" tabindex="-1"></a>NN.coef <span class="ot">&lt;-</span> <span class="fu">coef</span>(WC.Model)[<span class="dv">2</span>]</span>
+<span id="cb349-3"><a href="weighted-and-combined-models.html#cb349-3" tabindex="-1"></a>Prophet.coef <span class="ot">&lt;-</span> <span class="fu">coef</span>(WC.Model)[<span class="dv">3</span>]</span>
+<span id="cb349-4"><a href="weighted-and-combined-models.html#cb349-4" tabindex="-1"></a>HW.coef <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> ARIMA.coef <span class="sc">-</span> NN.coef <span class="sc">-</span> Prophet.coef</span></code></pre></div>
+<p>Now we can just combine the forecasts with their respective weights to get our final forecast. From there we can evaluate the MAE and MAPE for this minimum variance weighted average forecast.</p>
+<div class="sourceCode" id="cb350"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb350-1"><a href="weighted-and-combined-models.html#cb350-1" tabindex="-1"></a>For.W.Avg <span class="ot">&lt;-</span> HW.coef<span class="sc">*</span>HWES.USAir.train<span class="sc">$</span>mean <span class="sc">+</span> </span>
+<span id="cb350-2"><a href="weighted-and-combined-models.html#cb350-2" tabindex="-1"></a>             ARIMA.coef<span class="sc">*</span>forecast<span class="sc">::</span><span class="fu">forecast</span>(Full.ARIMA, <span class="at">xreg =</span> <span class="fu">cbind</span>(Sep11, Sep11.L1, Sep11.L2, Sep11.L3, Sep11.L4, Sep11.L5, Sep11.L6, Anniv), <span class="at">h =</span> <span class="dv">12</span>)<span class="sc">$</span>mean <span class="sc">+</span> </span>
+<span id="cb350-3"><a href="weighted-and-combined-models.html#cb350-3" tabindex="-1"></a>             NN.coef<span class="sc">*</span>Pass.Forecast <span class="sc">+</span></span>
+<span id="cb350-4"><a href="weighted-and-combined-models.html#cb350-4" tabindex="-1"></a>             Prophet.coef<span class="sc">*</span><span class="fu">tail</span>(<span class="fu">predict</span>(Prof, forecast.data)<span class="sc">$</span>yhat, <span class="dv">12</span>)</span></code></pre></div>
+<pre><code>## Warning in make_holidays_df(year.list, m$country_holidays):
+## Holidays for US are only supported from 1995 to 2044
+
+## Warning in make_holidays_df(year.list, m$country_holidays):
+## Holidays for US are only supported from 1995 to 2044</code></pre>
+<div class="sourceCode" id="cb352"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb352-1"><a href="weighted-and-combined-models.html#cb352-1" tabindex="-1"></a>W.Avg.error <span class="ot">&lt;-</span> test <span class="sc">-</span> For.W.Avg</span>
+<span id="cb352-2"><a href="weighted-and-combined-models.html#cb352-2" tabindex="-1"></a></span>
+<span id="cb352-3"><a href="weighted-and-combined-models.html#cb352-3" tabindex="-1"></a>W.Avg.MAE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(W.Avg.error))</span>
+<span id="cb352-4"><a href="weighted-and-combined-models.html#cb352-4" tabindex="-1"></a>W.Avg.MAPE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(W.Avg.error)<span class="sc">/</span><span class="fu">abs</span>(test))<span class="sc">*</span><span class="dv">100</span></span>
+<span id="cb352-5"><a href="weighted-and-combined-models.html#cb352-5" tabindex="-1"></a></span>
+<span id="cb352-6"><a href="weighted-and-combined-models.html#cb352-6" tabindex="-1"></a>W.Avg.MAE</span></code></pre></div>
+<pre><code>## [1] 1060.991</code></pre>
+<div class="sourceCode" id="cb354"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb354-1"><a href="weighted-and-combined-models.html#cb354-1" tabindex="-1"></a>W.Avg.MAPE</span></code></pre></div>
+<pre><code>## [1] 1.594627</code></pre>
+<p>Unfortunately, just because we have the minimum variance on the training data, doesn’t mean that we are good on the test dataset. In fact, in practice, the regular average of forecasts is very hard to beat.</p>
+<div id="python-code-for-weighted-and-combined-models" class="section level2 hasAnchor" number="9.1">
+<h2><span class="header-section-number">9.1</span> Python Code for Weighted and Combined Models<a href="weighted-and-combined-models.html#python-code-for-weighted-and-combined-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="simple-average" class="section level3 hasAnchor" number="9.1.1">
+<h3><span class="header-section-number">9.1.1</span> Simple Average<a href="weighted-and-combined-models.html#simple-average" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb356"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb356-1"><a href="weighted-and-combined-models.html#cb356-1" tabindex="-1"></a></span>
+<span id="cb356-2"><a href="weighted-and-combined-models.html#cb356-2" tabindex="-1"></a>fcast_avg <span class="op">=</span> (fcast <span class="op">+</span> fcast2 <span class="op">+</span> fcst[<span class="st">&#39;yhat&#39;</span>].tail(<span class="dv">12</span>) <span class="op">+</span> fcast5)<span class="op">/</span><span class="dv">4</span></span>
+<span id="cb356-3"><a href="weighted-and-combined-models.html#cb356-3" tabindex="-1"></a></span>
+<span id="cb356-4"><a href="weighted-and-combined-models.html#cb356-4" tabindex="-1"></a>error_avg <span class="op">=</span> test[<span class="st">&#39;Passengers&#39;</span>] <span class="op">-</span> fcast_avg</span>
+<span id="cb356-5"><a href="weighted-and-combined-models.html#cb356-5" tabindex="-1"></a>MAPE_avg <span class="op">=</span> np.mean(<span class="bu">abs</span>(error_avg)<span class="op">/</span>test[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb356-6"><a href="weighted-and-combined-models.html#cb356-6" tabindex="-1"></a>MAPE_avg</span></code></pre></div>
+<pre><code>## 1.148253225520028</code></pre>
+<div class="sourceCode" id="cb358"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb358-1"><a href="weighted-and-combined-models.html#cb358-1" tabindex="-1"></a>fcast_avg2 <span class="op">=</span> (fcast <span class="op">+</span> fcst[<span class="st">&#39;yhat&#39;</span>].tail(<span class="dv">12</span>) <span class="op">+</span> fcast5)<span class="op">/</span><span class="dv">3</span></span>
+<span id="cb358-2"><a href="weighted-and-combined-models.html#cb358-2" tabindex="-1"></a></span>
+<span id="cb358-3"><a href="weighted-and-combined-models.html#cb358-3" tabindex="-1"></a>error_avg <span class="op">=</span> test[<span class="st">&#39;Passengers&#39;</span>] <span class="op">-</span> fcast_avg2</span>
+<span id="cb358-4"><a href="weighted-and-combined-models.html#cb358-4" tabindex="-1"></a>MAPE_avg <span class="op">=</span> np.mean(<span class="bu">abs</span>(error_avg)<span class="op">/</span>test[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb358-5"><a href="weighted-and-combined-models.html#cb358-5" tabindex="-1"></a>MAPE_avg</span></code></pre></div>
+<pre><code>## 1.1117330494732722</code></pre>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="neural-network-model.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/sjsimmo2/TimeSeries/edit/master/08-Weighted_Combined.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/sjsimmo2/TimeSeries/blob/master/08-Weighted_Combined.Rmd",
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
