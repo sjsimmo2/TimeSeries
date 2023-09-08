@@ -47,3 +47,6 @@ forecasting
 neural-network-model
 python-code-for-neural-networks
 ar-neural-networks
+weighted-and-combined-models
+python-code-for-weighted-and-combined-models
+simple-average
