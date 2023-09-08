@@ -18,7 +18,8 @@ library(aTSA)
 library(imputeTS)
 library(reticulate)
 library(prophet)
-use_python("C:\\ProgramData\\Anaconda3\\python.exe")
+use_python("C:\\ProgramData\\Anaconda3\\envs\\R_Env2\\python.exe")
+#use_python("C:\\ProgramData\\Anaconda3\\python.exe")
 ```
 
 The data sets that you will need are as follows (be sure to put the correct location and file name for your computer):

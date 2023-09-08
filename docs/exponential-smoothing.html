@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 3 Exponential Smoothing | Time Series 1</title>
   <meta name="description" content="Chapter 3 Exponential Smoothing | Time Series 1" />
-  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 3 Exponential Smoothing | Time Series 1" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="by Dr. Susan Simmons" />
 
 
-<meta name="date" content="2022-08-23" />
+<meta name="date" content="2023-09-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -92,7 +92,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -105,7 +105,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -119,6 +119,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -163,6 +167,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.5" data-path="arima.html"><a href="arima.html#white-noise"><i class="fa fa-check"></i><b>4.5</b> White noise</a></li>
 <li class="chapter" data-level="4.6" data-path="arima.html"><a href="arima.html#trending-series"><i class="fa fa-check"></i><b>4.6</b> Trending Series</a></li>
 <li class="chapter" data-level="4.7" data-path="arima.html"><a href="arima.html#fitting-arima-models"><i class="fa fa-check"></i><b>4.7</b> Fitting ARIMA models</a></li>
+<li class="chapter" data-level="4.8" data-path="arima.html"><a href="arima.html#python-code-for-armaarima-models"><i class="fa fa-check"></i><b>4.8</b> Python Code for ARMA/ARIMA models</a></li>
+<li class="chapter" data-level="4.9" data-path="arima.html"><a href="arima.html#sas-code-for-armaarima"><i class="fa fa-check"></i><b>4.9</b> SAS Code for ARMA/ARIMA</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="seasonality.html"><a href="seasonality.html"><i class="fa fa-check"></i><b>5</b> Seasonality</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="seasonality.html"><a href="seasonality.html#seasonal-unit-root-testing"><i class="fa fa-check"></i><b>5.1</b> Seasonal Unit Root Testing</a></li>
+<li class="chapter" data-level="5.2" data-path="seasonality.html"><a href="seasonality.html#deterministic-solutions"><i class="fa fa-check"></i><b>5.2</b> Deterministic Solutions</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="seasonality.html"><a href="seasonality.html#seasonal-dummy-variables"><i class="fa fa-check"></i><b>5.2.1</b> Seasonal Dummy Variables</a></li>
+<li class="chapter" data-level="5.2.2" data-path="seasonality.html"><a href="seasonality.html#fourier-transforms"><i class="fa fa-check"></i><b>5.2.2</b> Fourier Transforms</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="seasonality.html"><a href="seasonality.html#stochastic-solutions"><i class="fa fa-check"></i><b>5.3</b> Stochastic Solutions</a></li>
+<li class="chapter" data-level="5.4" data-path="seasonality.html"><a href="seasonality.html#seasonal-arima-modeling"><i class="fa fa-check"></i><b>5.4</b> Seasonal ARIMA Modeling</a></li>
+<li class="chapter" data-level="5.5" data-path="seasonality.html"><a href="seasonality.html#python-code-for-seasonality"><i class="fa fa-check"></i><b>5.5</b> Python Code for Seasonality</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="seasonality.html"><a href="seasonality.html#seasonality-1"><i class="fa fa-check"></i><b>5.5.1</b> Seasonality</a></li>
+<li class="chapter" data-level="5.5.2" data-path="seasonality.html"><a href="seasonality.html#deterministic-solutions-1"><i class="fa fa-check"></i><b>5.5.2</b> Deterministic Solutions</a></li>
+<li class="chapter" data-level="5.5.3" data-path="seasonality.html"><a href="seasonality.html#stochastic-solution"><i class="fa fa-check"></i><b>5.5.3</b> Stochastic Solution</a></li>
+<li class="chapter" data-level="5.5.4" data-path="seasonality.html"><a href="seasonality.html#seasonal-arima"><i class="fa fa-check"></i><b>5.5.4</b> Seasonal ARIMA</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -193,9 +217,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   L_{t} = \theta Y_{t} + (1-\theta)L_{t-1}\]</span></p>
 <p>This is basically a weighted average with the last observation and the last predicted value. Since this only has a level component, forecasts from SES models will be a horizontal line (hence why this method is called “one-step ahead” forecasting).</p>
 <p>In the R code, you can choose how the initial values are selected. If you specify simple, then the first few observations will be used to estimate the starting value. If you select optimal, then the algorithm uses the ets algorithm (will be discussed later) to optimize the starting values and the smoothing parameters. You can also specify the value for “h”, which is the number of forecasts to create (take a look at the forecast…do you see a horizontal line?).</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="exponential-smoothing.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Building a Single Exponential Smoothing (SES) Model - Steel Data #</span></span>
-<span id="cb1-2"><a href="exponential-smoothing.html#cb1-2" aria-hidden="true" tabindex="-1"></a>SES.Steel <span class="ot">&lt;-</span> <span class="fu">ses</span>(SteelShp, <span class="at">initial =</span> <span class="st">&quot;simple&quot;</span>, <span class="at">h =</span> <span class="dv">24</span>)</span>
-<span id="cb1-3"><a href="exponential-smoothing.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(SES.Steel)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="exponential-smoothing.html#cb24-1" tabindex="-1"></a><span class="co"># Building a Single Exponential Smoothing (SES) Model - Steel Data #</span></span>
+<span id="cb24-2"><a href="exponential-smoothing.html#cb24-2" tabindex="-1"></a>SES.Steel <span class="ot">&lt;-</span> <span class="fu">ses</span>(SteelShp, <span class="at">initial =</span> <span class="st">&quot;simple&quot;</span>, <span class="at">h =</span> <span class="dv">24</span>)</span>
+<span id="cb24-3"><a href="exponential-smoothing.html#cb24-3" tabindex="-1"></a><span class="fu">summary</span>(SES.Steel)</span></code></pre></div>
 <pre><code>## 
 ## Forecast method: Simple exponential smoothing
 ## 
@@ -213,10 +237,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 
 ##   sigma:  460.4357
 ## Error measures:
-##                    ME     RMSE      MAE        MPE     MAPE      MASE
-## Training set 11.43866 460.4357 363.9341 -0.2204828 5.708307 0.8287599
-##                     ACF1
-## Training set -0.04379112
+##                    ME     RMSE      MAE        MPE     MAPE
+## Training set 11.43866 460.4357 363.9341 -0.2204828 5.708307
+##                   MASE        ACF1
+## Training set 0.8287599 -0.04379112
 ## 
 ## Forecasts:
 ##          Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
@@ -244,12 +268,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Oct 1993       6479.571 5115.201 7843.940 4392.948 8566.194
 ## Nov 1993       6479.571 5089.043 7870.098 4352.942 8606.199
 ## Dec 1993       6479.571 5063.368 7895.773 4313.676 8645.465</code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="exponential-smoothing.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the SES model on steel data</span></span>
-<span id="cb3-2"><a href="exponential-smoothing.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(SES.Steel)<span class="sc">+</span></span>
-<span id="cb3-3"><a href="exponential-smoothing.html#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">fitted</span>(SES.Steel),<span class="at">series=</span><span class="st">&quot;Fitted&quot;</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">&quot;US Steel Shipments&quot;</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1992</span>,<span class="at">color=</span><span class="st">&quot;orange&quot;</span>,<span class="at">linetype=</span><span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="exponential-smoothing.html#cb26-1" tabindex="-1"></a><span class="co"># Plot the SES model on steel data</span></span>
+<span id="cb26-2"><a href="exponential-smoothing.html#cb26-2" tabindex="-1"></a><span class="fu">autoplot</span>(SES.Steel)<span class="sc">+</span></span>
+<span id="cb26-3"><a href="exponential-smoothing.html#cb26-3" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">fitted</span>(SES.Steel),<span class="at">series=</span><span class="st">&quot;Fitted&quot;</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">&quot;US Steel Shipments&quot;</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1992</span>,<span class="at">color=</span><span class="st">&quot;orange&quot;</span>,<span class="at">linetype=</span><span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/ses-1.png" width="672" /></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="exponential-smoothing.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Computes accuracy statistics for SES model on steel data (training data...NOT validation nor test)</span></span>
-<span id="cb4-2"><a href="exponential-smoothing.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">accuracy</span>(SES.Steel),<span class="dv">2</span>) </span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="exponential-smoothing.html#cb27-1" tabindex="-1"></a><span class="co"># Computes accuracy statistics for SES model on steel data (training data...NOT validation nor test)</span></span>
+<span id="cb27-2"><a href="exponential-smoothing.html#cb27-2" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">accuracy</span>(SES.Steel),<span class="dv">2</span>) </span></code></pre></div>
 <pre><code>##                 ME   RMSE    MAE   MPE MAPE MASE  ACF1
 ## Training set 11.44 460.44 363.93 -0.22 5.71 0.83 -0.04</code></pre>
 </div>
@@ -260,9 +284,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   L_{t} = \theta Y_{t} + (1-\theta)(L_{t-1}+T_{t-1})\\
   T_{t} = \gamma (L_{t}-L_{t-1}) + (1-\gamma) T_{t-1}\]</span></p>
 <p>For the Holt’s method, when you forecast, you will see a trending line.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="exponential-smoothing.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Building a Linear Exponential Smoothing Model - Steel Data #</span></span>
-<span id="cb6-2"><a href="exponential-smoothing.html#cb6-2" aria-hidden="true" tabindex="-1"></a>LES.Steel <span class="ot">&lt;-</span> <span class="fu">holt</span>(SteelShp, <span class="at">initial =</span> <span class="st">&quot;optimal&quot;</span>, <span class="at">h =</span> <span class="dv">24</span>)</span>
-<span id="cb6-3"><a href="exponential-smoothing.html#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(LES.Steel)</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="exponential-smoothing.html#cb29-1" tabindex="-1"></a><span class="co"># Building a Linear Exponential Smoothing Model - Steel Data #</span></span>
+<span id="cb29-2"><a href="exponential-smoothing.html#cb29-2" tabindex="-1"></a>LES.Steel <span class="ot">&lt;-</span> <span class="fu">holt</span>(SteelShp, <span class="at">initial =</span> <span class="st">&quot;optimal&quot;</span>, <span class="at">h =</span> <span class="dv">24</span>)</span>
+<span id="cb29-3"><a href="exponential-smoothing.html#cb29-3" tabindex="-1"></a><span class="fu">summary</span>(LES.Steel)</span></code></pre></div>
 <pre><code>## 
 ## Forecast method: Holt&#39;s method
 ## 
@@ -286,10 +310,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 1626.001 1626.667 1638.822 
 ## 
 ## Error measures:
-##                     ME     RMSE      MAE        MPE     MAPE      MASE
-## Training set -4.167318 461.5062 369.9177 -0.4760441 5.818476 0.8423858
-##                     ACF1
-## Training set -0.03556298
+##                     ME     RMSE      MAE        MPE     MAPE
+## Training set -4.167318 461.5062 369.9177 -0.4760441 5.818476
+##                   MASE        ACF1
+## Training set 0.8423858 -0.03556298
 ## 
 ## Forecasts:
 ##          Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
@@ -317,18 +341,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Oct 1993       6493.255 5148.246 7838.264 4436.241 8550.269
 ## Nov 1993       6493.150 5122.689 7863.611 4397.211 8589.089
 ## Dec 1993       6493.045 5097.585 7888.504 4358.874 8627.216</code></pre>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="exponential-smoothing.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plote the LES model on steel data</span></span>
-<span id="cb8-2"><a href="exponential-smoothing.html#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="exponential-smoothing.html#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(LES.Steel)<span class="sc">+</span></span>
-<span id="cb8-4"><a href="exponential-smoothing.html#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">fitted</span>(LES.Steel),<span class="at">series=</span><span class="st">&quot;Fitted&quot;</span>)<span class="sc">+</span><span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;US Steel Shipment with Holt forecasts&quot;</span>,<span class="at">y=</span><span class="st">&quot;US Steel Shipments&quot;</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1992</span>,<span class="at">color=</span><span class="st">&quot;orange&quot;</span>,<span class="at">linetype=</span><span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="exponential-smoothing.html#cb31-1" tabindex="-1"></a><span class="co"># Plote the LES model on steel data</span></span>
+<span id="cb31-2"><a href="exponential-smoothing.html#cb31-2" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="exponential-smoothing.html#cb31-3" tabindex="-1"></a><span class="fu">autoplot</span>(LES.Steel)<span class="sc">+</span></span>
+<span id="cb31-4"><a href="exponential-smoothing.html#cb31-4" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">fitted</span>(LES.Steel),<span class="at">series=</span><span class="st">&quot;Fitted&quot;</span>)<span class="sc">+</span><span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;US Steel Shipment with Holt forecasts&quot;</span>,<span class="at">y=</span><span class="st">&quot;US Steel Shipments&quot;</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1992</span>,<span class="at">color=</span><span class="st">&quot;orange&quot;</span>,<span class="at">linetype=</span><span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/Holt-1.png" width="672" /></p>
 <p>We can also perform Holt’s method with a damped trend. You will see the formula for the damped trend is similar to the previous Holt formula with an addition of a dampening parameter.</p>
 <p><span class="math display">\[\hat{Y}_{t+h}= L_{t}+\sum_{i}^{k}\phi^{i}T_{t}\\
   L_{t} = \theta Y_{t} + (1-\theta)(L_{t-1}+\phi T_{t-1})\\
   T_{t} = \gamma (L_{t}-L_{t-1}) + (1-\gamma) \phi T_{t-1}\]</span></p>
 <p>We will illustrate the damped trend on both the Steel and Airline data sets.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="exponential-smoothing.html#cb9-1" aria-hidden="true" tabindex="-1"></a>LDES.Steel <span class="ot">&lt;-</span> <span class="fu">holt</span>(SteelShp, <span class="at">initial =</span> <span class="st">&quot;optimal&quot;</span>, <span class="at">h =</span> <span class="dv">24</span>, <span class="at">damped =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-2"><a href="exponential-smoothing.html#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(LDES.Steel)</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="exponential-smoothing.html#cb32-1" tabindex="-1"></a>LDES.Steel <span class="ot">&lt;-</span> <span class="fu">holt</span>(SteelShp, <span class="at">initial =</span> <span class="st">&quot;optimal&quot;</span>, <span class="at">h =</span> <span class="dv">24</span>, <span class="at">damped =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb32-2"><a href="exponential-smoothing.html#cb32-2" tabindex="-1"></a><span class="fu">summary</span>(LDES.Steel)</span></code></pre></div>
 <pre><code>## 
 ## Forecast method: Damped Holt&#39;s method
 ## 
@@ -353,8 +377,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 1627.468 1628.412 1642.854 
 ## 
 ## Error measures:
-##                    ME     RMSE     MAE        MPE     MAPE     MASE        ACF1
-## Training set 8.669068 460.2275 367.178 -0.2689588 5.765085 0.836147 -0.02936686
+##                    ME     RMSE     MAE        MPE     MAPE
+## Training set 8.669068 460.2275 367.178 -0.2689588 5.765085
+##                  MASE        ACF1
+## Training set 0.836147 -0.02936686
 ## 
 ## Forecasts:
 ##          Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
@@ -382,11 +408,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Oct 1993       6504.012 5188.032 7819.992 4491.394 8516.630
 ## Nov 1993       6504.005 5163.526 7844.483 4453.919 8554.090
 ## Dec 1993       6503.998 5139.459 7868.537 4417.116 8590.880</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="exponential-smoothing.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(LDES.Steel)<span class="sc">+</span></span>
-<span id="cb11-2"><a href="exponential-smoothing.html#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">fitted</span>(LDES.Steel),<span class="at">series=</span><span class="st">&quot;Fitted&quot;</span>)<span class="sc">+</span><span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;US Steel Shipment Linear Damped ESM Forecast&quot;</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1992</span>,<span class="at">color=</span><span class="st">&quot;orange&quot;</span>,<span class="at">linetype=</span><span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="exponential-smoothing.html#cb34-1" tabindex="-1"></a><span class="fu">autoplot</span>(LDES.Steel)<span class="sc">+</span></span>
+<span id="cb34-2"><a href="exponential-smoothing.html#cb34-2" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">fitted</span>(LDES.Steel),<span class="at">series=</span><span class="st">&quot;Fitted&quot;</span>)<span class="sc">+</span><span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;US Steel Shipment Linear Damped ESM Forecast&quot;</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1992</span>,<span class="at">color=</span><span class="st">&quot;orange&quot;</span>,<span class="at">linetype=</span><span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/damped%20trend-1.png" width="672" /></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="exponential-smoothing.html#cb12-1" aria-hidden="true" tabindex="-1"></a>LDES.USAir <span class="ot">&lt;-</span> <span class="fu">holt</span>(Passenger, <span class="at">initial =</span> <span class="st">&quot;optimal&quot;</span>, <span class="at">h =</span> <span class="dv">24</span>, <span class="at">damped =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb12-2"><a href="exponential-smoothing.html#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(LDES.USAir)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="exponential-smoothing.html#cb35-1" tabindex="-1"></a>LDES.USAir <span class="ot">&lt;-</span> <span class="fu">holt</span>(Passenger, <span class="at">initial =</span> <span class="st">&quot;optimal&quot;</span>, <span class="at">h =</span> <span class="dv">24</span>, <span class="at">damped =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb35-2"><a href="exponential-smoothing.html#cb35-2" tabindex="-1"></a><span class="fu">summary</span>(LDES.USAir)</span></code></pre></div>
 <pre><code>## 
 ## Forecast method: Damped Holt&#39;s method
 ## 
@@ -411,8 +437,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4906.527 4906.924 4926.862 
 ## 
 ## Error measures:
-##                    ME     RMSE      MAE        MPE     MAPE     MASE       ACF1
-## Training set 196.2283 4818.336 3529.079 -0.2896149 7.191284 1.326257 0.04535328
+##                    ME     RMSE      MAE        MPE     MAPE
+## Training set 196.2283 4818.336 3529.079 -0.2896149 7.191284
+##                  MASE       ACF1
+## Training set 1.326257 0.04535328
 ## 
 ## Forecasts:
 ##          Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
@@ -440,8 +468,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Jan 2010       63674.72 46138.10 81211.34 36854.78 90494.66
 ## Feb 2010       63674.72 45777.16 81572.28 36302.76 91046.68
 ## Mar 2010       63674.72 45423.35 81926.09 35761.66 91587.78</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="exponential-smoothing.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(LDES.USAir)<span class="sc">+</span></span>
-<span id="cb14-2"><a href="exponential-smoothing.html#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">fitted</span>(LDES.USAir),<span class="at">series=</span><span class="st">&quot;Fitted&quot;</span>)<span class="sc">+</span><span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;US Airline Passengers with Linear Damped ESM Forecast&quot;</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">2008.25</span>,<span class="at">color=</span><span class="st">&quot;orange&quot;</span>,<span class="at">linetype=</span><span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="exponential-smoothing.html#cb37-1" tabindex="-1"></a><span class="fu">autoplot</span>(LDES.USAir)<span class="sc">+</span></span>
+<span id="cb37-2"><a href="exponential-smoothing.html#cb37-2" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">fitted</span>(LDES.USAir),<span class="at">series=</span><span class="st">&quot;Fitted&quot;</span>)<span class="sc">+</span><span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;US Airline Passengers with Linear Damped ESM Forecast&quot;</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">2008.25</span>,<span class="at">color=</span><span class="st">&quot;orange&quot;</span>,<span class="at">linetype=</span><span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/damped%20trend-2.png" width="672" /></p>
 </div>
 <div id="holt-winters" class="section level2 hasAnchor" number="3.3">
@@ -458,9 +486,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   T_{t} = \gamma (L_{t}-L_{t-1}) + (1-\gamma) T_{t-1}\\
   S_{t} = \delta \frac{Y_{t}}{L_{t-1}+T_{t-1}} + (1-\delta) S_{t-p}\]</span></p>
 <p>Where p is the frequency of the seasonality (i.e. how many “seasons” there are within one year).</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="exponential-smoothing.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Building a Holt-Winters ESM - US Airlines Data - Additive Seasonality</span></span>
-<span id="cb15-2"><a href="exponential-smoothing.html#cb15-2" aria-hidden="true" tabindex="-1"></a>HWES.USAir <span class="ot">&lt;-</span> <span class="fu">hw</span>(Passenger, <span class="at">seasonal =</span> <span class="st">&quot;additive&quot;</span>)</span>
-<span id="cb15-3"><a href="exponential-smoothing.html#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(HWES.USAir)</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="exponential-smoothing.html#cb38-1" tabindex="-1"></a><span class="co"># Building a Holt-Winters ESM - US Airlines Data - Additive Seasonality</span></span>
+<span id="cb38-2"><a href="exponential-smoothing.html#cb38-2" tabindex="-1"></a>HWES.USAir <span class="ot">&lt;-</span> <span class="fu">hw</span>(Passenger, <span class="at">seasonal =</span> <span class="st">&quot;additive&quot;</span>)</span>
+<span id="cb38-3"><a href="exponential-smoothing.html#cb38-3" tabindex="-1"></a><span class="fu">summary</span>(HWES.USAir)</span></code></pre></div>
 <pre><code>## 
 ## Forecast method: Holt-Winters&#39; additive method
 ## 
@@ -487,10 +515,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4515.651 4518.696 4573.265 
 ## 
 ## Error measures:
-##                     ME     RMSE      MAE        MPE     MAPE      MASE
-## Training set -84.80235 1877.214 1168.093 -0.2917412 2.495749 0.4389788
-##                    ACF1
-## Training set 0.06636172
+##                     ME     RMSE      MAE        MPE     MAPE
+## Training set -84.80235 1877.214 1168.093 -0.2917412 2.495749
+##                   MASE       ACF1
+## Training set 0.4389788 0.06636172
 ## 
 ## Forecasts:
 ##          Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
@@ -518,12 +546,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Jan 2010       62673.83 55386.73 69960.92 51529.18 73818.47
 ## Feb 2010       61741.90 54302.73 69181.07 50364.67 73119.13
 ## Mar 2010       71459.14 63870.89 79047.39 59853.92 83064.36</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="exponential-smoothing.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(HWES.USAir)<span class="sc">+</span></span>
-<span id="cb17-2"><a href="exponential-smoothing.html#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">fitted</span>(HWES.USAir),<span class="at">series=</span><span class="st">&quot;Fitted&quot;</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">&quot;Airlines Passengers&quot;</span>)<span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">2008.25</span>,<span class="at">color=</span><span class="st">&quot;orange&quot;</span>,<span class="at">linetype=</span><span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="exponential-smoothing.html#cb40-1" tabindex="-1"></a><span class="fu">autoplot</span>(HWES.USAir)<span class="sc">+</span></span>
+<span id="cb40-2"><a href="exponential-smoothing.html#cb40-2" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">fitted</span>(HWES.USAir),<span class="at">series=</span><span class="st">&quot;Fitted&quot;</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">&quot;Airlines Passengers&quot;</span>)<span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">2008.25</span>,<span class="at">color=</span><span class="st">&quot;orange&quot;</span>,<span class="at">linetype=</span><span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/Seasonal%20models-1.png" width="672" /></p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="exponential-smoothing.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Building a Holt-Winters ESM - US Airlines Data - Multiplicative Seasonality</span></span>
-<span id="cb18-2"><a href="exponential-smoothing.html#cb18-2" aria-hidden="true" tabindex="-1"></a>HWES.USAir <span class="ot">&lt;-</span> <span class="fu">hw</span>(Passenger, <span class="at">seasonal =</span> <span class="st">&quot;multiplicative&quot;</span>)</span>
-<span id="cb18-3"><a href="exponential-smoothing.html#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(HWES.USAir)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="exponential-smoothing.html#cb41-1" tabindex="-1"></a><span class="co"># Building a Holt-Winters ESM - US Airlines Data - Multiplicative Seasonality</span></span>
+<span id="cb41-2"><a href="exponential-smoothing.html#cb41-2" tabindex="-1"></a>HWES.USAir <span class="ot">&lt;-</span> <span class="fu">hw</span>(Passenger, <span class="at">seasonal =</span> <span class="st">&quot;multiplicative&quot;</span>)</span>
+<span id="cb41-3"><a href="exponential-smoothing.html#cb41-3" tabindex="-1"></a><span class="fu">summary</span>(HWES.USAir)</span></code></pre></div>
 <pre><code>## 
 ## Forecast method: Holt-Winters&#39; multiplicative method
 ## 
@@ -550,8 +578,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4504.228 4507.272 4561.842 
 ## 
 ## Error measures:
-##                     ME     RMSE      MAE       MPE     MAPE      MASE      ACF1
-## Training set -113.1889 1848.797 1090.105 -0.383246 2.303162 0.4096702 0.1713934
+##                     ME     RMSE      MAE       MPE     MAPE
+## Training set -113.1889 1848.797 1090.105 -0.383246 2.303162
+##                   MASE      ACF1
+## Training set 0.4096702 0.1713934
 ## 
 ## Forecasts:
 ##          Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
@@ -579,40 +609,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Jan 2010       61219.37 54498.44 67940.31 50940.59 71498.16
 ## Feb 2010       59640.30 52980.57 66300.04 49455.12 69825.49
 ## Mar 2010       72861.19 64590.90 81131.47 60212.88 85509.49</code></pre>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="exponential-smoothing.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(HWES.USAir)<span class="sc">+</span></span>
-<span id="cb20-2"><a href="exponential-smoothing.html#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">fitted</span>(HWES.USAir),<span class="at">series=</span><span class="st">&quot;Fitted&quot;</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">&quot;Airlines Passengers&quot;</span>)<span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">2008.25</span>,<span class="at">color=</span><span class="st">&quot;orange&quot;</span>,<span class="at">linetype=</span><span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="exponential-smoothing.html#cb43-1" tabindex="-1"></a><span class="fu">autoplot</span>(HWES.USAir)<span class="sc">+</span></span>
+<span id="cb43-2"><a href="exponential-smoothing.html#cb43-2" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">fitted</span>(HWES.USAir),<span class="at">series=</span><span class="st">&quot;Fitted&quot;</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">&quot;Airlines Passengers&quot;</span>)<span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">2008.25</span>,<span class="at">color=</span><span class="st">&quot;orange&quot;</span>,<span class="at">linetype=</span><span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/Seasonal%20models-2.png" width="672" /></p>
 </div>
 <div id="evaluating-forecasts" class="section level2 hasAnchor" number="3.4">
 <h2><span class="header-section-number">3.4</span> Evaluating forecasts<a href="exponential-smoothing.html#evaluating-forecasts" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In order to get a better idea of the forecasting properties of the algorithms, it is best to divide your data into a training data set and a test data set. Time series is VERY different than other algorithms in which you have done. The test data set should come at the END of the time series (to truly see how well you can forecast!). An example code is shown below in which the last 12 observations are used as the test data set:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="exponential-smoothing.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create training set from overall Airlines Data</span></span>
-<span id="cb21-2"><a href="exponential-smoothing.html#cb21-2" aria-hidden="true" tabindex="-1"></a>training<span class="ot">=</span><span class="fu">subset</span>(Passenger,<span class="at">end=</span><span class="fu">length</span>(Passenger)<span class="sc">-</span><span class="dv">12</span>)</span>
-<span id="cb21-3"><a href="exponential-smoothing.html#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="exponential-smoothing.html#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create test set from overall Airlines Data</span></span>
-<span id="cb21-5"><a href="exponential-smoothing.html#cb21-5" aria-hidden="true" tabindex="-1"></a>test<span class="ot">=</span><span class="fu">subset</span>(Passenger,<span class="at">start=</span><span class="fu">length</span>(Passenger)<span class="sc">-</span><span class="dv">11</span>)</span>
-<span id="cb21-6"><a href="exponential-smoothing.html#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-7"><a href="exponential-smoothing.html#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit Holt-Winters ESM (multiplicative seasonality) on training data</span></span>
-<span id="cb21-8"><a href="exponential-smoothing.html#cb21-8" aria-hidden="true" tabindex="-1"></a>HWES.USAir.train <span class="ot">&lt;-</span> <span class="fu">hw</span>(training, <span class="at">seasonal =</span> <span class="st">&quot;multiplicative&quot;</span>,<span class="at">initial=</span><span class="st">&#39;optimal&#39;</span>,<span class="at">h=</span><span class="dv">12</span>)</span>
-<span id="cb21-9"><a href="exponential-smoothing.html#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-10"><a href="exponential-smoothing.html#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-11"><a href="exponential-smoothing.html#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate prediction errors from forecast</span></span>
-<span id="cb21-12"><a href="exponential-smoothing.html#cb21-12" aria-hidden="true" tabindex="-1"></a>error<span class="ot">=</span>test<span class="sc">-</span>HWES.USAir.train<span class="sc">$</span>mean</span>
-<span id="cb21-13"><a href="exponential-smoothing.html#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-14"><a href="exponential-smoothing.html#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate prediction error statistics (MAE and MAPE)</span></span>
-<span id="cb21-15"><a href="exponential-smoothing.html#cb21-15" aria-hidden="true" tabindex="-1"></a>MAE<span class="ot">=</span><span class="fu">mean</span>(<span class="fu">abs</span>(error))</span>
-<span id="cb21-16"><a href="exponential-smoothing.html#cb21-16" aria-hidden="true" tabindex="-1"></a>MAPE<span class="ot">=</span><span class="fu">mean</span>(<span class="fu">abs</span>(error)<span class="sc">/</span><span class="fu">abs</span>(test))</span>
-<span id="cb21-17"><a href="exponential-smoothing.html#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-18"><a href="exponential-smoothing.html#cb21-18" aria-hidden="true" tabindex="-1"></a>MAE</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="exponential-smoothing.html#cb44-1" tabindex="-1"></a><span class="co"># Create training set from overall Airlines Data</span></span>
+<span id="cb44-2"><a href="exponential-smoothing.html#cb44-2" tabindex="-1"></a>training<span class="ot">=</span><span class="fu">subset</span>(Passenger,<span class="at">end=</span><span class="fu">length</span>(Passenger)<span class="sc">-</span><span class="dv">12</span>)</span>
+<span id="cb44-3"><a href="exponential-smoothing.html#cb44-3" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="exponential-smoothing.html#cb44-4" tabindex="-1"></a><span class="co"># Create test set from overall Airlines Data</span></span>
+<span id="cb44-5"><a href="exponential-smoothing.html#cb44-5" tabindex="-1"></a>test<span class="ot">=</span><span class="fu">subset</span>(Passenger,<span class="at">start=</span><span class="fu">length</span>(Passenger)<span class="sc">-</span><span class="dv">11</span>)</span>
+<span id="cb44-6"><a href="exponential-smoothing.html#cb44-6" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="exponential-smoothing.html#cb44-7" tabindex="-1"></a><span class="co"># Fit Holt-Winters ESM (multiplicative seasonality) on training data</span></span>
+<span id="cb44-8"><a href="exponential-smoothing.html#cb44-8" tabindex="-1"></a>HWES.USAir.train <span class="ot">&lt;-</span> <span class="fu">hw</span>(training, <span class="at">seasonal =</span> <span class="st">&quot;multiplicative&quot;</span>,<span class="at">initial=</span><span class="st">&#39;optimal&#39;</span>,<span class="at">h=</span><span class="dv">12</span>)</span>
+<span id="cb44-9"><a href="exponential-smoothing.html#cb44-9" tabindex="-1"></a></span>
+<span id="cb44-10"><a href="exponential-smoothing.html#cb44-10" tabindex="-1"></a></span>
+<span id="cb44-11"><a href="exponential-smoothing.html#cb44-11" tabindex="-1"></a><span class="co"># Calculate prediction errors from forecast</span></span>
+<span id="cb44-12"><a href="exponential-smoothing.html#cb44-12" tabindex="-1"></a>error<span class="ot">=</span>test<span class="sc">-</span>HWES.USAir.train<span class="sc">$</span>mean</span>
+<span id="cb44-13"><a href="exponential-smoothing.html#cb44-13" tabindex="-1"></a></span>
+<span id="cb44-14"><a href="exponential-smoothing.html#cb44-14" tabindex="-1"></a><span class="co"># Calculate prediction error statistics (MAE and MAPE)</span></span>
+<span id="cb44-15"><a href="exponential-smoothing.html#cb44-15" tabindex="-1"></a>MAE<span class="ot">=</span><span class="fu">mean</span>(<span class="fu">abs</span>(error))</span>
+<span id="cb44-16"><a href="exponential-smoothing.html#cb44-16" tabindex="-1"></a>MAPE<span class="ot">=</span><span class="fu">mean</span>(<span class="fu">abs</span>(error)<span class="sc">/</span><span class="fu">abs</span>(test))</span>
+<span id="cb44-17"><a href="exponential-smoothing.html#cb44-17" tabindex="-1"></a></span>
+<span id="cb44-18"><a href="exponential-smoothing.html#cb44-18" tabindex="-1"></a>MAE</span></code></pre></div>
 <pre><code>## [1] 1134.58</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="exponential-smoothing.html#cb23-1" aria-hidden="true" tabindex="-1"></a>MAPE</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="exponential-smoothing.html#cb46-1" tabindex="-1"></a>MAPE</span></code></pre></div>
 <pre><code>## [1] 0.01763593</code></pre>
 </div>
 <div id="ets" class="section level2 hasAnchor" number="3.5">
 <h2><span class="header-section-number">3.5</span> ETS<a href="exponential-smoothing.html#ets" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>You can also allow the computer to search for the best model. The ETS (Error, Trend, Seasonality) algorithm will search for the best model and estimate the parameters. For the error term, we can have either an additive or multiplicative error structure. For the trend, we can have none, additive, multiplicative, damped additive or damped multiplicative . For the seasonal component, we can have none, additive or multiplicative (lots of choices!). An example of how to run this is:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="exponential-smoothing.html#cb25-1" aria-hidden="true" tabindex="-1"></a>ets.passenger<span class="ot">&lt;-</span><span class="fu">ets</span>(training)</span>
-<span id="cb25-2"><a href="exponential-smoothing.html#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ets.passenger)</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="exponential-smoothing.html#cb48-1" tabindex="-1"></a>ets.passenger<span class="ot">&lt;-</span><span class="fu">ets</span>(training)</span>
+<span id="cb48-2"><a href="exponential-smoothing.html#cb48-2" tabindex="-1"></a><span class="fu">summary</span>(ets.passenger)</span></code></pre></div>
 <pre><code>## ETS(M,Ad,M) 
 ## 
 ## Call:
@@ -636,99 +666,99 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4225.929 4229.567 4285.918 
 ## 
 ## Training set error measures:
-##                    ME     RMSE      MAE       MPE    MAPE    MASE        ACF1
-## Training set 157.1888 1747.817 1043.596 0.1980283 2.19083 0.38762 0.008869188</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="exponential-smoothing.html#cb27-1" aria-hidden="true" tabindex="-1"></a>ets.forecast.passenger<span class="ot">&lt;-</span>ets.passenger<span class="sc">%&gt;%</span>forecast<span class="sc">::</span><span class="fu">forecast</span>(<span class="at">h=</span><span class="dv">12</span>)</span>
-<span id="cb27-2"><a href="exponential-smoothing.html#cb27-2" aria-hidden="true" tabindex="-1"></a>error<span class="ot">=</span><span class="fu">mean</span>(<span class="fu">abs</span>(test<span class="sc">-</span>ets.forecast.passenger<span class="sc">$</span>mean))</span>
-<span id="cb27-3"><a href="exponential-smoothing.html#cb27-3" aria-hidden="true" tabindex="-1"></a>error</span></code></pre></div>
+##                    ME     RMSE      MAE       MPE    MAPE
+## Training set 157.1888 1747.817 1043.596 0.1980283 2.19083
+##                 MASE        ACF1
+## Training set 0.38762 0.008869188</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="exponential-smoothing.html#cb50-1" tabindex="-1"></a>ets.forecast.passenger<span class="ot">&lt;-</span>ets.passenger<span class="sc">%&gt;%</span>forecast<span class="sc">::</span><span class="fu">forecast</span>(<span class="at">h=</span><span class="dv">12</span>)</span>
+<span id="cb50-2"><a href="exponential-smoothing.html#cb50-2" tabindex="-1"></a>error<span class="ot">=</span><span class="fu">mean</span>(<span class="fu">abs</span>(test<span class="sc">-</span>ets.forecast.passenger<span class="sc">$</span>mean))</span>
+<span id="cb50-3"><a href="exponential-smoothing.html#cb50-3" tabindex="-1"></a>error</span></code></pre></div>
 <pre><code>## [1] 1153.042</code></pre>
 </div>
 <div id="python-code-for-exponential-smoothing" class="section level2 hasAnchor" number="3.6">
 <h2><span class="header-section-number">3.6</span> Python Code for Exponential Smoothing<a href="exponential-smoothing.html#python-code-for-exponential-smoothing" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The following Python codes will produce exponential smoothing models. I do recommend that you take some time to understand some of the differences between the models fit in R versus Python.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="exponential-smoothing.html#cb29-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-2"><a href="exponential-smoothing.html#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb29-3"><a href="exponential-smoothing.html#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb29-4"><a href="exponential-smoothing.html#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb29-5"><a href="exponential-smoothing.html#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
-<span id="cb29-6"><a href="exponential-smoothing.html#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.api <span class="im">import</span> ExponentialSmoothing, SimpleExpSmoothing, Holt</span>
-<span id="cb29-7"><a href="exponential-smoothing.html#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-8"><a href="exponential-smoothing.html#cb29-8" aria-hidden="true" tabindex="-1"></a>steel<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">steel.csv&quot;</span>)</span>
-<span id="cb29-9"><a href="exponential-smoothing.html#cb29-9" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1984&#39;</span>, end<span class="op">=</span><span class="st">&#39;12/1/1991&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
-<span id="cb29-10"><a href="exponential-smoothing.html#cb29-10" aria-hidden="true" tabindex="-1"></a>steel.index<span class="op">=</span>pd.to_datetime(df)</span>
-<span id="cb29-11"><a href="exponential-smoothing.html#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-12"><a href="exponential-smoothing.html#cb29-12" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> SimpleExpSmoothing(steel[<span class="st">&#39;steelshp&#39;</span>]).fit()</span></code></pre></div>
-<pre><code>## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\tsa\holtwinters.py:731: RuntimeWarning: invalid value encountered in greater_equal
-##   loc = initial_p &gt;= ub</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="exponential-smoothing.html#cb31-1" aria-hidden="true" tabindex="-1"></a>fit.params[<span class="st">&#39;smoothing_level&#39;</span>]</span></code></pre></div>
-<pre><code>## 0.4392481570237354</code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="exponential-smoothing.html#cb33-1" aria-hidden="true" tabindex="-1"></a>fcast <span class="op">=</span> fit.forecast(<span class="dv">24</span>)</span>
-<span id="cb33-2"><a href="exponential-smoothing.html#cb33-2" aria-hidden="true" tabindex="-1"></a>fcast</span></code></pre></div>
-<pre><code>## 1992-01-01    6491.065906
-## 1992-02-01    6491.065906
-## 1992-03-01    6491.065906
-## 1992-04-01    6491.065906
-## 1992-05-01    6491.065906
-## 1992-06-01    6491.065906
-## 1992-07-01    6491.065906
-## 1992-08-01    6491.065906
-## 1992-09-01    6491.065906
-## 1992-10-01    6491.065906
-## 1992-11-01    6491.065906
-## 1992-12-01    6491.065906
-## 1993-01-01    6491.065906
-## 1993-02-01    6491.065906
-## 1993-03-01    6491.065906
-## 1993-04-01    6491.065906
-## 1993-05-01    6491.065906
-## 1993-06-01    6491.065906
-## 1993-07-01    6491.065906
-## 1993-08-01    6491.065906
-## 1993-09-01    6491.065906
-## 1993-10-01    6491.065906
-## 1993-11-01    6491.065906
-## 1993-12-01    6491.065906
+<div class="sourceCode" id="cb52"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb52-1"><a href="exponential-smoothing.html#cb52-1" tabindex="-1"></a></span>
+<span id="cb52-2"><a href="exponential-smoothing.html#cb52-2" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb52-3"><a href="exponential-smoothing.html#cb52-3" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb52-4"><a href="exponential-smoothing.html#cb52-4" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb52-5"><a href="exponential-smoothing.html#cb52-5" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
+<span id="cb52-6"><a href="exponential-smoothing.html#cb52-6" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.api <span class="im">import</span> ExponentialSmoothing, SimpleExpSmoothing, Holt</span>
+<span id="cb52-7"><a href="exponential-smoothing.html#cb52-7" tabindex="-1"></a></span>
+<span id="cb52-8"><a href="exponential-smoothing.html#cb52-8" tabindex="-1"></a>steel<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">steel.csv&quot;</span>)</span>
+<span id="cb52-9"><a href="exponential-smoothing.html#cb52-9" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1984&#39;</span>, end<span class="op">=</span><span class="st">&#39;12/1/1991&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb52-10"><a href="exponential-smoothing.html#cb52-10" tabindex="-1"></a>steel.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb52-11"><a href="exponential-smoothing.html#cb52-11" tabindex="-1"></a></span>
+<span id="cb52-12"><a href="exponential-smoothing.html#cb52-12" tabindex="-1"></a>fit <span class="op">=</span> SimpleExpSmoothing(steel[<span class="st">&#39;steelshp&#39;</span>]).fit()</span>
+<span id="cb52-13"><a href="exponential-smoothing.html#cb52-13" tabindex="-1"></a>fit.params[<span class="st">&#39;smoothing_level&#39;</span>]</span></code></pre></div>
+<pre><code>## 0.42865253426712535</code></pre>
+<div class="sourceCode" id="cb54"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb54-1"><a href="exponential-smoothing.html#cb54-1" tabindex="-1"></a>fcast <span class="op">=</span> fit.forecast(<span class="dv">24</span>)</span>
+<span id="cb54-2"><a href="exponential-smoothing.html#cb54-2" tabindex="-1"></a>fcast</span></code></pre></div>
+<pre><code>## 1992-01-01    6498.665388
+## 1992-02-01    6498.665388
+## 1992-03-01    6498.665388
+## 1992-04-01    6498.665388
+## 1992-05-01    6498.665388
+## 1992-06-01    6498.665388
+## 1992-07-01    6498.665388
+## 1992-08-01    6498.665388
+## 1992-09-01    6498.665388
+## 1992-10-01    6498.665388
+## 1992-11-01    6498.665388
+## 1992-12-01    6498.665388
+## 1993-01-01    6498.665388
+## 1993-02-01    6498.665388
+## 1993-03-01    6498.665388
+## 1993-04-01    6498.665388
+## 1993-05-01    6498.665388
+## 1993-06-01    6498.665388
+## 1993-07-01    6498.665388
+## 1993-08-01    6498.665388
+## 1993-09-01    6498.665388
+## 1993-10-01    6498.665388
+## 1993-11-01    6498.665388
+## 1993-12-01    6498.665388
 ## Freq: MS, dtype: float64</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="exponential-smoothing.html#cb35-1" aria-hidden="true" tabindex="-1"></a>plt.plot(steel[<span class="st">&quot;steelshp&quot;</span>],color<span class="op">=</span><span class="st">&quot;black&quot;</span>)</span>
-<span id="cb35-2"><a href="exponential-smoothing.html#cb35-2" aria-hidden="true" tabindex="-1"></a>plt.plot(fcast,color<span class="op">=</span><span class="st">&quot;blue&quot;</span>)</span>
-<span id="cb35-3"><a href="exponential-smoothing.html#cb35-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb56-1"><a href="exponential-smoothing.html#cb56-1" tabindex="-1"></a>plt.plot(steel[<span class="st">&quot;steelshp&quot;</span>],color<span class="op">=</span><span class="st">&quot;black&quot;</span>)</span>
+<span id="cb56-2"><a href="exponential-smoothing.html#cb56-2" tabindex="-1"></a>plt.plot(fcast,color<span class="op">=</span><span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb56-3"><a href="exponential-smoothing.html#cb56-3" tabindex="-1"></a>plt.show()</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/simple%20exponential%20smoothing-1.png" width="672" /></p>
 <p>The Holt models in Python:</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="exponential-smoothing.html#cb36-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-2"><a href="exponential-smoothing.html#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb36-3"><a href="exponential-smoothing.html#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb36-4"><a href="exponential-smoothing.html#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb36-5"><a href="exponential-smoothing.html#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
-<span id="cb36-6"><a href="exponential-smoothing.html#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.api <span class="im">import</span> ExponentialSmoothing, SimpleExpSmoothing, Holt</span>
-<span id="cb36-7"><a href="exponential-smoothing.html#cb36-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-8"><a href="exponential-smoothing.html#cb36-8" aria-hidden="true" tabindex="-1"></a>steel<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">steel.csv&quot;</span>)</span>
-<span id="cb36-9"><a href="exponential-smoothing.html#cb36-9" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1984&#39;</span>, end<span class="op">=</span><span class="st">&#39;12/1/1991&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
-<span id="cb36-10"><a href="exponential-smoothing.html#cb36-10" aria-hidden="true" tabindex="-1"></a>steel.index<span class="op">=</span>pd.to_datetime(df)</span>
-<span id="cb36-11"><a href="exponential-smoothing.html#cb36-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-12"><a href="exponential-smoothing.html#cb36-12" aria-hidden="true" tabindex="-1"></a>fit1 <span class="op">=</span> Holt(steel[<span class="st">&#39;steelshp&#39;</span>]).fit()</span>
-<span id="cb36-13"><a href="exponential-smoothing.html#cb36-13" aria-hidden="true" tabindex="-1"></a>fit1.summary()</span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb57-1"><a href="exponential-smoothing.html#cb57-1" tabindex="-1"></a></span>
+<span id="cb57-2"><a href="exponential-smoothing.html#cb57-2" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb57-3"><a href="exponential-smoothing.html#cb57-3" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb57-4"><a href="exponential-smoothing.html#cb57-4" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb57-5"><a href="exponential-smoothing.html#cb57-5" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
+<span id="cb57-6"><a href="exponential-smoothing.html#cb57-6" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.api <span class="im">import</span> ExponentialSmoothing, SimpleExpSmoothing, Holt</span>
+<span id="cb57-7"><a href="exponential-smoothing.html#cb57-7" tabindex="-1"></a></span>
+<span id="cb57-8"><a href="exponential-smoothing.html#cb57-8" tabindex="-1"></a>steel<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">steel.csv&quot;</span>)</span>
+<span id="cb57-9"><a href="exponential-smoothing.html#cb57-9" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1984&#39;</span>, end<span class="op">=</span><span class="st">&#39;12/1/1991&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb57-10"><a href="exponential-smoothing.html#cb57-10" tabindex="-1"></a>steel.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb57-11"><a href="exponential-smoothing.html#cb57-11" tabindex="-1"></a></span>
+<span id="cb57-12"><a href="exponential-smoothing.html#cb57-12" tabindex="-1"></a>fit1 <span class="op">=</span> Holt(steel[<span class="st">&#39;steelshp&#39;</span>]).fit()</span>
+<span id="cb57-13"><a href="exponential-smoothing.html#cb57-13" tabindex="-1"></a>fit1.summary()</span></code></pre></div>
 <table class="simpletable">
 <caption>Holt Model Results</caption>
 <tr>
-  <th>Dep. Variable:</th>      <td>endog</td>  <th>  No. Observations:  </th>        <td>96</td>       
+  <th>Dep. Variable:</th>    <td>steelshp</td> <th>  No. Observations:  </th>        <td>96</td>       
 </tr>
 <tr>
-  <th>Model:</th>              <td>Holt</td>   <th>  SSE                </th>   <td>20217429.633</td>  
+  <th>Model:</th>              <td>Holt</td>   <th>  SSE                </th>   <td>21299746.384</td>  
 </tr>
 <tr>
-  <th>Optimized:</th>          <td>True</td>   <th>  AIC                </th>     <td>1184.740</td>    
+  <th>Optimized:</th>          <td>True</td>   <th>  AIC                </th>     <td>1189.746</td>    
 </tr>
 <tr>
-  <th>Trend:</th>            <td>Additive</td> <th>  BIC                </th>     <td>1194.997</td>    
+  <th>Trend:</th>            <td>Additive</td> <th>  BIC                </th>     <td>1200.004</td>    
 </tr>
 <tr>
-  <th>Seasonal:</th>           <td>None</td>   <th>  AICC               </th>     <td>1185.684</td>    
+  <th>Seasonal:</th>           <td>None</td>   <th>  AICC               </th>     <td>1190.690</td>    
 </tr>
 <tr>
-  <th>Seasonal Periods:</th>   <td>None</td>   <th>  Date:              </th> <td>Tue, 23 Aug 2022</td>
+  <th>Seasonal Periods:</th>   <td>None</td>   <th>  Date:              </th> <td>Thu, 07 Sep 2023</td>
 </tr>
 <tr>
-  <th>Box-Cox:</th>            <td>False</td>  <th>  Time:              </th>     <td>12:19:36</td>    
+  <th>Box-Cox:</th>            <td>False</td>  <th>  Time:              </th>     <td>21:40:03</td>    
 </tr>
 <tr>
   <th>Box-Cox Coeff.:</th>     <td>None</td>   <th>                     </th>         <td> </td>       
@@ -739,69 +769,71 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
          <td></td>                 <th>coeff</th>                <th>code</th>               <th>optimized</th>     
 </tr>
 <tr>
-  <th>smoothing_level</th> <td>           0.4389441</td> <td>               alpha</td> <td>                True</td>
+  <th>smoothing_level</th> <td>           0.5325556</td> <td>               alpha</td> <td>                True</td>
 </tr>
 <tr>
-  <th>smoothing_slope</th> <td>            0.000000</td> <td>                beta</td> <td>                True</td>
+  <th>smoothing_trend</th> <td>           0.0501636</td> <td>                beta</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_level</th>   <td>           6282.9434</td> <td>                 l.0</td> <td>                True</td>
+  <th>initial_level</th>   <td>           5994.5445</td> <td>                 l.0</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_slope</th>   <td>           2.1992004</td> <td>                 b.0</td> <td>                True</td>
+  <th>initial_trend</th>   <td>          -0.5416928</td> <td>                 b.0</td> <td>                True</td>
 </tr>
 </table>
-<div class="sourceCode" id="cb37"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="exponential-smoothing.html#cb37-1" aria-hidden="true" tabindex="-1"></a>fcast1 <span class="op">=</span> fit1.forecast(<span class="dv">24</span>)</span>
-<span id="cb37-2"><a href="exponential-smoothing.html#cb37-2" aria-hidden="true" tabindex="-1"></a>fcast1</span></code></pre></div>
-<pre><code>## 1992-01-01    6496.296092
-## 1992-02-01    6498.495293
-## 1992-03-01    6500.694493
-## 1992-04-01    6502.893694
-## 1992-05-01    6505.092894
-## 1992-06-01    6507.292094
-## 1992-07-01    6509.491295
-## 1992-08-01    6511.690495
-## 1992-09-01    6513.889696
-## 1992-10-01    6516.088896
-## 1992-11-01    6518.288096
-## 1992-12-01    6520.487297
-## 1993-01-01    6522.686497
-## 1993-02-01    6524.885698
-## 1993-03-01    6527.084898
-## 1993-04-01    6529.284098
-## 1993-05-01    6531.483299
-## 1993-06-01    6533.682499
-## 1993-07-01    6535.881700
-## 1993-08-01    6538.080900
-## 1993-09-01    6540.280101
-## 1993-10-01    6542.479301
-## 1993-11-01    6544.678501
-## 1993-12-01    6546.877702
+<div class="sourceCode" id="cb58"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb58-1"><a href="exponential-smoothing.html#cb58-1" tabindex="-1"></a>fcast1 <span class="op">=</span> fit1.forecast(<span class="dv">24</span>)</span>
+<span id="cb58-2"><a href="exponential-smoothing.html#cb58-2" tabindex="-1"></a>fcast1</span></code></pre></div>
+<pre><code>## 1992-01-01    6405.763623
+## 1992-02-01    6388.350856
+## 1992-03-01    6370.938089
+## 1992-04-01    6353.525323
+## 1992-05-01    6336.112556
+## 1992-06-01    6318.699789
+## 1992-07-01    6301.287022
+## 1992-08-01    6283.874255
+## 1992-09-01    6266.461488
+## 1992-10-01    6249.048721
+## 1992-11-01    6231.635954
+## 1992-12-01    6214.223188
+## 1993-01-01    6196.810421
+## 1993-02-01    6179.397654
+## 1993-03-01    6161.984887
+## 1993-04-01    6144.572120
+## 1993-05-01    6127.159353
+## 1993-06-01    6109.746586
+## 1993-07-01    6092.333820
+## 1993-08-01    6074.921053
+## 1993-09-01    6057.508286
+## 1993-10-01    6040.095519
+## 1993-11-01    6022.682752
+## 1993-12-01    6005.269985
 ## Freq: MS, dtype: float64</code></pre>
-<div class="sourceCode" id="cb39"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb39-1"><a href="exponential-smoothing.html#cb39-1" aria-hidden="true" tabindex="-1"></a>fit2 <span class="op">=</span> Holt(steel[<span class="st">&#39;steelshp&#39;</span>],exponential<span class="op">=</span><span class="va">True</span>).fit()</span>
-<span id="cb39-2"><a href="exponential-smoothing.html#cb39-2" aria-hidden="true" tabindex="-1"></a>fit2.summary()</span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb60-1"><a href="exponential-smoothing.html#cb60-1" tabindex="-1"></a>fit2 <span class="op">=</span> Holt(steel[<span class="st">&#39;steelshp&#39;</span>],exponential<span class="op">=</span><span class="va">True</span>).fit()</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\holtwinters\model.py:915: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+##   warnings.warn(</code></pre>
+<div class="sourceCode" id="cb62"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb62-1"><a href="exponential-smoothing.html#cb62-1" tabindex="-1"></a>fit2.summary()</span></code></pre></div>
 <table class="simpletable">
 <caption>Holt Model Results</caption>
 <tr>
-  <th>Dep. Variable:</th>         <td>endog</td>     <th>  No. Observations:  </th>        <td>96</td>       
+  <th>Dep. Variable:</th>       <td>steelshp</td>    <th>  No. Observations:  </th>        <td>96</td>       
 </tr>
 <tr>
-  <th>Model:</th>                 <td>Holt</td>      <th>  SSE                </th>   <td>20219185.862</td>  
+  <th>Model:</th>                 <td>Holt</td>      <th>  SSE                </th>   <td>22718462.013</td>  
 </tr>
 <tr>
-  <th>Optimized:</th>             <td>True</td>      <th>  AIC                </th>     <td>1184.748</td>    
+  <th>Optimized:</th>             <td>True</td>      <th>  AIC                </th>     <td>1195.937</td>    
 </tr>
 <tr>
-  <th>Trend:</th>            <td>Multiplicative</td> <th>  BIC                </th>     <td>1195.006</td>    
+  <th>Trend:</th>            <td>Multiplicative</td> <th>  BIC                </th>     <td>1206.194</td>    
 </tr>
 <tr>
-  <th>Seasonal:</th>              <td>None</td>      <th>  AICC               </th>     <td>1185.692</td>    
+  <th>Seasonal:</th>              <td>None</td>      <th>  AICC               </th>     <td>1196.880</td>    
 </tr>
 <tr>
-  <th>Seasonal Periods:</th>      <td>None</td>      <th>  Date:              </th> <td>Tue, 23 Aug 2022</td>
+  <th>Seasonal Periods:</th>      <td>None</td>      <th>  Date:              </th> <td>Thu, 07 Sep 2023</td>
 </tr>
 <tr>
-  <th>Box-Cox:</th>               <td>False</td>     <th>  Time:              </th>     <td>12:19:36</td>    
+  <th>Box-Cox:</th>               <td>False</td>     <th>  Time:              </th>     <td>21:40:03</td>    
 </tr>
 <tr>
   <th>Box-Cox Coeff.:</th>        <td>None</td>      <th>                     </th>         <td> </td>       
@@ -812,69 +844,70 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
          <td></td>                 <th>coeff</th>                <th>code</th>               <th>optimized</th>     
 </tr>
 <tr>
-  <th>smoothing_level</th> <td>           0.4394836</td> <td>               alpha</td> <td>                True</td>
+  <th>smoothing_level</th> <td>           0.5471429</td> <td>               alpha</td> <td>                True</td>
 </tr>
 <tr>
-  <th>smoothing_slope</th> <td>            0.000000</td> <td>                beta</td> <td>                True</td>
+  <th>smoothing_trend</th> <td>           0.0705991</td> <td>                beta</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_level</th>   <td>           6289.9550</td> <td>                 l.0</td> <td>                True</td>
+  <th>initial_level</th>   <td>           5980.0000</td> <td>                 l.0</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_slope</th>   <td>           0.9998332</td> <td>                 b.0</td> <td>                True</td>
+  <th>initial_trend</th>   <td>           1.0284281</td> <td>                 b.0</td> <td>                True</td>
 </tr>
 </table>
-<div class="sourceCode" id="cb40"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="exponential-smoothing.html#cb40-1" aria-hidden="true" tabindex="-1"></a>fcast2 <span class="op">=</span> fit2.forecast(<span class="dv">24</span>)</span>
-<span id="cb40-2"><a href="exponential-smoothing.html#cb40-2" aria-hidden="true" tabindex="-1"></a>fcast2</span></code></pre></div>
-<pre><code>## 1992-01-01    6488.365107
-## 1992-02-01    6487.282975
-## 1992-03-01    6486.201024
-## 1992-04-01    6485.119253
-## 1992-05-01    6484.037663
-## 1992-06-01    6482.956253
-## 1992-07-01    6481.875024
-## 1992-08-01    6480.793974
-## 1992-09-01    6479.713105
-## 1992-10-01    6478.632417
-## 1992-11-01    6477.551908
-## 1992-12-01    6476.471580
-## 1993-01-01    6475.391432
-## 1993-02-01    6474.311464
-## 1993-03-01    6473.231676
-## 1993-04-01    6472.152068
-## 1993-05-01    6471.072641
-## 1993-06-01    6469.993393
-## 1993-07-01    6468.914326
-## 1993-08-01    6467.835438
-## 1993-09-01    6466.756730
-## 1993-10-01    6465.678202
-## 1993-11-01    6464.599854
-## 1993-12-01    6463.521686
+<div class="sourceCode" id="cb63"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb63-1"><a href="exponential-smoothing.html#cb63-1" tabindex="-1"></a>fcast2 <span class="op">=</span> fit2.forecast(<span class="dv">24</span>)</span>
+<span id="cb63-2"><a href="exponential-smoothing.html#cb63-2" tabindex="-1"></a>fcast2</span></code></pre></div>
+<pre><code>## 1992-01-01    6398.185756
+## 1992-02-01    6378.947353
+## 1992-03-01    6359.766797
+## 1992-04-01    6340.643915
+## 1992-05-01    6321.578532
+## 1992-06-01    6302.570476
+## 1992-07-01    6283.619574
+## 1992-08-01    6264.725655
+## 1992-09-01    6245.888547
+## 1992-10-01    6227.108080
+## 1992-11-01    6208.384083
+## 1992-12-01    6189.716386
+## 1993-01-01    6171.104820
+## 1993-02-01    6152.549216
+## 1993-03-01    6134.049406
+## 1993-04-01    6115.605223
+## 1993-05-01    6097.216498
+## 1993-06-01    6078.883066
+## 1993-07-01    6060.604759
+## 1993-08-01    6042.381413
+## 1993-09-01    6024.212861
+## 1993-10-01    6006.098940
+## 1993-11-01    5988.039485
+## 1993-12-01    5970.034332
 ## Freq: MS, dtype: float64</code></pre>
-<div class="sourceCode" id="cb42"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="exponential-smoothing.html#cb42-1" aria-hidden="true" tabindex="-1"></a>fit3 <span class="op">=</span> Holt(steel[<span class="st">&#39;steelshp&#39;</span>],damped<span class="op">=</span><span class="va">True</span>).fit()</span>
-<span id="cb42-2"><a href="exponential-smoothing.html#cb42-2" aria-hidden="true" tabindex="-1"></a>fit3.summary()</span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb65-1"><a href="exponential-smoothing.html#cb65-1" tabindex="-1"></a>fit3 <span class="op">=</span> Holt(steel[<span class="st">&#39;steelshp&#39;</span>],damped<span class="op">=</span><span class="va">True</span>).fit()</span></code></pre></div>
+<pre><code>## &lt;string&gt;:1: FutureWarning: the &#39;damped&#39;&#39; keyword is deprecated, use &#39;damped_trend&#39; instead</code></pre>
+<div class="sourceCode" id="cb67"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb67-1"><a href="exponential-smoothing.html#cb67-1" tabindex="-1"></a>fit3.summary()</span></code></pre></div>
 <table class="simpletable">
 <caption>Holt Model Results</caption>
 <tr>
-  <th>Dep. Variable:</th>      <td>endog</td>  <th>  No. Observations:  </th>        <td>96</td>       
+  <th>Dep. Variable:</th>    <td>steelshp</td> <th>  No. Observations:  </th>        <td>96</td>       
 </tr>
 <tr>
-  <th>Model:</th>              <td>Holt</td>   <th>  SSE                </th>   <td>20076097.042</td>  
+  <th>Model:</th>              <td>Holt</td>   <th>  SSE                </th>   <td>20886858.243</td>  
 </tr>
 <tr>
-  <th>Optimized:</th>          <td>True</td>   <th>  AIC                </th>     <td>1186.066</td>    
+  <th>Optimized:</th>          <td>True</td>   <th>  AIC                </th>     <td>1189.867</td>    
 </tr>
 <tr>
-  <th>Trend:</th>            <td>Additive</td> <th>  BIC                </th>     <td>1198.888</td>    
+  <th>Trend:</th>            <td>Additive</td> <th>  BIC                </th>     <td>1202.689</td>    
 </tr>
 <tr>
-  <th>Seasonal:</th>           <td>None</td>   <th>  AICC               </th>     <td>1187.339</td>    
+  <th>Seasonal:</th>           <td>None</td>   <th>  AICC               </th>     <td>1191.140</td>    
 </tr>
 <tr>
-  <th>Seasonal Periods:</th>   <td>None</td>   <th>  Date:              </th> <td>Tue, 23 Aug 2022</td>
+  <th>Seasonal Periods:</th>   <td>None</td>   <th>  Date:              </th> <td>Thu, 07 Sep 2023</td>
 </tr>
 <tr>
-  <th>Box-Cox:</th>            <td>False</td>  <th>  Time:              </th>     <td>12:19:36</td>    
+  <th>Box-Cox:</th>            <td>False</td>  <th>  Time:              </th>     <td>21:40:03</td>    
 </tr>
 <tr>
   <th>Box-Cox Coeff.:</th>     <td>None</td>   <th>                     </th>         <td> </td>       
@@ -885,72 +918,74 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
          <td></td>                 <th>coeff</th>                <th>code</th>               <th>optimized</th>     
 </tr>
 <tr>
-  <th>smoothing_level</th> <td>           0.4426775</td> <td>               alpha</td> <td>                True</td>
+  <th>smoothing_level</th> <td>           0.4785874</td> <td>               alpha</td> <td>                True</td>
 </tr>
 <tr>
-  <th>smoothing_slope</th> <td>            0.000000</td> <td>                beta</td> <td>                True</td>
+  <th>smoothing_trend</th> <td>           0.0409672</td> <td>                beta</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_level</th>   <td>           6080.2826</td> <td>                 l.0</td> <td>                True</td>
+  <th>initial_level</th>   <td>           6062.3344</td> <td>                 l.0</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_slope</th>   <td>           205.61155</td> <td>                 b.0</td> <td>                True</td>
+  <th>initial_trend</th>   <td>           23.225833</td> <td>                 b.0</td> <td>                True</td>
 </tr>
 <tr>
-  <th>damping_slope</th>   <td>           0.5353795</td> <td>                 phi</td> <td>                True</td>
+  <th>damping_trend</th>   <td>           0.9680594</td> <td>                 phi</td> <td>                True</td>
 </tr>
 </table>
-<div class="sourceCode" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="exponential-smoothing.html#cb43-1" aria-hidden="true" tabindex="-1"></a>fcast3 <span class="op">=</span> fit3.forecast(<span class="dv">24</span>)</span>
-<span id="cb43-2"><a href="exponential-smoothing.html#cb43-2" aria-hidden="true" tabindex="-1"></a>fcast3</span></code></pre></div>
-<pre><code>## 1992-01-01    6488.576993
-## 1992-02-01    6488.576993
-## 1992-03-01    6488.576993
-## 1992-04-01    6488.576993
-## 1992-05-01    6488.576993
-## 1992-06-01    6488.576993
-## 1992-07-01    6488.576993
-## 1992-08-01    6488.576993
-## 1992-09-01    6488.576993
-## 1992-10-01    6488.576993
-## 1992-11-01    6488.576993
-## 1992-12-01    6488.576993
-## 1993-01-01    6488.576993
-## 1993-02-01    6488.576993
-## 1993-03-01    6488.576993
-## 1993-04-01    6488.576993
-## 1993-05-01    6488.576993
-## 1993-06-01    6488.576993
-## 1993-07-01    6488.576993
-## 1993-08-01    6488.576993
-## 1993-09-01    6488.576993
-## 1993-10-01    6488.576993
-## 1993-11-01    6488.576993
-## 1993-12-01    6488.576993
+<div class="sourceCode" id="cb68"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb68-1"><a href="exponential-smoothing.html#cb68-1" tabindex="-1"></a>fcast3 <span class="op">=</span> fit3.forecast(<span class="dv">24</span>)</span>
+<span id="cb68-2"><a href="exponential-smoothing.html#cb68-2" tabindex="-1"></a>fcast3</span></code></pre></div>
+<pre><code>## 1992-01-01    6451.860905
+## 1992-02-01    6439.883672
+## 1992-03-01    6428.289000
+## 1992-04-01    6417.064667
+## 1992-05-01    6406.198847
+## 1992-06-01    6395.680086
+## 1992-07-01    6385.497302
+## 1992-08-01    6375.639761
+## 1992-09-01    6366.097076
+## 1992-10-01    6356.859189
+## 1992-11-01    6347.916366
+## 1992-12-01    6339.259182
+## 1993-01-01    6330.878513
+## 1993-02-01    6322.765528
+## 1993-03-01    6314.911676
+## 1993-04-01    6307.308681
+## 1993-05-01    6299.948530
+## 1993-06-01    6292.823466
+## 1993-07-01    6285.925981
+## 1993-08-01    6279.248806
+## 1993-09-01    6272.784903
+## 1993-10-01    6266.527461
+## 1993-11-01    6260.469886
+## 1993-12-01    6254.605793
 ## Freq: MS, dtype: float64</code></pre>
-<div class="sourceCode" id="cb45"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb45-1"><a href="exponential-smoothing.html#cb45-1" aria-hidden="true" tabindex="-1"></a>fit4 <span class="op">=</span> Holt(steel[<span class="st">&#39;steelshp&#39;</span>],exponential<span class="op">=</span><span class="va">True</span>,damped<span class="op">=</span><span class="va">True</span>).fit()</span>
-<span id="cb45-2"><a href="exponential-smoothing.html#cb45-2" aria-hidden="true" tabindex="-1"></a>fit4.summary()</span></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb70-1"><a href="exponential-smoothing.html#cb70-1" tabindex="-1"></a>fit4 <span class="op">=</span> Holt(steel[<span class="st">&#39;steelshp&#39;</span>],exponential<span class="op">=</span><span class="va">True</span>,damped<span class="op">=</span><span class="va">True</span>).fit()</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\holtwinters\model.py:915: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+##   warnings.warn(</code></pre>
+<div class="sourceCode" id="cb72"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb72-1"><a href="exponential-smoothing.html#cb72-1" tabindex="-1"></a>fit4.summary()</span></code></pre></div>
 <table class="simpletable">
 <caption>Holt Model Results</caption>
 <tr>
-  <th>Dep. Variable:</th>         <td>endog</td>     <th>  No. Observations:  </th>        <td>96</td>       
+  <th>Dep. Variable:</th>       <td>steelshp</td>    <th>  No. Observations:  </th>        <td>96</td>       
 </tr>
 <tr>
-  <th>Model:</th>                 <td>Holt</td>      <th>  SSE                </th>   <td>20033241.756</td>  
+  <th>Model:</th>                 <td>Holt</td>      <th>  SSE                </th>   <td>22424181.268</td>  
 </tr>
 <tr>
-  <th>Optimized:</th>             <td>True</td>      <th>  AIC                </th>     <td>1185.861</td>    
+  <th>Optimized:</th>             <td>True</td>      <th>  AIC                </th>     <td>1196.685</td>    
 </tr>
 <tr>
-  <th>Trend:</th>            <td>Multiplicative</td> <th>  BIC                </th>     <td>1198.683</td>    
+  <th>Trend:</th>            <td>Multiplicative</td> <th>  BIC                </th>     <td>1209.507</td>    
 </tr>
 <tr>
-  <th>Seasonal:</th>              <td>None</td>      <th>  AICC               </th>     <td>1187.134</td>    
+  <th>Seasonal:</th>              <td>None</td>      <th>  AICC               </th>     <td>1197.958</td>    
 </tr>
 <tr>
-  <th>Seasonal Periods:</th>      <td>None</td>      <th>  Date:              </th> <td>Tue, 23 Aug 2022</td>
+  <th>Seasonal Periods:</th>      <td>None</td>      <th>  Date:              </th> <td>Thu, 07 Sep 2023</td>
 </tr>
 <tr>
-  <th>Box-Cox:</th>               <td>False</td>     <th>  Time:              </th>     <td>12:19:36</td>    
+  <th>Box-Cox:</th>               <td>False</td>     <th>  Time:              </th>     <td>21:40:03</td>    
 </tr>
 <tr>
   <th>Box-Cox Coeff.:</th>        <td>None</td>      <th>                     </th>         <td> </td>       
@@ -961,105 +996,102 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
          <td></td>                 <th>coeff</th>                <th>code</th>               <th>optimized</th>     
 </tr>
 <tr>
-  <th>smoothing_level</th> <td>           0.4427751</td> <td>               alpha</td> <td>                True</td>
+  <th>smoothing_level</th> <td>           0.5471429</td> <td>               alpha</td> <td>                True</td>
 </tr>
 <tr>
-  <th>smoothing_slope</th> <td>            0.000000</td> <td>                beta</td> <td>                True</td>
+  <th>smoothing_trend</th> <td>           0.0529493</td> <td>                beta</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_level</th>   <td>           5979.9999</td> <td>                 l.0</td> <td>                True</td>
+  <th>initial_level</th>   <td>           5980.0000</td> <td>                 l.0</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_slope</th>   <td>           1.0526968</td> <td>                 b.0</td> <td>                True</td>
+  <th>initial_trend</th>   <td>           1.0281399</td> <td>                 b.0</td> <td>                True</td>
 </tr>
 <tr>
-  <th>damping_slope</th>   <td>           0.4735625</td> <td>                 phi</td> <td>                True</td>
+  <th>damping_trend</th>   <td>           0.9900000</td> <td>                 phi</td> <td>                True</td>
 </tr>
 </table>
-<div class="sourceCode" id="cb46"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb46-1"><a href="exponential-smoothing.html#cb46-1" aria-hidden="true" tabindex="-1"></a>fcast4 <span class="op">=</span> fit4.forecast(<span class="dv">24</span>)</span>
-<span id="cb46-2"><a href="exponential-smoothing.html#cb46-2" aria-hidden="true" tabindex="-1"></a>fcast4</span></code></pre></div>
-<pre><code>## 1992-01-01    6488.50593
-## 1992-02-01    6488.50593
-## 1992-03-01    6488.50593
-## 1992-04-01    6488.50593
-## 1992-05-01    6488.50593
-## 1992-06-01    6488.50593
-## 1992-07-01    6488.50593
-## 1992-08-01    6488.50593
-## 1992-09-01    6488.50593
-## 1992-10-01    6488.50593
-## 1992-11-01    6488.50593
-## 1992-12-01    6488.50593
-## 1993-01-01    6488.50593
-## 1993-02-01    6488.50593
-## 1993-03-01    6488.50593
-## 1993-04-01    6488.50593
-## 1993-05-01    6488.50593
-## 1993-06-01    6488.50593
-## 1993-07-01    6488.50593
-## 1993-08-01    6488.50593
-## 1993-09-01    6488.50593
-## 1993-10-01    6488.50593
-## 1993-11-01    6488.50593
-## 1993-12-01    6488.50593
+<div class="sourceCode" id="cb73"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb73-1"><a href="exponential-smoothing.html#cb73-1" tabindex="-1"></a>fcast4 <span class="op">=</span> fit4.forecast(<span class="dv">24</span>)</span>
+<span id="cb73-2"><a href="exponential-smoothing.html#cb73-2" tabindex="-1"></a>fcast4</span></code></pre></div>
+<pre><code>## 1992-01-01    6401.809327
+## 1992-02-01    6388.238198
+## 1992-03-01    6374.831120
+## 1992-04-01    6361.585830
+## 1992-05-01    6348.500102
+## 1992-06-01    6335.571746
+## 1992-07-01    6322.798608
+## 1992-08-01    6310.178568
+## 1992-09-01    6297.709542
+## 1992-10-01    6285.389477
+## 1992-11-01    6273.216353
+## 1992-12-01    6261.188185
+## 1993-01-01    6249.303016
+## 1993-02-01    6237.558923
+## 1993-03-01    6225.954011
+## 1993-04-01    6214.486416
+## 1993-05-01    6203.154304
+## 1993-06-01    6191.955868
+## 1993-07-01    6180.889331
+## 1993-08-01    6169.952942
+## 1993-09-01    6159.144978
+## 1993-10-01    6148.463744
+## 1993-11-01    6137.907569
+## 1993-12-01    6127.474808
 ## Freq: MS, dtype: float64</code></pre>
-<div class="sourceCode" id="cb48"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb48-1"><a href="exponential-smoothing.html#cb48-1" aria-hidden="true" tabindex="-1"></a>ax<span class="op">=</span>steel.plot(color<span class="op">=</span><span class="st">&quot;black&quot;</span>,figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
-<span id="cb48-2"><a href="exponential-smoothing.html#cb48-2" aria-hidden="true" tabindex="-1"></a>fcast1.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;blue&quot;</span>)</span>
-<span id="cb48-3"><a href="exponential-smoothing.html#cb48-3" aria-hidden="true" tabindex="-1"></a>fcast2.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;orange&quot;</span>)</span>
-<span id="cb48-4"><a href="exponential-smoothing.html#cb48-4" aria-hidden="true" tabindex="-1"></a>fcast3.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;purple&quot;</span>)</span>
-<span id="cb48-5"><a href="exponential-smoothing.html#cb48-5" aria-hidden="true" tabindex="-1"></a>fcast4.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;gray&quot;</span>)</span>
-<span id="cb48-6"><a href="exponential-smoothing.html#cb48-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<div class="sourceCode" id="cb75"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb75-1"><a href="exponential-smoothing.html#cb75-1" tabindex="-1"></a>ax<span class="op">=</span>steel.plot(color<span class="op">=</span><span class="st">&quot;black&quot;</span>,figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
+<span id="cb75-2"><a href="exponential-smoothing.html#cb75-2" tabindex="-1"></a>fcast1.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb75-3"><a href="exponential-smoothing.html#cb75-3" tabindex="-1"></a>fcast2.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;orange&quot;</span>)</span>
+<span id="cb75-4"><a href="exponential-smoothing.html#cb75-4" tabindex="-1"></a>fcast3.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;purple&quot;</span>)</span>
+<span id="cb75-5"><a href="exponential-smoothing.html#cb75-5" tabindex="-1"></a>fcast4.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb75-6"><a href="exponential-smoothing.html#cb75-6" tabindex="-1"></a>plt.show()</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/holt%20models-3.png" width="1152" />
 Seasonal models in Python:</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb49-1"><a href="exponential-smoothing.html#cb49-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-2"><a href="exponential-smoothing.html#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb49-3"><a href="exponential-smoothing.html#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb49-4"><a href="exponential-smoothing.html#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
-<span id="cb49-5"><a href="exponential-smoothing.html#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
-<span id="cb49-6"><a href="exponential-smoothing.html#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
-<span id="cb49-7"><a href="exponential-smoothing.html#cb49-7" aria-hidden="true" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
-<span id="cb49-8"><a href="exponential-smoothing.html#cb49-8" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
-<span id="cb49-9"><a href="exponential-smoothing.html#cb49-9" aria-hidden="true" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
-<span id="cb49-10"><a href="exponential-smoothing.html#cb49-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-11"><a href="exponential-smoothing.html#cb49-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-12"><a href="exponential-smoothing.html#cb49-12" aria-hidden="true" tabindex="-1"></a>usair_p[<span class="st">&#39;HWES_ADD&#39;</span>] <span class="op">=</span> ExponentialSmoothing(usair_p[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit().fittedvalues</span></code></pre></div>
-<pre><code>## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\tsa\holtwinters.py:725: RuntimeWarning: invalid value encountered in less_equal
-##   loc = initial_p &lt;= lb
-## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\tsa\holtwinters.py:731: RuntimeWarning: invalid value encountered in greater_equal
-##   loc = initial_p &gt;= ub</code></pre>
-<div class="sourceCode" id="cb51"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb51-1"><a href="exponential-smoothing.html#cb51-1" aria-hidden="true" tabindex="-1"></a>usair_p[<span class="st">&#39;HWES_MUL&#39;</span>] <span class="op">=</span> ExponentialSmoothing(usair_p[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;mul&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;mul&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit().fittedvalues</span>
-<span id="cb51-2"><a href="exponential-smoothing.html#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-3"><a href="exponential-smoothing.html#cb51-3" aria-hidden="true" tabindex="-1"></a>usair_p[[<span class="st">&#39;Passengers&#39;</span>,<span class="st">&#39;HWES_ADD&#39;</span>,<span class="st">&#39;HWES_MUL&#39;</span>]].plot(title<span class="op">=</span><span class="st">&#39;Holt Winters Exponential Smoothing: Additive and Multiplicative Seasonality&#39;</span>)</span>
-<span id="cb51-4"><a href="exponential-smoothing.html#cb51-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb76-1"><a href="exponential-smoothing.html#cb76-1" tabindex="-1"></a></span>
+<span id="cb76-2"><a href="exponential-smoothing.html#cb76-2" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb76-3"><a href="exponential-smoothing.html#cb76-3" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb76-4"><a href="exponential-smoothing.html#cb76-4" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
+<span id="cb76-5"><a href="exponential-smoothing.html#cb76-5" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
+<span id="cb76-6"><a href="exponential-smoothing.html#cb76-6" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
+<span id="cb76-7"><a href="exponential-smoothing.html#cb76-7" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
+<span id="cb76-8"><a href="exponential-smoothing.html#cb76-8" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb76-9"><a href="exponential-smoothing.html#cb76-9" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb76-10"><a href="exponential-smoothing.html#cb76-10" tabindex="-1"></a></span>
+<span id="cb76-11"><a href="exponential-smoothing.html#cb76-11" tabindex="-1"></a></span>
+<span id="cb76-12"><a href="exponential-smoothing.html#cb76-12" tabindex="-1"></a>usair_p[<span class="st">&#39;HWES_ADD&#39;</span>] <span class="op">=</span> ExponentialSmoothing(usair_p[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit().fittedvalues</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\holtwinters\model.py:915: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+##   warnings.warn(</code></pre>
+<div class="sourceCode" id="cb78"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb78-1"><a href="exponential-smoothing.html#cb78-1" tabindex="-1"></a>usair_p[<span class="st">&#39;HWES_MUL&#39;</span>] <span class="op">=</span> ExponentialSmoothing(usair_p[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;mul&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;mul&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit().fittedvalues</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\holtwinters\model.py:915: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+##   warnings.warn(</code></pre>
+<div class="sourceCode" id="cb80"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb80-1"><a href="exponential-smoothing.html#cb80-1" tabindex="-1"></a>usair_p[[<span class="st">&#39;Passengers&#39;</span>,<span class="st">&#39;HWES_ADD&#39;</span>,<span class="st">&#39;HWES_MUL&#39;</span>]].plot(title<span class="op">=</span><span class="st">&#39;Holt Winters Exponential Smoothing: Additive and Multiplicative Seasonality&#39;</span>)</span>
+<span id="cb80-2"><a href="exponential-smoothing.html#cb80-2" tabindex="-1"></a>plt.show()</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/seasonal%20models-5.png" width="672" /></p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb52-1"><a href="exponential-smoothing.html#cb52-1" aria-hidden="true" tabindex="-1"></a>fit1<span class="op">=</span>ExponentialSmoothing(usair_p[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;mul&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit()</span></code></pre></div>
-<pre><code>## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\tsa\holtwinters.py:725: RuntimeWarning: invalid value encountered in less_equal
-##   loc = initial_p &lt;= lb
-## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\tsa\holtwinters.py:731: RuntimeWarning: invalid value encountered in greater_equal
-##   loc = initial_p &gt;= ub</code></pre>
-<div class="sourceCode" id="cb54"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb54-1"><a href="exponential-smoothing.html#cb54-1" aria-hidden="true" tabindex="-1"></a>fit1.summary()</span></code></pre></div>
+<div class="sourceCode" id="cb81"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb81-1"><a href="exponential-smoothing.html#cb81-1" tabindex="-1"></a>fit1<span class="op">=</span>ExponentialSmoothing(usair_p[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;mul&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit()</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\holtwinters\model.py:915: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+##   warnings.warn(</code></pre>
+<div class="sourceCode" id="cb83"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb83-1"><a href="exponential-smoothing.html#cb83-1" tabindex="-1"></a>fit1.summary()</span></code></pre></div>
 <table class="simpletable">
 <caption>ExponentialSmoothing Model Results</caption>
 <tr>
-  <th>Dep. Variable:</th>            <td>endog</td>        <th>  No. Observations:  </th>        <td>219</td>      
+  <th>Dep. Variable:</th>         <td>Passengers</td>      <th>  No. Observations:  </th>        <td>219</td>      
 </tr>
 <tr>
-  <th>Model:</th>            <td>ExponentialSmoothing</td> <th>  SSE                </th>   <td>632372040.907</td> 
+  <th>Model:</th>            <td>ExponentialSmoothing</td> <th>  SSE                </th>   <td>810065387.907</td> 
 </tr>
 <tr>
-  <th>Optimized:</th>                <td>True</td>         <th>  AIC                </th>     <td>3289.826</td>    
+  <th>Optimized:</th>                <td>True</td>         <th>  AIC                </th>     <td>3344.058</td>    
 </tr>
 <tr>
-  <th>Trend:</th>                  <td>Additive</td>       <th>  BIC                </th>     <td>3344.051</td>    
+  <th>Trend:</th>                  <td>Additive</td>       <th>  BIC                </th>     <td>3398.283</td>    
 </tr>
 <tr>
-  <th>Seasonal:</th>            <td>Multiplicative</td>    <th>  AICC               </th>     <td>3293.246</td>    
+  <th>Seasonal:</th>            <td>Multiplicative</td>    <th>  AICC               </th>     <td>3347.478</td>    
 </tr>
 <tr>
-  <th>Seasonal Periods:</th>          <td>12</td>          <th>  Date:              </th> <td>Tue, 23 Aug 2022</td>
+  <th>Seasonal Periods:</th>          <td>12</td>          <th>  Date:              </th> <td>Thu, 07 Sep 2023</td>
 </tr>
 <tr>
-  <th>Box-Cox:</th>                  <td>False</td>        <th>  Time:              </th>     <td>12:19:37</td>    
+  <th>Box-Cox:</th>                  <td>False</td>        <th>  Time:              </th>     <td>21:40:04</td>    
 </tr>
 <tr>
   <th>Box-Cox Coeff.:</th>           <td>None</td>         <th>                     </th>         <td> </td>       
@@ -1070,81 +1102,83 @@ Seasonal models in Python:</p>
            <td></td>                  <th>coeff</th>                <th>code</th>               <th>optimized</th>     
 </tr>
 <tr>
-  <th>smoothing_level</th>    <td>           0.6227123</td> <td>               alpha</td> <td>                True</td>
+  <th>smoothing_level</th>    <td>           0.3939286</td> <td>               alpha</td> <td>                True</td>
 </tr>
 <tr>
-  <th>smoothing_slope</th>    <td>           0.0032747</td> <td>                beta</td> <td>                True</td>
+  <th>smoothing_trend</th>    <td>           0.0218849</td> <td>                beta</td> <td>                True</td>
 </tr>
 <tr>
-  <th>smoothing_seasonal</th> <td>            0.000000</td> <td>               gamma</td> <td>                True</td>
+  <th>smoothing_seasonal</th> <td>           0.3030357</td> <td>               gamma</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_level</th>      <td>           45010.105</td> <td>                 l.0</td> <td>                True</td>
+  <th>initial_level</th>      <td>           38232.794</td> <td>                 l.0</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_slope</th>      <td>           0.0102971</td> <td>                 b.0</td> <td>                True</td>
+  <th>initial_trend</th>      <td>          -95.864899</td> <td>                 b.0</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.0</th>  <td>           0.7587098</td> <td>                 s.0</td> <td>                True</td>
+  <th>initial_seasons.0</th>  <td>           0.8828055</td> <td>                 s.0</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.1</th>  <td>           0.7406960</td> <td>                 s.1</td> <td>                True</td>
+  <th>initial_seasons.1</th>  <td>           0.8473624</td> <td>                 s.1</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.2</th>  <td>           0.9018018</td> <td>                 s.2</td> <td>                True</td>
+  <th>initial_seasons.2</th>  <td>           1.0108916</td> <td>                 s.2</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.3</th>  <td>           0.8586157</td> <td>                 s.3</td> <td>                True</td>
+  <th>initial_seasons.3</th>  <td>           0.9777503</td> <td>                 s.3</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.4</th>  <td>           0.8766397</td> <td>                 s.4</td> <td>                True</td>
+  <th>initial_seasons.4</th>  <td>           1.0088677</td> <td>                 s.4</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.5</th>  <td>           0.9231765</td> <td>                 s.5</td> <td>                True</td>
+  <th>initial_seasons.5</th>  <td>           1.0761260</td> <td>                 s.5</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.6</th>  <td>           0.9660812</td> <td>                 s.6</td> <td>                True</td>
+  <th>initial_seasons.6</th>  <td>           1.1385855</td> <td>                 s.6</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.7</th>  <td>           0.9558816</td> <td>                 s.7</td> <td>                True</td>
+  <th>initial_seasons.7</th>  <td>           1.1824059</td> <td>                 s.7</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.8</th>  <td>           0.7747387</td> <td>                 s.8</td> <td>                True</td>
+  <th>initial_seasons.8</th>  <td>           0.9607449</td> <td>                 s.8</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.9</th>  <td>           0.8474931</td> <td>                 s.9</td> <td>                True</td>
+  <th>initial_seasons.9</th>  <td>           1.0081718</td> <td>                 s.9</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.10</th> <td>           0.8080530</td> <td>                s.10</td> <td>                True</td>
+  <th>initial_seasons.10</th> <td>           0.9385590</td> <td>                s.10</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.11</th> <td>           0.8236796</td> <td>                s.11</td> <td>                True</td>
+  <th>initial_seasons.11</th> <td>           0.9677292</td> <td>                s.11</td> <td>                True</td>
 </tr>
 </table>
-<div class="sourceCode" id="cb55"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb55-1"><a href="exponential-smoothing.html#cb55-1" aria-hidden="true" tabindex="-1"></a>fit2<span class="op">=</span>ExponentialSmoothing(usair_p[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit()</span>
-<span id="cb55-2"><a href="exponential-smoothing.html#cb55-2" aria-hidden="true" tabindex="-1"></a>fit2.summary()</span></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb84-1"><a href="exponential-smoothing.html#cb84-1" tabindex="-1"></a>fit2<span class="op">=</span>ExponentialSmoothing(usair_p[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit()</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\holtwinters\model.py:915: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+##   warnings.warn(</code></pre>
+<div class="sourceCode" id="cb86"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb86-1"><a href="exponential-smoothing.html#cb86-1" tabindex="-1"></a>fit2.summary()</span></code></pre></div>
 <table class="simpletable">
 <caption>ExponentialSmoothing Model Results</caption>
 <tr>
-  <th>Dep. Variable:</th>            <td>endog</td>        <th>  No. Observations:  </th>        <td>219</td>      
+  <th>Dep. Variable:</th>         <td>Passengers</td>      <th>  No. Observations:  </th>        <td>219</td>      
 </tr>
 <tr>
-  <th>Model:</th>            <td>ExponentialSmoothing</td> <th>  SSE                </th>   <td>779366955.393</td> 
+  <th>Model:</th>            <td>ExponentialSmoothing</td> <th>  SSE                </th>   <td>818443222.270</td> 
 </tr>
 <tr>
-  <th>Optimized:</th>                <td>True</td>         <th>  AIC                </th>     <td>3335.598</td>    
+  <th>Optimized:</th>                <td>True</td>         <th>  AIC                </th>     <td>3346.312</td>    
 </tr>
 <tr>
-  <th>Trend:</th>                  <td>Additive</td>       <th>  BIC                </th>     <td>3389.823</td>    
+  <th>Trend:</th>                  <td>Additive</td>       <th>  BIC                </th>     <td>3400.537</td>    
 </tr>
 <tr>
-  <th>Seasonal:</th>               <td>Additive</td>       <th>  AICC               </th>     <td>3339.018</td>    
+  <th>Seasonal:</th>               <td>Additive</td>       <th>  AICC               </th>     <td>3349.732</td>    
 </tr>
 <tr>
-  <th>Seasonal Periods:</th>          <td>12</td>          <th>  Date:              </th> <td>Tue, 23 Aug 2022</td>
+  <th>Seasonal Periods:</th>          <td>12</td>          <th>  Date:              </th> <td>Thu, 07 Sep 2023</td>
 </tr>
 <tr>
-  <th>Box-Cox:</th>                  <td>False</td>        <th>  Time:              </th>     <td>12:19:38</td>    
+  <th>Box-Cox:</th>                  <td>False</td>        <th>  Time:              </th>     <td>21:40:04</td>    
 </tr>
 <tr>
   <th>Box-Cox Coeff.:</th>           <td>None</td>         <th>                     </th>         <td> </td>       
@@ -1155,93 +1189,91 @@ Seasonal models in Python:</p>
            <td></td>                  <th>coeff</th>                <th>code</th>               <th>optimized</th>     
 </tr>
 <tr>
-  <th>smoothing_level</th>    <td>           0.4886167</td> <td>               alpha</td> <td>                True</td>
+  <th>smoothing_level</th>    <td>           0.3939286</td> <td>               alpha</td> <td>                True</td>
 </tr>
 <tr>
-  <th>smoothing_slope</th>    <td>          2.5882e-09</td> <td>                beta</td> <td>                True</td>
+  <th>smoothing_trend</th>    <td>           0.0218849</td> <td>                beta</td> <td>                True</td>
 </tr>
 <tr>
-  <th>smoothing_seasonal</th> <td>           0.2359358</td> <td>               gamma</td> <td>                True</td>
+  <th>smoothing_seasonal</th> <td>           0.3305844</td> <td>               gamma</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_level</th>      <td>           44992.621</td> <td>                 l.0</td> <td>                True</td>
+  <th>initial_level</th>      <td>           38232.794</td> <td>                 l.0</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_slope</th>      <td>           132.60863</td> <td>                 b.0</td> <td>                True</td>
+  <th>initial_trend</th>      <td>          -95.864899</td> <td>                 b.0</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.0</th>  <td>          -10634.382</td> <td>                 s.0</td> <td>                True</td>
+  <th>initial_seasons.0</th>  <td>          -4632.4028</td> <td>                 s.0</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.1</th>  <td>          -11430.110</td> <td>                 s.1</td> <td>                True</td>
+  <th>initial_seasons.1</th>  <td>          -6032.6319</td> <td>                 s.1</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.2</th>  <td>          -4468.8717</td> <td>                 s.2</td> <td>                True</td>
+  <th>initial_seasons.2</th>  <td>           494.52431</td> <td>                 s.2</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.3</th>  <td>          -6738.8862</td> <td>                 s.3</td> <td>                True</td>
+  <th>initial_seasons.3</th>  <td>          -873.71528</td> <td>                 s.3</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.4</th>  <td>          -6604.9987</td> <td>                 s.4</td> <td>                True</td>
+  <th>initial_seasons.4</th>  <td>           368.01389</td> <td>                 s.4</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.5</th>  <td>          -4214.4889</td> <td>                 s.5</td> <td>                True</td>
+  <th>initial_seasons.5</th>  <td>           3047.9618</td> <td>                 s.5</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.6</th>  <td>          -2689.8742</td> <td>                 s.6</td> <td>                True</td>
+  <th>initial_seasons.6</th>  <td>           5402.8993</td> <td>                 s.6</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.7</th>  <td>          -484.79161</td> <td>                 s.7</td> <td>                True</td>
+  <th>initial_seasons.7</th>  <td>           7100.5243</td> <td>                 s.7</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.8</th>  <td>          -9405.1624</td> <td>                 s.8</td> <td>                True</td>
+  <th>initial_seasons.8</th>  <td>          -1505.9653</td> <td>                 s.8</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.9</th>  <td>          -6707.8316</td> <td>                 s.9</td> <td>                True</td>
+  <th>initial_seasons.9</th>  <td>           325.04514</td> <td>                 s.9</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.10</th> <td>          -8821.8270</td> <td>                s.10</td> <td>                True</td>
+  <th>initial_seasons.10</th> <td>          -2405.4861</td> <td>                s.10</td> <td>                True</td>
 </tr>
 <tr>
-  <th>initial_seasons.11</th> <td>          -8323.4613</td> <td>                s.11</td> <td>                True</td>
+  <th>initial_seasons.11</th> <td>          -1288.7674</td> <td>                s.11</td> <td>                True</td>
 </tr>
 </table>
-<div class="sourceCode" id="cb56"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb56-1"><a href="exponential-smoothing.html#cb56-1" aria-hidden="true" tabindex="-1"></a>fcast1<span class="op">=</span>fit1.forecast(<span class="dv">24</span>)</span>
-<span id="cb56-2"><a href="exponential-smoothing.html#cb56-2" aria-hidden="true" tabindex="-1"></a>fcast2<span class="op">=</span>fit2.forecast(<span class="dv">24</span>)</span>
-<span id="cb56-3"><a href="exponential-smoothing.html#cb56-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-4"><a href="exponential-smoothing.html#cb56-4" aria-hidden="true" tabindex="-1"></a>ax<span class="op">=</span>usair_p[<span class="st">&quot;Passengers&quot;</span>].plot(color<span class="op">=</span><span class="st">&quot;black&quot;</span>,figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
-<span id="cb56-5"><a href="exponential-smoothing.html#cb56-5" aria-hidden="true" tabindex="-1"></a>fcast1.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;blue&quot;</span>)</span>
-<span id="cb56-6"><a href="exponential-smoothing.html#cb56-6" aria-hidden="true" tabindex="-1"></a>fcast2.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;orange&quot;</span>)</span>
-<span id="cb56-7"><a href="exponential-smoothing.html#cb56-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<div class="sourceCode" id="cb87"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb87-1"><a href="exponential-smoothing.html#cb87-1" tabindex="-1"></a>fcast1<span class="op">=</span>fit1.forecast(<span class="dv">24</span>)</span>
+<span id="cb87-2"><a href="exponential-smoothing.html#cb87-2" tabindex="-1"></a>fcast2<span class="op">=</span>fit2.forecast(<span class="dv">24</span>)</span>
+<span id="cb87-3"><a href="exponential-smoothing.html#cb87-3" tabindex="-1"></a></span>
+<span id="cb87-4"><a href="exponential-smoothing.html#cb87-4" tabindex="-1"></a>ax<span class="op">=</span>usair_p[<span class="st">&quot;Passengers&quot;</span>].plot(color<span class="op">=</span><span class="st">&quot;black&quot;</span>,figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
+<span id="cb87-5"><a href="exponential-smoothing.html#cb87-5" tabindex="-1"></a>fcast1.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb87-6"><a href="exponential-smoothing.html#cb87-6" tabindex="-1"></a>fcast2.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;orange&quot;</span>)</span>
+<span id="cb87-7"><a href="exponential-smoothing.html#cb87-7" tabindex="-1"></a>plt.show()</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/seasonal%20models-6.png" width="1152" />
 Evaluating forecasts in Python (and setting aside training/validation data):</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb57-1"><a href="exponential-smoothing.html#cb57-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-2"><a href="exponential-smoothing.html#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb57-3"><a href="exponential-smoothing.html#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb57-4"><a href="exponential-smoothing.html#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb57-5"><a href="exponential-smoothing.html#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
-<span id="cb57-6"><a href="exponential-smoothing.html#cb57-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
-<span id="cb57-7"><a href="exponential-smoothing.html#cb57-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
-<span id="cb57-8"><a href="exponential-smoothing.html#cb57-8" aria-hidden="true" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
-<span id="cb57-9"><a href="exponential-smoothing.html#cb57-9" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
-<span id="cb57-10"><a href="exponential-smoothing.html#cb57-10" aria-hidden="true" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
-<span id="cb57-11"><a href="exponential-smoothing.html#cb57-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-12"><a href="exponential-smoothing.html#cb57-12" aria-hidden="true" tabindex="-1"></a>train<span class="op">=</span>usair_p.iloc[:<span class="dv">207</span>]</span>
-<span id="cb57-13"><a href="exponential-smoothing.html#cb57-13" aria-hidden="true" tabindex="-1"></a>test<span class="op">=</span>usair_p.iloc[<span class="dv">207</span>:]</span>
-<span id="cb57-14"><a href="exponential-smoothing.html#cb57-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-15"><a href="exponential-smoothing.html#cb57-15" aria-hidden="true" tabindex="-1"></a>fit<span class="op">=</span>ExponentialSmoothing(train[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;mul&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit()</span></code></pre></div>
-<pre><code>## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\tsa\holtwinters.py:725: RuntimeWarning: invalid value encountered in less_equal
-##   loc = initial_p &lt;= lb
-## C:\PROGRA~3\ANACON~1\lib\site-packages\statsmodels\tsa\holtwinters.py:731: RuntimeWarning: invalid value encountered in greater_equal
-##   loc = initial_p &gt;= ub</code></pre>
-<div class="sourceCode" id="cb59"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb59-1"><a href="exponential-smoothing.html#cb59-1" aria-hidden="true" tabindex="-1"></a>fcast<span class="op">=</span>fit.forecast(<span class="dv">12</span>)</span>
-<span id="cb59-2"><a href="exponential-smoothing.html#cb59-2" aria-hidden="true" tabindex="-1"></a>error<span class="op">=</span>test[<span class="st">&#39;Passengers&#39;</span>]<span class="op">-</span>fcast</span>
-<span id="cb59-3"><a href="exponential-smoothing.html#cb59-3" aria-hidden="true" tabindex="-1"></a>MAE<span class="op">=</span>np.mean(<span class="bu">abs</span>(error))</span>
-<span id="cb59-4"><a href="exponential-smoothing.html#cb59-4" aria-hidden="true" tabindex="-1"></a>MAE</span></code></pre></div>
-<pre><code>## 975.741640302714</code></pre>
-<div class="sourceCode" id="cb61"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb61-1"><a href="exponential-smoothing.html#cb61-1" aria-hidden="true" tabindex="-1"></a>MAPE<span class="op">=</span>np.mean(<span class="bu">abs</span>(error)<span class="op">/</span>test[<span class="st">&#39;Passengers&#39;</span>])</span>
-<span id="cb61-2"><a href="exponential-smoothing.html#cb61-2" aria-hidden="true" tabindex="-1"></a>MAPE</span></code></pre></div>
-<pre><code>## 0.015582661022182512</code></pre>
+<div class="sourceCode" id="cb88"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb88-1"><a href="exponential-smoothing.html#cb88-1" tabindex="-1"></a></span>
+<span id="cb88-2"><a href="exponential-smoothing.html#cb88-2" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb88-3"><a href="exponential-smoothing.html#cb88-3" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb88-4"><a href="exponential-smoothing.html#cb88-4" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb88-5"><a href="exponential-smoothing.html#cb88-5" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
+<span id="cb88-6"><a href="exponential-smoothing.html#cb88-6" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
+<span id="cb88-7"><a href="exponential-smoothing.html#cb88-7" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
+<span id="cb88-8"><a href="exponential-smoothing.html#cb88-8" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
+<span id="cb88-9"><a href="exponential-smoothing.html#cb88-9" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb88-10"><a href="exponential-smoothing.html#cb88-10" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb88-11"><a href="exponential-smoothing.html#cb88-11" tabindex="-1"></a></span>
+<span id="cb88-12"><a href="exponential-smoothing.html#cb88-12" tabindex="-1"></a>train<span class="op">=</span>usair_p.iloc[:<span class="dv">207</span>]</span>
+<span id="cb88-13"><a href="exponential-smoothing.html#cb88-13" tabindex="-1"></a>test<span class="op">=</span>usair_p.iloc[<span class="dv">207</span>:]</span>
+<span id="cb88-14"><a href="exponential-smoothing.html#cb88-14" tabindex="-1"></a></span>
+<span id="cb88-15"><a href="exponential-smoothing.html#cb88-15" tabindex="-1"></a>fit<span class="op">=</span>ExponentialSmoothing(train[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;mul&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit()</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\holtwinters\model.py:915: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+##   warnings.warn(</code></pre>
+<div class="sourceCode" id="cb90"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb90-1"><a href="exponential-smoothing.html#cb90-1" tabindex="-1"></a>fcast<span class="op">=</span>fit.forecast(<span class="dv">12</span>)</span>
+<span id="cb90-2"><a href="exponential-smoothing.html#cb90-2" tabindex="-1"></a>error<span class="op">=</span>test[<span class="st">&#39;Passengers&#39;</span>]<span class="op">-</span>fcast</span>
+<span id="cb90-3"><a href="exponential-smoothing.html#cb90-3" tabindex="-1"></a>MAE<span class="op">=</span>np.mean(<span class="bu">abs</span>(error))</span>
+<span id="cb90-4"><a href="exponential-smoothing.html#cb90-4" tabindex="-1"></a>MAE</span></code></pre></div>
+<pre><code>## 1373.7628412264887</code></pre>
+<div class="sourceCode" id="cb92"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb92-1"><a href="exponential-smoothing.html#cb92-1" tabindex="-1"></a>MAPE<span class="op">=</span>np.mean(<span class="bu">abs</span>(error)<span class="op">/</span>test[<span class="st">&#39;Passengers&#39;</span>])</span>
+<span id="cb92-2"><a href="exponential-smoothing.html#cb92-2" tabindex="-1"></a>MAPE</span></code></pre></div>
+<pre><code>## 0.02125707712076534</code></pre>
 </div>
 <div id="sas-code-for-exponential-smoothing-models" class="section level2 hasAnchor" number="3.7">
 <h2><span class="header-section-number">3.7</span> SAS Code for Exponential Smoothing Models<a href="exponential-smoothing.html#sas-code-for-exponential-smoothing-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -1372,10 +1404,7 @@ gitbook.start({
 "text": null
 },
 "download": null,
-"search": {
-"engine": "fuse",
-"options": null
-},
+"search": false,
 "toc": {
 "collapse": "subsection"
 }
@@ -1389,7 +1418,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

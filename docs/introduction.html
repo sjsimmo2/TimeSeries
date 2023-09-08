@@ -23,7 +23,7 @@
 <meta name="author" content="by Dr. Susan Simmons" />
 
 
-<meta name="date" content="2023-09-06" />
+<meta name="date" content="2023-09-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -170,6 +170,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.8" data-path="arima.html"><a href="arima.html#python-code-for-armaarima-models"><i class="fa fa-check"></i><b>4.8</b> Python Code for ARMA/ARIMA models</a></li>
 <li class="chapter" data-level="4.9" data-path="arima.html"><a href="arima.html#sas-code-for-armaarima"><i class="fa fa-check"></i><b>4.9</b> SAS Code for ARMA/ARIMA</a></li>
 </ul></li>
+<li class="chapter" data-level="5" data-path="seasonality.html"><a href="seasonality.html"><i class="fa fa-check"></i><b>5</b> Seasonality</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="seasonality.html"><a href="seasonality.html#seasonal-unit-root-testing"><i class="fa fa-check"></i><b>5.1</b> Seasonal Unit Root Testing</a></li>
+<li class="chapter" data-level="5.2" data-path="seasonality.html"><a href="seasonality.html#deterministic-solutions"><i class="fa fa-check"></i><b>5.2</b> Deterministic Solutions</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="seasonality.html"><a href="seasonality.html#seasonal-dummy-variables"><i class="fa fa-check"></i><b>5.2.1</b> Seasonal Dummy Variables</a></li>
+<li class="chapter" data-level="5.2.2" data-path="seasonality.html"><a href="seasonality.html#fourier-transforms"><i class="fa fa-check"></i><b>5.2.2</b> Fourier Transforms</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="seasonality.html"><a href="seasonality.html#stochastic-solutions"><i class="fa fa-check"></i><b>5.3</b> Stochastic Solutions</a></li>
+<li class="chapter" data-level="5.4" data-path="seasonality.html"><a href="seasonality.html#seasonal-arima-modeling"><i class="fa fa-check"></i><b>5.4</b> Seasonal ARIMA Modeling</a></li>
+<li class="chapter" data-level="5.5" data-path="seasonality.html"><a href="seasonality.html#python-code-for-seasonality"><i class="fa fa-check"></i><b>5.5</b> Python Code for Seasonality</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="seasonality.html"><a href="seasonality.html#seasonality-1"><i class="fa fa-check"></i><b>5.5.1</b> Seasonality</a></li>
+<li class="chapter" data-level="5.5.2" data-path="seasonality.html"><a href="seasonality.html#deterministic-solutions-1"><i class="fa fa-check"></i><b>5.5.2</b> Deterministic Solutions</a></li>
+<li class="chapter" data-level="5.5.3" data-path="seasonality.html"><a href="seasonality.html#stochastic-solution"><i class="fa fa-check"></i><b>5.5.3</b> Stochastic Solution</a></li>
+<li class="chapter" data-level="5.5.4" data-path="seasonality.html"><a href="seasonality.html#seasonal-arima"><i class="fa fa-check"></i><b>5.5.4</b> Seasonal ARIMA</a></li>
+</ul></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -206,7 +224,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-12"><a href="introduction.html#cb1-12" tabindex="-1"></a><span class="fu">library</span>(imputeTS)</span>
 <span id="cb1-13"><a href="introduction.html#cb1-13" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
 <span id="cb1-14"><a href="introduction.html#cb1-14" tabindex="-1"></a><span class="fu">library</span>(prophet)</span>
-<span id="cb1-15"><a href="introduction.html#cb1-15" tabindex="-1"></a><span class="fu">use_python</span>(<span class="st">&quot;C:</span><span class="sc">\\</span><span class="st">ProgramData</span><span class="sc">\\</span><span class="st">Anaconda3</span><span class="sc">\\</span><span class="st">python.exe&quot;</span>)</span></code></pre></div>
+<span id="cb1-15"><a href="introduction.html#cb1-15" tabindex="-1"></a><span class="fu">use_python</span>(<span class="st">&quot;C:</span><span class="sc">\\</span><span class="st">ProgramData</span><span class="sc">\\</span><span class="st">Anaconda3</span><span class="sc">\\</span><span class="st">envs</span><span class="sc">\\</span><span class="st">R_Env2</span><span class="sc">\\</span><span class="st">python.exe&quot;</span>)</span>
+<span id="cb1-16"><a href="introduction.html#cb1-16" tabindex="-1"></a><span class="co">#use_python(&quot;C:\\ProgramData\\Anaconda3\\python.exe&quot;)</span></span></code></pre></div>
 <p>The data sets that you will need are as follows (be sure to put the correct location and file name for your computer):</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="introduction.html#cb2-1" tabindex="-1"></a>file.dir <span class="ot">=</span> <span class="st">&quot;https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/&quot;</span> </span>
 <span id="cb2-2"><a href="introduction.html#cb2-2" tabindex="-1"></a>input.file1 <span class="ot">=</span> <span class="st">&quot;usairlines.csv&quot;</span></span>
@@ -284,14 +303,15 @@ Just a quick note. STL ONLY does additive seasonal decomposition. There is a dec
 <p>The following code shows the time series plot and classical decomposition (using additive model).</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="introduction.html#cb16-1" tabindex="-1"></a></span>
 <span id="cb16-2"><a href="introduction.html#cb16-2" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb16-3"><a href="introduction.html#cb16-3" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb16-4"><a href="introduction.html#cb16-4" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
-<span id="cb16-5"><a href="introduction.html#cb16-5" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
-<span id="cb16-6"><a href="introduction.html#cb16-6" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
-<span id="cb16-7"><a href="introduction.html#cb16-7" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
-<span id="cb16-8"><a href="introduction.html#cb16-8" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
-<span id="cb16-9"><a href="introduction.html#cb16-9" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
-<span id="cb16-10"><a href="introduction.html#cb16-10" tabindex="-1"></a><span class="bu">print</span>(usair_p.head())</span></code></pre></div>
+<span id="cb16-3"><a href="introduction.html#cb16-3" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb16-4"><a href="introduction.html#cb16-4" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb16-5"><a href="introduction.html#cb16-5" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
+<span id="cb16-6"><a href="introduction.html#cb16-6" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
+<span id="cb16-7"><a href="introduction.html#cb16-7" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
+<span id="cb16-8"><a href="introduction.html#cb16-8" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
+<span id="cb16-9"><a href="introduction.html#cb16-9" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb16-10"><a href="introduction.html#cb16-10" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb16-11"><a href="introduction.html#cb16-11" tabindex="-1"></a><span class="bu">print</span>(usair_p.head())</span></code></pre></div>
 <pre><code>##             Year  Month  Passengers
 ## 1990-01-01  1990      1       34348
 ## 1990-02-01  1990      2       33536

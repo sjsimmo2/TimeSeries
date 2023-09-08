@@ -36,8 +36,7 @@ x=read.csv(paste(file.dir, input.file7, sep = ""))
 hurricane=read.csv(paste(file.dir, input.file8, sep = ""))
 SteelShp <- ts(Steel$steelshp, start = 1984, frequency = 12)
 Passenger <- ts(USAirlines$Passengers, start = 1990, frequency =12)
-library(reticulate)
-use_python("C:\\ProgramData\\Anaconda3\\python.exe")
+
 ```
 
 We will now be switching over to doing ARMA/ARIMA models!!  There are a number of different concepts you will need in order to do this type of modeling.

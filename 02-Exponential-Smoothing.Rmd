@@ -37,8 +37,7 @@ x=read.csv(paste(file.dir, input.file7, sep = ""))
 hurricane=read.csv(paste(file.dir, input.file8, sep = ""))
 SteelShp <- ts(Steel$steelshp, start = 1984, frequency = 12)
 Passenger <- ts(USAirlines$Passengers, start = 1990, frequency =12)
-library(reticulate)
-use_python("C:\\ProgramData\\Anaconda3\\python.exe")
+
 ```
 
 In R, we are able to do Simple (or Single) Exponential Smoothing Models, Holt Exponential Smoothing Models and Holt-Winters Exponential Smoothing Models.  For the first two (Simple and Holt), we will be using the Steel data set and for the last one (Holt-Winters), we will be using the airline data set (we will also use the airline data set to illustrate the damped trend model).  Each of these are shown below.  
