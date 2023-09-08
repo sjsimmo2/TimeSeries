@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="dynamic-regression-models.html"/>
-
+<link rel="next" href="neural-network-model.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -206,6 +206,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.1.2" data-path="prophet.html"><a href="prophet.html#forecasting"><i class="fa fa-check"></i><b>7.1.2</b> Forecasting</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="8" data-path="neural-network-model.html"><a href="neural-network-model.html"><i class="fa fa-check"></i><b>8</b> Neural Network Model</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="neural-network-model.html"><a href="neural-network-model.html#python-code-for-neural-networks"><i class="fa fa-check"></i><b>8.1</b> Python Code for Neural Networks</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="neural-network-model.html"><a href="neural-network-model.html#ar-neural-networks"><i class="fa fa-check"></i><b>8.1.1</b> AR Neural Networks</a></li>
+</ul></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -312,48 +319,47 @@ X_W = \cos(\frac{2\pi t}{7}) + \sin(2 \times \frac{2\pi t}{7}) + \cos(3 \times \
 <h2><span class="header-section-number">7.1</span> Python Code for Prophet<a href="prophet.html#python-code-for-prophet" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div id="model-structure" class="section level3 hasAnchor" number="7.1.1">
 <h3><span class="header-section-number">7.1.1</span> Model Structure<a href="prophet.html#model-structure" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb312"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb312-1"><a href="prophet.html#cb312-1" tabindex="-1"></a><span class="im">from</span> prophet <span class="im">import</span> Prophet</span></code></pre></div>
-<pre><code>## Importing plotly failed. Interactive plots will not work.</code></pre>
-<div class="sourceCode" id="cb314"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb314-1"><a href="prophet.html#cb314-1" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb314-2"><a href="prophet.html#cb314-2" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb314-3"><a href="prophet.html#cb314-3" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb314-4"><a href="prophet.html#cb314-4" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
-<span id="cb314-5"><a href="prophet.html#cb314-5" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics <span class="im">import</span> tsaplots</span>
-<span id="cb314-6"><a href="prophet.html#cb314-6" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics <span class="im">import</span> tsaplots</span>
-<span id="cb314-7"><a href="prophet.html#cb314-7" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
-<span id="cb314-8"><a href="prophet.html#cb314-8" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
-<span id="cb314-9"><a href="prophet.html#cb314-9" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima_model <span class="im">import</span> ARMA</span>
-<span id="cb314-10"><a href="prophet.html#cb314-10" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima_model <span class="im">import</span> ARIMA</span>
-<span id="cb314-11"><a href="prophet.html#cb314-11" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.statespace.sarimax <span class="im">import</span> SARIMAX</span>
-<span id="cb314-12"><a href="prophet.html#cb314-12" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.holtwinters <span class="im">import</span> SimpleExpSmoothing, Holt, ExponentialSmoothing</span>
-<span id="cb314-13"><a href="prophet.html#cb314-13" tabindex="-1"></a><span class="im">import</span> pmdarima <span class="im">as</span> pm</span>
-<span id="cb314-14"><a href="prophet.html#cb314-14" tabindex="-1"></a>usair <span class="op">=</span> pd.read_csv(<span class="st">&quot;https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/usairlines.csv&quot;</span>)</span>
-<span id="cb314-15"><a href="prophet.html#cb314-15" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
-<span id="cb314-16"><a href="prophet.html#cb314-16" tabindex="-1"></a>usair.index<span class="op">=</span>pd.to_datetime(df)</span>
-<span id="cb314-17"><a href="prophet.html#cb314-17" tabindex="-1"></a></span>
-<span id="cb314-18"><a href="prophet.html#cb314-18" tabindex="-1"></a>training <span class="op">=</span> usair.head(<span class="dv">207</span>)</span>
-<span id="cb314-19"><a href="prophet.html#cb314-19" tabindex="-1"></a>test <span class="op">=</span> usair.tail(<span class="dv">12</span>)</span>
-<span id="cb314-20"><a href="prophet.html#cb314-20" tabindex="-1"></a></span>
-<span id="cb314-21"><a href="prophet.html#cb314-21" tabindex="-1"></a></span>
-<span id="cb314-22"><a href="prophet.html#cb314-22" tabindex="-1"></a>d <span class="op">=</span> {<span class="st">&#39;ds&#39;</span>: training.index, <span class="st">&#39;y&#39;</span>: training[<span class="st">&#39;Passengers&#39;</span>]}</span>
-<span id="cb314-23"><a href="prophet.html#cb314-23" tabindex="-1"></a>training_prophet <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d)</span></code></pre></div>
-<div class="sourceCode" id="cb315"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb315-1"><a href="prophet.html#cb315-1" tabindex="-1"></a>m <span class="op">=</span> Prophet(seasonality_mode<span class="op">=</span><span class="st">&#39;multiplicative&#39;</span>).fit(training_prophet)</span></code></pre></div>
-<pre><code>## 23:07:39 - cmdstanpy - INFO - Chain [1] start processing
-## 23:07:39 - cmdstanpy - INFO - Chain [1] done processing</code></pre>
+<div class="sourceCode" id="cb312"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb312-1"><a href="prophet.html#cb312-1" tabindex="-1"></a><span class="im">from</span> prophet <span class="im">import</span> Prophet</span>
+<span id="cb312-2"><a href="prophet.html#cb312-2" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb312-3"><a href="prophet.html#cb312-3" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb312-4"><a href="prophet.html#cb312-4" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb312-5"><a href="prophet.html#cb312-5" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb312-6"><a href="prophet.html#cb312-6" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics <span class="im">import</span> tsaplots</span>
+<span id="cb312-7"><a href="prophet.html#cb312-7" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics <span class="im">import</span> tsaplots</span>
+<span id="cb312-8"><a href="prophet.html#cb312-8" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
+<span id="cb312-9"><a href="prophet.html#cb312-9" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
+<span id="cb312-10"><a href="prophet.html#cb312-10" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima_model <span class="im">import</span> ARMA</span>
+<span id="cb312-11"><a href="prophet.html#cb312-11" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima_model <span class="im">import</span> ARIMA</span>
+<span id="cb312-12"><a href="prophet.html#cb312-12" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.statespace.sarimax <span class="im">import</span> SARIMAX</span>
+<span id="cb312-13"><a href="prophet.html#cb312-13" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.holtwinters <span class="im">import</span> SimpleExpSmoothing, Holt, ExponentialSmoothing</span>
+<span id="cb312-14"><a href="prophet.html#cb312-14" tabindex="-1"></a><span class="im">import</span> pmdarima <span class="im">as</span> pm</span>
+<span id="cb312-15"><a href="prophet.html#cb312-15" tabindex="-1"></a>usair <span class="op">=</span> pd.read_csv(<span class="st">&quot;https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/usairlines.csv&quot;</span>)</span>
+<span id="cb312-16"><a href="prophet.html#cb312-16" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb312-17"><a href="prophet.html#cb312-17" tabindex="-1"></a>usair.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb312-18"><a href="prophet.html#cb312-18" tabindex="-1"></a></span>
+<span id="cb312-19"><a href="prophet.html#cb312-19" tabindex="-1"></a>training <span class="op">=</span> usair.head(<span class="dv">207</span>)</span>
+<span id="cb312-20"><a href="prophet.html#cb312-20" tabindex="-1"></a>test <span class="op">=</span> usair.tail(<span class="dv">12</span>)</span>
+<span id="cb312-21"><a href="prophet.html#cb312-21" tabindex="-1"></a></span>
+<span id="cb312-22"><a href="prophet.html#cb312-22" tabindex="-1"></a></span>
+<span id="cb312-23"><a href="prophet.html#cb312-23" tabindex="-1"></a>d <span class="op">=</span> {<span class="st">&#39;ds&#39;</span>: training.index, <span class="st">&#39;y&#39;</span>: training[<span class="st">&#39;Passengers&#39;</span>]}</span>
+<span id="cb312-24"><a href="prophet.html#cb312-24" tabindex="-1"></a>training_prophet <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d)</span></code></pre></div>
+<div class="sourceCode" id="cb313"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb313-1"><a href="prophet.html#cb313-1" tabindex="-1"></a>m <span class="op">=</span> Prophet(seasonality_mode<span class="op">=</span><span class="st">&#39;multiplicative&#39;</span>).fit(training_prophet)</span></code></pre></div>
+<pre><code>## 23:21:17 - cmdstanpy - INFO - Chain [1] start processing
+## 23:21:17 - cmdstanpy - INFO - Chain [1] done processing</code></pre>
 </div>
 <div id="forecasting" class="section level3 hasAnchor" number="7.1.2">
 <h3><span class="header-section-number">7.1.2</span> Forecasting<a href="prophet.html#forecasting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb317"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb317-1"><a href="prophet.html#cb317-1" tabindex="-1"></a>future <span class="op">=</span> m.make_future_dataframe(periods<span class="op">=</span><span class="dv">12</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
-<span id="cb317-2"><a href="prophet.html#cb317-2" tabindex="-1"></a>fcst <span class="op">=</span> m.predict(future)</span>
-<span id="cb317-3"><a href="prophet.html#cb317-3" tabindex="-1"></a>fig <span class="op">=</span> m.plot(fcst)</span>
-<span id="cb317-4"><a href="prophet.html#cb317-4" tabindex="-1"></a></span>
-<span id="cb317-5"><a href="prophet.html#cb317-5" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<div class="sourceCode" id="cb315"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb315-1"><a href="prophet.html#cb315-1" tabindex="-1"></a>future <span class="op">=</span> m.make_future_dataframe(periods<span class="op">=</span><span class="dv">12</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb315-2"><a href="prophet.html#cb315-2" tabindex="-1"></a>fcst <span class="op">=</span> m.predict(future)</span>
+<span id="cb315-3"><a href="prophet.html#cb315-3" tabindex="-1"></a>fig <span class="op">=</span> m.plot(fcst)</span>
+<span id="cb315-4"><a href="prophet.html#cb315-4" tabindex="-1"></a></span>
+<span id="cb315-5"><a href="prophet.html#cb315-5" tabindex="-1"></a>plt.show()</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-83-1.png" width="960" /></p>
-<div class="sourceCode" id="cb318"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb318-1"><a href="prophet.html#cb318-1" tabindex="-1"></a>fcst.index <span class="op">=</span> fcst[<span class="st">&#39;ds&#39;</span>]</span>
-<span id="cb318-2"><a href="prophet.html#cb318-2" tabindex="-1"></a></span>
-<span id="cb318-3"><a href="prophet.html#cb318-3" tabindex="-1"></a>error5 <span class="op">=</span> test[<span class="st">&#39;Passengers&#39;</span>] <span class="op">-</span> fcst[<span class="st">&#39;yhat&#39;</span>].tail(<span class="dv">12</span>)</span>
-<span id="cb318-4"><a href="prophet.html#cb318-4" tabindex="-1"></a>MAPE5 <span class="op">=</span> np.mean(<span class="bu">abs</span>(error5)<span class="op">/</span>test[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
-<span id="cb318-5"><a href="prophet.html#cb318-5" tabindex="-1"></a>MAPE5</span></code></pre></div>
+<div class="sourceCode" id="cb316"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb316-1"><a href="prophet.html#cb316-1" tabindex="-1"></a>fcst.index <span class="op">=</span> fcst[<span class="st">&#39;ds&#39;</span>]</span>
+<span id="cb316-2"><a href="prophet.html#cb316-2" tabindex="-1"></a></span>
+<span id="cb316-3"><a href="prophet.html#cb316-3" tabindex="-1"></a>error5 <span class="op">=</span> test[<span class="st">&#39;Passengers&#39;</span>] <span class="op">-</span> fcst[<span class="st">&#39;yhat&#39;</span>].tail(<span class="dv">12</span>)</span>
+<span id="cb316-4"><a href="prophet.html#cb316-4" tabindex="-1"></a>MAPE5 <span class="op">=</span> np.mean(<span class="bu">abs</span>(error5)<span class="op">/</span>test[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb316-5"><a href="prophet.html#cb316-5" tabindex="-1"></a>MAPE5</span></code></pre></div>
 <pre><code>## 1.9550364715323514</code></pre>
 
 </div>
@@ -364,8 +370,8 @@ X_W = \cos(\frac{2\pi t}{7}) + \sin(2 \times \frac{2\pi t}{7}) + \cos(3 \times \
           </div>
         </div>
       </div>
-<a href="dynamic-regression-models.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="dynamic-regression-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="neural-network-model.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

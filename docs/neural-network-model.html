@@ -238,117 +238,117 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>From one layer to the next, the neurons from the previous layer are inputs into each neuron of the next layer all linear combined with weights (coefficients). Inside each of the hidden layer neurons, the linear combination of inputs is transformed with a non-linear function. Typically, this function is the logit function, but could be a variety of non-linear transformations. This is then output from each neuron to go into the next hidden layer. The top layer is just a linear combination of all of the transformations of the neurons from the previous hidden layer.</p>
 <p>In autoregressive neural networks the bottom layer (input variables) also contains lags of the target variable as possible inputs. The number of lags to include is typically done through trial and error. We can approach this problem similar to ARIMA modeling with correlation plots and automatic selection techniques. However, there are no MA terms in this autoregressive neural networks. For seasonal data we typically include all lags up through one season unless correlation plots say you only need specific ones. We do however need to make our data stationary first since we are dealing with lagged terms of the target variable.</p>
 <p>To build an autoregressive neural network in R, we use the nnetar function. This function cannot take differences of your data so we need to input our differenced training data. The p = and P = options specify the number of normal and seasonal autoregressive lags respectively. From there we just use the forecast function from the forecast package to forecast the next 12 time periods (h = 12 option).</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="neural-network-model.html#cb1-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
-<span id="cb1-2"><a href="neural-network-model.html#cb1-2" tabindex="-1"></a>NN.Model <span class="ot">&lt;-</span> <span class="fu">nnetar</span>(<span class="fu">diff</span>(training, <span class="dv">12</span>), <span class="at">p =</span> <span class="dv">2</span>, <span class="at">P =</span> <span class="dv">3</span>)</span>
-<span id="cb1-3"><a href="neural-network-model.html#cb1-3" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="neural-network-model.html#cb1-4" tabindex="-1"></a>NN.Forecast <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">forecast</span>(NN.Model, <span class="at">h =</span> <span class="dv">12</span>)</span>
-<span id="cb1-5"><a href="neural-network-model.html#cb1-5" tabindex="-1"></a><span class="fu">plot</span>(NN.Forecast)</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<div class="sourceCode" id="cb318"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb318-1"><a href="neural-network-model.html#cb318-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
+<span id="cb318-2"><a href="neural-network-model.html#cb318-2" tabindex="-1"></a>NN.Model <span class="ot">&lt;-</span> <span class="fu">nnetar</span>(<span class="fu">diff</span>(training, <span class="dv">12</span>), <span class="at">p =</span> <span class="dv">2</span>, <span class="at">P =</span> <span class="dv">3</span>)</span>
+<span id="cb318-3"><a href="neural-network-model.html#cb318-3" tabindex="-1"></a></span>
+<span id="cb318-4"><a href="neural-network-model.html#cb318-4" tabindex="-1"></a>NN.Forecast <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">forecast</span>(NN.Model, <span class="at">h =</span> <span class="dv">12</span>)</span>
+<span id="cb318-5"><a href="neural-network-model.html#cb318-5" tabindex="-1"></a><span class="fu">plot</span>(NN.Forecast)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-87-1.png" width="672" /></p>
 <p>However, the <code>nnetar</code> function only forecasts the input. Since our input was the differences, the function forecasts the differences, not the original data. The <code>for</code> loop in the code just calculates the forecasts of the actual data based on these differences. Essentially, to get the first month’s forecast, we just add the first forecasted difference to the last data point in our training dataset. Lastly, we can calculate the MAE and MAPE from these forecasts.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="neural-network-model.html#cb2-1" tabindex="-1"></a>Pass.Forecast <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">12</span>)</span>
-<span id="cb2-2"><a href="neural-network-model.html#cb2-2" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="neural-network-model.html#cb2-3" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>){</span>
-<span id="cb2-4"><a href="neural-network-model.html#cb2-4" tabindex="-1"></a>  Pass.Forecast[i] <span class="ot">&lt;-</span> training[<span class="fu">length</span>(training) <span class="sc">-</span> <span class="dv">12</span> <span class="sc">+</span> i] <span class="sc">+</span> forecast<span class="sc">::</span><span class="fu">forecast</span>(NN.Model, <span class="at">h =</span> <span class="dv">24</span>)<span class="sc">$</span>mean[i]</span>
-<span id="cb2-5"><a href="neural-network-model.html#cb2-5" tabindex="-1"></a>}</span>
-<span id="cb2-6"><a href="neural-network-model.html#cb2-6" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="neural-network-model.html#cb2-7" tabindex="-1"></a>Pass.Forecast <span class="ot">&lt;-</span> <span class="fu">ts</span>(Pass.Forecast, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2007</span>, <span class="dv">4</span>), <span class="at">frequency =</span> <span class="dv">12</span>)</span>
-<span id="cb2-8"><a href="neural-network-model.html#cb2-8" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="neural-network-model.html#cb2-9" tabindex="-1"></a><span class="fu">plot</span>(training, <span class="at">main =</span> <span class="st">&quot;US Airline Passengers ARIMA Model Forecasts&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;Date&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Passengers (Thousands)&quot;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1990</span>, <span class="dv">2009</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">30000</span>,<span class="dv">80000</span>))</span>
-<span id="cb2-10"><a href="neural-network-model.html#cb2-10" tabindex="-1"></a><span class="fu">lines</span>(Pass.Forecast, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
-<span id="cb2-11"><a href="neural-network-model.html#cb2-11" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">2007.25</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="neural-network-model.html#cb3-1" tabindex="-1"></a><span class="co"># Calculate prediction errors from forecast</span></span>
-<span id="cb3-2"><a href="neural-network-model.html#cb3-2" tabindex="-1"></a>NN.error <span class="ot">&lt;-</span> test <span class="sc">-</span> Pass.Forecast</span>
-<span id="cb3-3"><a href="neural-network-model.html#cb3-3" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="neural-network-model.html#cb3-4" tabindex="-1"></a><span class="co"># Calculate prediction error statistics (MAE and MAPE)</span></span>
-<span id="cb3-5"><a href="neural-network-model.html#cb3-5" tabindex="-1"></a>NN.MAE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(NN.error))</span>
-<span id="cb3-6"><a href="neural-network-model.html#cb3-6" tabindex="-1"></a>NN.MAPE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(NN.error)<span class="sc">/</span><span class="fu">abs</span>(test))<span class="sc">*</span><span class="dv">100</span></span>
-<span id="cb3-7"><a href="neural-network-model.html#cb3-7" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="neural-network-model.html#cb3-8" tabindex="-1"></a>NN.MAE</span></code></pre></div>
+<div class="sourceCode" id="cb319"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb319-1"><a href="neural-network-model.html#cb319-1" tabindex="-1"></a>Pass.Forecast <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">12</span>)</span>
+<span id="cb319-2"><a href="neural-network-model.html#cb319-2" tabindex="-1"></a></span>
+<span id="cb319-3"><a href="neural-network-model.html#cb319-3" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>){</span>
+<span id="cb319-4"><a href="neural-network-model.html#cb319-4" tabindex="-1"></a>  Pass.Forecast[i] <span class="ot">&lt;-</span> training[<span class="fu">length</span>(training) <span class="sc">-</span> <span class="dv">12</span> <span class="sc">+</span> i] <span class="sc">+</span> forecast<span class="sc">::</span><span class="fu">forecast</span>(NN.Model, <span class="at">h =</span> <span class="dv">24</span>)<span class="sc">$</span>mean[i]</span>
+<span id="cb319-5"><a href="neural-network-model.html#cb319-5" tabindex="-1"></a>}</span>
+<span id="cb319-6"><a href="neural-network-model.html#cb319-6" tabindex="-1"></a></span>
+<span id="cb319-7"><a href="neural-network-model.html#cb319-7" tabindex="-1"></a>Pass.Forecast <span class="ot">&lt;-</span> <span class="fu">ts</span>(Pass.Forecast, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2007</span>, <span class="dv">4</span>), <span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb319-8"><a href="neural-network-model.html#cb319-8" tabindex="-1"></a></span>
+<span id="cb319-9"><a href="neural-network-model.html#cb319-9" tabindex="-1"></a><span class="fu">plot</span>(training, <span class="at">main =</span> <span class="st">&quot;US Airline Passengers ARIMA Model Forecasts&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;Date&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Passengers (Thousands)&quot;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1990</span>, <span class="dv">2009</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">30000</span>,<span class="dv">80000</span>))</span>
+<span id="cb319-10"><a href="neural-network-model.html#cb319-10" tabindex="-1"></a><span class="fu">lines</span>(Pass.Forecast, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb319-11"><a href="neural-network-model.html#cb319-11" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">2007.25</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-88-1.png" width="672" /></p>
+<div class="sourceCode" id="cb320"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb320-1"><a href="neural-network-model.html#cb320-1" tabindex="-1"></a><span class="co"># Calculate prediction errors from forecast</span></span>
+<span id="cb320-2"><a href="neural-network-model.html#cb320-2" tabindex="-1"></a>NN.error <span class="ot">&lt;-</span> test <span class="sc">-</span> Pass.Forecast</span>
+<span id="cb320-3"><a href="neural-network-model.html#cb320-3" tabindex="-1"></a></span>
+<span id="cb320-4"><a href="neural-network-model.html#cb320-4" tabindex="-1"></a><span class="co"># Calculate prediction error statistics (MAE and MAPE)</span></span>
+<span id="cb320-5"><a href="neural-network-model.html#cb320-5" tabindex="-1"></a>NN.MAE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(NN.error))</span>
+<span id="cb320-6"><a href="neural-network-model.html#cb320-6" tabindex="-1"></a>NN.MAPE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(NN.error)<span class="sc">/</span><span class="fu">abs</span>(test))<span class="sc">*</span><span class="dv">100</span></span>
+<span id="cb320-7"><a href="neural-network-model.html#cb320-7" tabindex="-1"></a></span>
+<span id="cb320-8"><a href="neural-network-model.html#cb320-8" tabindex="-1"></a>NN.MAE</span></code></pre></div>
 <pre><code>## [1] 1087.973</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="neural-network-model.html#cb5-1" tabindex="-1"></a>NN.MAPE</span></code></pre></div>
+<div class="sourceCode" id="cb322"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb322-1"><a href="neural-network-model.html#cb322-1" tabindex="-1"></a>NN.MAPE</span></code></pre></div>
 <pre><code>## [1] 1.66796</code></pre>
 <p>Finally, we have a model that beats the original exponential smoothing model’s forecasts! Before any problem begins, we do not know which algorithm will win so we try them all.</p>
 <div id="python-code-for-neural-networks" class="section level2 hasAnchor" number="8.1">
 <h2><span class="header-section-number">8.1</span> Python Code for Neural Networks<a href="neural-network-model.html#python-code-for-neural-networks" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div id="ar-neural-networks" class="section level3 hasAnchor" number="8.1.1">
 <h3><span class="header-section-number">8.1.1</span> AR Neural Networks<a href="neural-network-model.html#ar-neural-networks" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="neural-network-model.html#cb7-1" tabindex="-1"></a></span>
-<span id="cb7-2"><a href="neural-network-model.html#cb7-2" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb7-3"><a href="neural-network-model.html#cb7-3" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb7-4"><a href="neural-network-model.html#cb7-4" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb7-5"><a href="neural-network-model.html#cb7-5" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
-<span id="cb7-6"><a href="neural-network-model.html#cb7-6" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics <span class="im">import</span> tsaplots</span>
-<span id="cb7-7"><a href="neural-network-model.html#cb7-7" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics <span class="im">import</span> tsaplots</span>
-<span id="cb7-8"><a href="neural-network-model.html#cb7-8" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
-<span id="cb7-9"><a href="neural-network-model.html#cb7-9" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
-<span id="cb7-10"><a href="neural-network-model.html#cb7-10" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima_model <span class="im">import</span> ARMA</span>
-<span id="cb7-11"><a href="neural-network-model.html#cb7-11" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima_model <span class="im">import</span> ARIMA</span>
-<span id="cb7-12"><a href="neural-network-model.html#cb7-12" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.statespace.sarimax <span class="im">import</span> SARIMAX</span>
-<span id="cb7-13"><a href="neural-network-model.html#cb7-13" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.holtwinters <span class="im">import</span> SimpleExpSmoothing, Holt, ExponentialSmoothing</span>
-<span id="cb7-14"><a href="neural-network-model.html#cb7-14" tabindex="-1"></a><span class="im">import</span> pmdarima <span class="im">as</span> pm</span>
-<span id="cb7-15"><a href="neural-network-model.html#cb7-15" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="neural-network-model.html#cb7-16" tabindex="-1"></a>usair <span class="op">=</span> pd.read_csv(<span class="st">&quot;https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/usairlines.csv&quot;</span>)</span>
-<span id="cb7-17"><a href="neural-network-model.html#cb7-17" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
-<span id="cb7-18"><a href="neural-network-model.html#cb7-18" tabindex="-1"></a>usair.index<span class="op">=</span>pd.to_datetime(df)</span>
-<span id="cb7-19"><a href="neural-network-model.html#cb7-19" tabindex="-1"></a></span>
-<span id="cb7-20"><a href="neural-network-model.html#cb7-20" tabindex="-1"></a>training <span class="op">=</span> usair.head(<span class="dv">207</span>)</span>
-<span id="cb7-21"><a href="neural-network-model.html#cb7-21" tabindex="-1"></a>test <span class="op">=</span> usair.tail(<span class="dv">12</span>)</span>
-<span id="cb7-22"><a href="neural-network-model.html#cb7-22" tabindex="-1"></a></span>
-<span id="cb7-23"><a href="neural-network-model.html#cb7-23" tabindex="-1"></a></span>
-<span id="cb7-24"><a href="neural-network-model.html#cb7-24" tabindex="-1"></a>usair[<span class="st">&#39;diff&#39;</span>] <span class="op">=</span> usair[<span class="st">&#39;Passengers&#39;</span>] <span class="op">-</span> usair[<span class="st">&#39;Passengers&#39;</span>].shift(<span class="dv">12</span>)</span>
-<span id="cb7-25"><a href="neural-network-model.html#cb7-25" tabindex="-1"></a>usair[<span class="st">&#39;L1&#39;</span>] <span class="op">=</span> usair[<span class="st">&#39;diff&#39;</span>].shift()</span>
-<span id="cb7-26"><a href="neural-network-model.html#cb7-26" tabindex="-1"></a>usair[<span class="st">&#39;L2&#39;</span>] <span class="op">=</span> usair[<span class="st">&#39;diff&#39;</span>].shift(<span class="dv">2</span>)</span>
-<span id="cb7-27"><a href="neural-network-model.html#cb7-27" tabindex="-1"></a>usair[<span class="st">&#39;L12&#39;</span>] <span class="op">=</span> usair[<span class="st">&#39;diff&#39;</span>].shift(<span class="dv">12</span>)</span>
-<span id="cb7-28"><a href="neural-network-model.html#cb7-28" tabindex="-1"></a>usair[<span class="st">&#39;L24&#39;</span>] <span class="op">=</span> usair[<span class="st">&#39;diff&#39;</span>].shift(<span class="dv">24</span>)</span>
-<span id="cb7-29"><a href="neural-network-model.html#cb7-29" tabindex="-1"></a>usair[<span class="st">&#39;L36&#39;</span>] <span class="op">=</span> usair[<span class="st">&#39;diff&#39;</span>].shift(<span class="dv">36</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="neural-network-model.html#cb8-1" tabindex="-1"></a>training <span class="op">=</span> usair.head(<span class="dv">207</span>)</span>
-<span id="cb8-2"><a href="neural-network-model.html#cb8-2" tabindex="-1"></a>test <span class="op">=</span> usair.tail(<span class="dv">12</span>)</span>
-<span id="cb8-3"><a href="neural-network-model.html#cb8-3" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="neural-network-model.html#cb8-4" tabindex="-1"></a>plt.cla()</span>
-<span id="cb8-5"><a href="neural-network-model.html#cb8-5" tabindex="-1"></a>plt.plot(training[<span class="st">&quot;diff&quot;</span>].dropna())</span>
-<span id="cb8-6"><a href="neural-network-model.html#cb8-6" tabindex="-1"></a>plt.xlabel(<span class="st">&quot;Date&quot;</span>)</span>
-<span id="cb8-7"><a href="neural-network-model.html#cb8-7" tabindex="-1"></a>plt.ylabel(<span class="st">&quot;Passengers&quot;</span>)</span>
-<span id="cb8-8"><a href="neural-network-model.html#cb8-8" tabindex="-1"></a>plt.title(<span class="st">&quot;Seasonal Difference in Airline Passengers&quot;</span>)</span>
-<span id="cb8-9"><a href="neural-network-model.html#cb8-9" tabindex="-1"></a>plt.show()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="neural-network-model.html#cb9-1" tabindex="-1"></a><span class="im">from</span> sklearn.neural_network <span class="im">import</span> MLPRegressor</span>
-<span id="cb9-2"><a href="neural-network-model.html#cb9-2" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="neural-network-model.html#cb9-3" tabindex="-1"></a>X <span class="op">=</span> training.drop([<span class="st">&#39;Month&#39;</span>, <span class="st">&#39;Year&#39;</span>, <span class="st">&#39;Passengers&#39;</span>, <span class="st">&#39;diff&#39;</span>], axis <span class="op">=</span> <span class="dv">1</span>).tail(<span class="dv">159</span>)</span>
-<span id="cb9-4"><a href="neural-network-model.html#cb9-4" tabindex="-1"></a>y <span class="op">=</span> training[<span class="st">&#39;diff&#39;</span>].tail(<span class="dv">159</span>)</span>
-<span id="cb9-5"><a href="neural-network-model.html#cb9-5" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="neural-network-model.html#cb9-6" tabindex="-1"></a>NN_air <span class="op">=</span> MLPRegressor(hidden_layer_sizes <span class="op">=</span> (<span class="dv">3</span>,), random_state<span class="op">=</span><span class="dv">123</span>, max_iter <span class="op">=</span> <span class="dv">100000</span>).fit(X, y)</span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="neural-network-model.html#cb10-1" tabindex="-1"></a>X_test <span class="op">=</span> test.drop([<span class="st">&#39;Month&#39;</span>, <span class="st">&#39;Year&#39;</span>, <span class="st">&#39;Passengers&#39;</span>, <span class="st">&#39;diff&#39;</span>], axis <span class="op">=</span> <span class="dv">1</span>)</span>
-<span id="cb10-2"><a href="neural-network-model.html#cb10-2" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="neural-network-model.html#cb10-3" tabindex="-1"></a>test[<span class="st">&#39;NN_pred&#39;</span>] <span class="op">=</span> NN_air.predict(X_test)</span></code></pre></div>
+<div class="sourceCode" id="cb324"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb324-1"><a href="neural-network-model.html#cb324-1" tabindex="-1"></a></span>
+<span id="cb324-2"><a href="neural-network-model.html#cb324-2" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb324-3"><a href="neural-network-model.html#cb324-3" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb324-4"><a href="neural-network-model.html#cb324-4" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb324-5"><a href="neural-network-model.html#cb324-5" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb324-6"><a href="neural-network-model.html#cb324-6" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics <span class="im">import</span> tsaplots</span>
+<span id="cb324-7"><a href="neural-network-model.html#cb324-7" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics <span class="im">import</span> tsaplots</span>
+<span id="cb324-8"><a href="neural-network-model.html#cb324-8" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
+<span id="cb324-9"><a href="neural-network-model.html#cb324-9" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
+<span id="cb324-10"><a href="neural-network-model.html#cb324-10" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima_model <span class="im">import</span> ARMA</span>
+<span id="cb324-11"><a href="neural-network-model.html#cb324-11" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima_model <span class="im">import</span> ARIMA</span>
+<span id="cb324-12"><a href="neural-network-model.html#cb324-12" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.statespace.sarimax <span class="im">import</span> SARIMAX</span>
+<span id="cb324-13"><a href="neural-network-model.html#cb324-13" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.holtwinters <span class="im">import</span> SimpleExpSmoothing, Holt, ExponentialSmoothing</span>
+<span id="cb324-14"><a href="neural-network-model.html#cb324-14" tabindex="-1"></a><span class="im">import</span> pmdarima <span class="im">as</span> pm</span>
+<span id="cb324-15"><a href="neural-network-model.html#cb324-15" tabindex="-1"></a></span>
+<span id="cb324-16"><a href="neural-network-model.html#cb324-16" tabindex="-1"></a>usair <span class="op">=</span> pd.read_csv(<span class="st">&quot;https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/usairlines.csv&quot;</span>)</span>
+<span id="cb324-17"><a href="neural-network-model.html#cb324-17" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb324-18"><a href="neural-network-model.html#cb324-18" tabindex="-1"></a>usair.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb324-19"><a href="neural-network-model.html#cb324-19" tabindex="-1"></a></span>
+<span id="cb324-20"><a href="neural-network-model.html#cb324-20" tabindex="-1"></a>training <span class="op">=</span> usair.head(<span class="dv">207</span>)</span>
+<span id="cb324-21"><a href="neural-network-model.html#cb324-21" tabindex="-1"></a>test <span class="op">=</span> usair.tail(<span class="dv">12</span>)</span>
+<span id="cb324-22"><a href="neural-network-model.html#cb324-22" tabindex="-1"></a></span>
+<span id="cb324-23"><a href="neural-network-model.html#cb324-23" tabindex="-1"></a></span>
+<span id="cb324-24"><a href="neural-network-model.html#cb324-24" tabindex="-1"></a>usair[<span class="st">&#39;diff&#39;</span>] <span class="op">=</span> usair[<span class="st">&#39;Passengers&#39;</span>] <span class="op">-</span> usair[<span class="st">&#39;Passengers&#39;</span>].shift(<span class="dv">12</span>)</span>
+<span id="cb324-25"><a href="neural-network-model.html#cb324-25" tabindex="-1"></a>usair[<span class="st">&#39;L1&#39;</span>] <span class="op">=</span> usair[<span class="st">&#39;diff&#39;</span>].shift()</span>
+<span id="cb324-26"><a href="neural-network-model.html#cb324-26" tabindex="-1"></a>usair[<span class="st">&#39;L2&#39;</span>] <span class="op">=</span> usair[<span class="st">&#39;diff&#39;</span>].shift(<span class="dv">2</span>)</span>
+<span id="cb324-27"><a href="neural-network-model.html#cb324-27" tabindex="-1"></a>usair[<span class="st">&#39;L12&#39;</span>] <span class="op">=</span> usair[<span class="st">&#39;diff&#39;</span>].shift(<span class="dv">12</span>)</span>
+<span id="cb324-28"><a href="neural-network-model.html#cb324-28" tabindex="-1"></a>usair[<span class="st">&#39;L24&#39;</span>] <span class="op">=</span> usair[<span class="st">&#39;diff&#39;</span>].shift(<span class="dv">24</span>)</span>
+<span id="cb324-29"><a href="neural-network-model.html#cb324-29" tabindex="-1"></a>usair[<span class="st">&#39;L36&#39;</span>] <span class="op">=</span> usair[<span class="st">&#39;diff&#39;</span>].shift(<span class="dv">36</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb325"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb325-1"><a href="neural-network-model.html#cb325-1" tabindex="-1"></a>training <span class="op">=</span> usair.head(<span class="dv">207</span>)</span>
+<span id="cb325-2"><a href="neural-network-model.html#cb325-2" tabindex="-1"></a>test <span class="op">=</span> usair.tail(<span class="dv">12</span>)</span>
+<span id="cb325-3"><a href="neural-network-model.html#cb325-3" tabindex="-1"></a></span>
+<span id="cb325-4"><a href="neural-network-model.html#cb325-4" tabindex="-1"></a>plt.cla()</span>
+<span id="cb325-5"><a href="neural-network-model.html#cb325-5" tabindex="-1"></a>plt.plot(training[<span class="st">&quot;diff&quot;</span>].dropna())</span>
+<span id="cb325-6"><a href="neural-network-model.html#cb325-6" tabindex="-1"></a>plt.xlabel(<span class="st">&quot;Date&quot;</span>)</span>
+<span id="cb325-7"><a href="neural-network-model.html#cb325-7" tabindex="-1"></a>plt.ylabel(<span class="st">&quot;Passengers&quot;</span>)</span>
+<span id="cb325-8"><a href="neural-network-model.html#cb325-8" tabindex="-1"></a>plt.title(<span class="st">&quot;Seasonal Difference in Airline Passengers&quot;</span>)</span>
+<span id="cb325-9"><a href="neural-network-model.html#cb325-9" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-92-1.png" width="960" /></p>
+<div class="sourceCode" id="cb326"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb326-1"><a href="neural-network-model.html#cb326-1" tabindex="-1"></a><span class="im">from</span> sklearn.neural_network <span class="im">import</span> MLPRegressor</span>
+<span id="cb326-2"><a href="neural-network-model.html#cb326-2" tabindex="-1"></a></span>
+<span id="cb326-3"><a href="neural-network-model.html#cb326-3" tabindex="-1"></a>X <span class="op">=</span> training.drop([<span class="st">&#39;Month&#39;</span>, <span class="st">&#39;Year&#39;</span>, <span class="st">&#39;Passengers&#39;</span>, <span class="st">&#39;diff&#39;</span>], axis <span class="op">=</span> <span class="dv">1</span>).tail(<span class="dv">159</span>)</span>
+<span id="cb326-4"><a href="neural-network-model.html#cb326-4" tabindex="-1"></a>y <span class="op">=</span> training[<span class="st">&#39;diff&#39;</span>].tail(<span class="dv">159</span>)</span>
+<span id="cb326-5"><a href="neural-network-model.html#cb326-5" tabindex="-1"></a></span>
+<span id="cb326-6"><a href="neural-network-model.html#cb326-6" tabindex="-1"></a>NN_air <span class="op">=</span> MLPRegressor(hidden_layer_sizes <span class="op">=</span> (<span class="dv">3</span>,), random_state<span class="op">=</span><span class="dv">123</span>, max_iter <span class="op">=</span> <span class="dv">100000</span>).fit(X, y)</span></code></pre></div>
+<div class="sourceCode" id="cb327"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb327-1"><a href="neural-network-model.html#cb327-1" tabindex="-1"></a>X_test <span class="op">=</span> test.drop([<span class="st">&#39;Month&#39;</span>, <span class="st">&#39;Year&#39;</span>, <span class="st">&#39;Passengers&#39;</span>, <span class="st">&#39;diff&#39;</span>], axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb327-2"><a href="neural-network-model.html#cb327-2" tabindex="-1"></a></span>
+<span id="cb327-3"><a href="neural-network-model.html#cb327-3" tabindex="-1"></a>test[<span class="st">&#39;NN_pred&#39;</span>] <span class="op">=</span> NN_air.predict(X_test)</span></code></pre></div>
 <pre><code>## &lt;string&gt;:1: SettingWithCopyWarning: 
 ## A value is trying to be set on a copy of a slice from a DataFrame.
 ## Try using .loc[row_indexer,col_indexer] = value instead
 ## 
 ## See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="neural-network-model.html#cb12-1" tabindex="-1"></a>training2 <span class="op">=</span> training.tail(<span class="dv">12</span>)</span>
-<span id="cb12-2"><a href="neural-network-model.html#cb12-2" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="neural-network-model.html#cb12-3" tabindex="-1"></a>training2[<span class="st">&#39;NN_pred&#39;</span>] <span class="op">=</span> NN_air.predict(X_test)</span></code></pre></div>
+<div class="sourceCode" id="cb329"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb329-1"><a href="neural-network-model.html#cb329-1" tabindex="-1"></a>training2 <span class="op">=</span> training.tail(<span class="dv">12</span>)</span>
+<span id="cb329-2"><a href="neural-network-model.html#cb329-2" tabindex="-1"></a></span>
+<span id="cb329-3"><a href="neural-network-model.html#cb329-3" tabindex="-1"></a>training2[<span class="st">&#39;NN_pred&#39;</span>] <span class="op">=</span> NN_air.predict(X_test)</span></code></pre></div>
 <pre><code>## &lt;string&gt;:1: SettingWithCopyWarning: 
 ## A value is trying to be set on a copy of a slice from a DataFrame.
 ## Try using .loc[row_indexer,col_indexer] = value instead
 ## 
 ## See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="neural-network-model.html#cb14-1" tabindex="-1"></a>Pass_pred <span class="op">=</span> training2[<span class="st">&#39;NN_pred&#39;</span>] <span class="op">+</span> training2[<span class="st">&#39;Passengers&#39;</span>]</span>
-<span id="cb14-2"><a href="neural-network-model.html#cb14-2" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="neural-network-model.html#cb14-3" tabindex="-1"></a>Pass_pred.index <span class="op">=</span> pd.to_datetime(pd.date_range(start<span class="op">=</span><span class="st">&#39;4/1/2007&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>))</span>
-<span id="cb14-4"><a href="neural-network-model.html#cb14-4" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="neural-network-model.html#cb14-5" tabindex="-1"></a>test[<span class="st">&#39;Pass_pred&#39;</span>] <span class="op">=</span> Pass_pred</span></code></pre></div>
-<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="neural-network-model.html#cb15-1" tabindex="-1"></a>error6 <span class="op">=</span> test[<span class="st">&#39;Passengers&#39;</span>] <span class="op">-</span> test[<span class="st">&#39;Pass_pred&#39;</span>]</span>
-<span id="cb15-2"><a href="neural-network-model.html#cb15-2" tabindex="-1"></a>MAPE6 <span class="op">=</span> np.mean(<span class="bu">abs</span>(error6)<span class="op">/</span>test[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
-<span id="cb15-3"><a href="neural-network-model.html#cb15-3" tabindex="-1"></a>MAPE6</span></code></pre></div>
+<div class="sourceCode" id="cb331"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb331-1"><a href="neural-network-model.html#cb331-1" tabindex="-1"></a>Pass_pred <span class="op">=</span> training2[<span class="st">&#39;NN_pred&#39;</span>] <span class="op">+</span> training2[<span class="st">&#39;Passengers&#39;</span>]</span>
+<span id="cb331-2"><a href="neural-network-model.html#cb331-2" tabindex="-1"></a></span>
+<span id="cb331-3"><a href="neural-network-model.html#cb331-3" tabindex="-1"></a>Pass_pred.index <span class="op">=</span> pd.to_datetime(pd.date_range(start<span class="op">=</span><span class="st">&#39;4/1/2007&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>))</span>
+<span id="cb331-4"><a href="neural-network-model.html#cb331-4" tabindex="-1"></a></span>
+<span id="cb331-5"><a href="neural-network-model.html#cb331-5" tabindex="-1"></a>test[<span class="st">&#39;Pass_pred&#39;</span>] <span class="op">=</span> Pass_pred</span></code></pre></div>
+<div class="sourceCode" id="cb332"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb332-1"><a href="neural-network-model.html#cb332-1" tabindex="-1"></a>error6 <span class="op">=</span> test[<span class="st">&#39;Passengers&#39;</span>] <span class="op">-</span> test[<span class="st">&#39;Pass_pred&#39;</span>]</span>
+<span id="cb332-2"><a href="neural-network-model.html#cb332-2" tabindex="-1"></a>MAPE6 <span class="op">=</span> np.mean(<span class="bu">abs</span>(error6)<span class="op">/</span>test[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb332-3"><a href="neural-network-model.html#cb332-3" tabindex="-1"></a>MAPE6</span></code></pre></div>
 <pre><code>## 1.3761273058280752</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="neural-network-model.html#cb17-1" tabindex="-1"></a>plt.cla()</span>
-<span id="cb17-2"><a href="neural-network-model.html#cb17-2" tabindex="-1"></a>fcast5 <span class="op">=</span> test[<span class="st">&#39;Pass_pred&#39;</span>]</span>
-<span id="cb17-3"><a href="neural-network-model.html#cb17-3" tabindex="-1"></a>ax <span class="op">=</span> training[<span class="st">&quot;Passengers&quot;</span>].plot(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
-<span id="cb17-4"><a href="neural-network-model.html#cb17-4" tabindex="-1"></a>fcast5.plot(ax <span class="op">=</span> ax,color <span class="op">=</span> <span class="st">&quot;orange&quot;</span>)</span>
-<span id="cb17-5"><a href="neural-network-model.html#cb17-5" tabindex="-1"></a>plt.show()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-13-3.png" width="1152" /></p>
+<div class="sourceCode" id="cb334"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb334-1"><a href="neural-network-model.html#cb334-1" tabindex="-1"></a>plt.cla()</span>
+<span id="cb334-2"><a href="neural-network-model.html#cb334-2" tabindex="-1"></a>fcast5 <span class="op">=</span> test[<span class="st">&#39;Pass_pred&#39;</span>]</span>
+<span id="cb334-3"><a href="neural-network-model.html#cb334-3" tabindex="-1"></a>ax <span class="op">=</span> training[<span class="st">&quot;Passengers&quot;</span>].plot(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
+<span id="cb334-4"><a href="neural-network-model.html#cb334-4" tabindex="-1"></a>fcast5.plot(ax <span class="op">=</span> ax,color <span class="op">=</span> <span class="st">&quot;orange&quot;</span>)</span>
+<span id="cb334-5"><a href="neural-network-model.html#cb334-5" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-97-3.png" width="1152" /></p>
 
 </div>
 </div>
@@ -413,6 +413,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>
