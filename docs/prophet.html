@@ -351,8 +351,8 @@ X_W = \cos(\frac{2\pi t}{7}) + \sin(2 \times \frac{2\pi t}{7}) + \cos(3 \times \
 <span id="cb312-23"><a href="prophet.html#cb312-23" tabindex="-1"></a>d <span class="op">=</span> {<span class="st">&#39;ds&#39;</span>: training.index, <span class="st">&#39;y&#39;</span>: training[<span class="st">&#39;Passengers&#39;</span>]}</span>
 <span id="cb312-24"><a href="prophet.html#cb312-24" tabindex="-1"></a>training_prophet <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d)</span></code></pre></div>
 <div class="sourceCode" id="cb313"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb313-1"><a href="prophet.html#cb313-1" tabindex="-1"></a>m <span class="op">=</span> Prophet(seasonality_mode<span class="op">=</span><span class="st">&#39;multiplicative&#39;</span>).fit(training_prophet)</span></code></pre></div>
-<pre><code>## 23:49:16 - cmdstanpy - INFO - Chain [1] start processing
-## 23:49:16 - cmdstanpy - INFO - Chain [1] done processing</code></pre>
+<pre><code>## 23:58:11 - cmdstanpy - INFO - Chain [1] start processing
+## 23:58:11 - cmdstanpy - INFO - Chain [1] done processing</code></pre>
 </div>
 <div id="forecasting" class="section level3 hasAnchor" number="7.1.2">
 <h3><span class="header-section-number">7.1.2</span> Forecasting<a href="prophet.html#forecasting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
