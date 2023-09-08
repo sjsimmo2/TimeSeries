@@ -34,3 +34,9 @@ seasonality-1
 deterministic-solutions-1
 stochastic-solution
 seasonal-arima
+dynamic-regression-models
+intervention-variables
+predictor-variables
+python-code-for-dynamic-regression-models
+intervention-variables-1
+predictor-variables-1

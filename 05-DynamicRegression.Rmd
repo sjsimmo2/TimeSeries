@@ -1,0 +1,332 @@
+# Dynamic Regression Models
+
+```{r, message=FALSE,echo=FALSE}
+library(tseries)
+library(forecast)
+library(haven)
+library(fma)
+library(expsmooth)
+library(lmtest)
+library(zoo)
+library(seasonal)
+library(ggplot2)
+library(seasonalview)
+library(aTSA)
+library(imputeTS)
+library(prophet)
+library(reticulate)
+use_python("C:\\ProgramData\\Anaconda3\\envs\\R_Env2\\python.exe")
+
+file.dir = "https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/" 
+input.file1 = "usairlines.csv"
+input.file2 = "steel.csv"
+input.file3 = "leadyear.csv"
+input.file4 = "ebay9899.csv"
+input.file5 = "fpp_insurance.csv" 
+input.file6 = "ar2.csv"
+input.file7 = "MA2.csv"
+input.file8 = "hurrican.csv"
+
+# Reads the data at specified directory
+# If the file directory is incorrect, then this won't run
+USAirlines = read.csv(paste(file.dir, input.file1,sep = ""))
+Steel = read.csv(paste(file.dir, input.file2, sep = ""))
+Lead.Year = read.csv(paste(file.dir, input.file3, sep = ""))
+Ebay = read.csv(paste(file.dir, input.file4, sep = ""))
+Quotes= read.csv(paste(file.dir, input.file5, sep = ""))
+Y= read.csv(paste(file.dir, input.file6, sep = ""))
+x=read.csv(paste(file.dir, input.file7, sep = ""))
+hurricane=read.csv(paste(file.dir, input.file8, sep = ""))
+SteelShp <- ts(Steel$steelshp, start = 1984, frequency = 12)
+Passenger <- ts(USAirlines$Passengers, start = 1990, frequency =12)
+
+
+```
+
+```{r include=FALSE}
+Passenger <- ts(USAirlines$Passengers, start = 1990, frequency =12)
+
+# Create training set from overall Airlines Data
+training <- subset(Passenger, end = length(Passenger)-12)
+
+# Create test set from overall Airlines Data
+test <- subset(Passenger, start = length(Passenger)-11)
+```
+
+Predictor variables are used for variety of things. Previously we have seen them used for accounting for trend and for seasonality. However, we can also use external variables to help make our forecasts better. Variables such as holiday effects, sales promotions, economic factors, and changes in policy are just a few examples.
+
+Predictor variables are incorporated in a regression and the time series component is applied to the errors from this regression model:
+
+$$
+Y_t = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + Z_t
+$$
+
+The $Z_t$ in the above equation is where the time series (typically ARIMA) model is applied. This form of modeling has many names - dynamic regression, ARIMAX, transfer functions, just to name a few.
+
+## Intervention Variables
+
+An intervention variable is a variable that contains discrete values that flag the occurrence of an event affecting the response series. These variables are used to model and forecast the series itself or analyze the impact of the specific event. For example, We can measure the impact of a previous sales promotion and forecast a future sales promotion\'s impact. We add these discrete variables in models to adjust the intercept of the model during the events.
+
+The three most common types of intervention variables are:
+
+-   Point interventions
+
+-   Shift interventions
+
+-   Ramp interventions
+
+A **point intervention** is typically denoted with a binary variable that flags when event occurs by taking a value of 1 with all other values set to zero. By putting this variable in our model, the coefficient on the intervention variable in the regression measures the estimated impact of that intervention.
+
+A **step intervention** is typically denoted with a binary variable that flags when an event occurs as well as the time period that the effects of the event last. For example, if you have a change in policy, you would have 0 values for dates before the policy change and values of 1 for every date after the change in policy. By putting this variable in our model, the coefficient on the intervention variable in the regression measures the estimated impact of that intervention\'s shift.
+
+A **ramp intervention** is typically denoted by 0 values before an event and values that increase by 1 (1,2,3, etc.) starting with the event time point itself. By putting this variable in our model, the coefficient on the intervention variable in the regression measures the estimated slope of this new relationship after the event.
+
+For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. By using the `xreg =` option in the `auto.arima` function, we can add this intervention to our model as well as build out a seasonal ARIMA. We use the `summary` and `checkresiduals` functions to evaluate our model.
+
+```{r}
+Sep11 <- rep(0, 207)
+Sep11[141] <- 1
+
+Full.ARIMA <- auto.arima(training, seasonal = TRUE, xreg = Sep11, method = "ML")
+summary(Full.ARIMA)
+```
+
+```{r}
+checkresiduals(Full.ARIMA)
+```
+
+We can see from the output above that our model now accounts for the outlier that we previously saw in our data. Notice how our model has changed slightly after accounting for this outlier. This will improve the forecasts going forward, even though we do not have any outliers in our validation dataset.
+
+To forecast these values going forward, we need future values of our predictor variable. For this dataset, we have our *Sep11* variable that we forecast to have values of 0 for each of the 12 observations we are forecasting for airline passengers. To do this we create another variable (of the same name) that has future values. This new variable is then put into the `xreg =` option inside of the `forecast` function. Notice how this forecast function comes from the `forecast` package with the input being the model we previously built. The `forecast` function is expecting a variable in the `xreg =` option with the same name as in our model.
+
+```{r}
+Sep11 <- rep(0, 12)
+
+forecast::forecast(Full.ARIMA, xreg = Sep11, h = 12)
+```
+
+```{r}
+autoplot(forecast::forecast(Full.ARIMA, xreg = Sep11, h = 12)) + autolayer(fitted(Full.ARIMA), series="Fitted") + 
+  ylab("Airlines Passengers") + 
+  geom_vline(xintercept = 2007.25,color="orange",linetype="dashed")
+```
+
+We can plot our forecasts just as we have done previously.
+
+## Predictor Variables
+
+Most forecasting models also need to account for explanatory variables such as price, advertising spending, or income. These kinds of models can be called any of the following: dynamic regression, ARIMAX, transfer functions. Through the examples above, we have seen how to implement this in R.
+
+However, there are often **lagged variables** (lags of the predictor variables) as well as (or instead of) immediate impacts of these variables. In other words, previous values of the predictor variables may still play a role in the current prediction of the target variable. The question becomes, how many lags of a variable need to be included in the model. There are multiple ways to evaluate how many lags of a predictor variable you need in a model.
+
+The first, more theoretical approach, involves cross correlations and pre-whitening of series. This approach is time consuming, requires building a model for the predictor variables themselves, and is therefore best used for small numbers of predictor variables.
+
+The second approach evaluates many difference combinations of lags of the predictor variable in many different models. These models are compared on a metric like AIC/BIC on a validation dataset to see which models the data best. This approach is more efficient, handles many variables much easier, and is similar in accuracy to the first approach.
+
+For our model, the impact of September 11, 2001 was felt for many months (lag impacts). In the code below we add six lags as well as one seasonal lag (the first anniversary of September 11, 2001) to the model through the same `xreg =` option in `auto.arima`.
+
+```{r}
+# Intervention Analysis with Lags
+Sep11 <- rep(0, 207)
+Sep11[141] <- 1
+
+Sep11.L1 <- rep(0, 207)
+Sep11.L1[142] <- 1
+
+Sep11.L2 <- rep(0, 207)
+Sep11.L2[143] <- 1
+
+Sep11.L3 <- rep(0, 207)
+Sep11.L3[144] <- 1
+
+Sep11.L4 <- rep(0, 207)
+Sep11.L4[145] <- 1
+
+Sep11.L5 <- rep(0, 207)
+Sep11.L5[146] <- 1
+
+Sep11.L6 <- rep(0, 207)
+Sep11.L6[147] <- 1
+
+Anniv <- rep(0, 207)
+Anniv[153] <- 1
+
+Full.ARIMA <- auto.arima(training, seasonal = TRUE, xreg = cbind(Sep11, Sep11.L1, Sep11.L2, Sep11.L3, Sep11.L4, Sep11.L5, Sep11.L6, Anniv), method = "ML")
+summary(Full.ARIMA)
+```
+
+```{r}
+checkresiduals(Full.ARIMA)
+```
+
+From the output above, we see that the model produces white noise and does not appear to have any more intervention impacts in the dataset.
+
+Forecasting in time series with only lagged values of the target variable is easy because of the recursive nature of the function - one prediction feeds into the next prediction. Forecasting with external variables is much trickier. For intervention variables it is easier since we should know future holiday, promotion, etc. values. However, some variables need forecasting. We could either use external estimate of future values or we might need to forecast future values ourselves.
+
+To forecast this series, we need to have future values of these input variables. Luckily, for our variables, these are just 0 values. We still need to use the `forecast` function from the `forecast` package. This function also has an `xreg =` option where we need future values of these predictor variables. Ideally, these future values have the same name as the original predictor variables for the `forecast` function to work best. We can plot these updated forecasts as well as calculate the MAE and MAPE.
+
+```{r}
+Sep11 <- rep(0, 12)
+Sep11.L1 <- rep(0, 12)
+Sep11.L2 <- rep(0, 12)
+Sep11.L3 <- rep(0, 12)
+Sep11.L4 <- rep(0, 12)
+Sep11.L5 <- rep(0, 12)
+Sep11.L6 <- rep(0, 12)
+Anniv <- rep(0, 12)
+
+forecast::forecast(Full.ARIMA, xreg = cbind(Sep11, Sep11.L1, Sep11.L2, Sep11.L3, Sep11.L4, Sep11.L5, Sep11.L6, Anniv), h = 12)
+```
+
+```{r}
+autoplot(forecast::forecast(Full.ARIMA, xreg = cbind(Sep11, Sep11.L1, Sep11.L2, Sep11.L3, Sep11.L4, Sep11.L5, Sep11.L6, Anniv), h = 12)) + autolayer(fitted(Full.ARIMA), series="Fitted") + 
+  ylab("Airlines Passengers") + 
+  geom_vline(xintercept = 2007.25,color="orange",linetype="dashed")
+```
+
+```{r}
+# Calculate prediction errors from forecast
+Full.ARIMA.error <- test - forecast::forecast(Full.ARIMA, xreg = cbind(Sep11, Sep11.L1, Sep11.L2, Sep11.L3, Sep11.L4, Sep11.L5, Sep11.L6, Anniv), h = 12)$mean
+
+# Calculate prediction error statistics (MAE and MAPE)
+Full.ARIMA.MAE <- mean(abs(Full.ARIMA.error))
+Full.ARIMA.MAPE <- mean(abs(Full.ARIMA.error)/abs(test))*100
+
+Full.ARIMA.MAE
+```
+
+```{r}
+Full.ARIMA.MAPE
+```
+
+From the above output we see that although the MAE and MAPE have improved from the ARIMA model without accounting for September 11, but still not better than the exponential smoothing model.
+
+## Python Code for Dynamic Regression Models
+
+```{python}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+from statsmodels.graphics import tsaplots
+from statsmodels.graphics import tsaplots
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.seasonal import STL
+from statsmodels.tsa.arima_model import ARMA
+from statsmodels.tsa.arima_model import ARIMA
+from statsmodels.tsa.statespace.sarimax import SARIMAX
+from statsmodels.tsa.holtwinters import SimpleExpSmoothing, Holt, ExponentialSmoothing
+import pmdarima as pm
+usair = pd.read_csv("https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/usairlines.csv")
+
+df=pd.date_range(start='1/1/1990', end='3/1/2008', freq='MS')
+usair.index=pd.to_datetime(df)
+
+training = usair.head(207)
+test = usair.tail(12)
+
+
+training['Sep11'] = 0 * 207
+training['Sep11'][140] = 1
+
+results = sm.OLS.from_formula("Passengers ~ Sep11",
+                              data=training).fit()
+print(results.summary())
+
+model = pm.auto_arima(results.resid.dropna(), start_p = 0, start_q = 0, max_p = 5, max_q = 5, start_P = 0, start_Q = 0, max_D = 1, max_P = 2, map_Q = 2, seasonal = True, m = 12)
+model.summary()
+```
+
+### Intervention Variables
+
+```{python}
+#training['Sep11'] = 0 * 207
+#training['Sep11'][140] = 1
+
+#model3 = SARIMAX(training['Passengers'], exog = training['Sep11'], order = (1,0,1), seasonal_order = (0,1,1,12), trend = 't').fit()
+#model3.summary()
+
+#plt.cla()
+#fcast2 = model3.forecast(12)
+#ax = training["Passengers"].plot(figsize=(12,8))
+#fcast2.plot(ax = ax,color = "orange")
+#plt.show()
+```
+
+### Predictor Variables
+
+```{python}
+training['Sep11'] = 0 * 207
+training['Sep11'][140] = 1
+training['Sep11_L1'] = 0 * 207
+training['Sep11_L1'][141] = 1
+training['Sep11_L2'] = 0 * 207
+training['Sep11_L2'][142] = 1
+training['Sep11_L3'] = 0 * 207
+training['Sep11_L3'][143] = 1
+training['Sep11_L4'] = 0 * 207
+training['Sep11_L4'][144] = 1
+training['Sep11_L5'] = 0 * 207
+training['Sep11_L5'][145] = 1
+training['Sep11_L6'] = 0 * 207
+training['Sep11_L6'][146] = 1
+training['Anniv'] = 0 * 207
+training['Anniv'][152] = 1
+
+X = np.array((training['Sep11'],
+             training['Sep11_L1'],
+             training['Sep11_L2'],
+             training['Sep11_L3'],
+             training['Sep11_L4'],
+             training['Sep11_L5'],
+             training['Sep11_L6'],
+             training['Anniv']))
+
+X = np.transpose(X)
+
+model4 = SARIMAX(training['Passengers'], exog = X, order = (2,0,0), seasonal_order = (1,1,1,12), trend = 't').fit()
+model4.summary()
+
+```
+
+```{python}
+#lag_test=[4,5,6,7,8,9,10,11,12,13]
+
+#for x in lag_test:
+ # sm.stats.acorr_ljungbox(model4.resid, lags=[x], model_df=2)
+```
+
+```{python}
+test['Sep11'] = 0 * 12
+test['Sep11_L1'] = 0 * 12
+test['Sep11_L2'] = 0 * 12
+test['Sep11_L3'] = 0 * 12
+test['Sep11_L4'] = 0 * 12
+test['Sep11_L5'] = 0 * 12
+test['Sep11_L6'] = 0 * 12
+test['Anniv'] = 0 * 12
+
+X_test = np.array((test['Sep11'],
+             test['Sep11_L1'],
+             test['Sep11_L2'],
+             test['Sep11_L3'],
+             test['Sep11_L4'],
+             test['Sep11_L5'],
+             test['Sep11_L6'],
+             test['Anniv']))
+
+X_test = np.transpose(X_test)
+
+plt.cla()
+fcast4 = model4.forecast(12, exog = X_test)
+ax = training["Passengers"].plot(figsize=(12,8))
+fcast4.plot(ax = ax,color = "orange")
+plt.show()
+```
+
+```{python}
+error4 = test['Passengers']-fcast4
+MAPE4 = np.mean(abs(error4)/test['Passengers'])*100
+MAPE4
+```
+

@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 6 Dynamic Regression Models | Time Series 1</title>
+  <meta name="description" content="Chapter 6 Dynamic Regression Models | Time Series 1" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 6 Dynamic Regression Models | Time Series 1" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 6 Dynamic Regression Models | Time Series 1" />
+  
+  
+  
+
+<meta name="author" content="by Dr. Susan Simmons" />
+
+
+<meta name="date" content="2023-09-07" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="seasonality.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">TimeSeries</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Time series 1</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#time-series-decomposition"><i class="fa fa-check"></i><b>2.1</b> Time series decomposition</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#python-code-and-results-for-time-series-plot"><i class="fa fa-check"></i><b>2.2</b> Python code and results for Time Series plot</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction.html"><a href="introduction.html#sas-code-for-time-series-plot-and-decomposition"><i class="fa fa-check"></i><b>2.3</b> SAS code for time series plot and decomposition</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction.html"><a href="introduction.html#self-study"><i class="fa fa-check"></i><b>2.4</b> Self-study</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html"><i class="fa fa-check"></i><b>3</b> Exponential Smoothing</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#simple-exponential-smoothing"><i class="fa fa-check"></i><b>3.1</b> Simple Exponential Smoothing</a></li>
+<li class="chapter" data-level="3.2" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#holt-esm"><i class="fa fa-check"></i><b>3.2</b> Holt ESM</a></li>
+<li class="chapter" data-level="3.3" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#holt-winters"><i class="fa fa-check"></i><b>3.3</b> Holt-Winters</a></li>
+<li class="chapter" data-level="3.4" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#evaluating-forecasts"><i class="fa fa-check"></i><b>3.4</b> Evaluating forecasts</a></li>
+<li class="chapter" data-level="3.5" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#ets"><i class="fa fa-check"></i><b>3.5</b> ETS</a></li>
+<li class="chapter" data-level="3.6" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#python-code-for-exponential-smoothing"><i class="fa fa-check"></i><b>3.6</b> Python Code for Exponential Smoothing</a></li>
+<li class="chapter" data-level="3.7" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#sas-code-for-exponential-smoothing-models"><i class="fa fa-check"></i><b>3.7</b> SAS Code for Exponential Smoothing Models</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="arima.html"><a href="arima.html"><i class="fa fa-check"></i><b>4</b> ARIMA</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="arima.html"><a href="arima.html#stationarity"><i class="fa fa-check"></i><b>4.1</b> Stationarity</a></li>
+<li class="chapter" data-level="4.2" data-path="arima.html"><a href="arima.html#correlation-functions"><i class="fa fa-check"></i><b>4.2</b> Correlation Functions</a></li>
+<li class="chapter" data-level="4.3" data-path="arima.html"><a href="arima.html#autoregressive-models-ar"><i class="fa fa-check"></i><b>4.3</b> AutoRegressive Models (AR)</a></li>
+<li class="chapter" data-level="4.4" data-path="arima.html"><a href="arima.html#moving-average-model-ma"><i class="fa fa-check"></i><b>4.4</b> Moving Average model (MA)</a></li>
+<li class="chapter" data-level="4.5" data-path="arima.html"><a href="arima.html#white-noise"><i class="fa fa-check"></i><b>4.5</b> White noise</a></li>
+<li class="chapter" data-level="4.6" data-path="arima.html"><a href="arima.html#trending-series"><i class="fa fa-check"></i><b>4.6</b> Trending Series</a></li>
+<li class="chapter" data-level="4.7" data-path="arima.html"><a href="arima.html#fitting-arima-models"><i class="fa fa-check"></i><b>4.7</b> Fitting ARIMA models</a></li>
+<li class="chapter" data-level="4.8" data-path="arima.html"><a href="arima.html#python-code-for-armaarima-models"><i class="fa fa-check"></i><b>4.8</b> Python Code for ARMA/ARIMA models</a></li>
+<li class="chapter" data-level="4.9" data-path="arima.html"><a href="arima.html#sas-code-for-armaarima"><i class="fa fa-check"></i><b>4.9</b> SAS Code for ARMA/ARIMA</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="seasonality.html"><a href="seasonality.html"><i class="fa fa-check"></i><b>5</b> Seasonality</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="seasonality.html"><a href="seasonality.html#seasonal-unit-root-testing"><i class="fa fa-check"></i><b>5.1</b> Seasonal Unit Root Testing</a></li>
+<li class="chapter" data-level="5.2" data-path="seasonality.html"><a href="seasonality.html#deterministic-solutions"><i class="fa fa-check"></i><b>5.2</b> Deterministic Solutions</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="seasonality.html"><a href="seasonality.html#seasonal-dummy-variables"><i class="fa fa-check"></i><b>5.2.1</b> Seasonal Dummy Variables</a></li>
+<li class="chapter" data-level="5.2.2" data-path="seasonality.html"><a href="seasonality.html#fourier-transforms"><i class="fa fa-check"></i><b>5.2.2</b> Fourier Transforms</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="seasonality.html"><a href="seasonality.html#stochastic-solutions"><i class="fa fa-check"></i><b>5.3</b> Stochastic Solutions</a></li>
+<li class="chapter" data-level="5.4" data-path="seasonality.html"><a href="seasonality.html#seasonal-arima-modeling"><i class="fa fa-check"></i><b>5.4</b> Seasonal ARIMA Modeling</a></li>
+<li class="chapter" data-level="5.5" data-path="seasonality.html"><a href="seasonality.html#python-code-for-seasonality"><i class="fa fa-check"></i><b>5.5</b> Python Code for Seasonality</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="seasonality.html"><a href="seasonality.html#seasonality-1"><i class="fa fa-check"></i><b>5.5.1</b> Seasonality</a></li>
+<li class="chapter" data-level="5.5.2" data-path="seasonality.html"><a href="seasonality.html#deterministic-solutions-1"><i class="fa fa-check"></i><b>5.5.2</b> Deterministic Solutions</a></li>
+<li class="chapter" data-level="5.5.3" data-path="seasonality.html"><a href="seasonality.html#stochastic-solution"><i class="fa fa-check"></i><b>5.5.3</b> Stochastic Solution</a></li>
+<li class="chapter" data-level="5.5.4" data-path="seasonality.html"><a href="seasonality.html#seasonal-arima"><i class="fa fa-check"></i><b>5.5.4</b> Seasonal ARIMA</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html"><i class="fa fa-check"></i><b>6</b> Dynamic Regression Models</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#intervention-variables"><i class="fa fa-check"></i><b>6.1</b> Intervention Variables</a></li>
+<li class="chapter" data-level="6.2" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#predictor-variables"><i class="fa fa-check"></i><b>6.2</b> Predictor Variables</a></li>
+<li class="chapter" data-level="6.3" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#python-code-for-dynamic-regression-models"><i class="fa fa-check"></i><b>6.3</b> Python Code for Dynamic Regression Models</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#intervention-variables-1"><i class="fa fa-check"></i><b>6.3.1</b> Intervention Variables</a></li>
+<li class="chapter" data-level="6.3.2" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#predictor-variables-1"><i class="fa fa-check"></i><b>6.3.2</b> Predictor Variables</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series 1</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="dynamic-regression-models" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">Chapter 6</span> Dynamic Regression Models<a href="dynamic-regression-models.html#dynamic-regression-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Predictor variables are used for variety of things. Previously we have seen them used for accounting for trend and for seasonality. However, we can also use external variables to help make our forecasts better. Variables such as holiday effects, sales promotions, economic factors, and changes in policy are just a few examples.</p>
+<p>Predictor variables are incorporated in a regression and the time series component is applied to the errors from this regression model:</p>
+<p><span class="math display">\[
+Y_t = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + Z_t
+\]</span></p>
+<p>The <span class="math inline">\(Z_t\)</span> in the above equation is where the time series (typically ARIMA) model is applied. This form of modeling has many names - dynamic regression, ARIMAX, transfer functions, just to name a few.</p>
+<div id="intervention-variables" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Intervention Variables<a href="dynamic-regression-models.html#intervention-variables" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>An intervention variable is a variable that contains discrete values that flag the occurrence of an event affecting the response series. These variables are used to model and forecast the series itself or analyze the impact of the specific event. For example, We can measure the impact of a previous sales promotion and forecast a future sales promotion's impact. We add these discrete variables in models to adjust the intercept of the model during the events.</p>
+<p>The three most common types of intervention variables are:</p>
+<ul>
+<li><p>Point interventions</p></li>
+<li><p>Shift interventions</p></li>
+<li><p>Ramp interventions</p></li>
+</ul>
+<p>A <strong>point intervention</strong> is typically denoted with a binary variable that flags when event occurs by taking a value of 1 with all other values set to zero. By putting this variable in our model, the coefficient on the intervention variable in the regression measures the estimated impact of that intervention.</p>
+<p>A <strong>step intervention</strong> is typically denoted with a binary variable that flags when an event occurs as well as the time period that the effects of the event last. For example, if you have a change in policy, you would have 0 values for dates before the policy change and values of 1 for every date after the change in policy. By putting this variable in our model, the coefficient on the intervention variable in the regression measures the estimated impact of that intervention's shift.</p>
+<p>A <strong>ramp intervention</strong> is typically denoted by 0 values before an event and values that increase by 1 (1,2,3, etc.) starting with the event time point itself. By putting this variable in our model, the coefficient on the intervention variable in the regression measures the estimated slope of this new relationship after the event.</p>
+<p>For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. By using the <code>xreg =</code> option in the <code>auto.arima</code> function, we can add this intervention to our model as well as build out a seasonal ARIMA. We use the <code>summary</code> and <code>checkresiduals</code> functions to evaluate our model.</p>
+<div class="sourceCode" id="cb262"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb262-1"><a href="dynamic-regression-models.html#cb262-1" tabindex="-1"></a>Sep11 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">207</span>)</span>
+<span id="cb262-2"><a href="dynamic-regression-models.html#cb262-2" tabindex="-1"></a>Sep11[<span class="dv">141</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb262-3"><a href="dynamic-regression-models.html#cb262-3" tabindex="-1"></a></span>
+<span id="cb262-4"><a href="dynamic-regression-models.html#cb262-4" tabindex="-1"></a>Full.ARIMA <span class="ot">&lt;-</span> <span class="fu">auto.arima</span>(training, <span class="at">seasonal =</span> <span class="cn">TRUE</span>, <span class="at">xreg =</span> Sep11, <span class="at">method =</span> <span class="st">&quot;ML&quot;</span>)</span>
+<span id="cb262-5"><a href="dynamic-regression-models.html#cb262-5" tabindex="-1"></a><span class="fu">summary</span>(Full.ARIMA)</span></code></pre></div>
+<pre><code>## Series: training 
+## Regression with ARIMA(2,0,0)(0,1,1)[12] errors 
+## 
+## Coefficients:
+##          ar1     ar2     sma1     drift        xreg
+##       0.7119  0.1369  -0.6626  125.6161  -11539.935
+## s.e.  0.0709  0.0713   0.0579   22.6471    1150.963
+## 
+## sigma^2 = 2442761:  log likelihood = -1712.17
+## AIC=3436.35   AICc=3436.8   BIC=3455.99
+## 
+## Training set error measures:
+##                     ME    RMSE      MAE        MPE     MAPE
+## Training set -3.349234 1497.38 1030.214 -0.1299989 2.123044
+##                   MASE        ACF1
+## Training set 0.3826493 0.008315115</code></pre>
+<div class="sourceCode" id="cb264"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb264-1"><a href="dynamic-regression-models.html#cb264-1" tabindex="-1"></a><span class="fu">checkresiduals</span>(Full.ARIMA)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-58-1.png" width="672" /></p>
+<pre><code>## 
+##  Ljung-Box test
+## 
+## data:  Residuals from Regression with ARIMA(2,0,0)(0,1,1)[12] errors
+## Q* = 21.697, df = 21, p-value = 0.4171
+## 
+## Model df: 3.   Total lags used: 24</code></pre>
+<p>We can see from the output above that our model now accounts for the outlier that we previously saw in our data. Notice how our model has changed slightly after accounting for this outlier. This will improve the forecasts going forward, even though we do not have any outliers in our validation dataset.</p>
+<p>To forecast these values going forward, we need future values of our predictor variable. For this dataset, we have our <em>Sep11</em> variable that we forecast to have values of 0 for each of the 12 observations we are forecasting for airline passengers. To do this we create another variable (of the same name) that has future values. This new variable is then put into the <code>xreg =</code> option inside of the <code>forecast</code> function. Notice how this forecast function comes from the <code>forecast</code> package with the input being the model we previously built. The <code>forecast</code> function is expecting a variable in the <code>xreg =</code> option with the same name as in our model.</p>
+<div class="sourceCode" id="cb266"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb266-1"><a href="dynamic-regression-models.html#cb266-1" tabindex="-1"></a>Sep11 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">12</span>)</span>
+<span id="cb266-2"><a href="dynamic-regression-models.html#cb266-2" tabindex="-1"></a></span>
+<span id="cb266-3"><a href="dynamic-regression-models.html#cb266-3" tabindex="-1"></a>forecast<span class="sc">::</span><span class="fu">forecast</span>(Full.ARIMA, <span class="at">xreg =</span> Sep11, <span class="at">h =</span> <span class="dv">12</span>)</span></code></pre></div>
+<pre><code>##          Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
+## Apr 2007       63955.27 61952.29 65958.25 60891.98 67018.57
+## May 2007       65316.30 62857.59 67775.01 61556.03 69076.57
+## Jun 2007       68554.32 65778.00 71330.63 64308.31 72800.32
+## Jul 2007       71525.80 68534.61 74516.99 66951.16 76100.43
+## Aug 2007       68990.75 65846.48 72135.01 64182.01 73799.48
+## Sep 2007       58181.07 54925.92 61436.22 53202.75 63159.39
+## Oct 2007       63003.05 59666.52 66339.58 57900.27 68105.83
+## Nov 2007       61187.86 57791.11 64584.60 55992.98 66382.73
+## Dec 2007       62406.11 58964.54 65847.68 57142.69 67669.53
+## Jan 2008       58243.83 54768.77 61718.89 52929.18 63558.48
+## Feb 2008       56374.88 52874.71 59875.05 51021.83 61727.92
+## Mar 2008       68567.34 65048.31 72086.37 63185.45 73949.23</code></pre>
+<div class="sourceCode" id="cb268"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb268-1"><a href="dynamic-regression-models.html#cb268-1" tabindex="-1"></a><span class="fu">autoplot</span>(forecast<span class="sc">::</span><span class="fu">forecast</span>(Full.ARIMA, <span class="at">xreg =</span> Sep11, <span class="at">h =</span> <span class="dv">12</span>)) <span class="sc">+</span> <span class="fu">autolayer</span>(<span class="fu">fitted</span>(Full.ARIMA), <span class="at">series=</span><span class="st">&quot;Fitted&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb268-2"><a href="dynamic-regression-models.html#cb268-2" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Airlines Passengers&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb268-3"><a href="dynamic-regression-models.html#cb268-3" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">2007.25</span>,<span class="at">color=</span><span class="st">&quot;orange&quot;</span>,<span class="at">linetype=</span><span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-60-1.png" width="672" /></p>
+<p>We can plot our forecasts just as we have done previously.</p>
+</div>
+<div id="predictor-variables" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Predictor Variables<a href="dynamic-regression-models.html#predictor-variables" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Most forecasting models also need to account for explanatory variables such as price, advertising spending, or income. These kinds of models can be called any of the following: dynamic regression, ARIMAX, transfer functions. Through the examples above, we have seen how to implement this in R.</p>
+<p>However, there are often <strong>lagged variables</strong> (lags of the predictor variables) as well as (or instead of) immediate impacts of these variables. In other words, previous values of the predictor variables may still play a role in the current prediction of the target variable. The question becomes, how many lags of a variable need to be included in the model. There are multiple ways to evaluate how many lags of a predictor variable you need in a model.</p>
+<p>The first, more theoretical approach, involves cross correlations and pre-whitening of series. This approach is time consuming, requires building a model for the predictor variables themselves, and is therefore best used for small numbers of predictor variables.</p>
+<p>The second approach evaluates many difference combinations of lags of the predictor variable in many different models. These models are compared on a metric like AIC/BIC on a validation dataset to see which models the data best. This approach is more efficient, handles many variables much easier, and is similar in accuracy to the first approach.</p>
+<p>For our model, the impact of September 11, 2001 was felt for many months (lag impacts). In the code below we add six lags as well as one seasonal lag (the first anniversary of September 11, 2001) to the model through the same <code>xreg =</code> option in <code>auto.arima</code>.</p>
+<div class="sourceCode" id="cb269"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb269-1"><a href="dynamic-regression-models.html#cb269-1" tabindex="-1"></a><span class="co"># Intervention Analysis with Lags</span></span>
+<span id="cb269-2"><a href="dynamic-regression-models.html#cb269-2" tabindex="-1"></a>Sep11 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">207</span>)</span>
+<span id="cb269-3"><a href="dynamic-regression-models.html#cb269-3" tabindex="-1"></a>Sep11[<span class="dv">141</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb269-4"><a href="dynamic-regression-models.html#cb269-4" tabindex="-1"></a></span>
+<span id="cb269-5"><a href="dynamic-regression-models.html#cb269-5" tabindex="-1"></a>Sep11.L1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">207</span>)</span>
+<span id="cb269-6"><a href="dynamic-regression-models.html#cb269-6" tabindex="-1"></a>Sep11.L1[<span class="dv">142</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb269-7"><a href="dynamic-regression-models.html#cb269-7" tabindex="-1"></a></span>
+<span id="cb269-8"><a href="dynamic-regression-models.html#cb269-8" tabindex="-1"></a>Sep11.L2 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">207</span>)</span>
+<span id="cb269-9"><a href="dynamic-regression-models.html#cb269-9" tabindex="-1"></a>Sep11.L2[<span class="dv">143</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb269-10"><a href="dynamic-regression-models.html#cb269-10" tabindex="-1"></a></span>
+<span id="cb269-11"><a href="dynamic-regression-models.html#cb269-11" tabindex="-1"></a>Sep11.L3 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">207</span>)</span>
+<span id="cb269-12"><a href="dynamic-regression-models.html#cb269-12" tabindex="-1"></a>Sep11.L3[<span class="dv">144</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb269-13"><a href="dynamic-regression-models.html#cb269-13" tabindex="-1"></a></span>
+<span id="cb269-14"><a href="dynamic-regression-models.html#cb269-14" tabindex="-1"></a>Sep11.L4 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">207</span>)</span>
+<span id="cb269-15"><a href="dynamic-regression-models.html#cb269-15" tabindex="-1"></a>Sep11.L4[<span class="dv">145</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb269-16"><a href="dynamic-regression-models.html#cb269-16" tabindex="-1"></a></span>
+<span id="cb269-17"><a href="dynamic-regression-models.html#cb269-17" tabindex="-1"></a>Sep11.L5 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">207</span>)</span>
+<span id="cb269-18"><a href="dynamic-regression-models.html#cb269-18" tabindex="-1"></a>Sep11.L5[<span class="dv">146</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb269-19"><a href="dynamic-regression-models.html#cb269-19" tabindex="-1"></a></span>
+<span id="cb269-20"><a href="dynamic-regression-models.html#cb269-20" tabindex="-1"></a>Sep11.L6 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">207</span>)</span>
+<span id="cb269-21"><a href="dynamic-regression-models.html#cb269-21" tabindex="-1"></a>Sep11.L6[<span class="dv">147</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb269-22"><a href="dynamic-regression-models.html#cb269-22" tabindex="-1"></a></span>
+<span id="cb269-23"><a href="dynamic-regression-models.html#cb269-23" tabindex="-1"></a>Anniv <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">207</span>)</span>
+<span id="cb269-24"><a href="dynamic-regression-models.html#cb269-24" tabindex="-1"></a>Anniv[<span class="dv">153</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb269-25"><a href="dynamic-regression-models.html#cb269-25" tabindex="-1"></a></span>
+<span id="cb269-26"><a href="dynamic-regression-models.html#cb269-26" tabindex="-1"></a>Full.ARIMA <span class="ot">&lt;-</span> <span class="fu">auto.arima</span>(training, <span class="at">seasonal =</span> <span class="cn">TRUE</span>, <span class="at">xreg =</span> <span class="fu">cbind</span>(Sep11, Sep11.L1, Sep11.L2, Sep11.L3, Sep11.L4, Sep11.L5, Sep11.L6, Anniv), <span class="at">method =</span> <span class="st">&quot;ML&quot;</span>)</span>
+<span id="cb269-27"><a href="dynamic-regression-models.html#cb269-27" tabindex="-1"></a><span class="fu">summary</span>(Full.ARIMA)</span></code></pre></div>
+<pre><code>## Series: training 
+## Regression with ARIMA(2,0,0)(1,1,1)[12] errors 
+## 
+## Coefficients:
+##          ar1     ar2    sar1    sma1     drift       Sep11
+##       0.6298  0.2207  0.1926  -0.696  124.7589  -17400.854
+## s.e.  0.0714  0.0726  0.1143   0.081   21.1667    1162.372
+##        Sep11.L1   Sep11.L2   Sep11.L3   Sep11.L4   Sep11.L5
+##       -12115.39  -8076.820  -7670.549  -4345.475  -2172.174
+## s.e.    1271.31   1387.159   1427.354   1403.895   1271.249
+##        Sep11.L6       Anniv
+##       -751.1779  -2305.7922
+## s.e.  1105.3273    998.2275
+## 
+## sigma^2 = 1736411:  log likelihood = -1673.71
+## AIC=3375.42   AICc=3377.75   BIC=3421.24
+## 
+## Training set error measures:
+##                   ME     RMSE     MAE         MPE     MAPE
+## Training set 1.06424 1235.597 944.956 -0.08204485 1.937638
+##                   MASE        ACF1
+## Training set 0.3509823 0.007697329</code></pre>
+<div class="sourceCode" id="cb271"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb271-1"><a href="dynamic-regression-models.html#cb271-1" tabindex="-1"></a><span class="fu">checkresiduals</span>(Full.ARIMA)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-62-1.png" width="672" /></p>
+<pre><code>## 
+##  Ljung-Box test
+## 
+## data:  Residuals from Regression with ARIMA(2,0,0)(1,1,1)[12] errors
+## Q* = 16.049, df = 20, p-value = 0.7136
+## 
+## Model df: 4.   Total lags used: 24</code></pre>
+<p>From the output above, we see that the model produces white noise and does not appear to have any more intervention impacts in the dataset.</p>
+<p>Forecasting in time series with only lagged values of the target variable is easy because of the recursive nature of the function - one prediction feeds into the next prediction. Forecasting with external variables is much trickier. For intervention variables it is easier since we should know future holiday, promotion, etc. values. However, some variables need forecasting. We could either use external estimate of future values or we might need to forecast future values ourselves.</p>
+<p>To forecast this series, we need to have future values of these input variables. Luckily, for our variables, these are just 0 values. We still need to use the <code>forecast</code> function from the <code>forecast</code> package. This function also has an <code>xreg =</code> option where we need future values of these predictor variables. Ideally, these future values have the same name as the original predictor variables for the <code>forecast</code> function to work best. We can plot these updated forecasts as well as calculate the MAE and MAPE.</p>
+<div class="sourceCode" id="cb273"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb273-1"><a href="dynamic-regression-models.html#cb273-1" tabindex="-1"></a>Sep11 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">12</span>)</span>
+<span id="cb273-2"><a href="dynamic-regression-models.html#cb273-2" tabindex="-1"></a>Sep11.L1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">12</span>)</span>
+<span id="cb273-3"><a href="dynamic-regression-models.html#cb273-3" tabindex="-1"></a>Sep11.L2 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">12</span>)</span>
+<span id="cb273-4"><a href="dynamic-regression-models.html#cb273-4" tabindex="-1"></a>Sep11.L3 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">12</span>)</span>
+<span id="cb273-5"><a href="dynamic-regression-models.html#cb273-5" tabindex="-1"></a>Sep11.L4 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">12</span>)</span>
+<span id="cb273-6"><a href="dynamic-regression-models.html#cb273-6" tabindex="-1"></a>Sep11.L5 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">12</span>)</span>
+<span id="cb273-7"><a href="dynamic-regression-models.html#cb273-7" tabindex="-1"></a>Sep11.L6 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">12</span>)</span>
+<span id="cb273-8"><a href="dynamic-regression-models.html#cb273-8" tabindex="-1"></a>Anniv <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">12</span>)</span>
+<span id="cb273-9"><a href="dynamic-regression-models.html#cb273-9" tabindex="-1"></a></span>
+<span id="cb273-10"><a href="dynamic-regression-models.html#cb273-10" tabindex="-1"></a>forecast<span class="sc">::</span><span class="fu">forecast</span>(Full.ARIMA, <span class="at">xreg =</span> <span class="fu">cbind</span>(Sep11, Sep11.L1, Sep11.L2, Sep11.L3, Sep11.L4, Sep11.L5, Sep11.L6, Anniv), <span class="at">h =</span> <span class="dv">12</span>)</span></code></pre></div>
+<pre><code>##          Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
+## Apr 2007       63937.41 62248.67 65626.15 61354.70 66520.11
+## May 2007       65316.99 63321.23 67312.74 62264.74 68369.23
+## Jun 2007       68441.09 66189.40 70692.78 64997.43 71884.75
+## Jul 2007       71239.59 68817.87 73661.31 67535.88 74943.29
+## Aug 2007       68660.78 66112.97 71208.59 64764.24 72557.32
+## Sep 2007       58377.66 55736.68 61018.64 54338.63 62416.69
+## Oct 2007       63394.58 60683.47 66105.69 59248.30 67540.87
+## Nov 2007       61550.94 58786.70 64315.17 57323.40 65778.47
+## Dec 2007       62572.18 59767.44 65376.91 58282.71 66861.65
+## Jan 2008       58447.68 55611.95 61283.41 54110.80 62784.56
+## Feb 2008       56242.81 53383.27 59102.35 51869.52 60616.09
+## Mar 2008       68562.18 65684.33 71440.04 64160.88 72963.48</code></pre>
+<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="dynamic-regression-models.html#cb275-1" tabindex="-1"></a><span class="fu">autoplot</span>(forecast<span class="sc">::</span><span class="fu">forecast</span>(Full.ARIMA, <span class="at">xreg =</span> <span class="fu">cbind</span>(Sep11, Sep11.L1, Sep11.L2, Sep11.L3, Sep11.L4, Sep11.L5, Sep11.L6, Anniv), <span class="at">h =</span> <span class="dv">12</span>)) <span class="sc">+</span> <span class="fu">autolayer</span>(<span class="fu">fitted</span>(Full.ARIMA), <span class="at">series=</span><span class="st">&quot;Fitted&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb275-2"><a href="dynamic-regression-models.html#cb275-2" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Airlines Passengers&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb275-3"><a href="dynamic-regression-models.html#cb275-3" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">2007.25</span>,<span class="at">color=</span><span class="st">&quot;orange&quot;</span>,<span class="at">linetype=</span><span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-64-1.png" width="672" /></p>
+<div class="sourceCode" id="cb276"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb276-1"><a href="dynamic-regression-models.html#cb276-1" tabindex="-1"></a><span class="co"># Calculate prediction errors from forecast</span></span>
+<span id="cb276-2"><a href="dynamic-regression-models.html#cb276-2" tabindex="-1"></a>Full.ARIMA.error <span class="ot">&lt;-</span> test <span class="sc">-</span> forecast<span class="sc">::</span><span class="fu">forecast</span>(Full.ARIMA, <span class="at">xreg =</span> <span class="fu">cbind</span>(Sep11, Sep11.L1, Sep11.L2, Sep11.L3, Sep11.L4, Sep11.L5, Sep11.L6, Anniv), <span class="at">h =</span> <span class="dv">12</span>)<span class="sc">$</span>mean</span>
+<span id="cb276-3"><a href="dynamic-regression-models.html#cb276-3" tabindex="-1"></a></span>
+<span id="cb276-4"><a href="dynamic-regression-models.html#cb276-4" tabindex="-1"></a><span class="co"># Calculate prediction error statistics (MAE and MAPE)</span></span>
+<span id="cb276-5"><a href="dynamic-regression-models.html#cb276-5" tabindex="-1"></a>Full.ARIMA.MAE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(Full.ARIMA.error))</span>
+<span id="cb276-6"><a href="dynamic-regression-models.html#cb276-6" tabindex="-1"></a>Full.ARIMA.MAPE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(Full.ARIMA.error)<span class="sc">/</span><span class="fu">abs</span>(test))<span class="sc">*</span><span class="dv">100</span></span>
+<span id="cb276-7"><a href="dynamic-regression-models.html#cb276-7" tabindex="-1"></a></span>
+<span id="cb276-8"><a href="dynamic-regression-models.html#cb276-8" tabindex="-1"></a>Full.ARIMA.MAE</span></code></pre></div>
+<pre><code>## [1] 1181.016</code></pre>
+<div class="sourceCode" id="cb278"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb278-1"><a href="dynamic-regression-models.html#cb278-1" tabindex="-1"></a>Full.ARIMA.MAPE</span></code></pre></div>
+<pre><code>## [1] 1.800296</code></pre>
+<p>From the above output we see that although the MAE and MAPE have improved from the ARIMA model without accounting for September 11, but still not better than the exponential smoothing model.</p>
+</div>
+<div id="python-code-for-dynamic-regression-models" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Python Code for Dynamic Regression Models<a href="dynamic-regression-models.html#python-code-for-dynamic-regression-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb280"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb280-1"><a href="dynamic-regression-models.html#cb280-1" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb280-2"><a href="dynamic-regression-models.html#cb280-2" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb280-3"><a href="dynamic-regression-models.html#cb280-3" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb280-4"><a href="dynamic-regression-models.html#cb280-4" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb280-5"><a href="dynamic-regression-models.html#cb280-5" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics <span class="im">import</span> tsaplots</span>
+<span id="cb280-6"><a href="dynamic-regression-models.html#cb280-6" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics <span class="im">import</span> tsaplots</span>
+<span id="cb280-7"><a href="dynamic-regression-models.html#cb280-7" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
+<span id="cb280-8"><a href="dynamic-regression-models.html#cb280-8" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
+<span id="cb280-9"><a href="dynamic-regression-models.html#cb280-9" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima_model <span class="im">import</span> ARMA</span>
+<span id="cb280-10"><a href="dynamic-regression-models.html#cb280-10" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima_model <span class="im">import</span> ARIMA</span>
+<span id="cb280-11"><a href="dynamic-regression-models.html#cb280-11" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.statespace.sarimax <span class="im">import</span> SARIMAX</span>
+<span id="cb280-12"><a href="dynamic-regression-models.html#cb280-12" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.holtwinters <span class="im">import</span> SimpleExpSmoothing, Holt, ExponentialSmoothing</span>
+<span id="cb280-13"><a href="dynamic-regression-models.html#cb280-13" tabindex="-1"></a><span class="im">import</span> pmdarima <span class="im">as</span> pm</span>
+<span id="cb280-14"><a href="dynamic-regression-models.html#cb280-14" tabindex="-1"></a>usair <span class="op">=</span> pd.read_csv(<span class="st">&quot;https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/usairlines.csv&quot;</span>)</span>
+<span id="cb280-15"><a href="dynamic-regression-models.html#cb280-15" tabindex="-1"></a></span>
+<span id="cb280-16"><a href="dynamic-regression-models.html#cb280-16" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb280-17"><a href="dynamic-regression-models.html#cb280-17" tabindex="-1"></a>usair.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb280-18"><a href="dynamic-regression-models.html#cb280-18" tabindex="-1"></a></span>
+<span id="cb280-19"><a href="dynamic-regression-models.html#cb280-19" tabindex="-1"></a>training <span class="op">=</span> usair.head(<span class="dv">207</span>)</span>
+<span id="cb280-20"><a href="dynamic-regression-models.html#cb280-20" tabindex="-1"></a>test <span class="op">=</span> usair.tail(<span class="dv">12</span>)</span>
+<span id="cb280-21"><a href="dynamic-regression-models.html#cb280-21" tabindex="-1"></a></span>
+<span id="cb280-22"><a href="dynamic-regression-models.html#cb280-22" tabindex="-1"></a></span>
+<span id="cb280-23"><a href="dynamic-regression-models.html#cb280-23" tabindex="-1"></a>training[<span class="st">&#39;Sep11&#39;</span>] <span class="op">=</span> <span class="dv">0</span> <span class="op">*</span> <span class="dv">207</span></span></code></pre></div>
+<pre><code>## &lt;string&gt;:1: SettingWithCopyWarning: 
+## A value is trying to be set on a copy of a slice from a DataFrame.
+## Try using .loc[row_indexer,col_indexer] = value instead
+## 
+## See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy</code></pre>
+<div class="sourceCode" id="cb282"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb282-1"><a href="dynamic-regression-models.html#cb282-1" tabindex="-1"></a>training[<span class="st">&#39;Sep11&#39;</span>][<span class="dv">140</span>] <span class="op">=</span> <span class="dv">1</span></span></code></pre></div>
+<pre><code>## &lt;string&gt;:1: SettingWithCopyWarning: 
+## A value is trying to be set on a copy of a slice from a DataFrame
+## 
+## See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy</code></pre>
+<div class="sourceCode" id="cb284"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb284-1"><a href="dynamic-regression-models.html#cb284-1" tabindex="-1"></a>results <span class="op">=</span> sm.OLS.from_formula(<span class="st">&quot;Passengers ~ Sep11&quot;</span>,</span>
+<span id="cb284-2"><a href="dynamic-regression-models.html#cb284-2" tabindex="-1"></a>                              data<span class="op">=</span>training).fit()</span>
+<span id="cb284-3"><a href="dynamic-regression-models.html#cb284-3" tabindex="-1"></a><span class="bu">print</span>(results.summary())</span></code></pre></div>
+<pre><code>##                             OLS Regression Results                            
+## ==============================================================================
+## Dep. Variable:             Passengers   R-squared:                       0.014
+## Model:                            OLS   Adj. R-squared:                  0.009
+## Method:                 Least Squares   F-statistic:                     2.905
+## Date:                Thu, 07 Sep 2023   Prob (F-statistic):             0.0898
+## Time:                        22:51:35   Log-Likelihood:                -2177.3
+## No. Observations:                 207   AIC:                             4359.
+## Df Residuals:                     205   BIC:                             4365.
+## Df Model:                           1                                         
+## Covariance Type:            nonrobust                                         
+## ==============================================================================
+##                  coef    std err          t      P&gt;|t|      [0.025      0.975]
+## ------------------------------------------------------------------------------
+## Intercept   4.989e+04    626.612     79.618      0.000    4.87e+04    5.11e+04
+## Sep11      -1.537e+04   9015.376     -1.704      0.090   -3.31e+04    2409.378
+## ==============================================================================
+## Omnibus:                       11.449   Durbin-Watson:                   0.287
+## Prob(Omnibus):                  0.003   Jarque-Bera (JB):                5.047
+## Skew:                           0.085   Prob(JB):                       0.0802
+## Kurtosis:                       2.254   Cond. No.                         14.4
+## ==============================================================================
+## 
+## Notes:
+## [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+<div class="sourceCode" id="cb286"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb286-1"><a href="dynamic-regression-models.html#cb286-1" tabindex="-1"></a>model <span class="op">=</span> pm.auto_arima(results.resid.dropna(), start_p <span class="op">=</span> <span class="dv">0</span>, start_q <span class="op">=</span> <span class="dv">0</span>, max_p <span class="op">=</span> <span class="dv">5</span>, max_q <span class="op">=</span> <span class="dv">5</span>, start_P <span class="op">=</span> <span class="dv">0</span>, start_Q <span class="op">=</span> <span class="dv">0</span>, max_D <span class="op">=</span> <span class="dv">1</span>, max_P <span class="op">=</span> <span class="dv">2</span>, map_Q <span class="op">=</span> <span class="dv">2</span>, seasonal <span class="op">=</span> <span class="va">True</span>, m <span class="op">=</span> <span class="dv">12</span>)</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\pmdarima\arima\_auto_solvers.py:522: ModelFitWarning: Error fitting  ARIMA(1,1,0)(2,0,1)[12]           (if you do not want to see these warnings, run with error_action=&quot;ignore&quot;).
+## Traceback:
+## Traceback (most recent call last):
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\pmdarima\arima\_auto_solvers.py&quot;, line 506, in _fit_candidate_model
+##     fit.fit(y, X=X, **fit_params)
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\pmdarima\arima\arima.py&quot;, line 597, in fit
+##     self._fit(y, X, **fit_args)
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\pmdarima\arima\arima.py&quot;, line 518, in _fit
+##     fit, self.arima_res_ = _fit_wrapper()
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\pmdarima\arima\arima.py&quot;, line 508, in _fit_wrapper
+##     return arima, arima.fit(start_params=start_params,
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\statespace\mlemodel.py&quot;, line 704, in fit
+##     mlefit = super(MLEModel, self).fit(start_params, method=method,
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\base\model.py&quot;, line 563, in fit
+##     xopt, retvals, optim_settings = optimizer._fit(f, score, start_params,
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\base\optimizer.py&quot;, line 241, in _fit
+##     xopt, retvals = func(objective, gradient, start_params, fargs, kwargs,
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\base\optimizer.py&quot;, line 651, in _fit_lbfgs
+##     retvals = optimize.fmin_l_bfgs_b(func, start_params, maxiter=maxiter,
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\scipy\optimize\_lbfgsb_py.py&quot;, line 199, in fmin_l_bfgs_b
+##     res = _minimize_lbfgsb(fun, x0, args=args, jac=jac, bounds=bounds,
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\scipy\optimize\_lbfgsb_py.py&quot;, line 365, in _minimize_lbfgsb
+##     f, g = func_and_grad(x)
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\scipy\optimize\_differentiable_functions.py&quot;, line 285, in fun_and_grad
+##     self._update_fun()
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\scipy\optimize\_differentiable_functions.py&quot;, line 251, in _update_fun
+##     self._update_fun_impl()
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\scipy\optimize\_differentiable_functions.py&quot;, line 155, in update_fun
+##     self.f = fun_wrapped(self.x)
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\scipy\optimize\_differentiable_functions.py&quot;, line 137, in fun_wrapped
+##     fx = fun(np.copy(x), *args)
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\base\model.py&quot;, line 531, in f
+##     return -self.loglike(params, *args) / nobs
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\statespace\mlemodel.py&quot;, line 939, in loglike
+##     loglike = self.ssm.loglike(complex_step=complex_step, **kwargs)
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\statespace\kalman_filter.py&quot;, line 983, in loglike
+##     kfilter = self._filter(**kwargs)
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\statespace\kalman_filter.py&quot;, line 903, in _filter
+##     self._initialize_state(prefix=prefix, complex_step=complex_step)
+##   File &quot;C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\statespace\representation.py&quot;, line 983, in _initialize_state
+##     self._statespaces[prefix].initialize(self.initialization,
+##   File &quot;statsmodels\tsa\statespace\_representation.pyx&quot;, line 1373, in statsmodels.tsa.statespace._representation.dStatespace.initialize
+##   File &quot;statsmodels\tsa\statespace\_representation.pyx&quot;, line 1362, in statsmodels.tsa.statespace._representation.dStatespace.initialize
+##   File &quot;statsmodels\tsa\statespace\_initialization.pyx&quot;, line 288, in statsmodels.tsa.statespace._initialization.dInitialization.initialize
+##   File &quot;statsmodels\tsa\statespace\_initialization.pyx&quot;, line 406, in statsmodels.tsa.statespace._initialization.dInitialization.initialize_stationary_stationary_cov
+##   File &quot;statsmodels\tsa\statespace\_tools.pyx&quot;, line 1206, in statsmodels.tsa.statespace._tools._dsolve_discrete_lyapunov
+## numpy.linalg.LinAlgError: LU decomposition error.
+## 
+##   warnings.warn(warning_str, ModelFitWarning)</code></pre>
+<div class="sourceCode" id="cb288"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb288-1"><a href="dynamic-regression-models.html#cb288-1" tabindex="-1"></a>model.summary()</span></code></pre></div>
+<table class="simpletable">
+<caption>SARIMAX Results</caption>
+<tr>
+  <th>Dep. Variable:</th>                   <td>y</td>                <th>  No. Observations:  </th>    <td>207</td>   
+</tr>
+<tr>
+  <th>Model:</th>           <td>SARIMAX(1, 1, 0)x(2, 0, [1], 12)</td> <th>  Log Likelihood     </th> <td>-1863.806</td>
+</tr>
+<tr>
+  <th>Date:</th>                    <td>Thu, 07 Sep 2023</td>         <th>  AIC                </th> <td>3739.612</td> 
+</tr>
+<tr>
+  <th>Time:</th>                        <td>22:51:44</td>             <th>  BIC                </th> <td>3759.580</td> 
+</tr>
+<tr>
+  <th>Sample:</th>                          <td>0</td>                <th>  HQIC               </th> <td>3747.688</td> 
+</tr>
+<tr>
+  <th></th>                              <td> - 207</td>              <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>                <td>opg</td>               <th>                     </th>     <td> </td>    
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>intercept</th> <td> -329.5035</td> <td>  126.168</td> <td>   -2.612</td> <td> 0.009</td> <td> -576.788</td> <td>  -82.219</td>
+</tr>
+<tr>
+  <th>ar.L1</th>     <td>   -0.2218</td> <td>    0.065</td> <td>   -3.425</td> <td> 0.001</td> <td>   -0.349</td> <td>   -0.095</td>
+</tr>
+<tr>
+  <th>ar.S.L12</th>  <td>    0.3887</td> <td>    0.181</td> <td>    2.148</td> <td> 0.032</td> <td>    0.034</td> <td>    0.743</td>
+</tr>
+<tr>
+  <th>ar.S.L24</th>  <td>    0.4842</td> <td>    0.160</td> <td>    3.017</td> <td> 0.003</td> <td>    0.170</td> <td>    0.799</td>
+</tr>
+<tr>
+  <th>ma.S.L12</th>  <td>    0.1300</td> <td>    0.203</td> <td>    0.641</td> <td> 0.522</td> <td>   -0.268</td> <td>    0.528</td>
+</tr>
+<tr>
+  <th>sigma2</th>    <td> 4.039e+06</td> <td> 2.62e+05</td> <td>   15.421</td> <td> 0.000</td> <td> 3.53e+06</td> <td> 4.55e+06</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Ljung-Box (L1) (Q):</th>     <td>0.04</td> <th>  Jarque-Bera (JB):  </th> <td>575.74</td>
+</tr>
+<tr>
+  <th>Prob(Q):</th>                <td>0.84</td> <th>  Prob(JB):          </th>  <td>0.00</td> 
+</tr>
+<tr>
+  <th>Heteroskedasticity (H):</th> <td>1.70</td> <th>  Skew:              </th>  <td>0.02</td> 
+</tr>
+<tr>
+  <th>Prob(H) (two-sided):</th>    <td>0.03</td> <th>  Kurtosis:          </th>  <td>11.19</td>
+</tr>
+</table><br/><br/>Warnings:<br/>[1] Covariance matrix calculated using the outer product of gradients (complex-step).
+<div id="intervention-variables-1" class="section level3 hasAnchor" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> Intervention Variables<a href="dynamic-regression-models.html#intervention-variables-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb289"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb289-1"><a href="dynamic-regression-models.html#cb289-1" tabindex="-1"></a><span class="co">#training[&#39;Sep11&#39;] = 0 * 207</span></span>
+<span id="cb289-2"><a href="dynamic-regression-models.html#cb289-2" tabindex="-1"></a><span class="co">#training[&#39;Sep11&#39;][140] = 1</span></span>
+<span id="cb289-3"><a href="dynamic-regression-models.html#cb289-3" tabindex="-1"></a></span>
+<span id="cb289-4"><a href="dynamic-regression-models.html#cb289-4" tabindex="-1"></a><span class="co">#model3 = SARIMAX(training[&#39;Passengers&#39;], exog = training[&#39;Sep11&#39;], order = (1,0,1), seasonal_order = (0,1,1,12), trend = &#39;t&#39;).fit()</span></span>
+<span id="cb289-5"><a href="dynamic-regression-models.html#cb289-5" tabindex="-1"></a><span class="co">#model3.summary()</span></span>
+<span id="cb289-6"><a href="dynamic-regression-models.html#cb289-6" tabindex="-1"></a></span>
+<span id="cb289-7"><a href="dynamic-regression-models.html#cb289-7" tabindex="-1"></a><span class="co">#plt.cla()</span></span>
+<span id="cb289-8"><a href="dynamic-regression-models.html#cb289-8" tabindex="-1"></a><span class="co">#fcast2 = model3.forecast(12)</span></span>
+<span id="cb289-9"><a href="dynamic-regression-models.html#cb289-9" tabindex="-1"></a><span class="co">#ax = training[&quot;Passengers&quot;].plot(figsize=(12,8))</span></span>
+<span id="cb289-10"><a href="dynamic-regression-models.html#cb289-10" tabindex="-1"></a><span class="co">#fcast2.plot(ax = ax,color = &quot;orange&quot;)</span></span>
+<span id="cb289-11"><a href="dynamic-regression-models.html#cb289-11" tabindex="-1"></a><span class="co">#plt.show()</span></span></code></pre></div>
+</div>
+<div id="predictor-variables-1" class="section level3 hasAnchor" number="6.3.2">
+<h3><span class="header-section-number">6.3.2</span> Predictor Variables<a href="dynamic-regression-models.html#predictor-variables-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb290"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb290-1"><a href="dynamic-regression-models.html#cb290-1" tabindex="-1"></a>training[<span class="st">&#39;Sep11&#39;</span>] <span class="op">=</span> <span class="dv">0</span> <span class="op">*</span> <span class="dv">207</span></span></code></pre></div>
+<pre><code>## &lt;string&gt;:1: SettingWithCopyWarning: 
+## A value is trying to be set on a copy of a slice from a DataFrame.
+## Try using .loc[row_indexer,col_indexer] = value instead
+## 
+## See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy</code></pre>
+<div class="sourceCode" id="cb292"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb292-1"><a href="dynamic-regression-models.html#cb292-1" tabindex="-1"></a>training[<span class="st">&#39;Sep11&#39;</span>][<span class="dv">140</span>] <span class="op">=</span> <span class="dv">1</span></span></code></pre></div>
+<pre><code>## &lt;string&gt;:1: SettingWithCopyWarning: 
+## A value is trying to be set on a copy of a slice from a DataFrame
+## 
+## See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy</code></pre>
+<div class="sourceCode" id="cb294"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb294-1"><a href="dynamic-regression-models.html#cb294-1" tabindex="-1"></a>training[<span class="st">&#39;Sep11_L1&#39;</span>] <span class="op">=</span> <span class="dv">0</span> <span class="op">*</span> <span class="dv">207</span></span>
+<span id="cb294-2"><a href="dynamic-regression-models.html#cb294-2" tabindex="-1"></a>training[<span class="st">&#39;Sep11_L1&#39;</span>][<span class="dv">141</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb294-3"><a href="dynamic-regression-models.html#cb294-3" tabindex="-1"></a>training[<span class="st">&#39;Sep11_L2&#39;</span>] <span class="op">=</span> <span class="dv">0</span> <span class="op">*</span> <span class="dv">207</span></span>
+<span id="cb294-4"><a href="dynamic-regression-models.html#cb294-4" tabindex="-1"></a>training[<span class="st">&#39;Sep11_L2&#39;</span>][<span class="dv">142</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb294-5"><a href="dynamic-regression-models.html#cb294-5" tabindex="-1"></a>training[<span class="st">&#39;Sep11_L3&#39;</span>] <span class="op">=</span> <span class="dv">0</span> <span class="op">*</span> <span class="dv">207</span></span>
+<span id="cb294-6"><a href="dynamic-regression-models.html#cb294-6" tabindex="-1"></a>training[<span class="st">&#39;Sep11_L3&#39;</span>][<span class="dv">143</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb294-7"><a href="dynamic-regression-models.html#cb294-7" tabindex="-1"></a>training[<span class="st">&#39;Sep11_L4&#39;</span>] <span class="op">=</span> <span class="dv">0</span> <span class="op">*</span> <span class="dv">207</span></span>
+<span id="cb294-8"><a href="dynamic-regression-models.html#cb294-8" tabindex="-1"></a>training[<span class="st">&#39;Sep11_L4&#39;</span>][<span class="dv">144</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb294-9"><a href="dynamic-regression-models.html#cb294-9" tabindex="-1"></a>training[<span class="st">&#39;Sep11_L5&#39;</span>] <span class="op">=</span> <span class="dv">0</span> <span class="op">*</span> <span class="dv">207</span></span>
+<span id="cb294-10"><a href="dynamic-regression-models.html#cb294-10" tabindex="-1"></a>training[<span class="st">&#39;Sep11_L5&#39;</span>][<span class="dv">145</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb294-11"><a href="dynamic-regression-models.html#cb294-11" tabindex="-1"></a>training[<span class="st">&#39;Sep11_L6&#39;</span>] <span class="op">=</span> <span class="dv">0</span> <span class="op">*</span> <span class="dv">207</span></span>
+<span id="cb294-12"><a href="dynamic-regression-models.html#cb294-12" tabindex="-1"></a>training[<span class="st">&#39;Sep11_L6&#39;</span>][<span class="dv">146</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb294-13"><a href="dynamic-regression-models.html#cb294-13" tabindex="-1"></a>training[<span class="st">&#39;Anniv&#39;</span>] <span class="op">=</span> <span class="dv">0</span> <span class="op">*</span> <span class="dv">207</span></span>
+<span id="cb294-14"><a href="dynamic-regression-models.html#cb294-14" tabindex="-1"></a>training[<span class="st">&#39;Anniv&#39;</span>][<span class="dv">152</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb294-15"><a href="dynamic-regression-models.html#cb294-15" tabindex="-1"></a></span>
+<span id="cb294-16"><a href="dynamic-regression-models.html#cb294-16" tabindex="-1"></a>X <span class="op">=</span> np.array((training[<span class="st">&#39;Sep11&#39;</span>],</span>
+<span id="cb294-17"><a href="dynamic-regression-models.html#cb294-17" tabindex="-1"></a>             training[<span class="st">&#39;Sep11_L1&#39;</span>],</span>
+<span id="cb294-18"><a href="dynamic-regression-models.html#cb294-18" tabindex="-1"></a>             training[<span class="st">&#39;Sep11_L2&#39;</span>],</span>
+<span id="cb294-19"><a href="dynamic-regression-models.html#cb294-19" tabindex="-1"></a>             training[<span class="st">&#39;Sep11_L3&#39;</span>],</span>
+<span id="cb294-20"><a href="dynamic-regression-models.html#cb294-20" tabindex="-1"></a>             training[<span class="st">&#39;Sep11_L4&#39;</span>],</span>
+<span id="cb294-21"><a href="dynamic-regression-models.html#cb294-21" tabindex="-1"></a>             training[<span class="st">&#39;Sep11_L5&#39;</span>],</span>
+<span id="cb294-22"><a href="dynamic-regression-models.html#cb294-22" tabindex="-1"></a>             training[<span class="st">&#39;Sep11_L6&#39;</span>],</span>
+<span id="cb294-23"><a href="dynamic-regression-models.html#cb294-23" tabindex="-1"></a>             training[<span class="st">&#39;Anniv&#39;</span>]))</span>
+<span id="cb294-24"><a href="dynamic-regression-models.html#cb294-24" tabindex="-1"></a></span>
+<span id="cb294-25"><a href="dynamic-regression-models.html#cb294-25" tabindex="-1"></a>X <span class="op">=</span> np.transpose(X)</span>
+<span id="cb294-26"><a href="dynamic-regression-models.html#cb294-26" tabindex="-1"></a></span>
+<span id="cb294-27"><a href="dynamic-regression-models.html#cb294-27" tabindex="-1"></a>model4 <span class="op">=</span> SARIMAX(training[<span class="st">&#39;Passengers&#39;</span>], exog <span class="op">=</span> X, order <span class="op">=</span> (<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>), seasonal_order <span class="op">=</span> (<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">12</span>), trend <span class="op">=</span> <span class="st">&#39;t&#39;</span>).fit()</span>
+<span id="cb294-28"><a href="dynamic-regression-models.html#cb294-28" tabindex="-1"></a>model4.summary()</span></code></pre></div>
+<table class="simpletable">
+<caption>SARIMAX Results</caption>
+<tr>
+  <th>Dep. Variable:</th>              <td>Passengers</td>            <th>  No. Observations:  </th>    <td>207</td>   
+</tr>
+<tr>
+  <th>Model:</th>           <td>SARIMAX(2, 0, 0)x(1, 1, [1], 12)</td> <th>  Log Likelihood     </th> <td>-1758.130</td>
+</tr>
+<tr>
+  <th>Date:</th>                    <td>Thu, 07 Sep 2023</td>         <th>  AIC                </th> <td>3544.260</td> 
+</tr>
+<tr>
+  <th>Time:</th>                        <td>22:51:46</td>             <th>  BIC                </th> <td>3590.082</td> 
+</tr>
+<tr>
+  <th>Sample:</th>                     <td>01-01-1990</td>            <th>  HQIC               </th> <td>3562.813</td> 
+</tr>
+<tr>
+  <th></th>                           <td>- 03-01-2007</td>           <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>                <td>opg</td>               <th>                     </th>     <td> </td>    
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+      <td></td>        <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>drift</th>    <td>    9.7333</td> <td>    1.411</td> <td>    6.900</td> <td> 0.000</td> <td>    6.969</td> <td>   12.498</td>
+</tr>
+<tr>
+  <th>x1</th>       <td>-1.674e+04</td> <td>  923.884</td> <td>  -18.116</td> <td> 0.000</td> <td>-1.85e+04</td> <td>-1.49e+04</td>
+</tr>
+<tr>
+  <th>x2</th>       <td>-1.093e+04</td> <td>  922.850</td> <td>  -11.842</td> <td> 0.000</td> <td>-1.27e+04</td> <td>-9119.746</td>
+</tr>
+<tr>
+  <th>x3</th>       <td>-7800.0000</td> <td>  728.167</td> <td>  -10.712</td> <td> 0.000</td> <td>-9227.182</td> <td>-6372.818</td>
+</tr>
+<tr>
+  <th>x4</th>       <td>-8401.5000</td> <td> 1100.215</td> <td>   -7.636</td> <td> 0.000</td> <td>-1.06e+04</td> <td>-6245.118</td>
+</tr>
+<tr>
+  <th>x5</th>       <td>-5819.9999</td> <td>  906.614</td> <td>   -6.419</td> <td> 0.000</td> <td>-7596.931</td> <td>-4043.069</td>
+</tr>
+<tr>
+  <th>x6</th>       <td>-4020.0003</td> <td>  916.580</td> <td>   -4.386</td> <td> 0.000</td> <td>-5816.464</td> <td>-2223.537</td>
+</tr>
+<tr>
+  <th>x7</th>       <td>-3335.9975</td> <td>  611.058</td> <td>   -5.459</td> <td> 0.000</td> <td>-4533.650</td> <td>-2138.345</td>
+</tr>
+<tr>
+  <th>x8</th>       <td>-5209.9962</td> <td>  789.594</td> <td>   -6.598</td> <td> 0.000</td> <td>-6757.571</td> <td>-3662.421</td>
+</tr>
+<tr>
+  <th>ar.L1</th>    <td>    0.4425</td> <td>    0.061</td> <td>    7.239</td> <td> 0.000</td> <td>    0.323</td> <td>    0.562</td>
+</tr>
+<tr>
+  <th>ar.L2</th>    <td>   -0.0244</td> <td>    0.059</td> <td>   -0.415</td> <td> 0.678</td> <td>   -0.140</td> <td>    0.091</td>
+</tr>
+<tr>
+  <th>ar.S.L12</th> <td>   -0.5652</td> <td>    0.145</td> <td>   -3.894</td> <td> 0.000</td> <td>   -0.850</td> <td>   -0.281</td>
+</tr>
+<tr>
+  <th>ma.S.L12</th> <td>    0.4883</td> <td>    0.157</td> <td>    3.104</td> <td> 0.002</td> <td>    0.180</td> <td>    0.797</td>
+</tr>
+<tr>
+  <th>sigma2</th>   <td> 2.344e+06</td> <td>    1.636</td> <td> 1.43e+06</td> <td> 0.000</td> <td> 2.34e+06</td> <td> 2.34e+06</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Ljung-Box (L1) (Q):</th>     <td>12.50</td> <th>  Jarque-Bera (JB):  </th> <td>263.80</td>
+</tr>
+<tr>
+  <th>Prob(Q):</th>                <td>0.00</td>  <th>  Prob(JB):          </th>  <td>0.00</td> 
+</tr>
+<tr>
+  <th>Heteroskedasticity (H):</th> <td>1.10</td>  <th>  Skew:              </th>  <td>-1.27</td>
+</tr>
+<tr>
+  <th>Prob(H) (two-sided):</th>    <td>0.71</td>  <th>  Kurtosis:          </th>  <td>8.10</td> 
+</tr>
+</table><br/><br/>Warnings:<br/>[1] Covariance matrix calculated using the outer product of gradients (complex-step).<br/>[2] Covariance matrix is singular or near-singular, with condition number 6.4e+21. Standard errors may be unstable.
+<div class="sourceCode" id="cb295"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb295-1"><a href="dynamic-regression-models.html#cb295-1" tabindex="-1"></a><span class="co">#lag_test=[4,5,6,7,8,9,10,11,12,13]</span></span>
+<span id="cb295-2"><a href="dynamic-regression-models.html#cb295-2" tabindex="-1"></a></span>
+<span id="cb295-3"><a href="dynamic-regression-models.html#cb295-3" tabindex="-1"></a><span class="co">#for x in lag_test:</span></span>
+<span id="cb295-4"><a href="dynamic-regression-models.html#cb295-4" tabindex="-1"></a> <span class="co"># sm.stats.acorr_ljungbox(model4.resid, lags=[x], model_df=2)</span></span></code></pre></div>
+<div class="sourceCode" id="cb296"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb296-1"><a href="dynamic-regression-models.html#cb296-1" tabindex="-1"></a>test[<span class="st">&#39;Sep11&#39;</span>] <span class="op">=</span> <span class="dv">0</span> <span class="op">*</span> <span class="dv">12</span></span></code></pre></div>
+<pre><code>## &lt;string&gt;:1: SettingWithCopyWarning: 
+## A value is trying to be set on a copy of a slice from a DataFrame.
+## Try using .loc[row_indexer,col_indexer] = value instead
+## 
+## See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy</code></pre>
+<div class="sourceCode" id="cb298"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb298-1"><a href="dynamic-regression-models.html#cb298-1" tabindex="-1"></a>test[<span class="st">&#39;Sep11_L1&#39;</span>] <span class="op">=</span> <span class="dv">0</span> <span class="op">*</span> <span class="dv">12</span></span>
+<span id="cb298-2"><a href="dynamic-regression-models.html#cb298-2" tabindex="-1"></a>test[<span class="st">&#39;Sep11_L2&#39;</span>] <span class="op">=</span> <span class="dv">0</span> <span class="op">*</span> <span class="dv">12</span></span>
+<span id="cb298-3"><a href="dynamic-regression-models.html#cb298-3" tabindex="-1"></a>test[<span class="st">&#39;Sep11_L3&#39;</span>] <span class="op">=</span> <span class="dv">0</span> <span class="op">*</span> <span class="dv">12</span></span>
+<span id="cb298-4"><a href="dynamic-regression-models.html#cb298-4" tabindex="-1"></a>test[<span class="st">&#39;Sep11_L4&#39;</span>] <span class="op">=</span> <span class="dv">0</span> <span class="op">*</span> <span class="dv">12</span></span>
+<span id="cb298-5"><a href="dynamic-regression-models.html#cb298-5" tabindex="-1"></a>test[<span class="st">&#39;Sep11_L5&#39;</span>] <span class="op">=</span> <span class="dv">0</span> <span class="op">*</span> <span class="dv">12</span></span>
+<span id="cb298-6"><a href="dynamic-regression-models.html#cb298-6" tabindex="-1"></a>test[<span class="st">&#39;Sep11_L6&#39;</span>] <span class="op">=</span> <span class="dv">0</span> <span class="op">*</span> <span class="dv">12</span></span>
+<span id="cb298-7"><a href="dynamic-regression-models.html#cb298-7" tabindex="-1"></a>test[<span class="st">&#39;Anniv&#39;</span>] <span class="op">=</span> <span class="dv">0</span> <span class="op">*</span> <span class="dv">12</span></span>
+<span id="cb298-8"><a href="dynamic-regression-models.html#cb298-8" tabindex="-1"></a></span>
+<span id="cb298-9"><a href="dynamic-regression-models.html#cb298-9" tabindex="-1"></a>X_test <span class="op">=</span> np.array((test[<span class="st">&#39;Sep11&#39;</span>],</span>
+<span id="cb298-10"><a href="dynamic-regression-models.html#cb298-10" tabindex="-1"></a>             test[<span class="st">&#39;Sep11_L1&#39;</span>],</span>
+<span id="cb298-11"><a href="dynamic-regression-models.html#cb298-11" tabindex="-1"></a>             test[<span class="st">&#39;Sep11_L2&#39;</span>],</span>
+<span id="cb298-12"><a href="dynamic-regression-models.html#cb298-12" tabindex="-1"></a>             test[<span class="st">&#39;Sep11_L3&#39;</span>],</span>
+<span id="cb298-13"><a href="dynamic-regression-models.html#cb298-13" tabindex="-1"></a>             test[<span class="st">&#39;Sep11_L4&#39;</span>],</span>
+<span id="cb298-14"><a href="dynamic-regression-models.html#cb298-14" tabindex="-1"></a>             test[<span class="st">&#39;Sep11_L5&#39;</span>],</span>
+<span id="cb298-15"><a href="dynamic-regression-models.html#cb298-15" tabindex="-1"></a>             test[<span class="st">&#39;Sep11_L6&#39;</span>],</span>
+<span id="cb298-16"><a href="dynamic-regression-models.html#cb298-16" tabindex="-1"></a>             test[<span class="st">&#39;Anniv&#39;</span>]))</span>
+<span id="cb298-17"><a href="dynamic-regression-models.html#cb298-17" tabindex="-1"></a></span>
+<span id="cb298-18"><a href="dynamic-regression-models.html#cb298-18" tabindex="-1"></a>X_test <span class="op">=</span> np.transpose(X_test)</span>
+<span id="cb298-19"><a href="dynamic-regression-models.html#cb298-19" tabindex="-1"></a></span>
+<span id="cb298-20"><a href="dynamic-regression-models.html#cb298-20" tabindex="-1"></a>plt.cla()</span>
+<span id="cb298-21"><a href="dynamic-regression-models.html#cb298-21" tabindex="-1"></a>fcast4 <span class="op">=</span> model4.forecast(<span class="dv">12</span>, exog <span class="op">=</span> X_test)</span>
+<span id="cb298-22"><a href="dynamic-regression-models.html#cb298-22" tabindex="-1"></a>ax <span class="op">=</span> training[<span class="st">&quot;Passengers&quot;</span>].plot(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
+<span id="cb298-23"><a href="dynamic-regression-models.html#cb298-23" tabindex="-1"></a>fcast4.plot(ax <span class="op">=</span> ax,color <span class="op">=</span> <span class="st">&quot;orange&quot;</span>)</span>
+<span id="cb298-24"><a href="dynamic-regression-models.html#cb298-24" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-71-1.png" width="1152" /></p>
+<div class="sourceCode" id="cb299"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb299-1"><a href="dynamic-regression-models.html#cb299-1" tabindex="-1"></a>error4 <span class="op">=</span> test[<span class="st">&#39;Passengers&#39;</span>]<span class="op">-</span>fcast4</span>
+<span id="cb299-2"><a href="dynamic-regression-models.html#cb299-2" tabindex="-1"></a>MAPE4 <span class="op">=</span> np.mean(<span class="bu">abs</span>(error4)<span class="op">/</span>test[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb299-3"><a href="dynamic-regression-models.html#cb299-3" tabindex="-1"></a>MAPE4</span></code></pre></div>
+<pre><code>## 1.4065001651788902</code></pre>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="seasonality.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/sjsimmo2/TimeSeries/edit/master/05-DynamicRegression.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/sjsimmo2/TimeSeries/blob/master/05-DynamicRegression.Rmd",
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
