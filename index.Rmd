@@ -1,6 +1,6 @@
 --- 
 title: "Time Series 1"
-author: "by Dr. Susan Simmons"
+author: "by Dr. Susan Simmons and Dr. Aric LaBarr "
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---

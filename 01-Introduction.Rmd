@@ -1,7 +1,7 @@
 # Introduction
 
 
-This document provides the code and output from Time Series I class. This is a living document and may be updated throughout the semester (when this occurs, you will be notified that it has been updated).  First, here is a list of all the libraries that you will need:
+This document provides the code and output from Time Series I and II class. This is a living document and may be updated throughout the semester (when this occurs, you will be notified that it has been updated).  First, here is a list of all the libraries that you will need:
 
 ```{r libraries, message=FALSE,warning=FALSE}
 library(tseries)
