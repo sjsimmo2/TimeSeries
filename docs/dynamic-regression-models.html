@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="seasonality.html"/>
-
+<link rel="next" href="prophet.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -196,6 +196,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="6.3.1" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#intervention-variables-1"><i class="fa fa-check"></i><b>6.3.1</b> Intervention Variables</a></li>
 <li class="chapter" data-level="6.3.2" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#predictor-variables-1"><i class="fa fa-check"></i><b>6.3.2</b> Predictor Variables</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="prophet.html"><a href="prophet.html"><i class="fa fa-check"></i><b>7</b> Prophet</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="prophet.html"><a href="prophet.html#python-code-for-prophet"><i class="fa fa-check"></i><b>7.1</b> Python Code for Prophet</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="prophet.html"><a href="prophet.html#model-structure"><i class="fa fa-check"></i><b>7.1.1</b> Model Structure</a></li>
+<li class="chapter" data-level="7.1.2" data-path="prophet.html"><a href="prophet.html#forecasting"><i class="fa fa-check"></i><b>7.1.2</b> Forecasting</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -444,7 +452,7 @@ Y_t = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + Z_t
 ## Model:                            OLS   Adj. R-squared:                  0.009
 ## Method:                 Least Squares   F-statistic:                     2.905
 ## Date:                Thu, 07 Sep 2023   Prob (F-statistic):             0.0898
-## Time:                        22:51:35   Log-Likelihood:                -2177.3
+## Time:                        23:06:53   Log-Likelihood:                -2177.3
 ## No. Observations:                 207   AIC:                             4359.
 ## Df Residuals:                     205   BIC:                             4365.
 ## Df Model:                           1                                         
@@ -526,7 +534,7 @@ Y_t = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + Z_t
   <th>Date:</th>                    <td>Thu, 07 Sep 2023</td>         <th>  AIC                </th> <td>3739.612</td> 
 </tr>
 <tr>
-  <th>Time:</th>                        <td>22:51:44</td>             <th>  BIC                </th> <td>3759.580</td> 
+  <th>Time:</th>                        <td>23:07:12</td>             <th>  BIC                </th> <td>3759.580</td> 
 </tr>
 <tr>
   <th>Sample:</th>                          <td>0</td>                <th>  HQIC               </th> <td>3747.688</td> 
@@ -642,7 +650,7 @@ Y_t = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + Z_t
   <th>Date:</th>                    <td>Thu, 07 Sep 2023</td>         <th>  AIC                </th> <td>3544.260</td> 
 </tr>
 <tr>
-  <th>Time:</th>                        <td>22:51:46</td>             <th>  BIC                </th> <td>3590.082</td> 
+  <th>Time:</th>                        <td>23:07:14</td>             <th>  BIC                </th> <td>3590.082</td> 
 </tr>
 <tr>
   <th>Sample:</th>                     <td>01-01-1990</td>            <th>  HQIC               </th> <td>3562.813</td> 
@@ -763,8 +771,8 @@ Y_t = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + Z_t
           </div>
         </div>
       </div>
-<a href="seasonality.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="seasonality.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="prophet.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -198,6 +198,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.3.2" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#predictor-variables-1"><i class="fa fa-check"></i><b>6.3.2</b> Predictor Variables</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="7" data-path="prophet.html"><a href="prophet.html"><i class="fa fa-check"></i><b>7</b> Prophet</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="prophet.html"><a href="prophet.html#python-code-for-prophet"><i class="fa fa-check"></i><b>7.1</b> Python Code for Prophet</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="prophet.html"><a href="prophet.html#model-structure"><i class="fa fa-check"></i><b>7.1.1</b> Model Structure</a></li>
+<li class="chapter" data-level="7.1.2" data-path="prophet.html"><a href="prophet.html#forecasting"><i class="fa fa-check"></i><b>7.1.2</b> Forecasting</a></li>
+</ul></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -666,7 +674,7 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 ## Dep. Variable:                      Y   No. Observations:                 1000
 ## Model:                 ARIMA(2, 0, 0)   Log Likelihood               -3695.014
 ## Date:                Thu, 07 Sep 2023   AIC                           7398.028
-## Time:                        22:49:32   BIC                           7417.659
+## Time:                        23:04:20   BIC                           7417.659
 ## Sample:                             0   HQIC                          7405.489
 ##                                - 1000                                         
 ## Covariance Type:                  opg                                         
@@ -732,7 +740,7 @@ The first value in the Ljung-Box test is the test statistic and the second value
 ## Dep. Variable:                      Y   No. Observations:                 1000
 ## Model:                 ARIMA(2, 0, 0)   Log Likelihood               -3695.014
 ## Date:                Thu, 07 Sep 2023   AIC                           7398.028
-## Time:                        22:49:33   BIC                           7417.659
+## Time:                        23:04:21   BIC                           7417.659
 ## Sample:                             0   HQIC                          7405.489
 ##                                - 1000                                         
 ## Covariance Type:                  opg                                         
@@ -806,7 +814,7 @@ The first value in the Ljung-Box test is the test statistic and the second value
 <span id="cb173-9"><a href="arima.html#cb173-9" tabindex="-1"></a></span>
 <span id="cb173-10"><a href="arima.html#cb173-10" tabindex="-1"></a><span class="co">### Now you can model residuals from the regression (if that is the route you took)</span></span>
 <span id="cb173-11"><a href="arima.html#cb173-11" tabindex="-1"></a>  </span></code></pre></div>
-<pre><code>## &lt;statsmodels.tsa.arima.model.ARIMAResultsWrapper object at 0x00000238789E04F0&gt;</code></pre>
+<pre><code>## &lt;statsmodels.tsa.arima.model.ARIMAResultsWrapper object at 0x0000023877FB16C0&gt;</code></pre>
 <p>Fitting ARIMA models.</p>
 <div class="sourceCode" id="cb175"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb175-1"><a href="arima.html#cb175-1" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb175-2"><a href="arima.html#cb175-2" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -848,7 +856,7 @@ The first value in the Ljung-Box test is the test statistic and the second value
   <th>Date:</th>            <td>Thu, 07 Sep 2023</td> <th>  AIC                </th> <td>1144.080</td>
 </tr>
 <tr>
-  <th>Time:</th>                <td>22:49:35</td>     <th>  BIC                </th> <td>1150.154</td>
+  <th>Time:</th>                <td>23:04:22</td>     <th>  BIC                </th> <td>1150.154</td>
 </tr>
 <tr>
   <th>Sample:</th>                  <td>0</td>        <th>  HQIC               </th> <td>1146.547</td>
@@ -899,7 +907,7 @@ The first value in the Ljung-Box test is the test statistic and the second value
   <th>Date:</th>            <td>Thu, 07 Sep 2023</td> <th>  AIC                </th> <td>1156.556</td>
 </tr>
 <tr>
-  <th>Time:</th>                <td>22:49:36</td>     <th>  BIC                </th> <td>1168.729</td>
+  <th>Time:</th>                <td>23:04:23</td>     <th>  BIC                </th> <td>1168.729</td>
 </tr>
 <tr>
   <th>Sample:</th>                  <td>0</td>        <th>  HQIC               </th> <td>1161.500</td>

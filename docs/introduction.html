@@ -198,6 +198,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.3.2" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#predictor-variables-1"><i class="fa fa-check"></i><b>6.3.2</b> Predictor Variables</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="7" data-path="prophet.html"><a href="prophet.html"><i class="fa fa-check"></i><b>7</b> Prophet</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="prophet.html"><a href="prophet.html#python-code-for-prophet"><i class="fa fa-check"></i><b>7.1</b> Python Code for Prophet</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="prophet.html"><a href="prophet.html#model-structure"><i class="fa fa-check"></i><b>7.1.1</b> Model Structure</a></li>
+<li class="chapter" data-level="7.1.2" data-path="prophet.html"><a href="prophet.html#forecasting"><i class="fa fa-check"></i><b>7.1.2</b> Forecasting</a></li>
+</ul></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -335,7 +343,7 @@ Just a quick note. STL ONLY does additive seasonal decomposition. There is a dec
 <span id="cb18-5"><a href="introduction.html#cb18-5" tabindex="-1"></a>plt.show()</span>
 <span id="cb18-6"><a href="introduction.html#cb18-6" tabindex="-1"></a></span>
 <span id="cb18-7"><a href="introduction.html#cb18-7" tabindex="-1"></a><span class="co">## Classical Decomposition</span></span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-1.png" width="1152" /></p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="introduction.html#cb19-1" tabindex="-1"></a>result <span class="op">=</span> seasonal_decompose(usair_p[<span class="st">&quot;Passengers&quot;</span>], model<span class="op">=</span><span class="st">&#39;additive&#39;</span>, period<span class="op">=</span><span class="dv">12</span>)</span>
 <span id="cb19-2"><a href="introduction.html#cb19-2" tabindex="-1"></a>result.plot()</span>
 <span id="cb19-3"><a href="introduction.html#cb19-3" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
