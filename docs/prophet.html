@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 7 Prophet | Time Series 1</title>
+  <meta name="description" content="Chapter 7 Prophet | Time Series 1" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 7 Prophet | Time Series 1" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 7 Prophet | Time Series 1" />
+  
+  
+  
+
+<meta name="author" content="by Dr. Susan Simmons" />
+
+
+<meta name="date" content="2023-09-07" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="dynamic-regression-models.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">TimeSeries</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Time series 1</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#time-series-decomposition"><i class="fa fa-check"></i><b>2.1</b> Time series decomposition</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#python-code-and-results-for-time-series-plot"><i class="fa fa-check"></i><b>2.2</b> Python code and results for Time Series plot</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction.html"><a href="introduction.html#sas-code-for-time-series-plot-and-decomposition"><i class="fa fa-check"></i><b>2.3</b> SAS code for time series plot and decomposition</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction.html"><a href="introduction.html#self-study"><i class="fa fa-check"></i><b>2.4</b> Self-study</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html"><i class="fa fa-check"></i><b>3</b> Exponential Smoothing</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#simple-exponential-smoothing"><i class="fa fa-check"></i><b>3.1</b> Simple Exponential Smoothing</a></li>
+<li class="chapter" data-level="3.2" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#holt-esm"><i class="fa fa-check"></i><b>3.2</b> Holt ESM</a></li>
+<li class="chapter" data-level="3.3" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#holt-winters"><i class="fa fa-check"></i><b>3.3</b> Holt-Winters</a></li>
+<li class="chapter" data-level="3.4" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#evaluating-forecasts"><i class="fa fa-check"></i><b>3.4</b> Evaluating forecasts</a></li>
+<li class="chapter" data-level="3.5" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#ets"><i class="fa fa-check"></i><b>3.5</b> ETS</a></li>
+<li class="chapter" data-level="3.6" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#python-code-for-exponential-smoothing"><i class="fa fa-check"></i><b>3.6</b> Python Code for Exponential Smoothing</a></li>
+<li class="chapter" data-level="3.7" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#sas-code-for-exponential-smoothing-models"><i class="fa fa-check"></i><b>3.7</b> SAS Code for Exponential Smoothing Models</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="arima.html"><a href="arima.html"><i class="fa fa-check"></i><b>4</b> ARIMA</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="arima.html"><a href="arima.html#stationarity"><i class="fa fa-check"></i><b>4.1</b> Stationarity</a></li>
+<li class="chapter" data-level="4.2" data-path="arima.html"><a href="arima.html#correlation-functions"><i class="fa fa-check"></i><b>4.2</b> Correlation Functions</a></li>
+<li class="chapter" data-level="4.3" data-path="arima.html"><a href="arima.html#autoregressive-models-ar"><i class="fa fa-check"></i><b>4.3</b> AutoRegressive Models (AR)</a></li>
+<li class="chapter" data-level="4.4" data-path="arima.html"><a href="arima.html#moving-average-model-ma"><i class="fa fa-check"></i><b>4.4</b> Moving Average model (MA)</a></li>
+<li class="chapter" data-level="4.5" data-path="arima.html"><a href="arima.html#white-noise"><i class="fa fa-check"></i><b>4.5</b> White noise</a></li>
+<li class="chapter" data-level="4.6" data-path="arima.html"><a href="arima.html#trending-series"><i class="fa fa-check"></i><b>4.6</b> Trending Series</a></li>
+<li class="chapter" data-level="4.7" data-path="arima.html"><a href="arima.html#fitting-arima-models"><i class="fa fa-check"></i><b>4.7</b> Fitting ARIMA models</a></li>
+<li class="chapter" data-level="4.8" data-path="arima.html"><a href="arima.html#python-code-for-armaarima-models"><i class="fa fa-check"></i><b>4.8</b> Python Code for ARMA/ARIMA models</a></li>
+<li class="chapter" data-level="4.9" data-path="arima.html"><a href="arima.html#sas-code-for-armaarima"><i class="fa fa-check"></i><b>4.9</b> SAS Code for ARMA/ARIMA</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="seasonality.html"><a href="seasonality.html"><i class="fa fa-check"></i><b>5</b> Seasonality</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="seasonality.html"><a href="seasonality.html#seasonal-unit-root-testing"><i class="fa fa-check"></i><b>5.1</b> Seasonal Unit Root Testing</a></li>
+<li class="chapter" data-level="5.2" data-path="seasonality.html"><a href="seasonality.html#deterministic-solutions"><i class="fa fa-check"></i><b>5.2</b> Deterministic Solutions</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="seasonality.html"><a href="seasonality.html#seasonal-dummy-variables"><i class="fa fa-check"></i><b>5.2.1</b> Seasonal Dummy Variables</a></li>
+<li class="chapter" data-level="5.2.2" data-path="seasonality.html"><a href="seasonality.html#fourier-transforms"><i class="fa fa-check"></i><b>5.2.2</b> Fourier Transforms</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="seasonality.html"><a href="seasonality.html#stochastic-solutions"><i class="fa fa-check"></i><b>5.3</b> Stochastic Solutions</a></li>
+<li class="chapter" data-level="5.4" data-path="seasonality.html"><a href="seasonality.html#seasonal-arima-modeling"><i class="fa fa-check"></i><b>5.4</b> Seasonal ARIMA Modeling</a></li>
+<li class="chapter" data-level="5.5" data-path="seasonality.html"><a href="seasonality.html#python-code-for-seasonality"><i class="fa fa-check"></i><b>5.5</b> Python Code for Seasonality</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="seasonality.html"><a href="seasonality.html#seasonality-1"><i class="fa fa-check"></i><b>5.5.1</b> Seasonality</a></li>
+<li class="chapter" data-level="5.5.2" data-path="seasonality.html"><a href="seasonality.html#deterministic-solutions-1"><i class="fa fa-check"></i><b>5.5.2</b> Deterministic Solutions</a></li>
+<li class="chapter" data-level="5.5.3" data-path="seasonality.html"><a href="seasonality.html#stochastic-solution"><i class="fa fa-check"></i><b>5.5.3</b> Stochastic Solution</a></li>
+<li class="chapter" data-level="5.5.4" data-path="seasonality.html"><a href="seasonality.html#seasonal-arima"><i class="fa fa-check"></i><b>5.5.4</b> Seasonal ARIMA</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html"><i class="fa fa-check"></i><b>6</b> Dynamic Regression Models</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#intervention-variables"><i class="fa fa-check"></i><b>6.1</b> Intervention Variables</a></li>
+<li class="chapter" data-level="6.2" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#predictor-variables"><i class="fa fa-check"></i><b>6.2</b> Predictor Variables</a></li>
+<li class="chapter" data-level="6.3" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#python-code-for-dynamic-regression-models"><i class="fa fa-check"></i><b>6.3</b> Python Code for Dynamic Regression Models</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#intervention-variables-1"><i class="fa fa-check"></i><b>6.3.1</b> Intervention Variables</a></li>
+<li class="chapter" data-level="6.3.2" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#predictor-variables-1"><i class="fa fa-check"></i><b>6.3.2</b> Predictor Variables</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="prophet.html"><a href="prophet.html"><i class="fa fa-check"></i><b>7</b> Prophet</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="prophet.html"><a href="prophet.html#python-code-for-prophet"><i class="fa fa-check"></i><b>7.1</b> Python Code for Prophet</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="prophet.html"><a href="prophet.html#model-structure"><i class="fa fa-check"></i><b>7.1.1</b> Model Structure</a></li>
+<li class="chapter" data-level="7.1.2" data-path="prophet.html"><a href="prophet.html#forecasting"><i class="fa fa-check"></i><b>7.1.2</b> Forecasting</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series 1</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="prophet" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">Chapter 7</span> Prophet<a href="prophet.html#prophet" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Prophet is a model framework introduced to the public by Facebook in 2018. Facebook uses this algorithm to forecast univariate time series by decomposing the it into pieces. This is similar to exponential smoothing, ETS, etc. In the Prophet model structure, the signal is broken down into three pieces - growth/trend, season, holiday.</p>
+<p>The growth/trend component uses trend lines (time) as variables in the model. This trend is a <strong>piecewise trend</strong> that brakes the pattern into different pieces using <strong>knots</strong> to change the slope. The user of the algorithm can specify the knots, or the algorithm will try to automatically select them. This trend can also be a <strong>logarithmic trend</strong> that is similar in design to the dampened trend approach to exponential smoothing.</p>
+<p>The seasonal component consists of Fourier variables to account for the seasonal pattern. The algorithm was originally designed for daily data with weekly and yearly seasonal effects. This can be expanded though to handle different types of data and seasons. The yearly season is set to 10 Fourier variables by default:</p>
+<p><span class="math display">\[
+X_Y = \cos(\frac{2\pi t}{365.25}) + \sin(2 \times \frac{2\pi t}{365.25}) + \cdots + \sin(10 \times \frac{2\pi t}{365.25})
+\]</span></p>
+<p>The weekly season is set to three Fourier variables by default:</p>
+<p><span class="math display">\[
+X_W = \cos(\frac{2\pi t}{7}) + \sin(2 \times \frac{2\pi t}{7}) + \cos(3 \times \frac{2\pi t}{7})
+\]</span></p>
+<p>The last component is the holiday component that consists of binary dummy variables to flag holidays in the dataset.</p>
+<p>The <code>prophet</code> package contains all the functions needed for the Prophet algorithm, but it is in a different format than the previous R time series functions. To start, we define our own “holidays” in the dataset. This list is a list of dates that you want flagged with binary variables. For our dataset, this would be September, 2001 as well as its 6 lags and the one seasonal lag (anniversary). These must be in a data frame (using the <code>data.frame</code> function) as date objects. The <code>as.Date</code> function will do this. This data frame needs to have specific naming conventions. The variable name is called <em>holiday</em> while the date variable is called <em>ds</em>. Next, the training data needs a time variable also called <em>ds</em>.</p>
+<p>Once the dataset is structured and ready, the <code>prophet</code> function can be employed. If we didn’t have our own “holidays” to add to the algorithm, we would just use <code>prophet()</code> to activate the prophet model framework. However, we use the <code>holidays = holidays</code> option to input our own additional holidays. The <code>add_country_holidays</code> function is used to add pre-programmed holidays by country. We use the <code>US</code> option to specify US holidays. Next, we use the <code>add_seasonlity</code> function to add our own monthly seasonality. The <code>name = 'monthly'</code> option along with the <code>period = 30.5</code> defines the monthly season with a period of 30.5 days per season. We can also specify the number of Fourier variables with the <code>fourier.order</code> option. Now that we have the structure created, we fit the algorithm using the <code>fit.prophet</code>function on our model object <em>Prof</em> and dataset <em>prophet.data</em>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="prophet.html#cb1-1" tabindex="-1"></a>holidays <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-2"><a href="prophet.html#cb1-2" tabindex="-1"></a>  <span class="at">holiday =</span> <span class="st">&#39;Sep11&#39;</span>,</span>
+<span id="cb1-3"><a href="prophet.html#cb1-3" tabindex="-1"></a>  <span class="at">ds =</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(<span class="st">&#39;2001-09-01&#39;</span>, <span class="st">&#39;2001-10-01&#39;</span>, <span class="st">&#39;2001-11-01&#39;</span>,</span>
+<span id="cb1-4"><a href="prophet.html#cb1-4" tabindex="-1"></a>                 <span class="st">&#39;2001-12-01&#39;</span>, <span class="st">&#39;2002-01-01&#39;</span>, <span class="st">&#39;2002-02-01&#39;</span>,</span>
+<span id="cb1-5"><a href="prophet.html#cb1-5" tabindex="-1"></a>                 <span class="st">&#39;2002-09-01&#39;</span>)),</span>
+<span id="cb1-6"><a href="prophet.html#cb1-6" tabindex="-1"></a>  <span class="at">lower_window =</span> <span class="dv">0</span>,</span>
+<span id="cb1-7"><a href="prophet.html#cb1-7" tabindex="-1"></a>  <span class="at">upper_window =</span> <span class="dv">1</span></span>
+<span id="cb1-8"><a href="prophet.html#cb1-8" tabindex="-1"></a>)</span>
+<span id="cb1-9"><a href="prophet.html#cb1-9" tabindex="-1"></a>prophet.data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ds =</span> <span class="fu">seq</span>(<span class="fu">as.Date</span>(<span class="st">&#39;1990-01-01&#39;</span>), <span class="fu">as.Date</span>(<span class="st">&#39;2007-03-01&#39;</span>), <span class="at">by =</span> <span class="st">&#39;m&#39;</span>), <span class="at">y =</span> training)</span>
+<span id="cb1-10"><a href="prophet.html#cb1-10" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="prophet.html#cb1-11" tabindex="-1"></a>Prof <span class="ot">&lt;-</span> <span class="fu">prophet</span>(<span class="at">holidays =</span> holidays)</span>
+<span id="cb1-12"><a href="prophet.html#cb1-12" tabindex="-1"></a>Prof <span class="ot">&lt;-</span> <span class="fu">add_country_holidays</span>(Prof, <span class="st">&quot;US&quot;</span>)</span>
+<span id="cb1-13"><a href="prophet.html#cb1-13" tabindex="-1"></a>Prof <span class="ot">&lt;-</span> <span class="fu">add_seasonality</span>(Prof, <span class="at">name=</span><span class="st">&#39;monthly&#39;</span>, <span class="at">period=</span><span class="fl">30.5</span>, <span class="at">fourier.order=</span><span class="dv">6</span>)</span>
+<span id="cb1-14"><a href="prophet.html#cb1-14" tabindex="-1"></a>Prof <span class="ot">&lt;-</span> <span class="fu">fit.prophet</span>(Prof, prophet.data)</span></code></pre></div>
+<pre><code>## Disabling weekly seasonality. Run prophet with weekly.seasonality=TRUE to override this.</code></pre>
+<pre><code>## Disabling daily seasonality. Run prophet with daily.seasonality=TRUE to override this.</code></pre>
+<p>Now that the model is created, we can forecast our dataset with the <code>make_future_dataframe</code> function with the <code>periods = 12</code> and <code>freq = 'month'</code> options to specify that we want 12 months of forecasts. This function structures the dataset (inputs) needed to forecast. The <code>predict</code> function actually does the forecasting. We can plot this forecast with the <code>plot</code> function and calculate our test dataset MAE and MAPE as well.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="prophet.html#cb4-1" tabindex="-1"></a>forecast.data <span class="ot">&lt;-</span> <span class="fu">make_future_dataframe</span>(Prof, <span class="at">periods =</span> <span class="dv">12</span>, <span class="at">freq =</span> <span class="st">&#39;month&#39;</span>)</span>
+<span id="cb4-2"><a href="prophet.html#cb4-2" tabindex="-1"></a><span class="fu">predict</span>(Prof, forecast.data)<span class="sc">$</span>yhat</span></code></pre></div>
+<pre><code>##   [1] 34255.33 32499.49 38070.92 36911.03 36941.93 40848.35 42400.36 43302.47
+##   [9] 35532.07 37813.34 36612.26 36743.93 33812.55 34078.78 38230.53 36380.02
+##  [17] 37436.07 40072.83 42666.26 42516.02 34671.97 37241.34 35344.57 36137.36
+##  [25] 32224.82 33367.37 42138.47 39325.92 40342.41 43730.45 46267.72 46236.45
+##  [33] 36874.69 40281.24 38752.87 39307.85 36639.74 35738.23 43964.06 40874.95
+##  [41] 42530.65 45084.88 48256.20 47595.26 37759.93 41914.46 39273.34 40916.00
+##  [49] 36836.63 35604.48 45690.91 43244.49 44597.21 47217.11 50090.95 49706.53
+##  [57] 40301.46 44252.70 41416.94 43218.59 38719.53 37504.52 46802.47 44891.65
+##  [65] 46043.31 48619.76 51308.81 51098.25 42609.68 45858.88 43317.58 44790.19
+##  [73] 40300.12 40061.41 50868.54 47967.92 49053.18 52353.15 54959.19 54839.86
+##  [81] 44805.82 48865.35 46652.55 47848.75 44563.22 42268.28 52178.44 49199.16
+##  [89] 50686.62 53344.90 56347.98 55791.09 45205.35 50046.08 47572.29 48983.40
+##  [97] 45138.35 43728.31 53856.15 51144.68 52698.24 55053.08 58127.76 57478.29
+## [105] 47943.73 51960.24 48995.00 50861.91 46233.37 45122.39 54204.05 52701.34
+## [113] 53380.67 56362.64 58576.85 58771.81 50186.66 53463.11 50825.24 52324.75
+## [121] 47737.73 47258.75 57911.53 55443.81 56080.71 59813.58 61971.26 62284.82
+## [129] 52181.58 56294.84 54012.84 55262.78 51908.05 49372.83 56512.45 55068.43
+## [137] 55014.77 59208.32 60670.27 61648.65 42570.89 45408.38 44014.25 44339.88
+## [145] 41574.49 40602.23 55780.65 53935.32 54616.91 57837.89 60040.60 60257.27
+## [153] 41735.77 54733.38 53270.61 53629.22 50503.15 50927.46 57645.77 54799.20
+## [161] 56816.56 58457.26 62012.01 60865.70 51151.23 55556.28 52706.83 54417.54
+## [169] 49619.32 50009.43 61345.22 57536.60 59514.41 61906.37 65404.95 64377.61
+## [177] 54063.17 58387.64 55894.43 57355.58 53789.64 52123.53 64036.53 60555.69
+## [185] 62538.85 64695.58 68194.36 67135.91 56494.00 61385.05 57937.37 60316.55
+## [193] 55497.60 53184.45 64979.74 62782.69 63816.00 66685.26 69239.69 69104.64
+## [201] 59749.27 63580.75 60794.70 62476.59 58027.24 56414.72 67240.95 63846.55
+## [209] 66411.74 67504.61 71607.19 69913.05 61268.06 64603.63 61905.92 63464.89
+## [217] 58818.41 58856.80 70940.40</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="prophet.html#cb6-1" tabindex="-1"></a><span class="fu">plot</span>(Prof, <span class="fu">predict</span>(Prof, forecast.data))</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="prophet.html#cb7-1" tabindex="-1"></a><span class="co"># Calculate prediction errors from forecast</span></span>
+<span id="cb7-2"><a href="prophet.html#cb7-2" tabindex="-1"></a>Prophet.error <span class="ot">&lt;-</span> test <span class="sc">-</span> <span class="fu">tail</span>(<span class="fu">predict</span>(Prof, forecast.data)<span class="sc">$</span>yhat, <span class="dv">12</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="prophet.html#cb8-1" tabindex="-1"></a><span class="co"># Calculate prediction error statistics (MAE and MAPE)</span></span>
+<span id="cb8-2"><a href="prophet.html#cb8-2" tabindex="-1"></a>Prophet.MAE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(Prophet.error))</span>
+<span id="cb8-3"><a href="prophet.html#cb8-3" tabindex="-1"></a>Prophet.MAPE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(Prophet.error)<span class="sc">/</span><span class="fu">abs</span>(test))<span class="sc">*</span><span class="dv">100</span></span>
+<span id="cb8-4"><a href="prophet.html#cb8-4" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="prophet.html#cb8-5" tabindex="-1"></a>Prophet.MAE</span></code></pre></div>
+<pre><code>## [1] 1438.429</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="prophet.html#cb10-1" tabindex="-1"></a>Prophet.MAPE</span></code></pre></div>
+<pre><code>## [1] 2.238247</code></pre>
+<div id="python-code-for-prophet" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> Python Code for Prophet<a href="prophet.html#python-code-for-prophet" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="model-structure" class="section level3 hasAnchor" number="7.1.1">
+<h3><span class="header-section-number">7.1.1</span> Model Structure<a href="prophet.html#model-structure" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="prophet.html#cb12-1" tabindex="-1"></a><span class="im">from</span> prophet <span class="im">import</span> Prophet</span></code></pre></div>
+<pre><code>## Importing plotly failed. Interactive plots will not work.</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="prophet.html#cb14-1" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb14-2"><a href="prophet.html#cb14-2" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb14-3"><a href="prophet.html#cb14-3" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb14-4"><a href="prophet.html#cb14-4" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb14-5"><a href="prophet.html#cb14-5" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics <span class="im">import</span> tsaplots</span>
+<span id="cb14-6"><a href="prophet.html#cb14-6" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics <span class="im">import</span> tsaplots</span>
+<span id="cb14-7"><a href="prophet.html#cb14-7" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
+<span id="cb14-8"><a href="prophet.html#cb14-8" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
+<span id="cb14-9"><a href="prophet.html#cb14-9" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima_model <span class="im">import</span> ARMA</span>
+<span id="cb14-10"><a href="prophet.html#cb14-10" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima_model <span class="im">import</span> ARIMA</span>
+<span id="cb14-11"><a href="prophet.html#cb14-11" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.statespace.sarimax <span class="im">import</span> SARIMAX</span>
+<span id="cb14-12"><a href="prophet.html#cb14-12" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.holtwinters <span class="im">import</span> SimpleExpSmoothing, Holt, ExponentialSmoothing</span>
+<span id="cb14-13"><a href="prophet.html#cb14-13" tabindex="-1"></a><span class="im">import</span> pmdarima <span class="im">as</span> pm</span>
+<span id="cb14-14"><a href="prophet.html#cb14-14" tabindex="-1"></a>usair <span class="op">=</span> pd.read_csv(<span class="st">&quot;https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/usairlines.csv&quot;</span>)</span>
+<span id="cb14-15"><a href="prophet.html#cb14-15" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb14-16"><a href="prophet.html#cb14-16" tabindex="-1"></a>usair.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb14-17"><a href="prophet.html#cb14-17" tabindex="-1"></a></span>
+<span id="cb14-18"><a href="prophet.html#cb14-18" tabindex="-1"></a>training <span class="op">=</span> usair.head(<span class="dv">207</span>)</span>
+<span id="cb14-19"><a href="prophet.html#cb14-19" tabindex="-1"></a>test <span class="op">=</span> usair.tail(<span class="dv">12</span>)</span>
+<span id="cb14-20"><a href="prophet.html#cb14-20" tabindex="-1"></a></span>
+<span id="cb14-21"><a href="prophet.html#cb14-21" tabindex="-1"></a></span>
+<span id="cb14-22"><a href="prophet.html#cb14-22" tabindex="-1"></a>d <span class="op">=</span> {<span class="st">&#39;ds&#39;</span>: training.index, <span class="st">&#39;y&#39;</span>: training[<span class="st">&#39;Passengers&#39;</span>]}</span>
+<span id="cb14-23"><a href="prophet.html#cb14-23" tabindex="-1"></a>training_prophet <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="prophet.html#cb15-1" tabindex="-1"></a>m <span class="op">=</span> Prophet(seasonality_mode<span class="op">=</span><span class="st">&#39;multiplicative&#39;</span>).fit(training_prophet)</span></code></pre></div>
+<pre><code>## 23:03:19 - cmdstanpy - INFO - Chain [1] start processing
+## 23:03:19 - cmdstanpy - INFO - Chain [1] done processing</code></pre>
+</div>
+<div id="forecasting" class="section level3 hasAnchor" number="7.1.2">
+<h3><span class="header-section-number">7.1.2</span> Forecasting<a href="prophet.html#forecasting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="prophet.html#cb17-1" tabindex="-1"></a>future <span class="op">=</span> m.make_future_dataframe(periods<span class="op">=</span><span class="dv">12</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb17-2"><a href="prophet.html#cb17-2" tabindex="-1"></a>fcst <span class="op">=</span> m.predict(future)</span>
+<span id="cb17-3"><a href="prophet.html#cb17-3" tabindex="-1"></a>fig <span class="op">=</span> m.plot(fcst)</span>
+<span id="cb17-4"><a href="prophet.html#cb17-4" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="prophet.html#cb17-5" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-11-1.png" width="960" /></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="prophet.html#cb18-1" tabindex="-1"></a>fcst.index <span class="op">=</span> fcst[<span class="st">&#39;ds&#39;</span>]</span>
+<span id="cb18-2"><a href="prophet.html#cb18-2" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="prophet.html#cb18-3" tabindex="-1"></a>error5 <span class="op">=</span> test[<span class="st">&#39;Passengers&#39;</span>] <span class="op">-</span> fcst[<span class="st">&#39;yhat&#39;</span>].tail(<span class="dv">12</span>)</span>
+<span id="cb18-4"><a href="prophet.html#cb18-4" tabindex="-1"></a>MAPE5 <span class="op">=</span> np.mean(<span class="bu">abs</span>(error5)<span class="op">/</span>test[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb18-5"><a href="prophet.html#cb18-5" tabindex="-1"></a>MAPE5</span></code></pre></div>
+<pre><code>## 1.9550364715323514</code></pre>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="dynamic-regression-models.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/sjsimmo2/TimeSeries/edit/master/06-Prophet.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/sjsimmo2/TimeSeries/blob/master/06-Prophet.Rmd",
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
