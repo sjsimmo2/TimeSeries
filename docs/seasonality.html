@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 Seasonality | Time Series 1</title>
+  <meta name="description" content="Chapter 5 Seasonality | Time Series 1" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 Seasonality | Time Series 1" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 Seasonality | Time Series 1" />
+  
+  
+  
+
+<meta name="author" content="by Dr. Susan Simmons" />
+
+
+<meta name="date" content="2023-09-07" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="arima.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">TimeSeries</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Time series 1</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#time-series-decomposition"><i class="fa fa-check"></i><b>2.1</b> Time series decomposition</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#python-code-and-results-for-time-series-plot"><i class="fa fa-check"></i><b>2.2</b> Python code and results for Time Series plot</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction.html"><a href="introduction.html#sas-code-for-time-series-plot-and-decomposition"><i class="fa fa-check"></i><b>2.3</b> SAS code for time series plot and decomposition</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction.html"><a href="introduction.html#self-study"><i class="fa fa-check"></i><b>2.4</b> Self-study</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html"><i class="fa fa-check"></i><b>3</b> Exponential Smoothing</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#simple-exponential-smoothing"><i class="fa fa-check"></i><b>3.1</b> Simple Exponential Smoothing</a></li>
+<li class="chapter" data-level="3.2" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#holt-esm"><i class="fa fa-check"></i><b>3.2</b> Holt ESM</a></li>
+<li class="chapter" data-level="3.3" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#holt-winters"><i class="fa fa-check"></i><b>3.3</b> Holt-Winters</a></li>
+<li class="chapter" data-level="3.4" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#evaluating-forecasts"><i class="fa fa-check"></i><b>3.4</b> Evaluating forecasts</a></li>
+<li class="chapter" data-level="3.5" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#ets"><i class="fa fa-check"></i><b>3.5</b> ETS</a></li>
+<li class="chapter" data-level="3.6" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#python-code-for-exponential-smoothing"><i class="fa fa-check"></i><b>3.6</b> Python Code for Exponential Smoothing</a></li>
+<li class="chapter" data-level="3.7" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#sas-code-for-exponential-smoothing-models"><i class="fa fa-check"></i><b>3.7</b> SAS Code for Exponential Smoothing Models</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="arima.html"><a href="arima.html"><i class="fa fa-check"></i><b>4</b> ARIMA</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="arima.html"><a href="arima.html#stationarity"><i class="fa fa-check"></i><b>4.1</b> Stationarity</a></li>
+<li class="chapter" data-level="4.2" data-path="arima.html"><a href="arima.html#correlation-functions"><i class="fa fa-check"></i><b>4.2</b> Correlation Functions</a></li>
+<li class="chapter" data-level="4.3" data-path="arima.html"><a href="arima.html#autoregressive-models-ar"><i class="fa fa-check"></i><b>4.3</b> AutoRegressive Models (AR)</a></li>
+<li class="chapter" data-level="4.4" data-path="arima.html"><a href="arima.html#moving-average-model-ma"><i class="fa fa-check"></i><b>4.4</b> Moving Average model (MA)</a></li>
+<li class="chapter" data-level="4.5" data-path="arima.html"><a href="arima.html#white-noise"><i class="fa fa-check"></i><b>4.5</b> White noise</a></li>
+<li class="chapter" data-level="4.6" data-path="arima.html"><a href="arima.html#trending-series"><i class="fa fa-check"></i><b>4.6</b> Trending Series</a></li>
+<li class="chapter" data-level="4.7" data-path="arima.html"><a href="arima.html#fitting-arima-models"><i class="fa fa-check"></i><b>4.7</b> Fitting ARIMA models</a></li>
+<li class="chapter" data-level="4.8" data-path="arima.html"><a href="arima.html#python-code-for-armaarima-models"><i class="fa fa-check"></i><b>4.8</b> Python Code for ARMA/ARIMA models</a></li>
+<li class="chapter" data-level="4.9" data-path="arima.html"><a href="arima.html#sas-code-for-armaarima"><i class="fa fa-check"></i><b>4.9</b> SAS Code for ARMA/ARIMA</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="seasonality.html"><a href="seasonality.html"><i class="fa fa-check"></i><b>5</b> Seasonality</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="seasonality.html"><a href="seasonality.html#seasonal-unit-root-testing"><i class="fa fa-check"></i><b>5.1</b> Seasonal Unit Root Testing</a></li>
+<li class="chapter" data-level="5.2" data-path="seasonality.html"><a href="seasonality.html#deterministic-solutions"><i class="fa fa-check"></i><b>5.2</b> Deterministic Solutions</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="seasonality.html"><a href="seasonality.html#seasonal-dummy-variables"><i class="fa fa-check"></i><b>5.2.1</b> Seasonal Dummy Variables</a></li>
+<li class="chapter" data-level="5.2.2" data-path="seasonality.html"><a href="seasonality.html#fourier-transforms"><i class="fa fa-check"></i><b>5.2.2</b> Fourier Transforms</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="seasonality.html"><a href="seasonality.html#stochastic-solutions"><i class="fa fa-check"></i><b>5.3</b> Stochastic Solutions</a></li>
+<li class="chapter" data-level="5.4" data-path="seasonality.html"><a href="seasonality.html#seasonal-arima-modeling"><i class="fa fa-check"></i><b>5.4</b> Seasonal ARIMA Modeling</a></li>
+<li class="chapter" data-level="5.5" data-path="seasonality.html"><a href="seasonality.html#python-code-for-seasonality"><i class="fa fa-check"></i><b>5.5</b> Python Code for Seasonality</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="seasonality.html"><a href="seasonality.html#seasonality-1"><i class="fa fa-check"></i><b>5.5.1</b> Seasonality</a></li>
+<li class="chapter" data-level="5.5.2" data-path="seasonality.html"><a href="seasonality.html#deterministic-solutions-1"><i class="fa fa-check"></i><b>5.5.2</b> Deterministic Solutions</a></li>
+<li class="chapter" data-level="5.5.3" data-path="seasonality.html"><a href="seasonality.html#stochastic-solution"><i class="fa fa-check"></i><b>5.5.3</b> Stochastic Solution</a></li>
+<li class="chapter" data-level="5.5.4" data-path="seasonality.html"><a href="seasonality.html#seasonal-arima"><i class="fa fa-check"></i><b>5.5.4</b> Seasonal ARIMA</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series 1</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="seasonality" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">Chapter 5</span> Seasonality<a href="seasonality.html#seasonality" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Seasonality is the component of the time series that represents the effects of the seasonal variation within the dataset. This seasonal effect can be thought of as repetitive behavior that occurs every S time periods. Here, S is the seasonal period that gets repeated every S units of time. Remember though that seasonal data is <strong>not</strong> stationary. This is because the series itself does not revert to an overall, constant mean.</p>
+<p>Let’s explore the U.S. airline passenger data from 1990 to 2007.</p>
+<p>First, we load the dataset into a time series object using the <code>ts</code> function. We use the <code>start =</code> option to define the starting point for our dataset, which is Janurary of 1990. The <code>frequency =</code> specifies the length of the seasonal period in our dataset. Our data is monthly with an annual seasonal pattern, so our frequency here is 12. From there we split our data into two pieces - training and testing - using the <code>subset</code> function. For the training set, we are subsetting the data to exclude the last 12 months. These last 12 months will be our test data set.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="seasonality.html#cb1-1" tabindex="-1"></a><span class="co"># Load the Data</span></span>
+<span id="cb1-2"><a href="seasonality.html#cb1-2" tabindex="-1"></a>Passenger <span class="ot">&lt;-</span> <span class="fu">ts</span>(USAirlines<span class="sc">$</span>Passengers, <span class="at">start =</span> <span class="dv">1990</span>, <span class="at">frequency =</span><span class="dv">12</span>)</span>
+<span id="cb1-3"><a href="seasonality.html#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="seasonality.html#cb1-4" tabindex="-1"></a><span class="fu">autoplot</span>(Passenger) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Time Series plot for Passengers&quot;</span>, <span class="at">x=</span><span class="st">&quot;Date&quot;</span>,<span class="at">y=</span><span class="st">&quot;Passengers&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="seasonality.html#cb2-1" tabindex="-1"></a><span class="co"># Create training set from overall Airlines Data</span></span>
+<span id="cb2-2"><a href="seasonality.html#cb2-2" tabindex="-1"></a>training <span class="ot">&lt;-</span> <span class="fu">subset</span>(Passenger, <span class="at">end =</span> <span class="fu">length</span>(Passenger)<span class="sc">-</span><span class="dv">12</span>)</span>
+<span id="cb2-3"><a href="seasonality.html#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="seasonality.html#cb2-4" tabindex="-1"></a><span class="co"># Create test set from overall Airlines Data</span></span>
+<span id="cb2-5"><a href="seasonality.html#cb2-5" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">subset</span>(Passenger, <span class="at">start =</span> <span class="fu">length</span>(Passenger)<span class="sc">-</span><span class="dv">11</span>)</span></code></pre></div>
+<p>Now, let’s explore our training data by looking at a time series decomposition. This time series decomposition breaks down the data into three pieces - season, trend, and error.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="seasonality.html#cb3-1" tabindex="-1"></a><span class="co"># Time Series Decomposition ...STL#</span></span>
+<span id="cb3-2"><a href="seasonality.html#cb3-2" tabindex="-1"></a>decomp_stl <span class="ot">&lt;-</span> <span class="fu">stl</span>(Passenger, <span class="at">s.window =</span> <span class="dv">7</span>)</span>
+<span id="cb3-3"><a href="seasonality.html#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="seasonality.html#cb3-4" tabindex="-1"></a><span class="co"># Plot the individual components of the time series</span></span>
+<span id="cb3-5"><a href="seasonality.html#cb3-5" tabindex="-1"></a><span class="fu">plot</span>(decomp_stl)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>From the above plot we can see the annual season of our data as well as the upward trending pattern. We do have a shock to the system from the September 11 attacks. This impacted US airline travel for a number of months. We will have to account for this in our modeling as we go along. We can even see this shock in the error term of our decomposition as it resulted in large errors that were out of pattern of the rest of the data.</p>
+<p>A great first place to start with any time series dataset is to build an exponential smoothing model. Exponential smoothing models are great first models as they are easy to build and relatively accurate. This allows us to set a baseline to try and beat with more sophisticated modeling approaches.</p>
+<p>To build a Holt-Winters exponential smoothing model to account for both the trend and seasonality in our data, we use the <code>hw</code> function. With the <code>seasonal =</code> option we can specify whether our data has additive or multiplicative seasonality. The <code>initial =</code> option just specifies that the initial values of the HW model are optimized in the actual model building process as compared to just estimated with a simple calculation like the overall mean. The <code>h =</code> specifies that we want to forecast 12 time periods into the future on our training dataset.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="seasonality.html#cb4-1" tabindex="-1"></a><span class="co"># Fit Holt-Winters ESM (multiplicative seasonality) on training data</span></span>
+<span id="cb4-2"><a href="seasonality.html#cb4-2" tabindex="-1"></a>HWES.USAir.train <span class="ot">&lt;-</span> <span class="fu">hw</span>(training, <span class="at">seasonal =</span> <span class="st">&quot;multiplicative&quot;</span>, <span class="at">initial=</span><span class="st">&#39;optimal&#39;</span>, <span class="at">h=</span><span class="dv">12</span>)</span></code></pre></div>
+<p>Now that we have our model, let’s plot the forecast as well as evaluate this forecast with our test dataset. The <code>mean</code> element in the ESM model object gives the 12 month forecast that we specified above. We can look at the difference between this forecast and our test dataset - what actually happened in those 12 months. From there we calculate the MAE and MAPE of this forecast. The <code>autoplot</code> function is used to visualize the forecast itself.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="seasonality.html#cb5-1" tabindex="-1"></a><span class="co"># Calculate prediction errors from forecast</span></span>
+<span id="cb5-2"><a href="seasonality.html#cb5-2" tabindex="-1"></a>HW.error <span class="ot">&lt;-</span> test <span class="sc">-</span> HWES.USAir.train<span class="sc">$</span>mean</span>
+<span id="cb5-3"><a href="seasonality.html#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="seasonality.html#cb5-4" tabindex="-1"></a><span class="co"># Calculate prediction error statistics (MAE and MAPE)</span></span>
+<span id="cb5-5"><a href="seasonality.html#cb5-5" tabindex="-1"></a>HW.MAE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(HW.error))</span>
+<span id="cb5-6"><a href="seasonality.html#cb5-6" tabindex="-1"></a>HW.MAPE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(HW.error)<span class="sc">/</span><span class="fu">abs</span>(test))<span class="sc">*</span><span class="dv">100</span></span>
+<span id="cb5-7"><a href="seasonality.html#cb5-7" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="seasonality.html#cb5-8" tabindex="-1"></a>HW.MAE</span></code></pre></div>
+<pre><code>## [1] 1134.58</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="seasonality.html#cb7-1" tabindex="-1"></a>HW.MAPE</span></code></pre></div>
+<pre><code>## [1] 1.763593</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="seasonality.html#cb9-1" tabindex="-1"></a><span class="fu">autoplot</span>(HWES.USAir.train)<span class="sc">+</span></span>
+<span id="cb9-2"><a href="seasonality.html#cb9-2" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">fitted</span>(HWES.USAir.train),<span class="at">series=</span><span class="st">&quot;Fitted&quot;</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">&quot;Airlines Passengers&quot;</span>)<span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">2007.25</span>,<span class="at">color=</span><span class="st">&quot;orange&quot;</span>,<span class="at">linetype=</span><span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>From the output above, we see that we have an MAE of 1134.58 and a MAPE of 1.76%. This gives us a good baseline to try and beat with further modeling approaches.</p>
+<div id="seasonal-unit-root-testing" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Seasonal Unit Root Testing<a href="seasonality.html#seasonal-unit-root-testing" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Exponential smoothing models do not require data to be stationary. However, ARIMA models do require stationary data for modeling. Since seasonal data is not stationary, we must account for this lack of stationarity in one of two broad categories of approaches - deterministic solutions and stochastic solutions.</p>
+<p>Some examples of deterministic solutions to seasonality are seasonal dummy variables, Fourier transforms, and predictor variables. The stochastic solution to seasonality is taking a seasonal difference. Be careful, as the choice of these solutions will matter for modeling. This is why we need to evaluate which approach we need using seasonal unit root testing. Similar to trending data, unit root testing allows us to determine if differencing is the proper solution to make our seasonal data stationary. There are many tests for seasonal unit-root testing. Each test is a little different on what the null and alternative hypotheses are so we must be careful to know what we are looking it with results.</p>
+<p>The <code>nsdiffs</code> function runs seasonal unit root tests and reports the number of seasonal differences that are needed for your dataset. If 0, that <strong>does not</strong> mean your data is stationary. It just means that your seasonality cannot be solved with differencing. If more than 0, then seasonal differencing is the solution to the seasonality problem of our data.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="seasonality.html#cb10-1" tabindex="-1"></a>training <span class="sc">%&gt;%</span> <span class="fu">nsdiffs</span>()</span></code></pre></div>
+<pre><code>## [1] 1</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="seasonality.html#cb12-1" tabindex="-1"></a><span class="fu">cbind</span>(<span class="st">&quot;Airlines Passengers&quot;</span> <span class="ot">=</span> training,</span>
+<span id="cb12-2"><a href="seasonality.html#cb12-2" tabindex="-1"></a>      <span class="st">&quot;Annual change in Passengers&quot;</span> <span class="ot">=</span> <span class="fu">diff</span>(training, <span class="dv">12</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="seasonality.html#cb12-3" tabindex="-1"></a>  <span class="fu">autoplot</span>(<span class="at">facets=</span><span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="seasonality.html#cb12-4" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Time&quot;</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="seasonality.html#cb12-5" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Comparison of Differenced Data to Original&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>We can see from the output above that we need one seasonal difference to account for the seasonality in our dataset. That means we need to solve our seasonality stochastically. The plot shows both the original data as well as the differenced data. This is not the end of our unit root testing however. There might still be a “regular” unit root in our data. Our data does not appear to be trending, but it still might contain a unity root. Again, we will want to test for whether our data requires an additional difference or whether it is stationary.</p>
+<p>The <code>ndiffs</code> function applied to the differenced data will help with this. The <code>diff</code> function is used with a <code>lag = 12</code> to take our seasonal difference.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="seasonality.html#cb13-1" tabindex="-1"></a>training <span class="sc">%&gt;%</span> <span class="fu">diff</span>(<span class="at">lag =</span> <span class="dv">12</span>) <span class="sc">%&gt;%</span> <span class="fu">ndiffs</span>()</span></code></pre></div>
+<pre><code>## [1] 0</code></pre>
+<p>From above we see that we require no more additional differencing. Since our data no longer appears to have a trend or season, we are ready to go to ARIMA modeling.</p>
+</div>
+<div id="deterministic-solutions" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Deterministic Solutions<a href="seasonality.html#deterministic-solutions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>If our dataset required a deterministic solution instead of a stochastic one, how would we go about solving this? Again, our dataset <strong>does not</strong> need a deterministic solution, but let’s explore how we would solve seasonality deterministically for completion sake.</p>
+<p>Unlike trend, there are many different approaches to accounting for seasonality deterministically. The approaches we will discuss are seasonal dummy variables, Fourier transforms, and predictor variables.</p>
+<div id="seasonal-dummy-variables" class="section level3 hasAnchor" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> Seasonal Dummy Variables<a href="seasonality.html#seasonal-dummy-variables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Seasonal dummy variables are exactly what their name implies. We will use a set of dummy variables to account for the seasonal effects in our dataset. For a time series with <em>S</em> periods within a season, there will be <em>S-1</em> dummy variables - one for each period (and one accounted for with the intercept). Since our dataset is monthly, we will build a dummy variable for each month and pick one to not include. For example, we could build the following model:</p>
+<p><span class="math display">\[
+Y_t = \beta_0 + \beta_1JAN + \beta_2FEB + \cdots + \beta_{11}NOV + e_t
+\]</span></p>
+<p>In the above model, we chose to leave out the month of December’s dummy variable since our model has an intercept. In fact, the intercept <span class="math inline">\(\beta_0\)</span> is the average effect of December. Each of the coefficients on the respective variables measures the average difference in effect from that month and December (our reference level).</p>
+<p>There are a lot of ways to build month variables in a dataset. You could extract month from a time stamp variable for example. Here, we create our own month variable by repeating the values 1 to 12 across our dataset using the <code>rep</code> function. We then convert this to a factor with the <code>factor</code> function as well as set the reference level using the <code>relevel</code> function.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="seasonality.html#cb15-1" tabindex="-1"></a><span class="co"># Seasonal Dummy Variables</span></span>
+<span id="cb15-2"><a href="seasonality.html#cb15-2" tabindex="-1"></a>Month <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">length</span>(training))</span>
+<span id="cb15-3"><a href="seasonality.html#cb15-3" tabindex="-1"></a>Month <span class="ot">&lt;-</span> Month <span class="sc">+</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span></span></code></pre></div>
+<pre><code>## Warning in Month + 1:12: longer object length is not a multiple of shorter
+## object length</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="seasonality.html#cb17-1" tabindex="-1"></a>M <span class="ot">&lt;-</span> <span class="fu">factor</span>(Month)</span>
+<span id="cb17-2"><a href="seasonality.html#cb17-2" tabindex="-1"></a>M <span class="ot">&lt;-</span> <span class="fu">relevel</span>(M, <span class="at">ref=</span><span class="st">&quot;12&quot;</span>)</span></code></pre></div>
+<p>By using an <code>lm</code> function we can see how building a linear regression with this factor variable would look. This is the exact same thing that is going on with the modeling in our data. If we were to use this factor variable in an ARIMA modeling function like <code>auto.arima</code>, the function will first build a linear regression and then evaluate which ARIMA model we need on the residuals from our model. Essentially, this “removes” the impact of the season from our dataset. The <code>auto.arima</code> function’s <code>xreg =</code> option is how we incorporate any external variables (here our dummy variables) into the model. The <code>seasonal = FALSE</code> option tells the function to not try and account for season itself since we are accounting for it with seasonal dummy variables.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="seasonality.html#cb18-1" tabindex="-1"></a>Season.Lin <span class="ot">&lt;-</span> <span class="fu">lm</span>(training <span class="sc">~</span> M)</span>
+<span id="cb18-2"><a href="seasonality.html#cb18-2" tabindex="-1"></a><span class="fu">summary</span>(Season.Lin)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = training ~ M)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -16257.2  -6848.9    484.4   6368.3  14699.6 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  48761.5     2002.3  24.353   &lt;2e-16 ***
+## M1           -4461.9     2792.1  -1.598   0.1116    
+## M2           -5433.9     2792.1  -1.946   0.0531 .  
+## M3            4099.8     2792.1   1.468   0.1436    
+## M4             814.9     2831.7   0.288   0.7738    
+## M5            1951.8     2831.7   0.689   0.4915    
+## M6            4844.6     2831.7   1.711   0.0887 .  
+## M7            7504.9     2831.7   2.650   0.0087 ** 
+## M8            7297.4     2831.7   2.577   0.0107 *  
+## M9           -3242.5     2831.7  -1.145   0.2536    
+## M10           1064.1     2831.7   0.376   0.7075    
+## M11          -1268.2     2831.7  -0.448   0.6548    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 8256 on 195 degrees of freedom
+## Multiple R-squared:  0.2097, Adjusted R-squared:  0.1651 
+## F-statistic: 4.703 on 11 and 195 DF,  p-value: 2.227e-06</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="seasonality.html#cb20-1" tabindex="-1"></a>M.Matrix <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span>M)</span>
+<span id="cb20-2"><a href="seasonality.html#cb20-2" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="seasonality.html#cb20-3" tabindex="-1"></a>Trend <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(training)</span>
+<span id="cb20-4"><a href="seasonality.html#cb20-4" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="seasonality.html#cb20-5" tabindex="-1"></a>SD.ARIMA <span class="ot">&lt;-</span> <span class="fu">auto.arima</span>(training, <span class="at">xreg =</span> M.Matrix[,<span class="dv">2</span><span class="sc">:</span><span class="dv">12</span>], <span class="at">method=</span><span class="st">&quot;ML&quot;</span>, <span class="at">seasonal =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb20-6"><a href="seasonality.html#cb20-6" tabindex="-1"></a><span class="fu">summary</span>(SD.ARIMA)</span></code></pre></div>
+<pre><code>## Series: training 
+## Regression with ARIMA(1,1,1) errors 
+## 
+## Coefficients:
+##          ar1      ma1     drift          M1          M2         M3         M4
+##       0.4291  -0.7971  120.7193  -3947.9234  -5040.2954  4372.9568  1776.4739
+## s.e.  0.1142   0.0773   47.0864    485.1706    583.2628   625.8812   653.3688
+##              M5         M6         M7        M8          M9        M10
+##       2774.0849  5538.2040  8074.5435  7745.458  -2914.0368  1275.6712
+## s.e.   664.7044   667.9357   665.0333   655.108    633.9267   589.7313
+##              M11
+##       -1168.3551
+## s.e.    486.9724
+## 
+## sigma^2 = 3751115:  log likelihood = -1844.41
+## AIC=3718.82   AICc=3721.34   BIC=3768.74
+## 
+## Training set error measures:
+##                     ME     RMSE      MAE       MPE     MAPE      MASE
+## Training set -13.62138 1865.287 1119.102 -0.182277 2.399052 0.4156649
+##                      ACF1
+## Training set -0.002848384</code></pre>
+<p>There are some advantages and disadvantages to the seasonal dummy variable approach. The advantages are that the model’s seasonal dummy variables have some nice interpretability. They tells us the average impact each seasonal component has on the target variable. It is also a rather straight-forward approach to implement. The main disadvantages however are that if your seasonal is especially long or complex, seasonal dummy variables are burdensome. Also, the constant effect of each season that is assumed may not be appropriate.</p>
+</div>
+<div id="fourier-transforms" class="section level3 hasAnchor" number="5.2.2">
+<h3><span class="header-section-number">5.2.2</span> Fourier Transforms<a href="seasonality.html#fourier-transforms" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Harmonic regression using Fourier transforms is another approach to account for seasonality deterministically. Fourier showed that a series of sine and cosine terms of the right frequencies approximate periodic patterns in a data series. To do this, we add Fourier variables to a regression model to account for the seasonal pattern. The odd terms <span class="math inline">\(k=1,3,5\)</span> etc. are accounted for with sine variables:</p>
+<p><span class="math display">\[
+X_{k, t} = \sin(k \times \frac{2\pi t}{S})
+\]</span></p>
+<p>The even terms <span class="math inline">\(k = 2, 4, 6\)</span> etc. are accounted for with cosine variables:</p>
+<p><span class="math display">\[
+X_{k, t} = \cos(k \times \frac{2\pi t}{S})
+\]</span></p>
+<p>In fact, if you add the same number of Fourier variables as you have seasonal dummy variables, you will get the same predictions. However, we typically do not need all of the Fourier variables, especially with large values of <em>S</em>. We need to decide how many of these values we need. One way to approach this is to build many models, while increasing the number of Fourier terms in the models and compare them all via a metric like BIC.</p>
+<p>Here, we loop through the first 6 Fourier terms to account for seasonality. We do this by adding the <code>fourier</code> function to the <code>auto.arima</code> function through the <code>xreg =</code> option. All of this is contained within a loop where we gradually increase the number of Fourier terms in the regression. The <code>K =</code> option in the <code>fourier</code> function does this. We loop through the first 6 Fourier terms (half of the seasonal length) and record the training BIC for each model. This BIC is reported on a plot with the 6 different forecasts (one from each model). The <code>gridExtra</code> package’s <code>grid.arrange</code> function allows the plots to all be put together.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="seasonality.html#cb22-1" tabindex="-1"></a>plots <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb22-2"><a href="seasonality.html#cb22-2" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">6</span>)) {</span>
+<span id="cb22-3"><a href="seasonality.html#cb22-3" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> <span class="fu">auto.arima</span>(training, <span class="at">xreg =</span> <span class="fu">fourier</span>(training, <span class="at">K =</span> i),</span>
+<span id="cb22-4"><a href="seasonality.html#cb22-4" tabindex="-1"></a>                    <span class="at">seasonal =</span> <span class="cn">FALSE</span>, <span class="at">lambda =</span> <span class="cn">NULL</span>)</span>
+<span id="cb22-5"><a href="seasonality.html#cb22-5" tabindex="-1"></a>  plots[[i]] <span class="ot">&lt;-</span> <span class="fu">autoplot</span>(forecast<span class="sc">::</span><span class="fu">forecast</span>(fit,</span>
+<span id="cb22-6"><a href="seasonality.html#cb22-6" tabindex="-1"></a>                                  <span class="at">xreg =</span> <span class="fu">fourier</span>(training, <span class="at">K=</span>i, <span class="at">h=</span><span class="dv">12</span>))) <span class="sc">+</span></span>
+<span id="cb22-7"><a href="seasonality.html#cb22-7" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="fu">paste</span>(<span class="st">&quot;K=&quot;</span>,i,<span class="st">&quot;   BIC=&quot;</span>,<span class="fu">round</span>(fit<span class="sc">$</span>bic,<span class="dv">2</span>))) <span class="sc">+</span></span>
+<span id="cb22-8"><a href="seasonality.html#cb22-8" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;&quot;</span>) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="dv">30000</span>,<span class="dv">80000</span>)</span>
+<span id="cb22-9"><a href="seasonality.html#cb22-9" tabindex="-1"></a>}</span>
+<span id="cb22-10"><a href="seasonality.html#cb22-10" tabindex="-1"></a>gridExtra<span class="sc">::</span><span class="fu">grid.arrange</span>(</span>
+<span id="cb22-11"><a href="seasonality.html#cb22-11" tabindex="-1"></a>  plots[[<span class="dv">1</span>]],plots[[<span class="dv">2</span>]],plots[[<span class="dv">3</span>]],</span>
+<span id="cb22-12"><a href="seasonality.html#cb22-12" tabindex="-1"></a>  plots[[<span class="dv">4</span>]],plots[[<span class="dv">5</span>]],plots[[<span class="dv">6</span>]], <span class="at">nrow=</span><span class="dv">3</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p>From the above output we see that the best model had 6 Fourier terms. So we can build this model to account for the seasonality in our dataset.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="seasonality.html#cb23-1" tabindex="-1"></a>F.ARIMA <span class="ot">&lt;-</span> <span class="fu">auto.arima</span>(training, <span class="at">xreg =</span> <span class="fu">fourier</span>(training, <span class="at">K =</span> <span class="dv">6</span>), <span class="at">seasonal =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb23-2"><a href="seasonality.html#cb23-2" tabindex="-1"></a><span class="fu">summary</span>(F.ARIMA)</span></code></pre></div>
+<pre><code>## Series: training 
+## Regression with ARIMA(1,1,1) errors 
+## 
+## Coefficients:
+##          ar1      ma1     drift       S1-12       C1-12     S2-12     C2-12
+##       0.4290  -0.7970  120.7058  -1232.2457  -4334.8854  313.8882  677.9354
+## s.e.  0.1142   0.0773   47.1023    270.2779    270.3897  194.1303  193.6314
+##            S3-12      C3-12     S4-12     C4-12      S5-12     C5-12     C6-12
+##       -2561.0644  1291.4579  413.8962  208.5872  2314.2561  274.0745  341.9422
+## s.e.    152.7954   153.1546  130.4231  130.6592   118.9866  119.5061   81.8781
+## 
+## sigma^2 = 3751119:  log likelihood = -1844.41
+## AIC=3718.82   AICc=3721.34   BIC=3768.74
+## 
+## Training set error measures:
+##                     ME     RMSE      MAE        MPE     MAPE      MASE
+## Training set -13.57507 1865.288 1119.122 -0.1821497 2.399082 0.4156723
+##                      ACF1
+## Training set -0.002822253</code></pre>
+<p>There are some advantages and disadvantages of the Fourier term approach to accounting for seasonality. The main advantage is that Fourier terms can handle long and complex seasonality. In fact, for multiple seasons in a dataset, we can add more Fourier variables at different frequencies to account for this. The disadvantages of the Fourier approach are that the Fourier terms themselves are not really interpretable and that we need to use trial and error to find the “right” amount of variables to use.</p>
+<p>After removing the seasonality through deterministic solutions, the remaining error term (residuals) are modeled with seasonal ARIMA models. The key to these new seasonal ARIMA models is that there still might be effects at seasonal lags in the dataset, even though the main seasonality is accounted for.</p>
+</div>
+</div>
+<div id="stochastic-solutions" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> Stochastic Solutions<a href="seasonality.html#stochastic-solutions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The stochastic approach has been hinted at above. When a stochastic solution is best to solve seasonality, we need to take seasonal differences. A difference on a season is when we look at the difference between the current point and the same point in the previous season: <span class="math inline">\(Y_t - Y_{t-S}\)</span>. For our dataset, it can be thought of as the year over year change in our data.</p>
+<p>Here the <code>ggtsdisplay</code> function allows us to see the actual difference along with its correlation pattern with ACF and PACF plots. Notice, we are looking at these ACF and PACF plots with regards to the differences on the training data using the <code>diff</code> function with <code>lag = 12</code> specifying the length of the difference being the same as our season.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="seasonality.html#cb25-1" tabindex="-1"></a>training <span class="sc">%&gt;%</span> <span class="fu">diff</span>(<span class="at">lag =</span> <span class="dv">12</span>) <span class="sc">%&gt;%</span> <span class="fu">ggtsdisplay</span>()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>After we remove the seasonal effect through stochastic approaches, the remaining differences are modeled with seasonal ARIMA models. The key to these new seasonal ARIMA models is that there still might be effects at seasonal lags in the dataset, even though the main seasonality is accounted for.</p>
+<p>There are some limitations to differencing. Differencing is hard to evaluate for long and complex seasons due to the statistical tests for stochastic differencing typically ended at a season length of 24. Therefore, long and/or complex seasons are typically best approached with deterministic solutions. In fact, it is hard to imagine a difference being very long in terms of time points logically. For example, if you had daily data and thought you had an annual season, it is hard to imagine there is an actual impact of Jan 26 from last year on Jan 26 of this year.</p>
+</div>
+<div id="seasonal-arima-modeling" class="section level2 hasAnchor" number="5.4">
+<h2><span class="header-section-number">5.4</span> Seasonal ARIMA Modeling<a href="seasonality.html#seasonal-arima-modeling" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>When extending the ARIMA model framework to the seasonal ARIMA framework, we add another set of terms - P, D, Q, and S. Notice how these terms are capitalized.</p>
+<p><span class="math display">\[
+ARIMA(p, d, q)(P, D, Q)_S
+\]</span></p>
+<p>The terms represent the number of <em>seasonal</em> AR terms (<span class="math inline">\(P\)</span>), the number of <em>seasonal</em> MA terms (<span class="math inline">\(Q\)</span>), and the number of <em>seasonal</em> differences (<span class="math inline">\(D\)</span>). The length of the season is still defined as <span class="math inline">\(S\)</span>. Seasonal ARIMA models have the same structure and approach as typical ARIMA models with AR and MA patterns in the ACF and PACF. THe main difference is that the pattern is just on the seasonal lag instead of the individual lags. For example, if you had an <span class="math inline">\(ARIMA(0,0,0)(1,0,0)_{12}\)</span> model, then the ACF would have an exponentially decreasing pattern <em>every 12 lags</em> while the PACF only had a single spike <em>at lag 12</em>. The pattern is the same, but it is only seen on the season since we are dealing with the seasonal lag. The opposite would be true for an <span class="math inline">\(ARIMA(0,0,0)(0,0,1)_{12}\)</span> model. The PACF would have an exponentially decreasing pattern <em>every 12 lags</em> while the ACF only had a single spike <em>at lag 12</em>.</p>
+<p>For our data we can try the <span class="math inline">\(ARIMA(1,0,0)(1,1,1)_{12}\)</span> model using the <code>Arima</code> function. With either the <code>ggtsdisplay</code> function on the residuals, or the <code>checkresiduals</code> function on the model object, we can see that the model still doesn’t capture all of the signal and pattern in the dataset.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="seasonality.html#cb26-1" tabindex="-1"></a><span class="co"># Seasonal ARIMA </span></span>
+<span id="cb26-2"><a href="seasonality.html#cb26-2" tabindex="-1"></a>training <span class="sc">%&gt;%</span> </span>
+<span id="cb26-3"><a href="seasonality.html#cb26-3" tabindex="-1"></a>  <span class="fu">Arima</span>(<span class="at">order=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">seasonal=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb26-4"><a href="seasonality.html#cb26-4" tabindex="-1"></a>  <span class="fu">residuals</span>() <span class="sc">%&gt;%</span> <span class="fu">ggtsdisplay</span>()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="seasonality.html#cb27-1" tabindex="-1"></a>S.ARIMA <span class="ot">&lt;-</span> <span class="fu">Arima</span>(training, <span class="at">order=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">seasonal=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb27-2"><a href="seasonality.html#cb27-2" tabindex="-1"></a><span class="fu">summary</span>(S.ARIMA)</span></code></pre></div>
+<pre><code>## Series: training 
+## ARIMA(1,0,0)(1,1,1)[12] 
+## 
+## Coefficients:
+##          ar1    sar1    sma1
+##       0.9056  0.0917  -0.672
+## s.e.  0.0364  0.1091   0.093
+## 
+## sigma^2 = 4126436:  log likelihood = -1763.94
+## AIC=3535.88   AICc=3536.09   BIC=3548.97
+## 
+## Training set error measures:
+##                    ME     RMSE      MAE       MPE     MAPE      MASE       ACF1
+## Training set 338.6503 1956.379 1156.221 0.5565257 2.418163 0.4294517 -0.2622466</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="seasonality.html#cb29-1" tabindex="-1"></a><span class="fu">checkresiduals</span>(S.ARIMA)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<pre><code>## 
+##  Ljung-Box test
+## 
+## data:  Residuals from ARIMA(1,0,0)(1,1,1)[12]
+## Q* = 45.934, df = 21, p-value = 0.001304
+## 
+## Model df: 3.   Total lags used: 24</code></pre>
+<p>We can still use the <code>auto.arima</code> function to select the “best” starting point model for us as well. We can use the original data in this function along with the <code>seasonal = TRUE</code> option to allow the function to take the seasonal difference for us.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="seasonality.html#cb31-1" tabindex="-1"></a>S.ARIMA <span class="ot">&lt;-</span> <span class="fu">auto.arima</span>(training, <span class="at">method=</span><span class="st">&quot;ML&quot;</span>, <span class="at">seasonal =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb31-2"><a href="seasonality.html#cb31-2" tabindex="-1"></a><span class="fu">summary</span>(S.ARIMA)</span></code></pre></div>
+<pre><code>## Series: training 
+## ARIMA(1,0,1)(0,1,1)[12] with drift 
+## 
+## Coefficients:
+##          ar1      ma1     sma1     drift
+##       0.8800  -0.2962  -0.6785  124.9788
+## s.e.  0.0454   0.0950   0.0600   23.6330
+## 
+## sigma^2 = 3639517:  log likelihood = -1751.67
+## AIC=3513.34   AICc=3513.66   BIC=3529.7
+## 
+## Training set error measures:
+##                     ME    RMSE     MAE        MPE     MAPE      MASE       ACF1
+## Training set -4.332616 1832.54 1055.07 -0.1745474 2.217472 0.3918815 0.01300462</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="seasonality.html#cb33-1" tabindex="-1"></a><span class="fu">checkresiduals</span>(S.ARIMA)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<pre><code>## 
+##  Ljung-Box test
+## 
+## data:  Residuals from ARIMA(1,0,1)(0,1,1)[12] with drift
+## Q* = 21.957, df = 21, p-value = 0.402
+## 
+## Model df: 3.   Total lags used: 24</code></pre>
+<p>Above we can see that the <code>auto.arima</code> function selected the <span class="math inline">\(ARIMA(1,0,1)(0,1,1)_{12}\)</span> model. By using the <code>checkresiduals</code> function we see that we are left with white noise after our modeling. We still have a large outlier that we will have to account for in the next section on dynamic regression.</p>
+<p>We can use the <code>forecast</code> function with <code>h = 12</code> to forecast the next 12 observations in our dataset. Similar to the exponential smoothing model above, we plot the forecast as well as evaluate the MAE and MAPE from this model.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="seasonality.html#cb35-1" tabindex="-1"></a>forecast<span class="sc">::</span><span class="fu">forecast</span>(S.ARIMA, <span class="at">h =</span> <span class="dv">12</span>)</span></code></pre></div>
+<pre><code>##          Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
+## Apr 2007       63889.23 61444.35 66334.12 60150.11 67628.36
+## May 2007       65213.49 62382.40 68044.59 60883.71 69543.27
+## Jun 2007       68462.20 65364.91 71559.48 63725.31 73199.09
+## Jul 2007       71439.69 68151.01 74728.37 66410.09 76469.29
+## Aug 2007       68975.83 65546.25 72405.40 63730.75 74220.90
+## Sep 2007       57619.49 54084.66 61154.33 52213.43 63025.56
+## Oct 2007       62959.30 59345.04 66573.56 57431.77 68486.83
+## Nov 2007       61127.43 57452.84 64802.02 55507.63 66747.23
+## Dec 2007       62364.86 58644.21 66085.50 56674.63 68055.09
+## Jan 2008       58193.22 54437.30 61949.14 52449.04 63937.41
+## Feb 2008       56375.46 52592.44 60158.48 50589.83 62161.08
+## Mar 2008       68502.52 64698.65 72306.39 62685.00 74320.04</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="seasonality.html#cb37-1" tabindex="-1"></a><span class="fu">autoplot</span>(forecast<span class="sc">::</span><span class="fu">forecast</span>(S.ARIMA, <span class="at">h =</span> <span class="dv">12</span>)) <span class="sc">+</span> <span class="fu">autolayer</span>(<span class="fu">fitted</span>(S.ARIMA), <span class="at">series=</span><span class="st">&quot;Fitted&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb37-2"><a href="seasonality.html#cb37-2" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Airlines Passengers&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb37-3"><a href="seasonality.html#cb37-3" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">2007.25</span>,<span class="at">color=</span><span class="st">&quot;orange&quot;</span>,<span class="at">linetype=</span><span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="seasonality.html#cb38-1" tabindex="-1"></a>S.ARIMA.error <span class="ot">&lt;-</span> test <span class="sc">-</span> forecast<span class="sc">::</span><span class="fu">forecast</span>(S.ARIMA, <span class="at">h =</span> <span class="dv">12</span>)<span class="sc">$</span>mean</span>
+<span id="cb38-2"><a href="seasonality.html#cb38-2" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="seasonality.html#cb38-3" tabindex="-1"></a><span class="co"># Calculate prediction error statistics (MAE and MAPE)</span></span>
+<span id="cb38-4"><a href="seasonality.html#cb38-4" tabindex="-1"></a>S.ARIMA.MAE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(S.ARIMA.error))</span>
+<span id="cb38-5"><a href="seasonality.html#cb38-5" tabindex="-1"></a>S.ARIMA.MAPE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(S.ARIMA.error)<span class="sc">/</span><span class="fu">abs</span>(test))<span class="sc">*</span><span class="dv">100</span></span>
+<span id="cb38-6"><a href="seasonality.html#cb38-6" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="seasonality.html#cb38-7" tabindex="-1"></a>S.ARIMA.MAE</span></code></pre></div>
+<pre><code>## [1] 1229.206</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="seasonality.html#cb40-1" tabindex="-1"></a>S.ARIMA.MAPE</span></code></pre></div>
+<pre><code>## [1] 1.885399</code></pre>
+<p>From the above output we see that our seasonal ARIMA did not beat the Holt-Winters exponential smoothing model in terms of MAE or MAPE. That outlier might be impacting the estimation of our model, so we will have to address that.</p>
+<p>The default for the <code>Arima</code> function in R (which is what <code>auto.arima</code> is built off of) uses the multiplicative approach to seasonal ARIMA models. To get an additive seasonal ARIMA model instead we need to use the <code>fixed =</code> option in the <code>Arima</code> function to specify exactly what terms we want to estimate instead as shown below. The zeroes are for terms we <em>do not</em> want to estimate, while the <em>NA</em> values will be estimated by the function.</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="seasonality.html#cb42-1" tabindex="-1"></a><span class="co"># Additive Seasonal ARIMA  </span></span>
+<span id="cb42-2"><a href="seasonality.html#cb42-2" tabindex="-1"></a>S.ARIMA <span class="ot">&lt;-</span> <span class="fu">Arima</span>(training, <span class="at">order=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">13</span>), <span class="at">seasonal=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb42-3"><a href="seasonality.html#cb42-3" tabindex="-1"></a>                 <span class="at">fixed=</span><span class="fu">c</span>(<span class="cn">NA</span>,<span class="cn">NA</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="cn">NA</span>,<span class="cn">NA</span>), <span class="at">method=</span><span class="st">&quot;ML&quot;</span>,)</span>
+<span id="cb42-4"><a href="seasonality.html#cb42-4" tabindex="-1"></a><span class="fu">summary</span>(S.ARIMA)</span></code></pre></div>
+<pre><code>## Series: training 
+## ARIMA(1,0,13)(0,1,0)[12] 
+## 
+## Coefficients:
+##          ar1      ma1  ma2  ma3  ma4  ma5  ma6  ma7  ma8  ma9  ma10  ma11
+##       0.9679  -0.3698    0    0    0    0    0    0    0    0     0     0
+## s.e.  0.0237   0.0880    0    0    0    0    0    0    0    0     0     0
+##          ma12    ma13
+##       -0.6612  0.2490
+## s.e.   0.0626  0.0766
+## 
+## sigma^2 = 3792723:  log likelihood = -1755.53
+## AIC=3521.07   AICc=3521.39   BIC=3537.43
+## 
+## Training set error measures:
+##                    ME     RMSE      MAE       MPE    MAPE      MASE       ACF1
+## Training set 216.2511 1870.713 1094.634 0.3140324 2.29433 0.4065768 0.02300017</code></pre>
+</div>
+<div id="python-code-for-seasonality" class="section level2 hasAnchor" number="5.5">
+<h2><span class="header-section-number">5.5</span> Python Code for Seasonality<a href="seasonality.html#python-code-for-seasonality" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb44"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb44-1"><a href="seasonality.html#cb44-1" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb44-2"><a href="seasonality.html#cb44-2" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb44-3"><a href="seasonality.html#cb44-3" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb44-4"><a href="seasonality.html#cb44-4" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb44-5"><a href="seasonality.html#cb44-5" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics <span class="im">import</span> tsaplots</span>
+<span id="cb44-6"><a href="seasonality.html#cb44-6" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics <span class="im">import</span> tsaplots</span>
+<span id="cb44-7"><a href="seasonality.html#cb44-7" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
+<span id="cb44-8"><a href="seasonality.html#cb44-8" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
+<span id="cb44-9"><a href="seasonality.html#cb44-9" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima_model <span class="im">import</span> ARMA</span>
+<span id="cb44-10"><a href="seasonality.html#cb44-10" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima_model <span class="im">import</span> ARIMA</span>
+<span id="cb44-11"><a href="seasonality.html#cb44-11" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.statespace.sarimax <span class="im">import</span> SARIMAX</span>
+<span id="cb44-12"><a href="seasonality.html#cb44-12" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.holtwinters <span class="im">import</span> SimpleExpSmoothing, Holt, ExponentialSmoothing</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb45-1"><a href="seasonality.html#cb45-1" tabindex="-1"></a>usair <span class="op">=</span> pd.read_csv(<span class="st">&quot;https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/usairlines.csv&quot;</span>)</span>
+<span id="cb45-2"><a href="seasonality.html#cb45-2" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="seasonality.html#cb45-3" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb45-4"><a href="seasonality.html#cb45-4" tabindex="-1"></a>usair.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb45-5"><a href="seasonality.html#cb45-5" tabindex="-1"></a></span>
+<span id="cb45-6"><a href="seasonality.html#cb45-6" tabindex="-1"></a>training <span class="op">=</span> usair.head(<span class="dv">207</span>)</span>
+<span id="cb45-7"><a href="seasonality.html#cb45-7" tabindex="-1"></a>test <span class="op">=</span> usair.tail(<span class="dv">12</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb46-1"><a href="seasonality.html#cb46-1" tabindex="-1"></a>plt.plot(training[<span class="st">&quot;Passengers&quot;</span>])</span>
+<span id="cb46-2"><a href="seasonality.html#cb46-2" tabindex="-1"></a>plt.xlabel(<span class="st">&quot;Date&quot;</span>)</span>
+<span id="cb46-3"><a href="seasonality.html#cb46-3" tabindex="-1"></a>plt.ylabel(<span class="st">&quot;Passengers&quot;</span>)</span>
+<span id="cb46-4"><a href="seasonality.html#cb46-4" tabindex="-1"></a>plt.title(<span class="st">&quot;Airline Passengers&quot;</span>)</span>
+<span id="cb46-5"><a href="seasonality.html#cb46-5" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb47-1"><a href="seasonality.html#cb47-1" tabindex="-1"></a>training[<span class="st">&#39;HWES_MUL&#39;</span>] <span class="op">=</span> ExponentialSmoothing(training[<span class="st">&#39;Passengers&#39;</span>], trend<span class="op">=</span><span class="st">&#39;mul&#39;</span>, seasonal<span class="op">=</span><span class="st">&#39;mul&#39;</span>, seasonal_periods <span class="op">=</span> <span class="dv">12</span>).fit().fittedvalues</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\holtwinters\model.py:915: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+##   warnings.warn(
+## &lt;string&gt;:1: SettingWithCopyWarning: 
+## A value is trying to be set on a copy of a slice from a DataFrame.
+## Try using .loc[row_indexer,col_indexer] = value instead
+## 
+## See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy</code></pre>
+<div class="sourceCode" id="cb49"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb49-1"><a href="seasonality.html#cb49-1" tabindex="-1"></a>training[[<span class="st">&#39;Passengers&#39;</span>, <span class="st">&#39;HWES_MUL&#39;</span>]].plot(title<span class="op">=</span><span class="st">&#39;Holt Winters Exponential Smoothing: Additive and Multiplicative Seasonality&#39;</span>)</span>
+<span id="cb49-2"><a href="seasonality.html#cb49-2" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-32-3.png" width="672" /></p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb50-1"><a href="seasonality.html#cb50-1" tabindex="-1"></a>fit <span class="op">=</span> ExponentialSmoothing(training[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;mul&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;mul&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit()</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\holtwinters\model.py:915: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+##   warnings.warn(</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb52-1"><a href="seasonality.html#cb52-1" tabindex="-1"></a>plt.cla()</span>
+<span id="cb52-2"><a href="seasonality.html#cb52-2" tabindex="-1"></a>fcast<span class="op">=</span>fit.forecast(<span class="dv">12</span>)</span>
+<span id="cb52-3"><a href="seasonality.html#cb52-3" tabindex="-1"></a>ax <span class="op">=</span> training[<span class="st">&quot;Passengers&quot;</span>].plot(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
+<span id="cb52-4"><a href="seasonality.html#cb52-4" tabindex="-1"></a>fcast.plot(ax <span class="op">=</span> ax,color <span class="op">=</span> <span class="st">&quot;orange&quot;</span>)</span>
+<span id="cb52-5"><a href="seasonality.html#cb52-5" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-33-5.png" width="1152" /></p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb53-1"><a href="seasonality.html#cb53-1" tabindex="-1"></a>error<span class="op">=</span>test[<span class="st">&#39;Passengers&#39;</span>]<span class="op">-</span>fcast</span>
+<span id="cb53-2"><a href="seasonality.html#cb53-2" tabindex="-1"></a>MAPE<span class="op">=</span>np.mean(<span class="bu">abs</span>(error)<span class="op">/</span>test[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb53-3"><a href="seasonality.html#cb53-3" tabindex="-1"></a>MAPE</span></code></pre></div>
+<pre><code>## 2.0264812820683558</code></pre>
+<div id="seasonality-1" class="section level3 hasAnchor" number="5.5.1">
+<h3><span class="header-section-number">5.5.1</span> Seasonality<a href="seasonality.html#seasonality-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb55"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb55-1"><a href="seasonality.html#cb55-1" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.stattools <span class="im">import</span> adfuller</span>
+<span id="cb55-2"><a href="seasonality.html#cb55-2" tabindex="-1"></a></span>
+<span id="cb55-3"><a href="seasonality.html#cb55-3" tabindex="-1"></a>training[<span class="st">&quot;Passengers_diff&quot;</span>] <span class="op">=</span> training[<span class="st">&quot;Passengers&quot;</span>] <span class="op">-</span> training[<span class="st">&quot;Passengers&quot;</span>].shift(<span class="dv">12</span>)</span></code></pre></div>
+<pre><code>## &lt;string&gt;:1: SettingWithCopyWarning: 
+## A value is trying to be set on a copy of a slice from a DataFrame.
+## Try using .loc[row_indexer,col_indexer] = value instead
+## 
+## See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy</code></pre>
+<div class="sourceCode" id="cb57"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb57-1"><a href="seasonality.html#cb57-1" tabindex="-1"></a>plt.cla()</span>
+<span id="cb57-2"><a href="seasonality.html#cb57-2" tabindex="-1"></a>plt.plot(training[<span class="st">&quot;Passengers_diff&quot;</span>].dropna())</span>
+<span id="cb57-3"><a href="seasonality.html#cb57-3" tabindex="-1"></a>plt.xlabel(<span class="st">&quot;Date&quot;</span>)</span>
+<span id="cb57-4"><a href="seasonality.html#cb57-4" tabindex="-1"></a>plt.ylabel(<span class="st">&quot;Passengers&quot;</span>)</span>
+<span id="cb57-5"><a href="seasonality.html#cb57-5" tabindex="-1"></a>plt.title(<span class="st">&quot;Seasonal Difference in Airline Passengers&quot;</span>)</span>
+<span id="cb57-6"><a href="seasonality.html#cb57-6" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-35-7.png" width="1152" /></p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb58-1"><a href="seasonality.html#cb58-1" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.stattools <span class="im">import</span> adfuller</span>
+<span id="cb58-2"><a href="seasonality.html#cb58-2" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.stattools <span class="im">import</span> kpss</span>
+<span id="cb58-3"><a href="seasonality.html#cb58-3" tabindex="-1"></a></span>
+<span id="cb58-4"><a href="seasonality.html#cb58-4" tabindex="-1"></a>adfuller(training[<span class="st">&quot;Passengers_diff&quot;</span>].dropna())</span></code></pre></div>
+<pre><code>## (-3.1193806884272663, 0.0251517817351501, 15, 179, {&#39;1%&#39;: -3.4674201432469816, &#39;5%&#39;: -2.877826051844538, &#39;10%&#39;: -2.575452082332012}, 3265.477674996173)</code></pre>
+<div class="sourceCode" id="cb60"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb60-1"><a href="seasonality.html#cb60-1" tabindex="-1"></a>kpss(training[<span class="st">&quot;Passengers_diff&quot;</span>].dropna())</span></code></pre></div>
+<pre><code>## (0.06877759490278168, 0.1, 8, {&#39;10%&#39;: 0.347, &#39;5%&#39;: 0.463, &#39;2.5%&#39;: 0.574, &#39;1%&#39;: 0.739})
+## 
+## C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\stattools.py:2022: InterpolationWarning: The test statistic is outside of the range of p-values available in the
+## look-up table. The actual p-value is greater than the p-value returned.
+## 
+##   warnings.warn(</code></pre>
+</div>
+<div id="deterministic-solutions-1" class="section level3 hasAnchor" number="5.5.2">
+<h3><span class="header-section-number">5.5.2</span> Deterministic Solutions<a href="seasonality.html#deterministic-solutions-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb62"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb62-1"><a href="seasonality.html#cb62-1" tabindex="-1"></a>results <span class="op">=</span> sm.OLS.from_formula(<span class="st">&quot;Passengers ~ C(Month)&quot;</span>,</span>
+<span id="cb62-2"><a href="seasonality.html#cb62-2" tabindex="-1"></a>                              data<span class="op">=</span>training).fit()</span>
+<span id="cb62-3"><a href="seasonality.html#cb62-3" tabindex="-1"></a><span class="bu">print</span>(results.summary())</span></code></pre></div>
+<pre><code>##                             OLS Regression Results                            
+## ==============================================================================
+## Dep. Variable:             Passengers   R-squared:                       0.210
+## Model:                            OLS   Adj. R-squared:                  0.165
+## Method:                 Least Squares   F-statistic:                     4.703
+## Date:                Thu, 07 Sep 2023   Prob (F-statistic):           2.23e-06
+## Time:                        21:25:06   Log-Likelihood:                -2154.4
+## No. Observations:                 207   AIC:                             4333.
+## Df Residuals:                     195   BIC:                             4373.
+## Df Model:                          11                                         
+## Covariance Type:            nonrobust                                         
+## ==================================================================================
+##                      coef    std err          t      P&gt;|t|      [0.025      0.975]
+## ----------------------------------------------------------------------------------
+## Intercept        4.43e+04   1945.888     22.766      0.000    4.05e+04    4.81e+04
+## C(Month)[T.2]   -971.9444   2751.901     -0.353      0.724   -6399.255    4455.366
+## C(Month)[T.3]   8561.6667   2751.901      3.111      0.002    3134.356     1.4e+04
+## C(Month)[T.4]   5276.8562   2792.077      1.890      0.060    -229.689    1.08e+04
+## C(Month)[T.5]   6413.7386   2792.077      2.297      0.023     907.193    1.19e+04
+## C(Month)[T.6]   9306.5033   2792.077      3.333      0.001    3799.958    1.48e+04
+## C(Month)[T.7]   1.197e+04   2792.077      4.286      0.000    6460.252    1.75e+04
+## C(Month)[T.8]   1.176e+04   2792.077      4.212      0.000    6252.723    1.73e+04
+## C(Month)[T.9]   1219.3856   2792.077      0.437      0.663   -4287.160    6725.931
+## C(Month)[T.10]  5525.9739   2792.077      1.979      0.049      19.429     1.1e+04
+## C(Month)[T.11]  3193.7386   2792.077      1.144      0.254   -2312.807    8700.284
+## C(Month)[T.12]  4461.9150   2792.077      1.598      0.112   -1044.630    9968.460
+## ==============================================================================
+## Omnibus:                       41.204   Durbin-Watson:                   0.065
+## Prob(Omnibus):                  0.000   Jarque-Bera (JB):                9.340
+## Skew:                          -0.070   Prob(JB):                      0.00937
+## Kurtosis:                       1.969   Cond. No.                         12.7
+## ==============================================================================
+## 
+## Notes:
+## [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+<div class="sourceCode" id="cb64"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb64-1"><a href="seasonality.html#cb64-1" tabindex="-1"></a><span class="im">import</span> pmdarima <span class="im">as</span> pm</span>
+<span id="cb64-2"><a href="seasonality.html#cb64-2" tabindex="-1"></a></span>
+<span id="cb64-3"><a href="seasonality.html#cb64-3" tabindex="-1"></a>model <span class="op">=</span> pm.auto_arima(results.resid.dropna(), start_p <span class="op">=</span> <span class="dv">0</span>, start_q <span class="op">=</span> <span class="dv">0</span>, max_p <span class="op">=</span> <span class="dv">5</span>, max_q <span class="op">=</span> <span class="dv">5</span>, seasonal <span class="op">=</span> <span class="va">False</span>)</span>
+<span id="cb64-4"><a href="seasonality.html#cb64-4" tabindex="-1"></a>model.summary()</span></code></pre></div>
+<table class="simpletable">
+<caption>SARIMAX Results</caption>
+<tr>
+  <th>Dep. Variable:</th>           <td>y</td>        <th>  No. Observations:  </th>    <td>207</td>   
+</tr>
+<tr>
+  <th>Model:</th>           <td>SARIMAX(1, 1, 1)</td> <th>  Log Likelihood     </th> <td>-1849.181</td>
+</tr>
+<tr>
+  <th>Date:</th>            <td>Thu, 07 Sep 2023</td> <th>  AIC                </th> <td>3706.362</td> 
+</tr>
+<tr>
+  <th>Time:</th>                <td>21:25:08</td>     <th>  BIC                </th> <td>3719.673</td> 
+</tr>
+<tr>
+  <th>Sample:</th>                  <td>0</td>        <th>  HQIC               </th> <td>3711.745</td> 
+</tr>
+<tr>
+  <th></th>                      <td> - 207</td>      <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>        <td>opg</td>       <th>                     </th>     <td> </td>    
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>intercept</th> <td>   59.9318</td> <td>   46.379</td> <td>    1.292</td> <td> 0.196</td> <td>  -30.970</td> <td>  150.834</td>
+</tr>
+<tr>
+  <th>ar.L1</th>     <td>    0.4469</td> <td>    0.199</td> <td>    2.243</td> <td> 0.025</td> <td>    0.056</td> <td>    0.837</td>
+</tr>
+<tr>
+  <th>ma.L1</th>     <td>   -0.7779</td> <td>    0.132</td> <td>   -5.909</td> <td> 0.000</td> <td>   -1.036</td> <td>   -0.520</td>
+</tr>
+<tr>
+  <th>sigma2</th>    <td> 3.739e+06</td> <td> 1.17e+05</td> <td>   31.828</td> <td> 0.000</td> <td> 3.51e+06</td> <td> 3.97e+06</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Ljung-Box (L1) (Q):</th>     <td>0.04</td> <th>  Jarque-Bera (JB):  </th> <td>12422.50</td>
+</tr>
+<tr>
+  <th>Prob(Q):</th>                <td>0.84</td> <th>  Prob(JB):          </th>   <td>0.00</td>  
+</tr>
+<tr>
+  <th>Heteroskedasticity (H):</th> <td>2.47</td> <th>  Skew:              </th>   <td>-4.09</td> 
+</tr>
+<tr>
+  <th>Prob(H) (two-sided):</th>    <td>0.00</td> <th>  Kurtosis:          </th>   <td>40.15</td> 
+</tr>
+</table><br/><br/>Warnings:<br/>[1] Covariance matrix calculated using the outer product of gradients (complex-step).
+<div class="sourceCode" id="cb65"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb65-1"><a href="seasonality.html#cb65-1" tabindex="-1"></a>training[<span class="st">&#39;t&#39;</span>] <span class="op">=</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">208</span>, <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## &lt;string&gt;:1: SettingWithCopyWarning: 
+## A value is trying to be set on a copy of a slice from a DataFrame.
+## Try using .loc[row_indexer,col_indexer] = value instead
+## 
+## See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy</code></pre>
+<div class="sourceCode" id="cb67"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb67-1"><a href="seasonality.html#cb67-1" tabindex="-1"></a>training[<span class="st">&#39;x1&#39;</span>] <span class="op">=</span> np.sin(<span class="dv">2</span><span class="op">*</span>np.pi<span class="op">*</span>training[<span class="st">&#39;t&#39;</span>]<span class="op">/</span><span class="dv">12</span>)</span>
+<span id="cb67-2"><a href="seasonality.html#cb67-2" tabindex="-1"></a>training[<span class="st">&#39;x2&#39;</span>] <span class="op">=</span> np.cos(<span class="dv">2</span><span class="op">*</span>np.pi<span class="op">*</span>training[<span class="st">&#39;t&#39;</span>]<span class="op">/</span><span class="dv">12</span>)</span>
+<span id="cb67-3"><a href="seasonality.html#cb67-3" tabindex="-1"></a>training[<span class="st">&#39;x3&#39;</span>] <span class="op">=</span> np.sin(<span class="dv">4</span><span class="op">*</span>np.pi<span class="op">*</span>training[<span class="st">&#39;t&#39;</span>]<span class="op">/</span><span class="dv">12</span>)</span>
+<span id="cb67-4"><a href="seasonality.html#cb67-4" tabindex="-1"></a>training[<span class="st">&#39;x4&#39;</span>] <span class="op">=</span> np.cos(<span class="dv">4</span><span class="op">*</span>np.pi<span class="op">*</span>training[<span class="st">&#39;t&#39;</span>]<span class="op">/</span><span class="dv">12</span>)</span>
+<span id="cb67-5"><a href="seasonality.html#cb67-5" tabindex="-1"></a>training[<span class="st">&#39;x5&#39;</span>] <span class="op">=</span> np.sin(<span class="dv">6</span><span class="op">*</span>np.pi<span class="op">*</span>training[<span class="st">&#39;t&#39;</span>]<span class="op">/</span><span class="dv">12</span>)</span>
+<span id="cb67-6"><a href="seasonality.html#cb67-6" tabindex="-1"></a>training[<span class="st">&#39;x6&#39;</span>] <span class="op">=</span> np.cos(<span class="dv">6</span><span class="op">*</span>np.pi<span class="op">*</span>training[<span class="st">&#39;t&#39;</span>]<span class="op">/</span><span class="dv">12</span>)</span>
+<span id="cb67-7"><a href="seasonality.html#cb67-7" tabindex="-1"></a>training[<span class="st">&#39;x7&#39;</span>] <span class="op">=</span> np.sin(<span class="dv">8</span><span class="op">*</span>np.pi<span class="op">*</span>training[<span class="st">&#39;t&#39;</span>]<span class="op">/</span><span class="dv">12</span>)</span>
+<span id="cb67-8"><a href="seasonality.html#cb67-8" tabindex="-1"></a>training[<span class="st">&#39;x8&#39;</span>] <span class="op">=</span> np.sin(<span class="dv">8</span><span class="op">*</span>np.pi<span class="op">*</span>training[<span class="st">&#39;t&#39;</span>]<span class="op">/</span><span class="dv">12</span>)</span>
+<span id="cb67-9"><a href="seasonality.html#cb67-9" tabindex="-1"></a>training[<span class="st">&#39;x9&#39;</span>] <span class="op">=</span> np.sin(<span class="dv">10</span><span class="op">*</span>np.pi<span class="op">*</span>training[<span class="st">&#39;t&#39;</span>]<span class="op">/</span><span class="dv">12</span>)</span>
+<span id="cb67-10"><a href="seasonality.html#cb67-10" tabindex="-1"></a>training[<span class="st">&#39;x10&#39;</span>] <span class="op">=</span> np.sin(<span class="dv">10</span><span class="op">*</span>np.pi<span class="op">*</span>training[<span class="st">&#39;t&#39;</span>]<span class="op">/</span><span class="dv">12</span>)</span>
+<span id="cb67-11"><a href="seasonality.html#cb67-11" tabindex="-1"></a>training[<span class="st">&#39;x11&#39;</span>] <span class="op">=</span> np.sin(<span class="dv">12</span><span class="op">*</span>np.pi<span class="op">*</span>training[<span class="st">&#39;t&#39;</span>]<span class="op">/</span><span class="dv">12</span>)</span>
+<span id="cb67-12"><a href="seasonality.html#cb67-12" tabindex="-1"></a>training[<span class="st">&#39;x12&#39;</span>] <span class="op">=</span> np.sin(<span class="dv">12</span><span class="op">*</span>np.pi<span class="op">*</span>training[<span class="st">&#39;t&#39;</span>]<span class="op">/</span><span class="dv">12</span>)</span>
+<span id="cb67-13"><a href="seasonality.html#cb67-13" tabindex="-1"></a></span>
+<span id="cb67-14"><a href="seasonality.html#cb67-14" tabindex="-1"></a>results <span class="op">=</span> sm.OLS.from_formula(<span class="st">&quot;Passengers ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x12&quot;</span>,</span>
+<span id="cb67-15"><a href="seasonality.html#cb67-15" tabindex="-1"></a>                              data<span class="op">=</span>training).fit()</span>
+<span id="cb67-16"><a href="seasonality.html#cb67-16" tabindex="-1"></a><span class="bu">print</span>(results.summary())</span></code></pre></div>
+<pre><code>##                             OLS Regression Results                            
+## ==============================================================================
+## Dep. Variable:             Passengers   R-squared:                       0.208
+## Model:                            OLS   Adj. R-squared:                  0.171
+## Method:                 Least Squares   F-statistic:                     5.735
+## Date:                Thu, 07 Sep 2023   Prob (F-statistic):           4.59e-07
+## Time:                        21:25:08   Log-Likelihood:                -2154.7
+## No. Observations:                 207   AIC:                             4329.
+## Df Residuals:                     197   BIC:                             4363.
+## Df Model:                           9                                         
+## Covariance Type:            nonrobust                                         
+## ==============================================================================
+##                  coef    std err          t      P&gt;|t|      [0.025      0.975]
+## ------------------------------------------------------------------------------
+## Intercept   4.985e+04    572.188     87.118      0.000    4.87e+04     5.1e+04
+## x1         -1373.6270    806.881     -1.702      0.090   -2964.860     217.606
+## x2         -4060.3302    811.407     -5.004      0.000   -5660.489   -2460.171
+## x3           328.2428    808.772      0.406      0.685   -1266.720    1923.206
+## x4           677.0116    809.884      0.836      0.404    -920.144    2274.167
+## x5         -2702.2477    807.278     -3.347      0.001   -4294.264   -1110.232
+## x6          1270.4928    810.522      1.567      0.119    -327.921    2868.906
+## x7          1.025e+13   2.45e+13      0.419      0.676    -3.8e+13    5.85e+13
+## x8         -1.025e+13   2.45e+13     -0.419      0.676   -5.85e+13     3.8e+13
+## x9           -7.4e+11   1.77e+12     -0.419      0.676   -4.22e+12    2.74e+12
+## x10           7.4e+11   1.77e+12      0.419      0.676   -2.74e+12    4.22e+12
+## x12        -8.206e+15   1.96e+16     -0.419      0.676   -4.68e+16    3.04e+16
+## ==============================================================================
+## Omnibus:                       40.167   Durbin-Watson:                   0.074
+## Prob(Omnibus):                  0.000   Jarque-Bera (JB):                9.220
+## Skew:                          -0.064   Prob(JB):                      0.00995
+## Kurtosis:                       1.974   Cond. No.                     5.29e+15
+## ==============================================================================
+## 
+## Notes:
+## [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+## [2] The smallest eigenvalue is 7.51e-30. This might indicate that there are
+## strong multicollinearity problems or that the design matrix is singular.</code></pre>
+<div class="sourceCode" id="cb69"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb69-1"><a href="seasonality.html#cb69-1" tabindex="-1"></a>model <span class="op">=</span> pm.auto_arima(results.resid.dropna(), start_p <span class="op">=</span> <span class="dv">0</span>, start_q <span class="op">=</span> <span class="dv">0</span>, max_p <span class="op">=</span> <span class="dv">5</span>, max_q <span class="op">=</span> <span class="dv">5</span>, seasonal <span class="op">=</span> <span class="va">False</span>)</span>
+<span id="cb69-2"><a href="seasonality.html#cb69-2" tabindex="-1"></a>model.summary()</span></code></pre></div>
+<table class="simpletable">
+<caption>SARIMAX Results</caption>
+<tr>
+  <th>Dep. Variable:</th>           <td>y</td>        <th>  No. Observations:  </th>    <td>207</td>   
+</tr>
+<tr>
+  <th>Model:</th>           <td>SARIMAX(2, 1, 2)</td> <th>  Log Likelihood     </th> <td>-1856.739</td>
+</tr>
+<tr>
+  <th>Date:</th>            <td>Thu, 07 Sep 2023</td> <th>  AIC                </th> <td>3725.477</td> 
+</tr>
+<tr>
+  <th>Time:</th>                <td>21:25:10</td>     <th>  BIC                </th> <td>3745.445</td> 
+</tr>
+<tr>
+  <th>Sample:</th>                  <td>0</td>        <th>  HQIC               </th> <td>3733.553</td> 
+</tr>
+<tr>
+  <th></th>                      <td> - 207</td>      <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>        <td>opg</td>       <th>                     </th>     <td> </td>    
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>intercept</th> <td>  133.3130</td> <td>   85.874</td> <td>    1.552</td> <td> 0.121</td> <td>  -34.996</td> <td>  301.622</td>
+</tr>
+<tr>
+  <th>ar.L1</th>     <td>   -0.6113</td> <td>    0.165</td> <td>   -3.702</td> <td> 0.000</td> <td>   -0.935</td> <td>   -0.288</td>
+</tr>
+<tr>
+  <th>ar.L2</th>     <td>    0.3801</td> <td>    0.169</td> <td>    2.253</td> <td> 0.024</td> <td>    0.049</td> <td>    0.711</td>
+</tr>
+<tr>
+  <th>ma.L1</th>     <td>    0.2189</td> <td>    0.129</td> <td>    1.697</td> <td> 0.090</td> <td>   -0.034</td> <td>    0.472</td>
+</tr>
+<tr>
+  <th>ma.L2</th>     <td>   -0.7437</td> <td>    0.133</td> <td>   -5.598</td> <td> 0.000</td> <td>   -1.004</td> <td>   -0.483</td>
+</tr>
+<tr>
+  <th>sigma2</th>    <td> 3.956e+06</td> <td>    0.012</td> <td> 3.34e+08</td> <td> 0.000</td> <td> 3.96e+06</td> <td> 3.96e+06</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Ljung-Box (L1) (Q):</th>     <td>0.02</td> <th>  Jarque-Bera (JB):  </th> <td>7485.39</td>
+</tr>
+<tr>
+  <th>Prob(Q):</th>                <td>0.88</td> <th>  Prob(JB):          </th>  <td>0.00</td>  
+</tr>
+<tr>
+  <th>Heteroskedasticity (H):</th> <td>2.54</td> <th>  Skew:              </th>  <td>-3.22</td> 
+</tr>
+<tr>
+  <th>Prob(H) (two-sided):</th>    <td>0.00</td> <th>  Kurtosis:          </th>  <td>31.82</td> 
+</tr>
+</table><br/><br/>Warnings:<br/>[1] Covariance matrix calculated using the outer product of gradients (complex-step).<br/>[2] Covariance matrix is singular or near-singular, with condition number 1.21e+23. Standard errors may be unstable.
+</div>
+<div id="stochastic-solution" class="section level3 hasAnchor" number="5.5.3">
+<h3><span class="header-section-number">5.5.3</span> Stochastic Solution<a href="seasonality.html#stochastic-solution" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb70"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb70-1"><a href="seasonality.html#cb70-1" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb70-2"><a href="seasonality.html#cb70-2" tabindex="-1"></a>usair.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb70-3"><a href="seasonality.html#cb70-3" tabindex="-1"></a></span>
+<span id="cb70-4"><a href="seasonality.html#cb70-4" tabindex="-1"></a>training <span class="op">=</span> usair.head(<span class="dv">207</span>)</span>
+<span id="cb70-5"><a href="seasonality.html#cb70-5" tabindex="-1"></a>test <span class="op">=</span> usair.tail(<span class="dv">12</span>)</span>
+<span id="cb70-6"><a href="seasonality.html#cb70-6" tabindex="-1"></a></span>
+<span id="cb70-7"><a href="seasonality.html#cb70-7" tabindex="-1"></a>training[<span class="st">&quot;Passengers_diff&quot;</span>] <span class="op">=</span> training[<span class="st">&quot;Passengers&quot;</span>] <span class="op">-</span> training[<span class="st">&quot;Passengers&quot;</span>].shift(<span class="dv">12</span>)</span></code></pre></div>
+<pre><code>## &lt;string&gt;:1: SettingWithCopyWarning: 
+## A value is trying to be set on a copy of a slice from a DataFrame.
+## Try using .loc[row_indexer,col_indexer] = value instead
+## 
+## See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy</code></pre>
+<div class="sourceCode" id="cb72"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb72-1"><a href="seasonality.html#cb72-1" tabindex="-1"></a>plt.cla()</span>
+<span id="cb72-2"><a href="seasonality.html#cb72-2" tabindex="-1"></a>plt.plot(training[<span class="st">&quot;Passengers_diff&quot;</span>].dropna())</span>
+<span id="cb72-3"><a href="seasonality.html#cb72-3" tabindex="-1"></a>plt.xlabel(<span class="st">&quot;Date&quot;</span>)</span>
+<span id="cb72-4"><a href="seasonality.html#cb72-4" tabindex="-1"></a>plt.ylabel(<span class="st">&quot;Passengers&quot;</span>)</span>
+<span id="cb72-5"><a href="seasonality.html#cb72-5" tabindex="-1"></a>plt.title(<span class="st">&quot;Seasonal Difference in Airline Passengers&quot;</span>)</span>
+<span id="cb72-6"><a href="seasonality.html#cb72-6" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-40-9.png" width="1152" /></p>
+<div class="sourceCode" id="cb73"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb73-1"><a href="seasonality.html#cb73-1" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
+<span id="cb73-2"><a href="seasonality.html#cb73-2" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_acf</span>
+<span id="cb73-3"><a href="seasonality.html#cb73-3" tabindex="-1"></a></span>
+<span id="cb73-4"><a href="seasonality.html#cb73-4" tabindex="-1"></a>plot_acf(training[<span class="st">&#39;Passengers_diff&#39;</span>].dropna(), lags <span class="op">=</span> <span class="dv">36</span>)</span>
+<span id="cb73-5"><a href="seasonality.html#cb73-5" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-41-11.png" width="672" /></p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb74-1"><a href="seasonality.html#cb74-1" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_pacf</span>
+<span id="cb74-2"><a href="seasonality.html#cb74-2" tabindex="-1"></a></span>
+<span id="cb74-3"><a href="seasonality.html#cb74-3" tabindex="-1"></a>plot_pacf(training[<span class="st">&#39;Passengers_diff&#39;</span>].dropna(), lags <span class="op">=</span> <span class="dv">36</span>)</span>
+<span id="cb74-4"><a href="seasonality.html#cb74-4" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-42-13.png" width="672" /></p>
+</div>
+<div id="seasonal-arima" class="section level3 hasAnchor" number="5.5.4">
+<h3><span class="header-section-number">5.5.4</span> Seasonal ARIMA<a href="seasonality.html#seasonal-arima" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb75"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb75-1"><a href="seasonality.html#cb75-1" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.statespace.sarimax <span class="im">import</span> SARIMAX</span>
+<span id="cb75-2"><a href="seasonality.html#cb75-2" tabindex="-1"></a></span>
+<span id="cb75-3"><a href="seasonality.html#cb75-3" tabindex="-1"></a>model2 <span class="op">=</span> SARIMAX(training[<span class="st">&#39;Passengers&#39;</span>], order <span class="op">=</span> (<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>), seasonal_order <span class="op">=</span> (<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">12</span>)).fit()</span>
+<span id="cb75-4"><a href="seasonality.html#cb75-4" tabindex="-1"></a>model2.summary()</span></code></pre></div>
+<table class="simpletable">
+<caption>SARIMAX Results</caption>
+<tr>
+  <th>Dep. Variable:</th>              <td>Passengers</td>            <th>  No. Observations:  </th>    <td>207</td>   
+</tr>
+<tr>
+  <th>Model:</th>           <td>SARIMAX(1, 0, 0)x(1, 1, [1], 12)</td> <th>  Log Likelihood     </th> <td>-1814.636</td>
+</tr>
+<tr>
+  <th>Date:</th>                    <td>Thu, 07 Sep 2023</td>         <th>  AIC                </th> <td>3637.272</td> 
+</tr>
+<tr>
+  <th>Time:</th>                        <td>21:25:14</td>             <th>  BIC                </th> <td>3650.364</td> 
+</tr>
+<tr>
+  <th>Sample:</th>                     <td>01-01-1990</td>            <th>  HQIC               </th> <td>3642.573</td> 
+</tr>
+<tr>
+  <th></th>                           <td>- 03-01-2007</td>           <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>                <td>opg</td>               <th>                     </th>     <td> </td>    
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+      <td></td>        <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>ar.L1</th>    <td>    0.5876</td> <td>    0.022</td> <td>   26.506</td> <td> 0.000</td> <td>    0.544</td> <td>    0.631</td>
+</tr>
+<tr>
+  <th>ar.S.L12</th> <td>   -0.2520</td> <td>    0.191</td> <td>   -1.318</td> <td> 0.188</td> <td>   -0.627</td> <td>    0.123</td>
+</tr>
+<tr>
+  <th>ma.S.L12</th> <td>    0.0732</td> <td>    0.204</td> <td>    0.359</td> <td> 0.720</td> <td>   -0.327</td> <td>    0.473</td>
+</tr>
+<tr>
+  <th>sigma2</th>   <td> 6.834e+06</td> <td> 5.89e-08</td> <td> 1.16e+14</td> <td> 0.000</td> <td> 6.83e+06</td> <td> 6.83e+06</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Ljung-Box (L1) (Q):</th>     <td>0.71</td> <th>  Jarque-Bera (JB):  </th> <td>5457.43</td>
+</tr>
+<tr>
+  <th>Prob(Q):</th>                <td>0.40</td> <th>  Prob(JB):          </th>  <td>0.00</td>  
+</tr>
+<tr>
+  <th>Heteroskedasticity (H):</th> <td>0.80</td> <th>  Skew:              </th>  <td>-3.28</td> 
+</tr>
+<tr>
+  <th>Prob(H) (two-sided):</th>    <td>0.38</td> <th>  Kurtosis:          </th>  <td>28.07</td> 
+</tr>
+</table><br/><br/>Warnings:<br/>[1] Covariance matrix calculated using the outer product of gradients (complex-step).<br/>[2] Covariance matrix is singular or near-singular, with condition number 3.25e+29. Standard errors may be unstable.
+<div class="sourceCode" id="cb76"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb76-1"><a href="seasonality.html#cb76-1" tabindex="-1"></a>lag_test<span class="op">=</span>[<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">10</span>,<span class="dv">11</span>,<span class="dv">12</span>,<span class="dv">13</span>]</span>
+<span id="cb76-2"><a href="seasonality.html#cb76-2" tabindex="-1"></a></span>
+<span id="cb76-3"><a href="seasonality.html#cb76-3" tabindex="-1"></a><span class="co">## Not run</span></span>
+<span id="cb76-4"><a href="seasonality.html#cb76-4" tabindex="-1"></a><span class="co">#for x in lag_test:</span></span>
+<span id="cb76-5"><a href="seasonality.html#cb76-5" tabindex="-1"></a><span class="co">#  sm.stats.acorr_ljungbox(model.resid, lags=[x], model_df=2)</span></span></code></pre></div>
+<div class="sourceCode" id="cb77"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb77-1"><a href="seasonality.html#cb77-1" tabindex="-1"></a>plot_acf(model2.resid, lags <span class="op">=</span> <span class="dv">36</span>)</span>
+<span id="cb77-2"><a href="seasonality.html#cb77-2" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-45-15.png" width="672" /></p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb78-1"><a href="seasonality.html#cb78-1" tabindex="-1"></a>plot_pacf(model2.resid, lags <span class="op">=</span> <span class="dv">36</span>)</span>
+<span id="cb78-2"><a href="seasonality.html#cb78-2" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-46-17.png" width="672" /></p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb79-1"><a href="seasonality.html#cb79-1" tabindex="-1"></a>model3 <span class="op">=</span> pm.auto_arima(training[<span class="st">&#39;Passengers&#39;</span>], start_p <span class="op">=</span> <span class="dv">0</span>, start_q <span class="op">=</span> <span class="dv">0</span>, max_p <span class="op">=</span> <span class="dv">5</span>, max_q <span class="op">=</span> <span class="dv">5</span>, seasonal <span class="op">=</span> <span class="va">True</span>, m <span class="op">=</span> <span class="dv">12</span>)</span>
+<span id="cb79-2"><a href="seasonality.html#cb79-2" tabindex="-1"></a>model3.summary()</span></code></pre></div>
+<table class="simpletable">
+<caption>SARIMAX Results</caption>
+<tr>
+  <th>Dep. Variable:</th>                  <td>y</td>                <th>  No. Observations:  </th>    <td>207</td>   
+</tr>
+<tr>
+  <th>Model:</th>           <td>SARIMAX(1, 1, 1)x(2, 0, [], 12)</td> <th>  Log Likelihood     </th> <td>-1939.149</td>
+</tr>
+<tr>
+  <th>Date:</th>                   <td>Thu, 07 Sep 2023</td>         <th>  AIC                </th> <td>3890.298</td> 
+</tr>
+<tr>
+  <th>Time:</th>                       <td>21:25:28</td>             <th>  BIC                </th> <td>3910.265</td> 
+</tr>
+<tr>
+  <th>Sample:</th>                         <td>0</td>                <th>  HQIC               </th> <td>3898.374</td> 
+</tr>
+<tr>
+  <th></th>                             <td> - 207</td>              <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>               <td>opg</td>               <th>                     </th>     <td> </td>    
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>intercept</th> <td>   12.8056</td> <td>   10.137</td> <td>    1.263</td> <td> 0.207</td> <td>   -7.063</td> <td>   32.675</td>
+</tr>
+<tr>
+  <th>ar.L1</th>     <td>    0.7479</td> <td>    0.067</td> <td>   11.096</td> <td> 0.000</td> <td>    0.616</td> <td>    0.880</td>
+</tr>
+<tr>
+  <th>ma.L1</th>     <td>   -0.9624</td> <td>    0.032</td> <td>  -30.547</td> <td> 0.000</td> <td>   -1.024</td> <td>   -0.901</td>
+</tr>
+<tr>
+  <th>ar.S.L12</th>  <td>    0.4551</td> <td>    0.019</td> <td>   24.431</td> <td> 0.000</td> <td>    0.419</td> <td>    0.492</td>
+</tr>
+<tr>
+  <th>ar.S.L24</th>  <td>    0.2898</td> <td>    0.028</td> <td>   10.488</td> <td> 0.000</td> <td>    0.236</td> <td>    0.344</td>
+</tr>
+<tr>
+  <th>sigma2</th>    <td> 8.064e+06</td> <td>    0.000</td> <td> 5.02e+10</td> <td> 0.000</td> <td> 8.06e+06</td> <td> 8.06e+06</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Ljung-Box (L1) (Q):</th>     <td>2.68</td> <th>  Jarque-Bera (JB):  </th> <td>3892.96</td>
+</tr>
+<tr>
+  <th>Prob(Q):</th>                <td>0.10</td> <th>  Prob(JB):          </th>  <td>0.00</td>  
+</tr>
+<tr>
+  <th>Heteroskedasticity (H):</th> <td>0.86</td> <th>  Skew:              </th>  <td>-2.86</td> 
+</tr>
+<tr>
+  <th>Prob(H) (two-sided):</th>    <td>0.52</td> <th>  Kurtosis:          </th>  <td>23.52</td> 
+</tr>
+</table><br/><br/>Warnings:<br/>[1] Covariance matrix calculated using the outer product of gradients (complex-step).<br/>[2] Covariance matrix is singular or near-singular, with condition number 4.44e+26. Standard errors may be unstable.
+<div class="sourceCode" id="cb80"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb80-1"><a href="seasonality.html#cb80-1" tabindex="-1"></a>model3 <span class="op">=</span> SARIMAX(training[<span class="st">&#39;Passengers&#39;</span>], order <span class="op">=</span> (<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>), seasonal_order <span class="op">=</span> (<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">12</span>), trend <span class="op">=</span> <span class="st">&#39;t&#39;</span>).fit()</span>
+<span id="cb80-2"><a href="seasonality.html#cb80-2" tabindex="-1"></a>model3.summary()</span></code></pre></div>
+<table class="simpletable">
+<caption>SARIMAX Results</caption>
+<tr>
+  <th>Dep. Variable:</th>             <td>Passengers</td>           <th>  No. Observations:  </th>    <td>207</td>   
+</tr>
+<tr>
+  <th>Model:</th>           <td>SARIMAX(1, 0, 1)x(0, 1, 1, 12)</td> <th>  Log Likelihood     </th> <td>-1809.402</td>
+</tr>
+<tr>
+  <th>Date:</th>                   <td>Thu, 07 Sep 2023</td>        <th>  AIC                </th> <td>3628.804</td> 
+</tr>
+<tr>
+  <th>Time:</th>                       <td>21:25:28</td>            <th>  BIC                </th> <td>3645.169</td> 
+</tr>
+<tr>
+  <th>Sample:</th>                    <td>01-01-1990</td>           <th>  HQIC               </th> <td>3635.430</td> 
+</tr>
+<tr>
+  <th></th>                          <td>- 03-01-2007</td>          <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>               <td>opg</td>              <th>                     </th>     <td> </td>    
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+      <td></td>        <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>drift</th>    <td>    5.1211</td> <td>    1.369</td> <td>    3.741</td> <td> 0.000</td> <td>    2.438</td> <td>    7.804</td>
+</tr>
+<tr>
+  <th>ar.L1</th>    <td>    0.5632</td> <td>    0.048</td> <td>   11.626</td> <td> 0.000</td> <td>    0.468</td> <td>    0.658</td>
+</tr>
+<tr>
+  <th>ma.L1</th>    <td>   -0.0459</td> <td>    0.096</td> <td>   -0.480</td> <td> 0.632</td> <td>   -0.234</td> <td>    0.142</td>
+</tr>
+<tr>
+  <th>ma.S.L12</th> <td>   -0.1773</td> <td>    0.025</td> <td>   -7.111</td> <td> 0.000</td> <td>   -0.226</td> <td>   -0.128</td>
+</tr>
+<tr>
+  <th>sigma2</th>   <td> 5.126e+06</td> <td>  1.8e+05</td> <td>   28.548</td> <td> 0.000</td> <td> 4.77e+06</td> <td> 5.48e+06</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Ljung-Box (L1) (Q):</th>     <td>6.60</td> <th>  Jarque-Bera (JB):  </th> <td>4042.93</td>
+</tr>
+<tr>
+  <th>Prob(Q):</th>                <td>0.01</td> <th>  Prob(JB):          </th>  <td>0.00</td>  
+</tr>
+<tr>
+  <th>Heteroskedasticity (H):</th> <td>0.82</td> <th>  Skew:              </th>  <td>-2.92</td> 
+</tr>
+<tr>
+  <th>Prob(H) (two-sided):</th>    <td>0.41</td> <th>  Kurtosis:          </th>  <td>24.53</td> 
+</tr>
+</table><br/><br/>Warnings:<br/>[1] Covariance matrix calculated using the outer product of gradients (complex-step).
+<div class="sourceCode" id="cb81"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb81-1"><a href="seasonality.html#cb81-1" tabindex="-1"></a>plt.cla()</span>
+<span id="cb81-2"><a href="seasonality.html#cb81-2" tabindex="-1"></a>fcast2 <span class="op">=</span> model3.forecast(<span class="dv">12</span>)</span>
+<span id="cb81-3"><a href="seasonality.html#cb81-3" tabindex="-1"></a>ax <span class="op">=</span> training[<span class="st">&quot;Passengers&quot;</span>].plot(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
+<span id="cb81-4"><a href="seasonality.html#cb81-4" tabindex="-1"></a>fcast2.plot(ax <span class="op">=</span> ax,color <span class="op">=</span> <span class="st">&quot;orange&quot;</span>)</span>
+<span id="cb81-5"><a href="seasonality.html#cb81-5" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-48-19.png" width="1152" /></p>
+<div class="sourceCode" id="cb82"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb82-1"><a href="seasonality.html#cb82-1" tabindex="-1"></a>error2 <span class="op">=</span> test[<span class="st">&#39;Passengers&#39;</span>]<span class="op">-</span>fcast2</span>
+<span id="cb82-2"><a href="seasonality.html#cb82-2" tabindex="-1"></a>MAPE2 <span class="op">=</span> np.mean(<span class="bu">abs</span>(error2)<span class="op">/</span>test[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb82-3"><a href="seasonality.html#cb82-3" tabindex="-1"></a>MAPE2</span></code></pre></div>
+<pre><code>## 1.3836946523828837</code></pre>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="arima.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/sjsimmo2/TimeSeries/edit/master/04-Seasonality.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/sjsimmo2/TimeSeries/blob/master/04-Seasonality.Rmd",
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
