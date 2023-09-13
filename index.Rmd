@@ -1,11 +1,30 @@
 --- 
-title: "Time Series 1"
+title: "Time Series 1 and 2"
 author: "by Dr. Susan Simmons and Dr. Aric LaBarr "
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
 
-# Time series 1
+# Time series 
 
-This is your introduction in Time Series.  By the end of this course, you should be able to understand time series data and different formats for doing time series; understand and identify the different characteristics of a time series (trend, cycle, seasonality, etc); perform a time series decomposition on seasonal data; perform numerous exponential smoothing models; understand stationarity and how to test for it; understand AR, MA and mixed models and when to use differencing; and be able to identify if a series has white noise.  All of the data sets needed for this class are on the github repository.  Enjoy your TIME in Time Series!!
+This book contains the codes for Time Series 1 and 2.  By the end of these two courses, you should be able to:  
+* Create plots and clean time series data  
+* Understand format of time series data  
+* Identify the different characteristics of a time series (trend, cycle, seasonality, etc)  
+* Perform a time series decomposition and understand the different decomposition techniques  
+* Perform several exponential smoothing models  
+* Understand stationarity and how to test for it  
+* Understand and be able to use ACF and PACF plots to develop potential ARMA models  
+* Be able to fit basic ARIMA models  
+* Identify if white noise exists  
+* Identify seasonality within time series data sets  
+* Build seasonal ARIMA models  
+* Incorporate external variables into ARIMA models (dynamic regression)  
+* Fourier transformations in time series models  
+* Build Facebook Prophet models  
+* Build Neural Network Autoregressive models  
+* Ensemble different time series models  
+* Construct hierarchical time series approaches  
+
+All of the data sets needed for this class are on the github repository.  Enjoy your TIME in Time Series!!
 
