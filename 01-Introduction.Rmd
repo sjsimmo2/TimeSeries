@@ -17,13 +17,17 @@ library(ggplot2)
 library(seasonalview)
 library(aTSA)
 
+
+### Note that the following packages and information is for Python:
 library(reticulate)
 
 use_python("C:\\ProgramData\\Anaconda3\\envs\\R_Env2\\python.exe")
 #use_python("C:\\ProgramData\\Anaconda3\\python.exe")
 ```
 
-The data sets that you will need are as follows (be sure to put the correct location and file name for your computer):
+
+The data sets that you will need are as follows:
+
 
 ```{r data sets}
 
@@ -39,6 +43,8 @@ input.file8 = "hurrican.csv"
 
 # Reads the data at specified directory
 # If the file directory is incorrect, then this won't run
+
+
 USAirlines = read_csv(paste(file.dir, input.file1,sep = ""),show_col_types = FALSE)
 Steel = read_csv(paste(file.dir, input.file2, sep = ""),show_col_types = FALSE)
 Lead.Year = read_csv(paste(file.dir, input.file3, sep = ""),show_col_types = FALSE)
@@ -51,7 +57,7 @@ temp<-read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\minntemp.csv", sho
 ```
 
 
-For most of the applications we will be using, you will first need to create a tsibble.  In order to create a tsibble, you need to have a column that identifies the date (which we will indicate with "index").  The code below creates tsibble for the Steel data set and the Minneapolis temperature data set:
+For most of the applications we will be using, you will first need to create a tsibble.  In order to create a tsibble, you need to have a column that identifies the date (which we will indicate with "index").  The code below creates tsibble for the Steel data set and the Minneapolis temperature data set and plots the data:
 
 ```{r Time Series object}
 
@@ -69,7 +75,7 @@ autoplot(temp_ts,Temp) + labs(title="Minneapolis temperature", y= "Temperature")
 
 
 
-Another example of creating a tsibble with the US Airlines data set:
+Another example of creating a tsibble and time plot with the US Airlines data set:
 
 ```{r ts2}
 USAirlines_ts <- USAirlines |> mutate(date=myd(paste(Month, Year, "1"))) |> mutate(Month2=yearmonth(date)) |> as_tsibble(index=Month2)
@@ -77,9 +83,11 @@ USAirlines_ts <- USAirlines |> mutate(date=myd(paste(Month, Year, "1"))) |> muta
 autoplot(USAirlines_ts,Passengers)
 ```
 
+
 ## Other plots
 
-Some other interesting plots we can look at is the seasonal plot (only if our time series has a seasonal component....if you have yearly data, this is not possible since each line represents one year). 
+Some other interesting plots we can look at is the seasonal plot (only if our time series has a seasonal component....if you have yearly data, this is not possible since each line in the graph represents one year). 
+
 
 ```{r}
 USAirlines_ts |>
@@ -87,7 +95,10 @@ USAirlines_ts |>
   labs(y = "Passengers",
        title = "Seasonal plot: US Airline Passengers")
 ```
+
+
 We can further explore seasonal patterns by a subseries plot (again ONLY if there is a seasonal component):
+
 
 ```{r}
 USAirlines_ts |>
@@ -103,7 +114,8 @@ USAirlines_ts |>
 ## Time series decomposition
 
 
-IF your time series has a seasonal component to it, a useful visualization is the decomposition.  We will first look at the STL decomposition (which can only do the additive decomposition, NOT multiplicative!).  The following code creates the decomposition and then plots it:
+If your time series has a seasonal component to it, a useful visualization is the decomposition.  We will first look at the STL decomposition (which can only do the additive decomposition, NOT multiplicative!).  The following code creates the decomposition and then plots it:
+
 
 ```{r decomposition}
 # Time Series Decomposition ...STL#
@@ -118,7 +130,8 @@ components(dcmp) |> autoplot() + theme_classic()
 
 
 
-We can visualize the time series with the trend component overlaid with it: 
+We can visualize the time plot with the trend component overlaid with it: 
+
 
 ```{r overlay trend}
 
@@ -132,6 +145,7 @@ components(dcmp) |>
   )
 
 ```
+
 
 We can also overlay plots with the seasonally adjusted values (plot below has both trend and seasonally adjusted overlaid):
 
@@ -162,7 +176,7 @@ components(dcmp) |>
 
 Notice that the trend component is VERY similar to the "seasonally adjusted" data!  Do you know what the difference between the lines are?
 
-We can also do a classical decomposition (this can do an additive decomposition and a multiplicative decomposition).
+We can also do a classical decomposition (this can do an additive decomposition and a multiplicative decomposition...just change type = "multiplicative" to do a multiplicative decomposition).
 
 ```{r classical}
 
@@ -175,6 +189,8 @@ USAirlines_ts |>
   labs(title = "Classical additive decomposition of US Airline Passengers")
 
 ```
+
+
 The last decomposition we will look at is the X11 decomposition (done by the government).  This is a very complex algorithm that does the decomposition.
 
 ```{r}
@@ -184,16 +200,26 @@ x11_dcmp <- USAirlines_ts |>
 autoplot(x11_dcmp) +
   labs(title =
     "Decomposition of US Airline Passengers using X-11.")
+
+
 ```
-We can also look at the strength of the trend and seasonal components in a decomposition (within the STL decomposition):
+
+## STL features
+
+
+We can also look at the strength of the trend and seasonal components in with a STL decomposition:
+
 
 ```{r}
 USAirlines_ts |>
   features(Passengers, feat_stl)
 ```
+
+
 ## Missing values
 
 We actually need to put the series in the OLD format to use the package imputeTS (will probably get updated, just not yet).  We will illustrate this with the US Airlines data set (but first we need to create the missing values).
+
 
 ```{r}
 
