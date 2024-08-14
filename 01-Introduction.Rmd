@@ -1,13 +1,14 @@
 # Introduction
 
 
-This document provides the code and output from Time Series I and II class. This is a living document and may be updated throughout the semester (when this occurs, you will be notified that it has been updated).  First, here is a list of all the libraries that you will need:
+This document provides the code and output from Time Series I. This is a living document and may be updated throughout the semester (when this occurs, you will be notified that it has been updated).  First, here is a list of some the libraries that you will need:
 
 ```{r libraries, message=FALSE,warning=FALSE}
-library(tseries)
-library(forecast)
-library(haven)
-library(fma)
+library(readr)
+library(fpp3)
+library(fable)
+library(fabletools)
+library(lubridate)
 library(expsmooth)
 library(lmtest)
 library(zoo)
@@ -15,9 +16,9 @@ library(seasonal)
 library(ggplot2)
 library(seasonalview)
 library(aTSA)
-library(imputeTS)
+
 library(reticulate)
-library(prophet)
+
 use_python("C:\\ProgramData\\Anaconda3\\envs\\R_Env2\\python.exe")
 #use_python("C:\\ProgramData\\Anaconda3\\python.exe")
 ```
@@ -38,100 +39,194 @@ input.file8 = "hurrican.csv"
 
 # Reads the data at specified directory
 # If the file directory is incorrect, then this won't run
-USAirlines = read.csv(paste(file.dir, input.file1,sep = ""))
-Steel = read.csv(paste(file.dir, input.file2, sep = ""))
-Lead.Year = read.csv(paste(file.dir, input.file3, sep = ""))
-Ebay = read.csv(paste(file.dir, input.file4, sep = ""))
-Quotes= read.csv(paste(file.dir, input.file5, sep = ""))
-Y= read.csv(paste(file.dir, input.file6, sep = ""))
-x=read.csv(paste(file.dir, input.file7, sep = ""))
-hurricane=read.csv(paste(file.dir, input.file8, sep = ""))
+USAirlines = read_csv(paste(file.dir, input.file1,sep = ""),show_col_types = FALSE)
+Steel = read_csv(paste(file.dir, input.file2, sep = ""),show_col_types = FALSE)
+Lead.Year = read_csv(paste(file.dir, input.file3, sep = ""),show_col_types = FALSE)
+Ebay = read_csv(paste(file.dir, input.file4, sep = ""),show_col_types = FALSE)
+Quotes= read_csv(paste(file.dir, input.file5, sep = ""),show_col_types = FALSE)
+Y= read_csv(paste(file.dir, input.file6, sep = ""),show_col_types = FALSE)
+x=read_csv(paste(file.dir, input.file7, sep = ""),show_col_types = FALSE)
+hurricane=read_csv(paste(file.dir, input.file8, sep = ""),show_col_types = FALSE)
+temp<-read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\minntemp.csv", show_col_types = FALSE)
 ```
 
 
-For many time series applications, you will need a time series object in R.  This is created using the function ts.  For example, the time series data set in the airlines data frame is in the column "passengers".  Let's go ahead and create the time series object for this data set and graph it.
+For most of the applications we will be using, you will first need to create a tsibble.  In order to create a tsibble, you need to have a column that identifies the date (which we will indicate with "index").  The code below creates tsibble for the Steel data set and the Minneapolis temperature data set:
 
 ```{r Time Series object}
 
-Passenger <- ts(USAirlines$Passengers, start = 1990, frequency =12)
+Steel <- Steel |> mutate(date = seq(ymd('1932-07-01'),ymd('1980-01-01'),by='6 months'))
 
-autoplot(Passenger)+labs(title="Time Series plot for Passengers", x="Date",y="Passengers")
+steel_ts<-Steel |> mutate(Month=yearmonth(date)) |> as_tsibble(index=Month)
+
+autoplot(steel_ts,steelshp) + labs(title= "Iron and Steel Exports", subtitle = "Weight in tons", y= "Export") + theme_classic()
+
+temp_ts<-temp |> mutate(date = seq(ymd('1900-01-01'),ymd('1966-03-01'),by='months')) |> mutate(Month=yearmonth(date)) |> as_tsibble(index=Month)
+
+autoplot(temp_ts,Temp) + labs(title="Minneapolis temperature", y= "Temperature") + theme_classic()
 
 ```
 
 
 
-Within the ts command, the only required argument is the vector of data that contains the time series information (in this case USAirlines$Passengers).  The optional arguments of "start" is for nice plotting purposes (it has the correct time frame when it plots instead of just using 1,2,3 for time).  The last argument shown is "frequency", which is for seasonal data.  If your time series object has a seasonality to it, then you should specify the length of the season (it does not know this unless you provide it).  For future analysis, we will need to create the time series objects for Steel (this data is monthly, so we will set frequency to 12, since there are 12 months in a year).
+Another example of creating a tsibble with the US Airlines data set:
 
 ```{r ts2}
-SteelShp <- ts(Steel$steelshp, start = 1984, frequency = 12)
+USAirlines_ts <- USAirlines |> mutate(date=myd(paste(Month, Year, "1"))) |> mutate(Month2=yearmonth(date)) |> as_tsibble(index=Month2)
 
+autoplot(USAirlines_ts,Passengers)
 ```
+
+## Other plots
+
+Some other interesting plots we can look at is the seasonal plot (only if our time series has a seasonal component....if you have yearly data, this is not possible since each line represents one year). 
+
+```{r}
+USAirlines_ts |>
+  gg_season(Passengers, labels = "both") +
+  labs(y = "Passengers",
+       title = "Seasonal plot: US Airline Passengers")
+```
+We can further explore seasonal patterns by a subseries plot (again ONLY if there is a seasonal component):
+
+```{r}
+USAirlines_ts |>
+  gg_subseries(Passengers) +
+  labs(
+    y = "Passengers",
+    title = "US Airline Passengers"
+  )
+```
+
 
 
 ## Time series decomposition
 
 
-IF your time series has a seasonal component to it, a useful visualization is the decomposition.  We will be using the STL decomposition (which can only do the additive decomposition, NOT multiplicative!).  The following code creates the decomposition and then plots it:
+IF your time series has a seasonal component to it, a useful visualization is the decomposition.  We will first look at the STL decomposition (which can only do the additive decomposition, NOT multiplicative!).  The following code creates the decomposition and then plots it:
 
 ```{r decomposition}
 # Time Series Decomposition ...STL#
-decomp_stl <- stl(Passenger, s.window = 7)
+dcmp <- USAirlines_ts |>
+  model(stl = STL(Passengers))
+components(dcmp)
 
-# Plot the individual components of the time series
-plot(decomp_stl)
+components(dcmp) |> autoplot() + theme_classic()
 
-autoplot(decomp_stl)
-
-```
-
-NOTE: You will need to specify the length of the seasonal window for STL...this is done by specifying s.window = "size of window".  Your window should be an odd number.\\
-You can pull off the different components (Seasonal, Trend or Remainder). The below command provides the first few rows of the decomposition (you can see what information is contained within the decomposition...season, trend and remainder).
-
-```{r decomposition components}
-
-head(decomp_stl$time.series)
 
 ```
 
-Which means we can overlay the original data with the trend component (which is the second column.)
+
+
+We can visualize the time series with the trend component overlaid with it: 
 
 ```{r overlay trend}
 
-autoplot(Passenger)+geom_line(aes(y=decomp_stl$time.series[,2]),color="blue")
+components(dcmp) |>
+  as_tsibble() |>
+  autoplot(Passengers, colour="gray") +
+  geom_line(aes(y=trend), colour = "#D55E00") +
+  labs(
+    y = "Passengers",
+    title = "US Airline Passengers with trend overlaid"
+  )
 
 ```
 
-Notice that the trend component is VERY similar to the "seasonally adjusted" data!  Do you know what the difference between the two series is?
+We can also overlay plots with the seasonally adjusted values (plot below has both trend and seasonally adjusted overlaid):
+
 
 ```{r seasonally adjusted}
+components(dcmp) |>
+  as_tsibble() |>
+  autoplot(Passengers, colour="gray") +
+  geom_line(aes(y=season_adjust), colour = "#D55E00") +
+  labs(
+    y = "Passengers",
+    title = "US Airline Passengers with seasonally adjusted overlaid"
+  )
 
-seas_adj=Passenger-decomp_stl$time.series[,1]
 
-autoplot(Passenger) +
-  geom_line(aes(y=decomp_stl$time.series[,2]),color="blue") +
-  geom_line(aes(y=seas_adj),color="orange")
+## Both
 
+components(dcmp) |>
+  as_tsibble() |>
+  autoplot(Passengers, colour="gray") +
+  geom_line(aes(y=season_adjust), colour = "#D55E00") +
+  geom_line(aes(y=trend),colour="blue")+
+  labs(
+    y = "Passengers",
+    title = "US Airline Passengers "
+  )
 ```
 
-Another interesting plot is the subseries plot.  This looks at the individual series (in this case, the series for January, the series for February, etc....).
+Notice that the trend component is VERY similar to the "seasonally adjusted" data!  Do you know what the difference between the lines are?
 
-```{r subseries}
+We can also do a classical decomposition (this can do an additive decomposition and a multiplicative decomposition).
 
-# Plot seasonal subseries by months
-ggsubseriesplot(Passenger)
+```{r classical}
+
+USAirlines_ts |>
+  model(
+    classical_decomposition(Passengers, type = "additive")
+  ) |>
+  components() |>
+  autoplot() +
+  labs(title = "Classical additive decomposition of US Airline Passengers")
 
 ```
-Just a quick note.  STL ONLY does additive seasonal decomposition.  There is a decompose library that will do both additive AND multiplicative decomposition.
-
-To get a measure of strength for trend and seasonality using Hyndman and Athanasopoulos' technique:
+The last decomposition we will look at is the X11 decomposition (done by the government).  This is a very complex algorithm that does the decomposition.
 
 ```{r}
-Ft=max(0,1-var(decomp_stl$time.series[,3])/(var(decomp_stl$time.series[,3])+var(decomp_stl$time.series[,2]) + 2*cov(decomp_stl$time.series[,3],decomp_stl$time.series[,2])))
-Ft
+x11_dcmp <- USAirlines_ts |>
+  model(x11 = X_13ARIMA_SEATS(Passengers ~ x11())) |>
+  components()
+autoplot(x11_dcmp) +
+  labs(title =
+    "Decomposition of US Airline Passengers using X-11.")
+```
+We can also look at the strength of the trend and seasonal components in a decomposition (within the STL decomposition):
 
-Fs=max(0,1-var(decomp_stl$time.series[,3])/(var(decomp_stl$time.series[,3])+var(decomp_stl$time.series[,1])+2*cov(decomp_stl$time.series[,3],decomp_stl$time.series[,1])))
-Fs
+```{r}
+USAirlines_ts |>
+  features(Passengers, feat_stl)
+```
+## Missing values
+
+We actually need to put the series in the OLD format to use the package imputeTS (will probably get updated, just not yet).  We will illustrate this with the US Airlines data set (but first we need to create the missing values).
+
+```{r}
+
+
+#### Make some missing values:
+set.seed(19076)
+miss_val<-sample(1:nrow(USAirlines),30,replace=F)
+miss_val<-c(miss_val,102,104:107)
+
+US_temp<-USAirlines
+US_temp$Passengers[miss_val]<-NA
+
+col_vector=rep("blue",nrow(USAirlines))
+col_vector[miss_val]="red"
+
+### Create ts using the old way:
+library(imputeTS)
+library(forecast)
+
+Pass_miss<-ts(US_temp$Passengers,start = c(1990,1),frequency = 12)
+
+ggplot_na_distribution(Pass_miss)+labs(y="US Airline Passengers")
+
+# Interpolate the missing observations in this data set
+Pass_impute<-Pass_miss %>% na_interpolation(option = "spline")
+
+
+autoplot(Pass_impute,color=col_vector) + labs(y="Airline Passengers")
+
+Pass_impute<-Pass_miss %>% na_seadec(algorithm = "interpolation")
+
+autoplot(Pass_impute,color=col_vector) + labs(y="Airline Passengers")
+
 ```
 
 
@@ -149,10 +244,15 @@ import matplotlib.pyplot as plt
 from matplotlib import pyplot
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.seasonal import STL
+
+from statsforecast import StatsForecast
+
 usair_p=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\usairlines.csv")
 df=pd.date_range(start='1/1/1990', end='3/1/2008', freq='MS')
 usair_p.index=pd.to_datetime(df)
-print(usair_p.head())
+
+
+
 plt.plot(usair_p["Passengers"])
 plt.xlabel("Date")
 plt.ylabel("Passengers")
@@ -183,10 +283,20 @@ usair_p.index=pd.to_datetime(df)
 
 ## STL Decomposition
 
-stl = STL(usair_p["Passengers"], period=12)
-res = stl.fit()
-fig = res.plot()
-pyplot.show()
+from statsforecast.models import MSTL
+
+d = {'unique_id': 1, 'ds': usair_p.index, 'y': usair_p['Passengers']}
+usair_sf = pd.DataFrame(data = d)
+
+dcmp = StatsForecast(models = [MSTL(season_length = 12)], freq = 'M')
+dcmp.fit(df = usair_sf)
+
+result = dcmp.fitted_[0,0].model_
+result
+
+dcmp.fitted_[0, 0].model_.plot(subplots=True, grid=True)
+plt.tight_layout()
+plt.show()
 
 ```
 
@@ -218,18 +328,4 @@ proc timeseries data=Time.Steel plots=(series decomp sc) seasonality=12; \
 	var steelshp; \  
 run; \  
 
-
-## Self-study
-
-Here is something to get you started if you want to take a look at the X13 decomposition!
-
-```{r X13,message=FALSE}
-
-decomp_x13=seas(Passenger)
-summary(decomp_x13)
-
-## Neat R shiny application....run OUTSIDE of RMarkdown
-#view(decomp_x13)
-
-```
 
