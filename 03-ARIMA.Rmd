@@ -2,10 +2,11 @@
 
 
 ```{r, message=FALSE,echo=FALSE}
-library(tseries)
-library(forecast)
-library(haven)
-library(fma)
+library(readr)
+library(fpp3)
+library(fable)
+library(fabletools)
+library(lubridate)
 library(expsmooth)
 library(lmtest)
 library(zoo)
@@ -13,11 +14,16 @@ library(seasonal)
 library(ggplot2)
 library(seasonalview)
 library(aTSA)
-library(imputeTS)
+
+library(reticulate)
+
+use_python("C:\\ProgramData\\Anaconda3\\envs\\R_Env2\\python.exe")
+#use_python("C:\\ProgramData\\Anaconda3\\python.exe")
+
 file.dir = "https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/" 
 input.file1 = "usairlines.csv"
 input.file2 = "steel.csv"
-input.file3 = "leadyear.csv"
+input.file3 = "leadyear2.csv"
 input.file4 = "ebay9899.csv"
 input.file5 = "fpp_insurance.csv" 
 input.file6 = "ar2.csv"
@@ -26,16 +32,16 @@ input.file8 = "hurrican.csv"
 
 # Reads the data at specified directory
 # If the file directory is incorrect, then this won't run
-USAirlines = read.csv(paste(file.dir, input.file1,sep = ""))
-Steel = read.csv(paste(file.dir, input.file2, sep = ""))
-Lead.Year = read.csv(paste(file.dir, input.file3, sep = ""))
-Ebay = read.csv(paste(file.dir, input.file4, sep = ""))
-Quotes= read.csv(paste(file.dir, input.file5, sep = ""))
-Y= read.csv(paste(file.dir, input.file6, sep = ""))
-x=read.csv(paste(file.dir, input.file7, sep = ""))
-hurricane=read.csv(paste(file.dir, input.file8, sep = ""))
-SteelShp <- ts(Steel$steelshp, start = 1984, frequency = 12)
-Passenger <- ts(USAirlines$Passengers, start = 1990, frequency =12)
+USAirlines = read_csv(paste(file.dir, input.file1,sep = ""),show_col_types = FALSE)
+Steel = read_csv(paste(file.dir, input.file2, sep = ""),show_col_types = FALSE)
+Lead.Year = read_csv(paste(file.dir, input.file3, sep = ""),show_col_types = FALSE)
+Ebay = read_csv(paste(file.dir, input.file4, sep = ""),show_col_types = FALSE)
+Quotes= read_csv(paste(file.dir, input.file5, sep = ""),show_col_types = FALSE)
+Y= read_csv(paste(file.dir, input.file6, sep = ""),show_col_types = FALSE)
+x=read_csv(paste(file.dir, input.file7, sep = ""),show_col_types = FALSE)
+hurricane=read_csv(paste(file.dir, input.file8, sep = ""),show_col_types = FALSE)
+temp<-read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\minntemp.csv", show_col_types = FALSE)
+
 
 ```
 
@@ -43,43 +49,62 @@ We will now be switching over to doing ARMA/ARIMA models!!  There are a number o
 
 ## Stationarity
 
-Before we can try to model the dependency structure (the AR and MA terms), we must first have a stationarity!  The ADF test is one of the most well-known and accepted test for testing stationarity.  There are several packages that will do this for you, however, below, I am focusing on the ADF test within the package aTSA.
+Before we can try to model the dependency structure (the AR and MA terms), we must first have a stationary series!  The ADF test is one of the most well-known and accepted test for testing stationarity.  However, others have also been proposed.  Within this document, we will be using the KPSS test.
 
 ```{r plot}
 
-Quotes.ts<-ts(Quotes$Quotes,start=2002,frequency=12)
-autoplot(Quotes.ts)+labs(title="Time Series of Daily Stock quotes", x="Time", y="Quotes")
+Quotes.ts<-Quotes |> mutate(date = seq(ymd('2002-01-01'),ymd('2005-04-21'),by='months')) |>
+mutate(month=yearmonth(date)) |> as_tsibble(index=month)
+
+Quotes_train<-Quotes.ts %>% filter(year(date)<2005)
+
+autoplot(Quotes_train,Quotes)+labs(title="Time Series of Monthly Stock quotes", x="Time", y="Quotes")
 ```
 
 
-The following code produces output similar to the output seen in SAS (under the tau test).
+The following code looks into stationarity.
 
 
 ```{r stationarity}
 
 
-# Perform the ADF test (k=0)
-aTSA::adf.test(Quotes.ts)
+# Perform the KPSS test 
+Quotes_train |>
+ features(Quotes, unitroot_kpss)
 
+Quotes_train |>
+ features(Quotes, unitroot_ndiffs)
 ```
 
 
 ## Correlation Functions
 
 
-The Acf and the Pacf in R will calculate the autocorrelation (up to the lag you specify) and the partial autocorrelation, respectively.  You can either output these values to look at them or plot them (see code below).
+The Acf and the Pacf in R will calculate the autocorrelation (up to the lag you specify) and the partial autocorrelation, respectively.  
+
 
 ```{r correlation functions}
-acf1=Acf(Y, lag=10)$acf
-pacf1=Pacf(Y, lag=10)$acf
-
-index1=seq(1,length(pacf1))
-
-all.dat=data.frame(cbind(acf1[2:11],pacf1,index1))
-colnames(all.dat)=c("acf","pacf","index")
-
-ggplot(all.dat,aes(x=factor(index),y=acf))+geom_col()+labs(x="Lags")
+ggAcf(Quotes_train$Quotes,lag=10)
+ggPacf(Quotes_train$Quotes,lag=10)
 ```
+
+
+```{r}
+Hurricane.ts<- hurricane %>% as_tsibble(index=Year)
+
+Hurricane_train <-Hurricane.ts %>% filter(Year <2000)
+
+autoplot(Hurricane_train,MeanVMax)+labs(title="Time Series of Yearly Mean Velocity for Hurricanes", x="Time", y="MPH")
+
+Hurricane_train %>% features(MeanVMax,unitroot_ndiffs)
+
+Hurricane_train <- Hurricane_train %>% mutate(mean_diff=difference(MeanVMax))
+Hurricane_train %>% features(mean_diff,unitroot_ndiffs)
+
+autoplot(Hurricane_train,mean_diff)+labs(title="Differenced Mean Max Velocity", x="Time", y="Difference")
+
+```
+
 
 
 ## AutoRegressive Models (AR)
@@ -91,14 +116,22 @@ Where there are *p* lags of *Y*.  Below is the code to fit an AR(2) model. The *
 
 ```{r AR2}
 
-ggAcf(Y)
-ggPacf(Y)
+ggAcf(Y[1:731,])
+ggPacf(Y[1:731,])
 
-Y.ts <- ts(Y)
-Y.ARIMA <- Arima(Y.ts, order=c(2,0,0))
+Y.1 <-data.frame(Y)
 
-ggAcf(Y.ARIMA$residuals)
-ggPacf(Y.ARIMA$residuals)
+Y.ts<-Y.1 %>% mutate(date = seq(ymd('2000-01-01'),ymd('2002-9-26'),by='day'))  %>% as_tsibble(index=date)
+
+Y_train <- Y.ts %>% filter(year(date)<2002)
+
+autoplot(Y_train,Y)+labs(title="Time Series of Simulated Daily series", x="Time", y="Values")
+
+Y.ARIMA <- Y_train %>% model(ARIMA(Y~pdq(2,0,0)+PDQ(0,0,0)))
+report(Y.ARIMA)
+
+Y.ARIMA %>% residuals() %>% ggAcf()
+Y.ARIMA %>% residuals() %>% ggPacf()
 
 ```
 
@@ -112,254 +145,50 @@ Where there are *q* lags of $\epsilon$.  Below is code to fit an MA(2) model.
 
 ```{r MA2}
 
-ggAcf(x)
-ggPacf(x)
+ggAcf(x[1:74,])
+ggPacf(x[1:74,])
 
-x.ts <- ts(x)
-x.ARIMA <- Arima(x.ts, order=c(0,0,2))
-summary(x.ARIMA)
-ggAcf(x.ARIMA$residuals)
-ggPacf(x.ARIMA$residuals)
+x.1 <-data.frame(x)
+
+x.ts<-x.1 %>% mutate(date = seq(ymd('2000-01-01'),ymd('2000-4-9'),by='day'))  %>% as_tsibble(index=date)
+
+x_train <- x.ts %>% filter(date < '2000-3-15')
+
+autoplot(x_train,x)+labs(title="Time Series of Simulated Daily series", x="Time", y="Values")
+
+x.ARIMA <- x_train %>% model(ARIMA(x~pdq(0,0,2)+PDQ(0,0,0)))
+report(x.ARIMA)
+
+x.ARIMA %>% residuals() %>% ggAcf()
+x.ARIMA %>% residuals() %>% ggPacf()
+
 
 ```
 
 
 ## White noise
 
-For residuals to exhibit white noise, they must be "independent" and normally distributed with mean 0 and constant variance.  You already know how to assess normality and constant variance, however, we need to focus on assessing "independence".  We can assess if there is significant dependence through the Ljung-Box test. The hypotheses being tested are
+For residuals to exhibit white noise, they must be "independent" and normally distributed with mean 0 and constant variance.  You already know how to assess normality and constant variance, however, we need to focus on assessing "independence".  We can assess if there is significant dependence through the Ljung-Box test (or graphically through ACF and PACF plots). The hypotheses being tested are
 
 $$H_{0}:No\quad significant\quad autocorrelation\\
 H_{A}:Significant\qquad autocorrletion $$
 
-This should be assessed on a stationary time series.  Looking at a stationary time series, going back 10 lags should be sufficient (this will be different when we get to seasonal models).  We would like for all of the p-values (for lags 1-10) to be insignificant (large p-values).  However, keep in mind that sample size will matter when assessing significance.
+This should be assessed on a *stationary* time series.  Looking at a stationary time series, going back 10 lags should be sufficient (this will be different when we get to seasonal models).  Keep in mind that sample size does matter when assessing significance (adjust significance level accordingly).
 
 ```{r Ljung-Box test}
 
-White.LB <- rep(NA, 10)
-for(i in 1:10){
-  White.LB[i] <- Box.test(Y, lag=i, type="Ljung-Box", fitdf = 0)$p.value
-}
+### Before fitting model:
 
-white.dat=data.frame(cbind(White.LB,index1))
-colnames(white.dat)=c("pvalues","Lag")
+ljung_box(Y[1:731,], lag = 10, dof=0)
 
-ggplot(white.dat,aes(x=factor(Lag),y=pvalues))+geom_col()+labs(title="Ljung-Box test p-values",x="Lags",y="p-values")+coord_cartesian(ylim = c(0, 0.025))
+## Note: Y is a vector
 
+### After fitting model:
 
-####Fit appropriate model
-Y.ARIMA=Arima(Y,order=c(2,0,0))
-White.LB <- rep(NA, 10)
-for(i in 3:10){
-  White.LB[i] <- Box.test(Y.ARIMA$residuals, lag=i, type="Ljung-Box", fitdf = 2)$p.value
-}
+augment(Y.ARIMA) %>% features(.innov,ljung_box, lag=10, dof = 2)
 
-white.dat=data.frame(cbind(White.LB[3:10],index1[3:10]))
-colnames(white.dat)=c("pvalues","Lag") 
 
-
-ggplot(white.dat,aes(x=factor(Lag),y=pvalues))+geom_col()+labs(title="Ljung-Box test when there is white noise",x="Lags",y="p-values")
-
-```
-
-
-## Trending Series
-
-If the series is trending then it is NOT stationary.  You will NEED to do something to the series in order to make it stationary!!  You will either fit a linear regression line (then use the residuals to model dependencies) or take differences and use the differenced series to model dependencies.  We will be using the Ebay stock data of "Daily High" (however, this data has missing values!!).  If you do not impute missing values, it simply ignores the missing values (could create an issue).  I would recommend FIRST imputing those values BEFORE doing the ADF test (in the na_interpolation algorithm, missing values are imputed).
-
-```{r adf test with missing values}
-Daily.High <- ts(Ebay$DailyHigh)
-###NOT appropriate since there are missing values!!
-aTSA::adf.test(Daily.High)
-
-ggplot_na_distribution(Daily.High)+labs(y="Stock prices for Ebay")
-
-# Interpolate the missing observations in this data set
-Daily.High<-Daily.High %>% na_interpolation(option = "spline")
-
-autoplot(Daily.High)+labs(title="Daily high stock quotes",x="Time",y="Quotes")
-
-# Perform an ADF test
-aTSA::adf.test(Daily.High)
-### Definitely a Random Walk!!
-```
-
-
-How do we fit each situation?  If the series is stationary about the line, we need to fit a line (and then model the AR and MA terms on the residuals).  If series is a random walk with drift, then need to take differences.  Here is the R code for each situation.
-
-```{r ARIMA with trend}
-
-###Fitting a regression line...
-time.high=seq(1,length(Daily.High))
-resid.y =lm(Daily.High ~ time.high)$resid
-#Now use resid.y to explore what p and q to fit
-ggAcf(resid.y)
-ggPacf(resid.y)
-### You can CLEARLY see this is a random walk...can't really fit p,q
-
-## DO NOT RUN!!
-#ARIMA.line=Arima(Daily.High,order=c(p,0,q),xreg=time.high)
-
-
-
-####Fitting a random walk with drift
-diff.y=diff(Daily.High)
-ggAcf(diff.y) 
-ggPacf(diff.y)
-ARIMA.RW=Arima(Daily.High,order=c(1,1,0))
-summary(ARIMA.RW)
-####  automatic procedure will determine if you need differencing or not!
-
-```
-
-
-## Fitting ARIMA models
-
-We can use an automatic procedure to help us find a model. For this illustration, we will be using the mean of the maximum velocity in the hurricane data set.  This data also has some missing values which we need to look into first.
-
-```{r visualize missing values}
-
-max.velocity=hurricane$MeanVMax
-
-ggplot_na_distribution(max.velocity)+labs(y="Mean Max Velocity")
-
-```
-
-This is yearly data and the reason those values are missing is because there were no hurricanes recorded for that year.  Since there is no trend (nor seasonality), I am going to remove these NA values and then run the Dickey-Fuller test.
-
-```{r hurrican ADF test}
-
-max.velocity=na.omit(max.velocity)
-hurrican.ts=ts(max.velocity)
-aTSA::adf.test(hurrican.ts)
-
-```
-
-Series is stationary!! Let's see if there is any significant dependecies here...
-
-```{r Ljung-Box for Hurricane data}
-index1=seq(1,10)
-White.LB <- rep(NA, 10)
-for(i in 1:10){
-  White.LB[i] <- Box.test(hurrican.ts, lag=i, type="Ljung-Box", fitdf = 0)$p.value
-}
-
-white.dat=data.frame(cbind(White.LB[1:10],index1[1:10]))
-colnames(white.dat)=c("pvalues","Lag") 
-
-
-ggplot(white.dat,aes(x=factor(Lag),y=pvalues))+geom_col()+labs(title="Hurricane data",x="Lags",y="p-values")
-
-```
-
-There is definitely something to be modeled here!!  Let's try an automated search first...
-
-```{r auto.arima for Hurricane data}
-
-model1=auto.arima(hurrican.ts)
-model2=auto.arima(hurrican.ts,d=0)
-
-```
-
-Let's take a look at ACF and PACF plots and see how well we do manually..
-
-```{r Correlation plots hurricane data}
-
-ggAcf(hurrican.ts)
-ggPacf(hurrican.ts)
-
-```
-
-
-Using the graphs and some trial and error, here was the model I chose...
-
-
-
-```{r by hand hurricane model}
-
-model3=Arima(hurrican.ts,order=c(2,0,3))
-summary(model3)
-
-```
-
-
-Comparing the ACF and PACF plots for these models:
-
-```{r comparing ACF and PACF}
-
-ggAcf(model1$residuals,lag.max = 10)
-ggPacf(model1$residuals,lag.max = 10)
-ggAcf(model2$residuals,lag.max = 10)
-ggPacf(model2$residuals,lag.max = 10)
-ggAcf(model3$residuals,lag.max = 10)
-ggPacf(model3$residuals,lag.max = 10)
-
-```
-
-
-Let's take a look at white noise for each model:
-
-
-```{r white noise}
-
-index1=seq(1,10)
-White.LB <- rep(NA, 10)
-for(i in 2:10){
-  White.LB[i] <- Box.test(model1$residuals, lag=i, type="Ljung-Box", fitdf = 1)$p.value
-}
-
-white.dat=data.frame(cbind(White.LB[2:10],index1[2:10]))
-colnames(white.dat)=c("pvalues","Lag") 
-
-
-ggplot(white.dat,aes(x=factor(Lag),y=pvalues))+geom_col()+labs(title="Model 1",x="Lags",y="p-values")
-
-White.LB <- rep(NA, 10)
-for(i in 3:10){
-  White.LB[i] <- Box.test(model2$residuals, lag=i, type="Ljung-Box", fitdf = 2)$p.value
-}
-
-white.dat=data.frame(cbind(White.LB[3:10],index1[3:10]))
-colnames(white.dat)=c("pvalues","Lag") 
-
-
-ggplot(white.dat,aes(x=factor(Lag),y=pvalues))+geom_col()+labs(title="Model 2",x="Lags",y="p-values")
-
-White.LB <- rep(NA, 10)
-for(i in 6:10){
-  White.LB[i] <- Box.test(model3$residuals, lag=i, type="Ljung-Box", fitdf = 5)$p.value
-}
-
-white.dat=data.frame(cbind(White.LB[6:10],index1[6:10]))
-colnames(white.dat)=c("pvalues","Lag") 
-
-
-ggplot(white.dat,aes(x=factor(Lag),y=pvalues))+geom_col()+labs(title="Model 3",x="Lags",y="p-values")
-
-ggplot(data =hurrican.ts, aes(x = model1$residuals)) +
-    geom_histogram() +
-    labs(title = 'Histogram of Residuals for Model 1', x = 'Residuals', y = 'Frequency')
-ggplot(data =hurrican.ts, aes(x = model2$residuals)) +
-    geom_histogram() +
-    labs(title = 'Histogram of Residuals for Model 2', x = 'Residuals', y = 'Frequency')
-
-ggplot(data =hurrican.ts, aes(x = model3$residuals)) +
-    geom_histogram() +
-    labs(title = 'Histogram of Residuals for Model 3', x = 'Residuals', y = 'Frequency')
-
-
-```
-
-
-You can now forecast the data with these models:
-
-
-```{r forecast ARIMA}
-
-forecast::forecast(model1, h = 10)
-autoplot(forecast::forecast(model1, h = 10))
-autoplot(forecast::forecast(model2, h = 10))
-autoplot(forecast::forecast(model3, h = 10))
-
+## Note that dof has changed!!
 ```
 
 
@@ -436,41 +265,6 @@ for x in lag_test:
   
 ```
 
-Trending series...
-
-```{python Trending series}
-
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib import pyplot
-from pandas import DataFrame
-import statsmodels.api as sm
-from statsmodels.tsa.stattools import adfuller
-from statsmodels.graphics.tsaplots import plot_acf
-from statsmodels.graphics.tsaplots import plot_pacf
-from statsmodels.tsa.arima.model import ARIMA
-
-
-Daily_High_all=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\ebay9899.csv")
-Daily_High=Daily_High_all["DailyHigh"]
-Daily_High2=Daily_High.interpolate(option='spline')
-result=adfuller(Daily_High2)
-print(f'ADF p-value: {result[1]}')
-
-##Fitting a Random Walk
-model = ARIMA(y, order=(0,1,0))
-model_fit = model.fit()
-
-###NOT correct, but if you wanted to fit a regression to data
-x=pd.Series(range(318))
-model2=ARIMA(endog=Daily_High2,exog=x,order=[0,0,0])
-model2_fit=model2.fit()
-model2_fit
-
-### Now you can model residuals from the regression (if that is the route you took)
-  
-```
 
 
 Fitting ARIMA models.
@@ -576,25 +370,6 @@ proc arima data=Time.Ebay9899 plot=all; \
 	run;
 quit;
 
-_IF it would have been deterministic...CAUTION, it is NOT deterministic!!_ \  
-
-
-_You would need to create an "x" variable for time_ \  
-
-data newebay; \  
-set Time.Ebay9899; \  
-time=_n_; \  
-run; \  
-
-
-_Keep in mind that this data is not deterministic!!_ \  
-
- 
-proc arima data=newebay plot=all; \  
-	identify var=DailyHigh crosscorr=time; \  
-		estimate input=time; \  
-		run;
-quit;
 
 
 
