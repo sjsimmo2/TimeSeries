@@ -1,5 +1,6 @@
 # ARIMA
 
+We will not be getting into ARIMA.  This chapter is fairly long and covers many different concepts in ARIMA.
 
 ```{r, message=FALSE,echo=FALSE}
 library(readr)
@@ -45,11 +46,12 @@ temp<-read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\minntemp.csv", sho
 
 ```
 
-We will now be switching over to doing ARMA/ARIMA models!!  There are a number of different concepts you will need in order to do this type of modeling.
+
 
 ## Stationarity
 
 Before we can try to model the dependency structure (the AR and MA terms), we must first have a stationary series!  The ADF test is one of the most well-known and accepted test for testing stationarity.  However, others have also been proposed.  Within this document, we will be using the KPSS test.
+
 
 ```{r plot}
 
@@ -88,6 +90,8 @@ ggAcf(Quotes_train$Quotes,lag=10)
 ggPacf(Quotes_train$Quotes,lag=10)
 ```
 
+
+Since the Hurricane data set needs a difference to be stationary, we will first create the difference column and explore the correlations in that variable.
 
 ```{r}
 Hurricane.ts<- hurricane %>% as_tsibble(index=Year)
@@ -190,6 +194,139 @@ augment(Y.ARIMA) %>% features(.innov,ljung_box, lag=10, dof = 2)
 
 ## Note that dof has changed!!
 ```
+
+
+# Examples
+
+We will now demonstrate these ideas on two different examples: 
+
+
+
+First example is the Quotes data set:
+
+```{r}
+Quotes.ts<-Quotes |> mutate(date = seq(ymd('2002-01-01'),ymd('2005-04-21'),by='months')) |>
+mutate(month=yearmonth(date)) |> as_tsibble(index=month)
+
+Quotes_train<-Quotes.ts %>% filter(year(date)<2005)
+
+autoplot(Quotes_train,Quotes)+labs(title="Time Series of Monthly Stock quotes", x="Time", y="Quotes")
+
+Quotes_train %>% gg_tsdisplay(Quotes,plot_type = 'partial')
+```
+
+
+
+```{r}
+quotes_model <-Quotes_train %>%
+  model(ar1 = ARIMA(Quotes ~ pdq(1,0,0) + PDQ(0,0,0)),
+        ma1 = ARIMA(Quotes ~ pdq(0,0,1) + PDQ(0,0,0)),
+        search1 = ARIMA(Quotes),
+        search2 = ARIMA(Quotes,stepwise = F))
+
+quotes_model2<-as.data.frame(quotes_model)
+t(quotes_model2)
+
+glance(quotes_model) %>% arrange(AICc) %>% select(.model:BIC)
+```
+```{r}
+quotes_model %>% select(search1) %>% residuals() %>% ggAcf()
+quotes_model %>% select(search1) %>% residuals() %>% ggPacf()
+quotes_model %>% select(search1) %>% gg_tsresiduals()
+
+augment(quotes_model) %>% filter(.model=='search1') %>% features(.innov,ljung_box, lag=10, dof = 2)
+```
+
+
+
+Second example is the Hurricane data set (mean Maximum velocity):
+
+```{r}
+Hurricane.ts<- hurricane %>% as_tsibble(index=Year)
+
+Hurricane_train <-Hurricane.ts %>% filter(Year <2000)
+
+autoplot(Hurricane_train,MeanVMax)+labs(title="Time Series of Yearly Mean Velocity for Hurricanes", x="Time", y="MPH")
+
+Hurricane_train %>% features(MeanVMax,unitroot_ndiffs)
+```
+
+
+
+```{r}
+
+
+Hurricane_train <- Hurricane_train %>% mutate(mean_diff=difference(MeanVMax))
+
+Hurricane_train %>% gg_tsdisplay(mean_diff,plot_type = 'partial')
+```
+```{r}
+hurr_model <-Hurricane_train %>%
+  model(ar3 = ARIMA(MeanVMax ~ 0 + pdq(3,1,0) + PDQ(0,0,0)),
+        ma2 = ARIMA(MeanVMax ~ 0 + pdq(0,1,2) + PDQ(0,1,0)),
+        arima32 = ARIMA(MeanVMax~0 + pdq(3,1,2) + PDQ(0,0,0)),
+        search1 = ARIMA(MeanVMax),
+        search2 = ARIMA(MeanVMax,stepwise = F))
+
+hurr_model2<-as.data.frame(hurr_model)
+t(hurr_model2)
+
+glance(hurr_model) %>% arrange(AICc) %>% select(.model:BIC)
+```
+```{r}
+hurr_model %>% select(ma2) %>% residuals() %>% ggAcf()
+hurr_model %>% select(ma2) %>% residuals() %>% ggPacf()
+hurr_model %>% select(ma2) %>% gg_tsresiduals()
+
+
+```
+
+
+
+```{r}
+hurr_model %>% select(arima32) %>% residuals() %>% ggAcf()
+hurr_model %>% select(arima32) %>% residuals() %>% ggPacf()
+hurr_model %>% select(arima32) %>% gg_tsresiduals()
+
+augment(hurr_model) %>% filter(.model=='arima32') %>% features(.innov,ljung_box, lag=10, dof = 5)
+```
+
+## Forecasting
+
+Now let's forecast each of our models:
+
+
+
+```{r}
+
+quotes_model %>% select(search1) %>% fabletools::forecast(h=4) %>% autoplot(Quotes_train)
+
+quotes_for<-quotes_model %>% select(search1) %>% fabletools::forecast(h=4)
+
+quotes_resid<-Quotes$Quotes[37:40]-quotes_for$.mean
+MAPE<-mean(abs(quotes_resid/Quotes$Quotes[37:40]))
+MAE<-mean(abs(quotes_resid))
+MAPE
+MAE
+
+```
+
+
+
+
+```{r}
+hurr_model %>% select(arima32) %>% fabletools::forecast(h=8) %>% autoplot(Hurricane_train)
+
+hurr_for<-hurr_model %>% select(arima32) %>% fabletools::forecast(h=8)
+
+hurr_resid<-hurricane$MeanVMax[150:157]-hurr_for$.mean
+MAPE<-mean(abs(hurr_resid/hurricane$MeanVMax[150:157]))
+MAE<-mean(abs(hurr_resid))
+MAPE
+MAE
+```
+
+
 
 
 ## Python Code for ARMA/ARIMA models

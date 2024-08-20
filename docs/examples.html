@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 Examples | Time Series 1 and 2</title>
+  <meta name="description" content="Chapter 5 Examples | Time Series 1 and 2" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 Examples | Time Series 1 and 2" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 Examples | Time Series 1 and 2" />
+  
+  
+  
+
+<meta name="author" content="by Dr. Susan Simmons and Dr. Aric LaBarr" />
+
+
+<meta name="date" content="2024-08-20" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="arima.html"/>
+<link rel="next" href="seasonality.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">TimeSeries</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Time series</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#other-plots"><i class="fa fa-check"></i><b>2.1</b> Other plots</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#time-series-decomposition"><i class="fa fa-check"></i><b>2.2</b> Time series decomposition</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction.html"><a href="introduction.html#stl-features"><i class="fa fa-check"></i><b>2.3</b> STL features</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction.html"><a href="introduction.html#missing-values"><i class="fa fa-check"></i><b>2.4</b> Missing values</a></li>
+<li class="chapter" data-level="2.5" data-path="introduction.html"><a href="introduction.html#python-code-and-results-for-time-series-plot"><i class="fa fa-check"></i><b>2.5</b> Python code and results for Time Series plot</a></li>
+<li class="chapter" data-level="2.6" data-path="introduction.html"><a href="introduction.html#sas-code-for-time-series-plot-and-decomposition"><i class="fa fa-check"></i><b>2.6</b> SAS code for time series plot and decomposition</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html"><i class="fa fa-check"></i><b>3</b> Exponential Smoothing</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#simple-exponential-smoothing"><i class="fa fa-check"></i><b>3.1</b> Simple Exponential Smoothing</a></li>
+<li class="chapter" data-level="3.2" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#holt-esm"><i class="fa fa-check"></i><b>3.2</b> Holt ESM</a></li>
+<li class="chapter" data-level="3.3" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#holt-winters"><i class="fa fa-check"></i><b>3.3</b> Holt-Winters</a></li>
+<li class="chapter" data-level="3.4" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#comparing-forecasts"><i class="fa fa-check"></i><b>3.4</b> Comparing forecasts</a></li>
+<li class="chapter" data-level="3.5" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#ets"><i class="fa fa-check"></i><b>3.5</b> ETS</a></li>
+<li class="chapter" data-level="3.6" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#python-code-for-exponential-smoothing"><i class="fa fa-check"></i><b>3.6</b> Python Code for Exponential Smoothing</a></li>
+<li class="chapter" data-level="3.7" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#sas-code-for-exponential-smoothing-models"><i class="fa fa-check"></i><b>3.7</b> SAS Code for Exponential Smoothing Models</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="arima.html"><a href="arima.html"><i class="fa fa-check"></i><b>4</b> ARIMA</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="arima.html"><a href="arima.html#stationarity"><i class="fa fa-check"></i><b>4.1</b> Stationarity</a></li>
+<li class="chapter" data-level="4.2" data-path="arima.html"><a href="arima.html#correlation-functions"><i class="fa fa-check"></i><b>4.2</b> Correlation Functions</a></li>
+<li class="chapter" data-level="4.3" data-path="arima.html"><a href="arima.html#autoregressive-models-ar"><i class="fa fa-check"></i><b>4.3</b> AutoRegressive Models (AR)</a></li>
+<li class="chapter" data-level="4.4" data-path="arima.html"><a href="arima.html#moving-average-model-ma"><i class="fa fa-check"></i><b>4.4</b> Moving Average model (MA)</a></li>
+<li class="chapter" data-level="4.5" data-path="arima.html"><a href="arima.html#white-noise"><i class="fa fa-check"></i><b>4.5</b> White noise</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="examples.html"><a href="examples.html"><i class="fa fa-check"></i><b>5</b> Examples</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="examples.html"><a href="examples.html#forecasting"><i class="fa fa-check"></i><b>5.1</b> Forecasting</a></li>
+<li class="chapter" data-level="5.2" data-path="examples.html"><a href="examples.html#python-code-for-armaarima-models"><i class="fa fa-check"></i><b>5.2</b> Python Code for ARMA/ARIMA models</a></li>
+<li class="chapter" data-level="5.3" data-path="examples.html"><a href="examples.html#sas-code-for-armaarima"><i class="fa fa-check"></i><b>5.3</b> SAS Code for ARMA/ARIMA</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="seasonality.html"><a href="seasonality.html"><i class="fa fa-check"></i><b>6</b> Seasonality</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="seasonality.html"><a href="seasonality.html#seasonal-unit-root-testing"><i class="fa fa-check"></i><b>6.1</b> Seasonal Unit Root Testing</a></li>
+<li class="chapter" data-level="6.2" data-path="seasonality.html"><a href="seasonality.html#deterministic-solutions"><i class="fa fa-check"></i><b>6.2</b> Deterministic Solutions</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="seasonality.html"><a href="seasonality.html#seasonal-dummy-variables"><i class="fa fa-check"></i><b>6.2.1</b> Seasonal Dummy Variables</a></li>
+<li class="chapter" data-level="6.2.2" data-path="seasonality.html"><a href="seasonality.html#fourier-transforms"><i class="fa fa-check"></i><b>6.2.2</b> Fourier Transforms</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="seasonality.html"><a href="seasonality.html#stochastic-solutions"><i class="fa fa-check"></i><b>6.3</b> Stochastic Solutions</a></li>
+<li class="chapter" data-level="6.4" data-path="seasonality.html"><a href="seasonality.html#seasonal-arima-modeling"><i class="fa fa-check"></i><b>6.4</b> Seasonal ARIMA Modeling</a></li>
+<li class="chapter" data-level="6.5" data-path="seasonality.html"><a href="seasonality.html#python-code-for-seasonality"><i class="fa fa-check"></i><b>6.5</b> Python Code for Seasonality</a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="seasonality.html"><a href="seasonality.html#seasonality-1"><i class="fa fa-check"></i><b>6.5.1</b> Seasonality</a></li>
+<li class="chapter" data-level="6.5.2" data-path="seasonality.html"><a href="seasonality.html#deterministic-solutions-1"><i class="fa fa-check"></i><b>6.5.2</b> Deterministic Solutions</a></li>
+<li class="chapter" data-level="6.5.3" data-path="seasonality.html"><a href="seasonality.html#stochastic-solution"><i class="fa fa-check"></i><b>6.5.3</b> Stochastic Solution</a></li>
+<li class="chapter" data-level="6.5.4" data-path="seasonality.html"><a href="seasonality.html#seasonal-arima"><i class="fa fa-check"></i><b>6.5.4</b> Seasonal ARIMA</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html"><i class="fa fa-check"></i><b>7</b> Dynamic Regression Models</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#intervention-variables"><i class="fa fa-check"></i><b>7.1</b> Intervention Variables</a></li>
+<li class="chapter" data-level="7.2" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#predictor-variables"><i class="fa fa-check"></i><b>7.2</b> Predictor Variables</a></li>
+<li class="chapter" data-level="7.3" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#python-code-for-dynamic-regression-models"><i class="fa fa-check"></i><b>7.3</b> Python Code for Dynamic Regression Models</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#intervention-variables-1"><i class="fa fa-check"></i><b>7.3.1</b> Intervention Variables</a></li>
+<li class="chapter" data-level="7.3.2" data-path="dynamic-regression-models.html"><a href="dynamic-regression-models.html#predictor-variables-1"><i class="fa fa-check"></i><b>7.3.2</b> Predictor Variables</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="prophet.html"><a href="prophet.html"><i class="fa fa-check"></i><b>8</b> Prophet</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="prophet.html"><a href="prophet.html#python-code-for-prophet"><i class="fa fa-check"></i><b>8.1</b> Python Code for Prophet</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="prophet.html"><a href="prophet.html#model-structure"><i class="fa fa-check"></i><b>8.1.1</b> Model Structure</a></li>
+<li class="chapter" data-level="8.1.2" data-path="prophet.html"><a href="prophet.html#forecasting-1"><i class="fa fa-check"></i><b>8.1.2</b> Forecasting</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="neural-network-model.html"><a href="neural-network-model.html"><i class="fa fa-check"></i><b>9</b> Neural Network Model</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="neural-network-model.html"><a href="neural-network-model.html#python-code-for-neural-networks"><i class="fa fa-check"></i><b>9.1</b> Python Code for Neural Networks</a>
+<ul>
+<li class="chapter" data-level="9.1.1" data-path="neural-network-model.html"><a href="neural-network-model.html#ar-neural-networks"><i class="fa fa-check"></i><b>9.1.1</b> AR Neural Networks</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="weighted-and-combined-models.html"><a href="weighted-and-combined-models.html"><i class="fa fa-check"></i><b>10</b> Weighted and Combined Models</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="weighted-and-combined-models.html"><a href="weighted-and-combined-models.html#python-code-for-weighted-and-combined-models"><i class="fa fa-check"></i><b>10.1</b> Python Code for Weighted and Combined Models</a>
+<ul>
+<li class="chapter" data-level="10.1.1" data-path="weighted-and-combined-models.html"><a href="weighted-and-combined-models.html#simple-average"><i class="fa fa-check"></i><b>10.1.1</b> Simple Average</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series 1 and 2</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="examples" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">Chapter 5</span> Examples<a href="examples.html#examples" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>We will now demonstrate these ideas on two different examples:</p>
+<p>First example is the Quotes data set:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="examples.html#cb34-1" tabindex="-1"></a>Quotes.ts<span class="ot">&lt;-</span>Quotes <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">seq</span>(<span class="fu">ymd</span>(<span class="st">&#39;2002-01-01&#39;</span>),<span class="fu">ymd</span>(<span class="st">&#39;2005-04-21&#39;</span>),<span class="at">by=</span><span class="st">&#39;months&#39;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb34-2"><a href="examples.html#cb34-2" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">month=</span><span class="fu">yearmonth</span>(date)) <span class="sc">|&gt;</span> <span class="fu">as_tsibble</span>(<span class="at">index=</span>month)</span>
+<span id="cb34-3"><a href="examples.html#cb34-3" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="examples.html#cb34-4" tabindex="-1"></a>Quotes_train<span class="ot">&lt;-</span>Quotes.ts <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">year</span>(date)<span class="sc">&lt;</span><span class="dv">2005</span>)</span>
+<span id="cb34-5"><a href="examples.html#cb34-5" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="examples.html#cb34-6" tabindex="-1"></a><span class="fu">autoplot</span>(Quotes_train,Quotes)<span class="sc">+</span><span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Time Series of Monthly Stock quotes&quot;</span>, <span class="at">x=</span><span class="st">&quot;Time&quot;</span>, <span class="at">y=</span><span class="st">&quot;Quotes&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="examples.html#cb35-1" tabindex="-1"></a>Quotes_train <span class="sc">%&gt;%</span> <span class="fu">gg_tsdisplay</span>(Quotes,<span class="at">plot_type =</span> <span class="st">&#39;partial&#39;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="examples.html#cb36-1" tabindex="-1"></a>quotes_model <span class="ot">&lt;-</span>Quotes_train <span class="sc">%&gt;%</span></span>
+<span id="cb36-2"><a href="examples.html#cb36-2" tabindex="-1"></a>  <span class="fu">model</span>(<span class="at">ar1 =</span> <span class="fu">ARIMA</span>(Quotes <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)),</span>
+<span id="cb36-3"><a href="examples.html#cb36-3" tabindex="-1"></a>        <span class="at">ma1 =</span> <span class="fu">ARIMA</span>(Quotes <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)),</span>
+<span id="cb36-4"><a href="examples.html#cb36-4" tabindex="-1"></a>        <span class="at">search1 =</span> <span class="fu">ARIMA</span>(Quotes),</span>
+<span id="cb36-5"><a href="examples.html#cb36-5" tabindex="-1"></a>        <span class="at">search2 =</span> <span class="fu">ARIMA</span>(Quotes,<span class="at">stepwise =</span> F))</span>
+<span id="cb36-6"><a href="examples.html#cb36-6" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="examples.html#cb36-7" tabindex="-1"></a>quotes_model2<span class="ot">&lt;-</span><span class="fu">as.data.frame</span>(quotes_model)</span>
+<span id="cb36-8"><a href="examples.html#cb36-8" tabindex="-1"></a><span class="fu">t</span>(quotes_model2)</span></code></pre></div>
+<pre><code>##         [,1]                
+## ar1     ARIMA(1,0,0) w/ mean
+## ma1     ARIMA(0,0,1) w/ mean
+## search1 ARIMA(1,0,1) w/ mean
+## search2 ARIMA(1,0,1) w/ mean</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="examples.html#cb38-1" tabindex="-1"></a><span class="fu">glance</span>(quotes_model) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(AICc) <span class="sc">%&gt;%</span> <span class="fu">select</span>(.model<span class="sc">:</span>BIC)</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 6
+##   .model  sigma2 log_lik   AIC  AICc   BIC
+##   &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 search1   2.54   -66.8  142.  143.  148.
+## 2 search2   2.54   -66.8  142.  143.  148.
+## 3 ma1       2.75   -68.7  143.  144.  148.
+## 4 ar1       2.79   -68.8  144.  144.  148.</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="examples.html#cb40-1" tabindex="-1"></a>quotes_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(search1) <span class="sc">%&gt;%</span> <span class="fu">residuals</span>() <span class="sc">%&gt;%</span> <span class="fu">ggAcf</span>()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="examples.html#cb41-1" tabindex="-1"></a>quotes_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(search1) <span class="sc">%&gt;%</span> <span class="fu">residuals</span>() <span class="sc">%&gt;%</span> <span class="fu">ggPacf</span>()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-5-2.png" width="672" /></p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="examples.html#cb42-1" tabindex="-1"></a>quotes_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(search1) <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-5-3.png" width="672" /></p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="examples.html#cb43-1" tabindex="-1"></a><span class="fu">augment</span>(quotes_model) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(.model<span class="sc">==</span><span class="st">&#39;search1&#39;</span>) <span class="sc">%&gt;%</span> <span class="fu">features</span>(.innov,ljung_box, <span class="at">lag=</span><span class="dv">10</span>, <span class="at">dof =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 3
+##   .model  lb_stat lb_pvalue
+##   &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 search1    3.60     0.892</code></pre>
+<p>Second example is the Hurricane data set (mean Maximum velocity):</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="examples.html#cb45-1" tabindex="-1"></a>Hurricane.ts<span class="ot">&lt;-</span> hurricane <span class="sc">%&gt;%</span> <span class="fu">as_tsibble</span>(<span class="at">index=</span>Year)</span>
+<span id="cb45-2"><a href="examples.html#cb45-2" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="examples.html#cb45-3" tabindex="-1"></a>Hurricane_train <span class="ot">&lt;-</span>Hurricane.ts <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Year <span class="sc">&lt;</span><span class="dv">2000</span>)</span>
+<span id="cb45-4"><a href="examples.html#cb45-4" tabindex="-1"></a></span>
+<span id="cb45-5"><a href="examples.html#cb45-5" tabindex="-1"></a><span class="fu">autoplot</span>(Hurricane_train,MeanVMax)<span class="sc">+</span><span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Time Series of Yearly Mean Velocity for Hurricanes&quot;</span>, <span class="at">x=</span><span class="st">&quot;Time&quot;</span>, <span class="at">y=</span><span class="st">&quot;MPH&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="examples.html#cb46-1" tabindex="-1"></a>Hurricane_train <span class="sc">%&gt;%</span> <span class="fu">features</span>(MeanVMax,unitroot_ndiffs)</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 1
+##   ndiffs
+##    &lt;int&gt;
+## 1      1</code></pre>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="examples.html#cb48-1" tabindex="-1"></a>Hurricane_train <span class="ot">&lt;-</span> Hurricane_train <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">mean_diff=</span><span class="fu">difference</span>(MeanVMax))</span>
+<span id="cb48-2"><a href="examples.html#cb48-2" tabindex="-1"></a></span>
+<span id="cb48-3"><a href="examples.html#cb48-3" tabindex="-1"></a>Hurricane_train <span class="sc">%&gt;%</span> <span class="fu">gg_tsdisplay</span>(mean_diff,<span class="at">plot_type =</span> <span class="st">&#39;partial&#39;</span>)</span></code></pre></div>
+<pre><code>## Warning: Removed 1 row containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
+<pre><code>## Warning: Removed 5 rows containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="examples.html#cb51-1" tabindex="-1"></a>hurr_model <span class="ot">&lt;-</span>Hurricane_train <span class="sc">%&gt;%</span></span>
+<span id="cb51-2"><a href="examples.html#cb51-2" tabindex="-1"></a>  <span class="fu">model</span>(<span class="at">ar3 =</span> <span class="fu">ARIMA</span>(MeanVMax <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">0</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)),</span>
+<span id="cb51-3"><a href="examples.html#cb51-3" tabindex="-1"></a>        <span class="at">ma2 =</span> <span class="fu">ARIMA</span>(MeanVMax <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>)),</span>
+<span id="cb51-4"><a href="examples.html#cb51-4" tabindex="-1"></a>        <span class="at">arima32 =</span> <span class="fu">ARIMA</span>(MeanVMax<span class="sc">~</span><span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">2</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)),</span>
+<span id="cb51-5"><a href="examples.html#cb51-5" tabindex="-1"></a>        <span class="at">search1 =</span> <span class="fu">ARIMA</span>(MeanVMax),</span>
+<span id="cb51-6"><a href="examples.html#cb51-6" tabindex="-1"></a>        <span class="at">search2 =</span> <span class="fu">ARIMA</span>(MeanVMax,<span class="at">stepwise =</span> F))</span>
+<span id="cb51-7"><a href="examples.html#cb51-7" tabindex="-1"></a></span>
+<span id="cb51-8"><a href="examples.html#cb51-8" tabindex="-1"></a>hurr_model2<span class="ot">&lt;-</span><span class="fu">as.data.frame</span>(hurr_model)</span>
+<span id="cb51-9"><a href="examples.html#cb51-9" tabindex="-1"></a><span class="fu">t</span>(hurr_model2)</span></code></pre></div>
+<pre><code>##         [,1]                
+## ar3     ARIMA(3,1,0)        
+## ma2     ARIMA(0,1,2)        
+## arima32 ARIMA(3,1,2)        
+## search1 ARIMA(1,0,1) w/ mean
+## search2 ARIMA(2,0,3) w/ mean</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="examples.html#cb53-1" tabindex="-1"></a><span class="fu">glance</span>(hurr_model) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(AICc) <span class="sc">%&gt;%</span> <span class="fu">select</span>(.model<span class="sc">:</span>BIC)</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 6
+##   .model  sigma2 log_lik   AIC  AICc   BIC
+##   &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 arima32   94.6   -539. 1090. 1090. 1108.
+## 2 ma2       97.4   -542. 1091. 1091. 1100.
+## 3 search2   93.1   -540. 1094. 1095. 1115.
+## 4 search1   96.3   -544. 1096. 1096. 1108.
+## 5 ar3      108.    -549. 1106. 1106. 1118.</code></pre>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="examples.html#cb55-1" tabindex="-1"></a>hurr_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(ma2) <span class="sc">%&gt;%</span> <span class="fu">residuals</span>() <span class="sc">%&gt;%</span> <span class="fu">ggAcf</span>()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="examples.html#cb56-1" tabindex="-1"></a>hurr_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(ma2) <span class="sc">%&gt;%</span> <span class="fu">residuals</span>() <span class="sc">%&gt;%</span> <span class="fu">ggPacf</span>()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="examples.html#cb57-1" tabindex="-1"></a>hurr_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(ma2) <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>()</span></code></pre></div>
+<pre><code>## Warning: Removed 2 rows containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
+<pre><code>## Warning: Removed 2 rows containing non-finite outside the scale range
+## (`stat_bin()`).</code></pre>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="examples.html#cb60-1" tabindex="-1"></a>hurr_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(arima32) <span class="sc">%&gt;%</span> <span class="fu">residuals</span>() <span class="sc">%&gt;%</span> <span class="fu">ggAcf</span>()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="examples.html#cb61-1" tabindex="-1"></a>hurr_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(arima32) <span class="sc">%&gt;%</span> <span class="fu">residuals</span>() <span class="sc">%&gt;%</span> <span class="fu">ggPacf</span>()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="examples.html#cb62-1" tabindex="-1"></a>hurr_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(arima32) <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>()</span></code></pre></div>
+<pre><code>## Warning: Removed 2 rows containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
+<pre><code>## Warning: Removed 2 rows containing non-finite outside the scale range
+## (`stat_bin()`).</code></pre>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-10-3.png" width="672" /></p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="examples.html#cb65-1" tabindex="-1"></a><span class="fu">augment</span>(hurr_model) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(.model<span class="sc">==</span><span class="st">&#39;arima32&#39;</span>) <span class="sc">%&gt;%</span> <span class="fu">features</span>(.innov,ljung_box, <span class="at">lag=</span><span class="dv">10</span>, <span class="at">dof =</span> <span class="dv">5</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 3
+##   .model  lb_stat lb_pvalue
+##   &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 arima32    5.15     0.398</code></pre>
+<div id="forecasting" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Forecasting<a href="examples.html#forecasting" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Now let’s forecast each of our models:</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="examples.html#cb67-1" tabindex="-1"></a>quotes_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(search1) <span class="sc">%&gt;%</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(<span class="at">h=</span><span class="dv">4</span>) <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Quotes_train)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="examples.html#cb68-1" tabindex="-1"></a>quotes_for<span class="ot">&lt;-</span>quotes_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(search1) <span class="sc">%&gt;%</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(<span class="at">h=</span><span class="dv">4</span>)</span>
+<span id="cb68-2"><a href="examples.html#cb68-2" tabindex="-1"></a></span>
+<span id="cb68-3"><a href="examples.html#cb68-3" tabindex="-1"></a>quotes_resid<span class="ot">&lt;-</span>Quotes<span class="sc">$</span>Quotes[<span class="dv">37</span><span class="sc">:</span><span class="dv">40</span>]<span class="sc">-</span>quotes_for<span class="sc">$</span>.mean</span>
+<span id="cb68-4"><a href="examples.html#cb68-4" tabindex="-1"></a>MAPE<span class="ot">&lt;-</span><span class="fu">mean</span>(<span class="fu">abs</span>(quotes_resid<span class="sc">/</span>Quotes<span class="sc">$</span>Quotes[<span class="dv">37</span><span class="sc">:</span><span class="dv">40</span>]))</span>
+<span id="cb68-5"><a href="examples.html#cb68-5" tabindex="-1"></a>MAE<span class="ot">&lt;-</span><span class="fu">mean</span>(<span class="fu">abs</span>(quotes_resid))</span>
+<span id="cb68-6"><a href="examples.html#cb68-6" tabindex="-1"></a>MAPE</span></code></pre></div>
+<pre><code>## [1] 0.2330841</code></pre>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="examples.html#cb70-1" tabindex="-1"></a>MAE</span></code></pre></div>
+<pre><code>## [1] 3.952702</code></pre>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="examples.html#cb72-1" tabindex="-1"></a>hurr_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(arima32) <span class="sc">%&gt;%</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(<span class="at">h=</span><span class="dv">8</span>) <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Hurricane_train)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="examples.html#cb73-1" tabindex="-1"></a>hurr_for<span class="ot">&lt;-</span>hurr_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(arima32) <span class="sc">%&gt;%</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(<span class="at">h=</span><span class="dv">8</span>)</span>
+<span id="cb73-2"><a href="examples.html#cb73-2" tabindex="-1"></a></span>
+<span id="cb73-3"><a href="examples.html#cb73-3" tabindex="-1"></a>hurr_resid<span class="ot">&lt;-</span>hurricane<span class="sc">$</span>MeanVMax[<span class="dv">150</span><span class="sc">:</span><span class="dv">157</span>]<span class="sc">-</span>hurr_for<span class="sc">$</span>.mean</span>
+<span id="cb73-4"><a href="examples.html#cb73-4" tabindex="-1"></a>MAPE<span class="ot">&lt;-</span><span class="fu">mean</span>(<span class="fu">abs</span>(hurr_resid<span class="sc">/</span>hurricane<span class="sc">$</span>MeanVMax[<span class="dv">150</span><span class="sc">:</span><span class="dv">157</span>]))</span>
+<span id="cb73-5"><a href="examples.html#cb73-5" tabindex="-1"></a>MAE<span class="ot">&lt;-</span><span class="fu">mean</span>(<span class="fu">abs</span>(hurr_resid))</span>
+<span id="cb73-6"><a href="examples.html#cb73-6" tabindex="-1"></a>MAPE</span></code></pre></div>
+<pre><code>## [1] 0.06067555</code></pre>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="examples.html#cb75-1" tabindex="-1"></a>MAE</span></code></pre></div>
+<pre><code>## [1] 5.986266</code></pre>
+</div>
+<div id="python-code-for-armaarima-models" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Python Code for ARMA/ARIMA models<a href="examples.html#python-code-for-armaarima-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb77"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb77-1"><a href="examples.html#cb77-1" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb77-2"><a href="examples.html#cb77-2" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb77-3"><a href="examples.html#cb77-3" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb77-4"><a href="examples.html#cb77-4" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
+<span id="cb77-5"><a href="examples.html#cb77-5" tabindex="-1"></a><span class="im">from</span> pandas <span class="im">import</span> DataFrame</span>
+<span id="cb77-6"><a href="examples.html#cb77-6" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.stattools <span class="im">import</span> adfuller</span>
+<span id="cb77-7"><a href="examples.html#cb77-7" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_acf</span>
+<span id="cb77-8"><a href="examples.html#cb77-8" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_pacf</span>
+<span id="cb77-9"><a href="examples.html#cb77-9" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima.model <span class="im">import</span> ARIMA</span>
+<span id="cb77-10"><a href="examples.html#cb77-10" tabindex="-1"></a></span>
+<span id="cb77-11"><a href="examples.html#cb77-11" tabindex="-1"></a>quotes<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">fpp_insurance.csv&quot;</span>)</span>
+<span id="cb77-12"><a href="examples.html#cb77-12" tabindex="-1"></a>y<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">ar2.csv&quot;</span>)</span>
+<span id="cb77-13"><a href="examples.html#cb77-13" tabindex="-1"></a></span>
+<span id="cb77-14"><a href="examples.html#cb77-14" tabindex="-1"></a>result<span class="op">=</span>adfuller(quotes[<span class="st">&quot;Quotes&quot;</span>])</span>
+<span id="cb77-15"><a href="examples.html#cb77-15" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;ADF p-value: </span><span class="sc">{</span>result[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">&#39;</span>)</span></code></pre></div>
+<pre><code>## ADF p-value: 0.010194998749727997</code></pre>
+<div class="sourceCode" id="cb79"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb79-1"><a href="examples.html#cb79-1" tabindex="-1"></a>plot_acf(quotes[<span class="st">&quot;Quotes&quot;</span>],lags<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb79-2"><a href="examples.html#cb79-2" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/ADF,%20correlation%20plots%20and%20ARIMA-1.png" width="672" /></p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb80-1"><a href="examples.html#cb80-1" tabindex="-1"></a>plot_pacf(quotes[<span class="st">&quot;Quotes&quot;</span>],lags<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb80-2"><a href="examples.html#cb80-2" tabindex="-1"></a>pyplot.show</span></code></pre></div>
+<pre><code>## &lt;function make_python_function.&lt;locals&gt;.python_function at 0x0000020E51741990&gt;</code></pre>
+<div class="sourceCode" id="cb82"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb82-1"><a href="examples.html#cb82-1" tabindex="-1"></a>model <span class="op">=</span> ARIMA(y, order<span class="op">=</span>(<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb82-2"><a href="examples.html#cb82-2" tabindex="-1"></a>model_fit <span class="op">=</span> model.fit()</span>
+<span id="cb82-3"><a href="examples.html#cb82-3" tabindex="-1"></a><span class="bu">print</span>(model_fit.summary())</span></code></pre></div>
+<pre><code>##                                SARIMAX Results                                
+## ==============================================================================
+## Dep. Variable:                      Y   No. Observations:                 1000
+## Model:                 ARIMA(2, 0, 0)   Log Likelihood               -3695.014
+## Date:                Tue, 20 Aug 2024   AIC                           7398.028
+## Time:                        11:20:26   BIC                           7417.659
+## Sample:                             0   HQIC                          7405.489
+##                                - 1000                                         
+## Covariance Type:                  opg                                         
+## ==============================================================================
+##                  coef    std err          z      P&gt;|z|      [0.025      0.975]
+## ------------------------------------------------------------------------------
+## const         -0.1365      0.420     -0.325      0.745      -0.960       0.687
+## ar.L1          0.6406      0.030     21.165      0.000       0.581       0.700
+## ar.L2         -0.3759      0.030    -12.466      0.000      -0.435      -0.317
+## sigma2        94.7853      4.193     22.604      0.000      86.567     103.004
+## ===================================================================================
+## Ljung-Box (L1) (Q):                   0.02   Jarque-Bera (JB):                 0.26
+## Prob(Q):                              0.89   Prob(JB):                         0.88
+## Heteroskedasticity (H):               1.04   Skew:                            -0.03
+## Prob(H) (two-sided):                  0.73   Kurtosis:                         3.05
+## ===================================================================================
+## 
+## Warnings:
+## [1] Covariance matrix calculated using the outer product of gradients (complex-step).</code></pre>
+<div class="sourceCode" id="cb84"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb84-1"><a href="examples.html#cb84-1" tabindex="-1"></a>residuals <span class="op">=</span> DataFrame(model_fit.resid)</span>
+<span id="cb84-2"><a href="examples.html#cb84-2" tabindex="-1"></a>residuals.plot()</span>
+<span id="cb84-3"><a href="examples.html#cb84-3" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/ADF,%20correlation%20plots%20and%20ARIMA-2.png" width="672" /></p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb85-1"><a href="examples.html#cb85-1" tabindex="-1"></a><span class="bu">print</span>(residuals.describe())</span></code></pre></div>
+<pre><code>##                  0
+## count  1000.000000
+## mean     -0.001313
+## std       9.747534
+## min     -33.282545
+## 25%      -6.475670
+## 50%       0.117391
+## 75%       6.510636
+## max      30.318100</code></pre>
+<div class="sourceCode" id="cb87"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb87-1"><a href="examples.html#cb87-1" tabindex="-1"></a>plot_acf(residuals,lags<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb87-2"><a href="examples.html#cb87-2" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/ADF,%20correlation%20plots%20and%20ARIMA-3.png" width="672" /></p>
+<div class="sourceCode" id="cb88"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb88-1"><a href="examples.html#cb88-1" tabindex="-1"></a>plot_pacf(residuals,lags<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb88-2"><a href="examples.html#cb88-2" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/ADF,%20correlation%20plots%20and%20ARIMA-4.png" width="672" /><img src="bookdownproj_files/figure-html/ADF,%20correlation%20plots%20and%20ARIMA-5.png" width="672" /></p>
+<p>Checking for white noise:
+The first value in the Ljung-Box test is the test statistic and the second value is the p-value.</p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb89-1"><a href="examples.html#cb89-1" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb89-2"><a href="examples.html#cb89-2" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb89-3"><a href="examples.html#cb89-3" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb89-4"><a href="examples.html#cb89-4" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
+<span id="cb89-5"><a href="examples.html#cb89-5" tabindex="-1"></a><span class="im">from</span> pandas <span class="im">import</span> DataFrame</span>
+<span id="cb89-6"><a href="examples.html#cb89-6" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb89-7"><a href="examples.html#cb89-7" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.stattools <span class="im">import</span> adfuller</span>
+<span id="cb89-8"><a href="examples.html#cb89-8" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_acf</span>
+<span id="cb89-9"><a href="examples.html#cb89-9" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_pacf</span>
+<span id="cb89-10"><a href="examples.html#cb89-10" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima.model <span class="im">import</span> ARIMA</span>
+<span id="cb89-11"><a href="examples.html#cb89-11" tabindex="-1"></a></span>
+<span id="cb89-12"><a href="examples.html#cb89-12" tabindex="-1"></a>quotes<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">fpp_insurance.csv&quot;</span>)</span>
+<span id="cb89-13"><a href="examples.html#cb89-13" tabindex="-1"></a>y<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">ar2.csv&quot;</span>)</span>
+<span id="cb89-14"><a href="examples.html#cb89-14" tabindex="-1"></a></span>
+<span id="cb89-15"><a href="examples.html#cb89-15" tabindex="-1"></a></span>
+<span id="cb89-16"><a href="examples.html#cb89-16" tabindex="-1"></a>model <span class="op">=</span> ARIMA(y, order<span class="op">=</span>(<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb89-17"><a href="examples.html#cb89-17" tabindex="-1"></a>model_fit <span class="op">=</span> model.fit()</span>
+<span id="cb89-18"><a href="examples.html#cb89-18" tabindex="-1"></a><span class="bu">print</span>(model_fit.summary())</span></code></pre></div>
+<pre><code>##                                SARIMAX Results                                
+## ==============================================================================
+## Dep. Variable:                      Y   No. Observations:                 1000
+## Model:                 ARIMA(2, 0, 0)   Log Likelihood               -3695.014
+## Date:                Tue, 20 Aug 2024   AIC                           7398.028
+## Time:                        11:20:27   BIC                           7417.659
+## Sample:                             0   HQIC                          7405.489
+##                                - 1000                                         
+## Covariance Type:                  opg                                         
+## ==============================================================================
+##                  coef    std err          z      P&gt;|z|      [0.025      0.975]
+## ------------------------------------------------------------------------------
+## const         -0.1365      0.420     -0.325      0.745      -0.960       0.687
+## ar.L1          0.6406      0.030     21.165      0.000       0.581       0.700
+## ar.L2         -0.3759      0.030    -12.466      0.000      -0.435      -0.317
+## sigma2        94.7853      4.193     22.604      0.000      86.567     103.004
+## ===================================================================================
+## Ljung-Box (L1) (Q):                   0.02   Jarque-Bera (JB):                 0.26
+## Prob(Q):                              0.89   Prob(JB):                         0.88
+## Heteroskedasticity (H):               1.04   Skew:                            -0.03
+## Prob(H) (two-sided):                  0.73   Kurtosis:                         3.05
+## ===================================================================================
+## 
+## Warnings:
+## [1] Covariance matrix calculated using the outer product of gradients (complex-step).</code></pre>
+<div class="sourceCode" id="cb91"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb91-1"><a href="examples.html#cb91-1" tabindex="-1"></a>lag_test<span class="op">=</span>[<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">10</span>]</span>
+<span id="cb91-2"><a href="examples.html#cb91-2" tabindex="-1"></a></span>
+<span id="cb91-3"><a href="examples.html#cb91-3" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> lag_test:</span>
+<span id="cb91-4"><a href="examples.html#cb91-4" tabindex="-1"></a>  sm.stats.acorr_ljungbox(model_fit.resid, lags<span class="op">=</span>[x], model_df<span class="op">=</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>##     lb_stat  lb_pvalue
+## 3  0.312026    0.57644
+##    lb_stat  lb_pvalue
+## 4  0.48802    0.78348
+##     lb_stat  lb_pvalue
+## 5  0.514998   0.915584
+##     lb_stat  lb_pvalue
+## 6  4.115336   0.390622
+##    lb_stat  lb_pvalue
+## 7  4.12802   0.531135
+##     lb_stat  lb_pvalue
+## 8  4.256921   0.641952
+##     lb_stat  lb_pvalue
+## 9  4.313757   0.743012
+##      lb_stat  lb_pvalue
+## 10  6.360916   0.606873</code></pre>
+<p>Fitting ARIMA models.</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb93-1"><a href="examples.html#cb93-1" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb93-2"><a href="examples.html#cb93-2" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb93-3"><a href="examples.html#cb93-3" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb93-4"><a href="examples.html#cb93-4" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
+<span id="cb93-5"><a href="examples.html#cb93-5" tabindex="-1"></a><span class="im">from</span> pandas <span class="im">import</span> DataFrame</span>
+<span id="cb93-6"><a href="examples.html#cb93-6" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb93-7"><a href="examples.html#cb93-7" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.stattools <span class="im">import</span> adfuller</span>
+<span id="cb93-8"><a href="examples.html#cb93-8" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_acf</span>
+<span id="cb93-9"><a href="examples.html#cb93-9" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_pacf</span>
+<span id="cb93-10"><a href="examples.html#cb93-10" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima.model <span class="im">import</span> ARIMA</span>
+<span id="cb93-11"><a href="examples.html#cb93-11" tabindex="-1"></a><span class="im">import</span> pmdarima <span class="im">as</span> pm</span>
+<span id="cb93-12"><a href="examples.html#cb93-12" tabindex="-1"></a></span>
+<span id="cb93-13"><a href="examples.html#cb93-13" tabindex="-1"></a></span>
+<span id="cb93-14"><a href="examples.html#cb93-14" tabindex="-1"></a>hurricane<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">hurrican.csv&quot;</span>)</span>
+<span id="cb93-15"><a href="examples.html#cb93-15" tabindex="-1"></a>max_velocity<span class="op">=</span>hurricane[<span class="st">&quot;MeanVMax&quot;</span>]</span>
+<span id="cb93-16"><a href="examples.html#cb93-16" tabindex="-1"></a>max2<span class="op">=</span>max_velocity.dropna()</span>
+<span id="cb93-17"><a href="examples.html#cb93-17" tabindex="-1"></a></span>
+<span id="cb93-18"><a href="examples.html#cb93-18" tabindex="-1"></a><span class="co">### Testing stationarity </span></span>
+<span id="cb93-19"><a href="examples.html#cb93-19" tabindex="-1"></a></span>
+<span id="cb93-20"><a href="examples.html#cb93-20" tabindex="-1"></a>result<span class="op">=</span>adfuller(max2)</span>
+<span id="cb93-21"><a href="examples.html#cb93-21" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;ADF p-value: </span><span class="sc">{</span>result[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">&#39;</span>)</span></code></pre></div>
+<pre><code>## ADF p-value: 0.0010116374636738128</code></pre>
+<div class="sourceCode" id="cb95"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb95-1"><a href="examples.html#cb95-1" tabindex="-1"></a><span class="co">### Same result as auto.arima in R!</span></span>
+<span id="cb95-2"><a href="examples.html#cb95-2" tabindex="-1"></a>model1<span class="op">=</span>pm.auto_arima(max2, start_p<span class="op">=</span><span class="dv">0</span>,start_q<span class="op">=</span><span class="dv">0</span>,max_p<span class="op">=</span><span class="dv">5</span>,max_q<span class="op">=</span><span class="dv">5</span>,seasonal<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb95-3"><a href="examples.html#cb95-3" tabindex="-1"></a>model1.summary()</span></code></pre></div>
+<table class="simpletable">
+<caption>SARIMAX Results</caption>
+<tr>
+  <th>Dep. Variable:</th>           <td>y</td>        <th>  No. Observations:  </th>    <td>155</td>  
+</tr>
+<tr>
+  <th>Model:</th>           <td>SARIMAX(0, 1, 1)</td> <th>  Log Likelihood     </th> <td>-570.040</td>
+</tr>
+<tr>
+  <th>Date:</th>            <td>Tue, 20 Aug 2024</td> <th>  AIC                </th> <td>1144.080</td>
+</tr>
+<tr>
+  <th>Time:</th>                <td>11:20:28</td>     <th>  BIC                </th> <td>1150.154</td>
+</tr>
+<tr>
+  <th>Sample:</th>                  <td>0</td>        <th>  HQIC               </th> <td>1146.547</td>
+</tr>
+<tr>
+  <th></th>                      <td> - 155</td>      <th>                     </th>     <td> </td>   
+</tr>
+<tr>
+  <th>Covariance Type:</th>        <td>opg</td>       <th>                     </th>     <td> </td>   
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+     <td></td>       <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>ma.L1</th>  <td>   -0.9050</td> <td>    0.036</td> <td>  -25.036</td> <td> 0.000</td> <td>   -0.976</td> <td>   -0.834</td>
+</tr>
+<tr>
+  <th>sigma2</th> <td>   95.0278</td> <td>   10.416</td> <td>    9.123</td> <td> 0.000</td> <td>   74.612</td> <td>  115.443</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Ljung-Box (L1) (Q):</th>     <td>0.05</td> <th>  Jarque-Bera (JB):  </th> <td>0.30</td>
+</tr>
+<tr>
+  <th>Prob(Q):</th>                <td>0.81</td> <th>  Prob(JB):          </th> <td>0.86</td>
+</tr>
+<tr>
+  <th>Heteroskedasticity (H):</th> <td>2.10</td> <th>  Skew:              </th> <td>0.08</td>
+</tr>
+<tr>
+  <th>Prob(H) (two-sided):</th>    <td>0.01</td> <th>  Kurtosis:          </th> <td>3.15</td>
+</tr>
+</table><br/><br/>Warnings:<br/>[1] Covariance matrix calculated using the outer product of gradients (complex-step).
+<div class="sourceCode" id="cb96"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb96-1"><a href="examples.html#cb96-1" tabindex="-1"></a><span class="co"># Force d=0</span></span>
+<span id="cb96-2"><a href="examples.html#cb96-2" tabindex="-1"></a>model2<span class="op">=</span>pm.auto_arima(max2, start_p<span class="op">=</span><span class="dv">0</span>,start_q<span class="op">=</span><span class="dv">0</span>,max_p<span class="op">=</span><span class="dv">5</span>,max_q<span class="op">=</span><span class="dv">5</span>,d<span class="op">=</span><span class="dv">0</span>,seasonal<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb96-3"><a href="examples.html#cb96-3" tabindex="-1"></a>model2.summary()</span></code></pre></div>
+<table class="simpletable">
+<caption>SARIMAX Results</caption>
+<tr>
+  <th>Dep. Variable:</th>           <td>y</td>        <th>  No. Observations:  </th>    <td>155</td>  
+</tr>
+<tr>
+  <th>Model:</th>           <td>SARIMAX(1, 0, 1)</td> <th>  Log Likelihood     </th> <td>-574.278</td>
+</tr>
+<tr>
+  <th>Date:</th>            <td>Tue, 20 Aug 2024</td> <th>  AIC                </th> <td>1156.556</td>
+</tr>
+<tr>
+  <th>Time:</th>                <td>11:20:29</td>     <th>  BIC                </th> <td>1168.729</td>
+</tr>
+<tr>
+  <th>Sample:</th>                  <td>0</td>        <th>  HQIC               </th> <td>1161.500</td>
+</tr>
+<tr>
+  <th></th>                      <td> - 155</td>      <th>                     </th>     <td> </td>   
+</tr>
+<tr>
+  <th>Covariance Type:</th>        <td>opg</td>       <th>                     </th>     <td> </td>   
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>intercept</th> <td>   26.5825</td> <td>   20.863</td> <td>    1.274</td> <td> 0.203</td> <td>  -14.308</td> <td>   67.473</td>
+</tr>
+<tr>
+  <th>ar.L1</th>     <td>    0.7082</td> <td>    0.228</td> <td>    3.103</td> <td> 0.002</td> <td>    0.261</td> <td>    1.156</td>
+</tr>
+<tr>
+  <th>ma.L1</th>     <td>   -0.5717</td> <td>    0.281</td> <td>   -2.031</td> <td> 0.042</td> <td>   -1.123</td> <td>   -0.020</td>
+</tr>
+<tr>
+  <th>sigma2</th>    <td>   97.3309</td> <td>   11.556</td> <td>    8.423</td> <td> 0.000</td> <td>   74.682</td> <td>  119.979</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Ljung-Box (L1) (Q):</th>     <td>0.23</td> <th>  Jarque-Bera (JB):  </th> <td>2.12</td>
+</tr>
+<tr>
+  <th>Prob(Q):</th>                <td>0.63</td> <th>  Prob(JB):          </th> <td>0.35</td>
+</tr>
+<tr>
+  <th>Heteroskedasticity (H):</th> <td>1.75</td> <th>  Skew:              </th> <td>0.29</td>
+</tr>
+<tr>
+  <th>Prob(H) (two-sided):</th>    <td>0.05</td> <th>  Kurtosis:          </th> <td>2.95</td>
+</tr>
+</table><br/><br/>Warnings:<br/>[1] Covariance matrix calculated using the outer product of gradients (complex-step).
+</div>
+<div id="sas-code-for-armaarima" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> SAS Code for ARMA/ARIMA<a href="examples.html#sas-code-for-armaarima" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>AUGMENTED DICKEY-FULLER TESTING</em></p>
+<p>proc arima data=Time.fpp_insurance plot=all;  
+identify var=quotes nlag=10 stationarity=(adf=2);  
+identify var=quotes(1) nlag=10 stationarity=(adf=2);  
+run;
+quit;</p>
+<p><em>CORRELATION FUNCTIONS</em><br />
+</p>
+<p><em>Notice no model statement!</em>  </p>
+<p>proc arima data=Time.ar2 plot(unpack)=all;  
+identify var=y nlag=10 outcov=Corr;  
+estimate method=ML;  
+run;
+quit;</p>
+<p><em>BUILDING AN AUTOREGRESSIVE MODEL</em></p>
+<p><em>Fit an AR2 model</em>  </p>
+<p>proc arima data=Time.AR2 plot=all;  
+identify var=y nlag=10;  
+estimate p=2 method=ML;  
+run;
+quit;  </p>
+<p><em>Add another estimate statement</em>
+proc arima data=Time.AR2 plot=all;
+identify var=y nlag=10;
+estimate p=(2) method=ML;
+estimate p=(1,2,4) method=ML;
+run;
+quit;  </p>
+<p><em>BUILDING A MOVING AVERAGE MODEL</em></p>
+<p>proc arima data=Time.ma2;  
+identify var=x;  
+estimate q=2 method=ML;  
+run;
+quit;  </p>
+<p><em>Need to check for how to take care of trend</em></p>
+<p>proc arima data=Time.Ebay9899 plot=all;  
+identify var=DailyHigh nlag=10 stationarity=(adf=2);  
+run;
+quit;</p>
+<p><em>It is a random walk!! The way to model a random walk is by using differences</em>  </p>
+<p>proc arima data=Time.Ebay9899 plot=all;  
+identify var=DailyHigh(1) nlag=10 stationarity=(adf=2);  
+run;
+quit;</p>
+<p><em>BUILDING AN AUTOREGRESSIVE MOVING AVERAGE MODEL</em>  
+<em>(AUTOMATIC SELECTION TECHNIQUES)</em>  </p>
+<p><em>Fit an ARIMA model</em>  </p>
+<p>proc arima data=Time.Hurricanes plot=all;  
+identify var=MeanVMax nlag=12 stationarity=(adf=2);  
+run;
+quit;  </p>
+<p><em>Model identification with minimum information criterion (MINIC)</em>  </p>
+<p>proc arima data=Time.Hurricanes plot=all;  
+identify var=MeanVMax nlag=12 minic P=(0:12) Q=(0:12);  
+run;
+quit;  </p>
+<p><em>Model identification with smallest canonical correlation (SCAN);</em>  </p>
+<p>proc arima data=Time.Hurricanes plot=all;  
+identify var=MeanVMax nlag=12 scan P=(0:12) Q=(0:12);  
+run;
+quit;  </p>
+<p><em>Model identificaiton with extended sample autocorrelation function (ESACF)</em>  </p>
+<p>proc arima data=Time.Hurricanes plot=all;  
+identify var=MeanVMax nlag=12 esacf P=(0:12) Q=(0:12);  
+run;
+quit;  </p>
+<p><em>Create estimates with our ARIMA model p=2, q=3</em>  </p>
+<p>proc arima data=Time.Hurricanes plot=all;  
+identify var=MeanVMax nlag=12;  
+estimate p=2 q=3 method=ML;  
+run;
+quit;</p>
+<p><em>FORECASTING</em>  </p>
+<p>proc arima data=Time.Hurricanes plot=all;  
+identify var=MeanVMax nlag=10 ;  
+estimate p=2 q=3 method=ML;  
+forecast lead=10;  
+run;
+quit;</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="arima.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="seasonality.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/sjsimmo2/TimeSeries/edit/master/03-ARIMA.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/sjsimmo2/TimeSeries/blob/master/03-ARIMA.Rmd",
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
