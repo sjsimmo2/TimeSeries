@@ -936,7 +936,7 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 <p><img src="bookdownproj_files/figure-html/ADF,%20correlation%20plots%20and%20ARIMA-1.png" width="672" /></p>
 <div class="sourceCode" id="cb151"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb151-1"><a href="arima.html#cb151-1" tabindex="-1"></a>plot_pacf(quotes[<span class="st">&quot;Quotes&quot;</span>],lags<span class="op">=</span><span class="dv">12</span>)</span>
 <span id="cb151-2"><a href="arima.html#cb151-2" tabindex="-1"></a>pyplot.show</span></code></pre></div>
-<pre><code>## &lt;function make_python_function.&lt;locals&gt;.python_function at 0x000002E969941B40&gt;</code></pre>
+<pre><code>## &lt;function make_python_function.&lt;locals&gt;.python_function at 0x000001EE61741B40&gt;</code></pre>
 <div class="sourceCode" id="cb153"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb153-1"><a href="arima.html#cb153-1" tabindex="-1"></a>model <span class="op">=</span> ARIMA(y, order<span class="op">=</span>(<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
 <span id="cb153-2"><a href="arima.html#cb153-2" tabindex="-1"></a>model_fit <span class="op">=</span> model.fit()</span>
 <span id="cb153-3"><a href="arima.html#cb153-3" tabindex="-1"></a><span class="bu">print</span>(model_fit.summary())</span></code></pre></div>
@@ -945,7 +945,7 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 ## Dep. Variable:                      Y   No. Observations:                 1000
 ## Model:                 ARIMA(2, 0, 0)   Log Likelihood               -3695.014
 ## Date:                Tue, 20 Aug 2024   AIC                           7398.028
-## Time:                        13:19:59   BIC                           7417.659
+## Time:                        13:23:35   BIC                           7417.659
 ## Sample:                             0   HQIC                          7405.489
 ##                                - 1000                                         
 ## Covariance Type:                  opg                                         
@@ -1010,7 +1010,7 @@ The first value in the Ljung-Box test is the test statistic and the second value
 ## Dep. Variable:                      Y   No. Observations:                 1000
 ## Model:                 ARIMA(2, 0, 0)   Log Likelihood               -3695.014
 ## Date:                Tue, 20 Aug 2024   AIC                           7398.028
-## Time:                        13:20:00   BIC                           7417.659
+## Time:                        13:23:36   BIC                           7417.659
 ## Sample:                             0   HQIC                          7405.489
 ##                                - 1000                                         
 ## Covariance Type:                  opg                                         
@@ -1088,7 +1088,7 @@ The first value in the Ljung-Box test is the test statistic and the second value
   <th>Date:</th>            <td>Tue, 20 Aug 2024</td> <th>  AIC                </th> <td>1144.080</td>
 </tr>
 <tr>
-  <th>Time:</th>                <td>13:20:01</td>     <th>  BIC                </th> <td>1150.154</td>
+  <th>Time:</th>                <td>13:23:37</td>     <th>  BIC                </th> <td>1150.154</td>
 </tr>
 <tr>
   <th>Sample:</th>                  <td>0</td>        <th>  HQIC               </th> <td>1146.547</td>
@@ -1140,7 +1140,7 @@ The first value in the Ljung-Box test is the test statistic and the second value
   <th>Date:</th>            <td>Tue, 20 Aug 2024</td> <th>  AIC                </th> <td>1156.556</td>
 </tr>
 <tr>
-  <th>Time:</th>                <td>13:20:03</td>     <th>  BIC                </th> <td>1168.729</td>
+  <th>Time:</th>                <td>13:23:39</td>     <th>  BIC                </th> <td>1168.729</td>
 </tr>
 <tr>
   <th>Sample:</th>                  <td>0</td>        <th>  HQIC               </th> <td>1161.500</td>
