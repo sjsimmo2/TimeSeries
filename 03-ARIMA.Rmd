@@ -30,6 +30,8 @@ input.file5 = "fpp_insurance.csv"
 input.file6 = "ar2.csv"
 input.file7 = "MA2.csv"
 input.file8 = "hurrican.csv"
+input.file9 = "consume1982.csv"
+input.file10 = "Raleighhouse.csv"
 
 # Reads the data at specified directory
 # If the file directory is incorrect, then this won't run
@@ -42,6 +44,8 @@ Y= read_csv(paste(file.dir, input.file6, sep = ""),show_col_types = FALSE)
 x=read_csv(paste(file.dir, input.file7, sep = ""),show_col_types = FALSE)
 hurricane=read_csv(paste(file.dir, input.file8, sep = ""),show_col_types = FALSE)
 temp<-read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\minntemp.csv", show_col_types = FALSE)
+consume <- read_csv(paste(file.dir, input.file9, sep = ""),show_col_types = FALSE)
+Raleigh <- read_csv(paste(file.dir, input.file10, sep = ""),show_col_types = FALSE)
 
 
 ```
@@ -196,7 +200,7 @@ augment(Y.ARIMA) %>% features(.innov,ljung_box, lag=10, dof = 2)
 ```
 
 
-# Examples
+## Examples
 
 We will now demonstrate these ideas on two different examples: 
 
@@ -325,6 +329,359 @@ MAE<-mean(abs(hurr_resid))
 MAPE
 MAE
 ```
+
+## Trend
+
+
+We will now take a look at trending time series.  We will use the Consume and Raleigh Housing prices index as two examples.
+
+Consumer example using differences for trend:
+
+```{r}
+consume.ts<- consume |> mutate(date2=my(date))|> mutate(month=yearmonth(date2)) |> as_tsibble(index=month)
+
+consume_train<-consume.ts %>% filter(year(date2)<1990)
+
+autoplot(consume_train,Disposable_income)+labs(title="Time Series of Monthly Disposable Income", x="Time", y="Thousands of Dollars")
+
+ndiffs(consume_train$Disposable_income)
+
+consume_train<- consume_train %>% 
+  mutate(income_diff = difference(Disposable_income))
+
+autoplot(consume_train,income_diff)+labs(title="Time Series of Differenced Monthly Disposable Income", x="Time", y="Differences")
+
+consume_train %>% gg_tsdisplay(income_diff,plot_type = 'partial')
+```
+
+```{r}
+consume_model <-consume_train %>%
+  model(ar1 = ARIMA(Disposable_income ~ pdq(1,1,0) + PDQ(0,0,0)),
+        ma1 = ARIMA(Disposable_income ~ pdq(0,1,1) + PDQ(0,0,0)),
+        ar6 = ARIMA(Disposable_income ~ pdq(6,1,0) + PDQ(0,0,0)),
+        ma6 = ARIMA(Disposable_income ~ pdq(0,1,6) + PDQ(0,0,0)),
+        search1 = ARIMA(Disposable_income),
+        search2 = ARIMA(Disposable_income,stepwise = F))
+
+consume_model2<-as.data.frame(consume_model)
+t(consume_model2)
+
+glance(consume_model) %>% arrange(AICc) %>% select(.model:BIC)
+
+
+```
+
+
+
+
+
+```{r}
+consume_modelt1 <-consume_train %>%
+  model(arima11 = ARIMA(Disposable_income ~ pdq(1,1,1) + PDQ(0,0,0)),
+        arima21 = ARIMA(Disposable_income ~ pdq(2,1,1) + PDQ(0,0,0)),
+        arima20 = ARIMA(Disposable_income ~ pdq(2,1,0) + PDQ(0,0,0)),
+        arima12 = ARIMA(Disposable_income ~ pdq(1,1,2) + PDQ(0,0,0)),
+        arima30 = ARIMA(Disposable_income ~ pdq(3,1,0) + PDQ(0,0,0))
+        )
+
+consume_modelt2<-as.data.frame(consume_modelt1)
+t(consume_modelt2)
+
+glance(consume_modelt1) %>% arrange(AICc) %>% select(.model:BIC)
+
+```
+
+
+
+```{r}
+consume_model %>% select(ar6) %>% residuals() %>% ggAcf(lag.max = 10)
+consume_model %>% select(ar6) %>% residuals() %>% ggPacf(lag.max = 10)
+consume_model %>% select(ar6) %>% gg_tsresiduals()
+
+augment(consume_model) %>% filter(.model=='ar6') %>% features(.innov,ljung_box, lag=10, dof = 6)
+
+pred_ar6 <- consume_model %>% select(ar6) %>%
+  fabletools::forecast(h=6)
+
+error_ar6 <- consume$Disposable_income[89:94] - pred_ar6$.mean
+MAPE_ar6 <-mean(abs(error_ar6/consume$Disposable_income[89:94]))
+MAE_ar6 <- mean(abs(error_ar6))
+
+consume_model %>% select(ar6) %>% fabletools::forecast(h=6) %>% autoplot(consume_train)
+
+pred_ma1 <- consume_model %>% select(ma1) %>%
+  fabletools::forecast(h=6)
+
+error_ma1 <- consume$Disposable_income[89:94] - pred_ma1$.mean
+MAPE_ma1 <-mean(abs(error_ma1/consume$Disposable_income[89:94]))
+MAE_ma1 <- mean(abs(error_ma1))
+
+consume_model %>% select(ma1) %>% fabletools::forecast(h=6) %>% autoplot(consume_train)
+
+```
+
+Raleigh example using differences: 
+
+```{r}
+
+Raleigh.ts<- Raleigh %>% mutate(quarter=yearquarter(DATE)) %>% as_tsibble(index=quarter)
+
+Raleigh_train <-Raleigh.ts %>% filter(quarter <yearquarter("2023 Q1"))
+
+autoplot(Raleigh_train,price_index)+labs(title="Time Series of Quarterly Housing price Index for Raleigh-Cary", x="Time", y="Index")
+
+Raleigh_train %>% features(price_index,unitroot_ndiffs)
+
+Raleigh_train <- Raleigh_train %>% mutate(diff_price=difference(difference(price_index)))
+
+Raleigh_train %>% gg_tsdisplay(diff_price,plot_type = 'partial')
+
+```
+
+
+
+```{r}
+Raleigh_model <-Raleigh_train %>%
+  model(
+        ma5 = ARIMA(price_index ~ pdq(0,2,5)+ PDQ(0,0,0)+0),
+        ar2 = ARIMA(price_index ~ pdq(2,2,0)+ PDQ(0,0,0)+0),
+        ma2 = ARIMA(price_index ~ pdq(0,2,2)+ PDQ(0,0,0)+0),
+        search1 = ARIMA(price_index~PDQ(0,0,0)),
+        search2 = ARIMA(price_index,stepwise = FALSE)
+        )
+
+Raleigh_model2<-as.data.frame(Raleigh_model)
+t(Raleigh_model2)
+
+glance(Raleigh_model) %>% arrange(AICc) %>% select(.model:BIC)
+```
+
+
+
+
+
+```{r}
+Raleigh_model %>% select(search1) %>% residuals() %>% ggAcf(lag.max = 10)
+Raleigh_model %>% select(search1) %>% residuals() %>% ggPacf(lag.max = 10)
+Raleigh_model %>% select(search1) %>% gg_tsresiduals()
+
+augment(Raleigh_model) %>% filter(.model=='search1') %>% features(.innov,ljung_box, lag=10, dof = 4)
+```
+```{r}
+pred_arima123 <- Raleigh_model %>% select(search1) %>%
+  fabletools::forecast(h=5)
+
+error_arima123 <- Raleigh.ts$price_index[93:97] - pred_arima123$.mean
+MAPE_arima123 <-mean(abs(error_arima123/Raleigh.ts$price_index[93:97]))
+MAE_arima123 <- mean(abs(error_arima123))
+
+Raleigh_model %>% select(search1) %>% fabletools::forecast(h=5) %>% autoplot(Raleigh_train)
+```
+```{r}
+pred_data <- tibble(
+  quarter = yearquarter(seq.Date(from = as.Date("2023-01-01"),
+                                 to = as.Date("2024-01-01"),
+                                 by = "quarter")),
+  value = pred_arima123$.mean  
+)
+
+test_data <- tibble(
+  quarter = yearquarter(seq.Date(from = as.Date("2023-01-01"),
+                                 to = as.Date("2024-01-01"),
+                                 by = "quarter")),
+  value = Raleigh.ts$price_index[93:97]  
+)
+
+ggplot() +
+  geom_line(data = test_data, aes(x = quarter, y = value), color = "blue", linetype = "solid") +
+  geom_line(data = pred_data, aes(x = quarter, y = value), color = "orange", linetype = "dashed") +
+  labs(title = "Predicted versus Actual values",
+       x = "Quarter", y = "Price Index") +
+  theme_minimal()
+```
+
+
+Using the consumer data set and fitting a linear trend line:
+
+```{r}
+
+consume_linear <-consume_train %>%
+  model(trend1 = ARIMA(Disposable_income~ trend() + pdq(0,0,0) + PDQ(0,0,0)+1)
+        )
+report(consume_linear)
+
+fitted_values <- fitted(consume_linear)
+
+# Plot the original data and fitted values
+autoplot(consume_train, Disposable_income) +
+  autolayer(fitted_values, .fitted, color = "blue", linetype = "dashed") +
+  labs(title = "Fitted Values from Linear Regression Model for Disposable Income",
+       x = "Time", y = "Dollars (000)") +
+  theme_minimal()
+
+consume_linear %>% residuals() %>% ggAcf(lag.max = 10)
+consume_linear %>% residuals() %>% ggPacf(lag.max = 10)
+
+
+```
+
+
+
+
+
+```{r}
+
+consume_linear <-consume_train %>%
+  model(trend1 = ARIMA(Disposable_income~ trend() + pdq(6,0,0) + PDQ(0,0,0)+1),
+        trend2 = ARIMA(Disposable_income ~ trend() + PDQ(0,0,0) +1)
+        )
+consume_linear2<-as.data.frame(consume_linear)
+t(consume_linear2)
+
+glance(consume_linear) %>% arrange(AICc) %>% select(.model:BIC)
+
+```
+
+Comparing the random walk with drift to the linear trend time series model for the consumer data set:
+
+```{r}
+consume_linear %>% select(trend1) %>% residuals() %>% ggAcf(lag.max = 10)
+consume_linear %>% select(trend1) %>% residuals() %>% ggPacf(lag.max = 10)
+consume_linear %>% select(trend1) %>% gg_tsresiduals()
+
+augment(consume_linear) %>% filter(.model=='trend1') %>% features(.innov,ljung_box, lag=10, dof = 6)
+
+pred_lm <- consume_linear %>% select(trend1) %>%
+  fabletools::forecast(h=6)
+
+consume_linear %>% select(trend1) %>% fabletools::forecast(h=6) %>% autoplot(consume_train)
+
+error_lm <- consume$Disposable_income[89:94] - pred_lm$.mean
+MAPE_lm <-mean(abs(error_lm/consume$Disposable_income[89:94]))
+MAE_lm <- mean(abs(error_lm))
+
+
+pred_rw <- tibble(
+  month = yearmonth(seq.Date(from = as.Date("1990-01-01"),
+                                 to = as.Date("1990-06-01"),
+                                 by = "month")),
+  value = pred_ar6$.mean  
+)
+
+pred_lm2 <- tibble(
+  month = yearmonth(seq.Date(from = as.Date("1990-01-01"),
+                                 to = as.Date("1990-06-01"),
+                                 by = "month")),
+  value = pred_lm$.mean  
+)
+
+test_data <- tibble(
+  month = yearmonth(seq.Date(from = as.Date("1990-01-01"),
+                                 to = as.Date("1990-06-01"),
+                                 by = "month")),
+  value = consume.ts$Disposable_income[89:94]  
+)
+
+combined_data <- bind_rows(
+  test_data %>% mutate(Line = "Actual"),
+  pred_rw %>% mutate(Line = "Random Walk"),
+  pred_lm2 %>% mutate(Line = "Linear Model")
+)
+
+# Plot the data with a legend
+ggplot(combined_data, aes(x = month, y = value, color = Line)) +
+  geom_line(linetype = "solid") +
+  labs(title = "Predicted versus Actual values",
+       x = "Date", y = "Disposable Income (000)",
+       color = "Legend") +
+  theme_minimal()
+
+
+
+```
+
+Fitting a trend line to the Raleigh data set:
+
+
+```{r}
+
+Raleigh_linear <-Raleigh_train %>%
+  model(trend1 = ARIMA(price_index~ trend() + pdq(0,0,0) + PDQ(0,0,0)+1)
+    )
+Raleigh_linear %>% residuals() %>% ggAcf(lag.max = 10)
+Raleigh_linear %>% residuals() %>% ggPacf(lag.max = 10)
+
+
+Raleigh_linear <-Raleigh_train %>%
+  model(trend1 = ARIMA(price_index~ trend() + pdq(2,0,0) + PDQ(0,0,0)+1),
+        trend2 = ARIMA(price_index ~ trend() + PDQ(0,0,0) + 1),
+        trend3 = ARIMA(price_index ~ trend() + PDQ(0,0,0) + 1,stepwise = FALSE)
+    )
+Raleigh_linear2<-as.data.frame(Raleigh_linear)
+t(Raleigh_linear2)
+
+glance(Raleigh_linear) %>% arrange(AICc) %>% select(.model:BIC)
+
+Raleigh_linear %>% select(trend2) %>% residuals() %>% ggAcf(lag.max = 10)
+Raleigh_linear %>% select(trend2) %>%residuals() %>% ggPacf(lag.max = 10)
+
+
+augment(Raleigh_linear) %>% filter(.model=='trend2') %>% features(.innov,ljung_box, lag=10, dof = 4)
+
+
+
+```
+Comparing the Raleigh data set using a random walk with drift to the trend model:
+
+```{r}
+
+
+pred_lm <- Raleigh_linear %>% select(trend2) %>%
+  fabletools::forecast(h=5)
+
+error_lm <- Raleigh.ts$price_index[93:97] - pred_lm$.mean
+MAPE_lm <-mean(abs(error_lm/Raleigh.ts$price_index[93:97]))
+MAE_lm <- mean(abs(error_lm))
+
+
+pred_rw <- tibble(
+  quarter = yearquarter(seq.Date(from = as.Date("2023-01-01"),
+                                 to = as.Date("2024-01-01"),
+                                 by = "quarter")),
+  value = pred_arima123$.mean  
+)
+
+pred_lm2 <- tibble(
+  quarter = yearquarter(seq.Date(from = as.Date("2023-01-01"),
+                                 to = as.Date("2024-01-01"),
+                                 by = "quarter")),
+  value = pred_lm$.mean  
+)
+
+test_data <- tibble(
+  quarter = yearquarter(seq.Date(from = as.Date("2023-01-01"),
+                                 to = as.Date("2024-01-01"),
+                                 by = "quarter")),
+  value = Raleigh.ts$price_index[93:97]  
+)
+
+combined_data <- bind_rows(
+  test_data %>% mutate(Line = "Actual"),
+  pred_rw %>% mutate(Line = "Random Walk"),
+  pred_lm2 %>% mutate(Line = "Linear Model")
+)
+
+# Plot the data with a legend
+ggplot(combined_data, aes(x = quarter, y = value, color = Line)) +
+  geom_line(linetype = "solid") +
+  labs(title = "Predicted versus Actual values",
+       x = "Date", y = "Raleigh Price Index",
+       color = "Legend") +
+  theme_minimal()
+
+
+```
+
 
 
 

@@ -57,3 +57,4 @@ stl-features
 comparing-forecasts
 examples
 forecasting-1
+trend
