@@ -264,6 +264,8 @@ Hurricane_train <- Hurricane_train %>% mutate(mean_diff=difference(MeanVMax))
 
 Hurricane_train %>% gg_tsdisplay(mean_diff,plot_type = 'partial')
 ```
+
+
 ```{r}
 hurr_model <-Hurricane_train %>%
   model(ar3 = ARIMA(MeanVMax ~ 0 + pdq(3,1,0) + PDQ(0,0,0)),
@@ -353,6 +355,8 @@ autoplot(consume_train,income_diff)+labs(title="Time Series of Differenced Month
 
 consume_train %>% gg_tsdisplay(income_diff,plot_type = 'partial')
 ```
+
+
 
 ```{r}
 consume_model <-consume_train %>%
@@ -703,16 +707,18 @@ from statsmodels.tsa.arima.model import ARIMA
 
 quotes=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\fpp_insurance.csv")
 y=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\ar2.csv")
+quotes_train = quotes.head(36)
+y_train = y.head(731)
 
-result=adfuller(quotes["Quotes"])
+result=adfuller(quotes_train["Quotes"])
 print(f'ADF p-value: {result[1]}')
 
-plot_acf(quotes["Quotes"],lags=12)
+plot_acf(quotes_train["Quotes"],lags=12)
 pyplot.show()
-plot_pacf(quotes["Quotes"],lags=12)
+plot_pacf(quotes_train["Quotes"],lags=12)
 pyplot.show
 
-model = ARIMA(y, order=(2,0,0))
+model = ARIMA(y_train, order=(2,0,0))
 model_fit = model.fit()
 print(model_fit.summary())
 
@@ -728,34 +734,36 @@ pyplot.show()
 ```
 
 
+
+```{python}
+from pmdarima.arima import ndiffs
+
+hurricane = pd.read_csv("https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/hurrican.csv")
+hurricane2 = hurricane.dropna(axis=0)
+hurricane_train =hurricane2.head(149)
+hurricane_train
+n_diffs = ndiffs(hurricane_train["MeanVMax"])
+print(n_diffs)
+```
+
+
 Checking for white noise:
 The first value in the Ljung-Box test is the test statistic and the second value is the p-value.
 
 ```{python white noise with Ljung-Box}
 
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib import pyplot
-from pandas import DataFrame
-import statsmodels.api as sm
-from statsmodels.tsa.stattools import adfuller
-from statsmodels.graphics.tsaplots import plot_acf
-from statsmodels.graphics.tsaplots import plot_pacf
-from statsmodels.tsa.arima.model import ARIMA
-
-quotes=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\fpp_insurance.csv")
-y=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\ar2.csv")
+import statsmodels.stats.diagnostic as diag
 
 
-model = ARIMA(y, order=(2,0,0))
+model = ARIMA(y_train, order=(2,0,0))
 model_fit = model.fit()
 print(model_fit.summary())
 
-lag_test=[3,4,5,6,7,8,9,10]
+# Perform the Ljung-Box test
+lb_test = diag.acorr_ljungbox(model_fit.resid, lags=[10], model_df=2)
+print(lb_test)
 
-for x in lag_test:
-  sm.stats.acorr_ljungbox(model_fit.resid, lags=[x], model_df=2)
+
   
 ```
 
@@ -763,25 +771,15 @@ for x in lag_test:
 
 Fitting ARIMA models.
 
+
+
 ```{python}
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib import pyplot
-from pandas import DataFrame
-import statsmodels.api as sm
-from statsmodels.tsa.stattools import adfuller
-from statsmodels.graphics.tsaplots import plot_acf
-from statsmodels.graphics.tsaplots import plot_pacf
-from statsmodels.tsa.arima.model import ARIMA
+
 import pmdarima as pm
 
 
-hurricane=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\hurrican.csv")
-max_velocity=hurricane["MeanVMax"]
-max2=max_velocity.dropna()
-
 ### Testing stationarity 
+max2 = hurricane_train["MeanVMax"]
 
 result=adfuller(max2)
 print(f'ADF p-value: {result[1]}')
@@ -797,6 +795,7 @@ model2.summary()
 
 
 ```
+
 
 
 ## SAS Code for ARMA/ARIMA
