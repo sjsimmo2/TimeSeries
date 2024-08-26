@@ -21,8 +21,8 @@ library(aTSA)
 ### Note that the following packages and information is for Python:
 library(reticulate)
 
-use_python("C:\\ProgramData\\Anaconda3\\envs\\R_Env2\\python.exe")
-#use_python("C:\\ProgramData\\Anaconda3\\python.exe")
+
+use_python("C:\\ProgramData\\Anaconda3\\python.exe")
 ```
 
 
@@ -34,7 +34,7 @@ The data sets that you will need are as follows:
 file.dir = "https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/" 
 input.file1 = "usairlines.csv"
 input.file2 = "steel.csv"
-input.file3 = "leadyear.csv"
+input.file3 = "leadyear2.csv"
 input.file4 = "ebay9899.csv"
 input.file5 = "fpp_insurance.csv" 
 input.file6 = "ar2.csv"
