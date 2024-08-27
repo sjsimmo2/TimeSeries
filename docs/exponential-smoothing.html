@@ -23,7 +23,7 @@
 <meta name="author" content="by Dr. Susan Simmons and Dr. Aric LaBarr" />
 
 
-<meta name="date" content="2024-08-15" />
+<meta name="date" content="2024-08-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -167,10 +167,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3" data-path="arima.html"><a href="arima.html#autoregressive-models-ar"><i class="fa fa-check"></i><b>4.3</b> AutoRegressive Models (AR)</a></li>
 <li class="chapter" data-level="4.4" data-path="arima.html"><a href="arima.html#moving-average-model-ma"><i class="fa fa-check"></i><b>4.4</b> Moving Average model (MA)</a></li>
 <li class="chapter" data-level="4.5" data-path="arima.html"><a href="arima.html#white-noise"><i class="fa fa-check"></i><b>4.5</b> White noise</a></li>
-<li class="chapter" data-level="4.6" data-path="arima.html"><a href="arima.html#trending-series"><i class="fa fa-check"></i><b>4.6</b> Trending Series</a></li>
-<li class="chapter" data-level="4.7" data-path="arima.html"><a href="arima.html#fitting-arima-models"><i class="fa fa-check"></i><b>4.7</b> Fitting ARIMA models</a></li>
-<li class="chapter" data-level="4.8" data-path="arima.html"><a href="arima.html#python-code-for-armaarima-models"><i class="fa fa-check"></i><b>4.8</b> Python Code for ARMA/ARIMA models</a></li>
-<li class="chapter" data-level="4.9" data-path="arima.html"><a href="arima.html#sas-code-for-armaarima"><i class="fa fa-check"></i><b>4.9</b> SAS Code for ARMA/ARIMA</a></li>
+<li class="chapter" data-level="4.6" data-path="arima.html"><a href="arima.html#examples"><i class="fa fa-check"></i><b>4.6</b> Examples</a></li>
+<li class="chapter" data-level="4.7" data-path="arima.html"><a href="arima.html#forecasting"><i class="fa fa-check"></i><b>4.7</b> Forecasting</a></li>
+<li class="chapter" data-level="4.8" data-path="arima.html"><a href="arima.html#trend"><i class="fa fa-check"></i><b>4.8</b> Trend</a></li>
+<li class="chapter" data-level="4.9" data-path="arima.html"><a href="arima.html#python-code-for-armaarima-models"><i class="fa fa-check"></i><b>4.9</b> Python Code for ARMA/ARIMA models</a></li>
+<li class="chapter" data-level="4.10" data-path="arima.html"><a href="arima.html#sas-code-for-armaarima"><i class="fa fa-check"></i><b>4.10</b> SAS Code for ARMA/ARIMA</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="seasonality.html"><a href="seasonality.html"><i class="fa fa-check"></i><b>5</b> Seasonality</a>
 <ul>
@@ -205,7 +206,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.1" data-path="prophet.html"><a href="prophet.html#python-code-for-prophet"><i class="fa fa-check"></i><b>7.1</b> Python Code for Prophet</a>
 <ul>
 <li class="chapter" data-level="7.1.1" data-path="prophet.html"><a href="prophet.html#model-structure"><i class="fa fa-check"></i><b>7.1.1</b> Model Structure</a></li>
-<li class="chapter" data-level="7.1.2" data-path="prophet.html"><a href="prophet.html#forecasting"><i class="fa fa-check"></i><b>7.1.2</b> Forecasting</a></li>
+<li class="chapter" data-level="7.1.2" data-path="prophet.html"><a href="prophet.html#forecasting-1"><i class="fa fa-check"></i><b>7.1.2</b> Forecasting</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="neural-network-model.html"><a href="neural-network-model.html"><i class="fa fa-check"></i><b>8</b> Neural Network Model</a>
@@ -548,518 +549,273 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb26-2"><a href="exponential-smoothing.html#cb26-2" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb26-3"><a href="exponential-smoothing.html#cb26-3" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb26-4"><a href="exponential-smoothing.html#cb26-4" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
-<span id="cb26-5"><a href="exponential-smoothing.html#cb26-5" tabindex="-1"></a><span class="im">from</span> statsforecast.models <span class="im">import</span> ETS</span>
-<span id="cb26-6"><a href="exponential-smoothing.html#cb26-6" tabindex="-1"></a><span class="im">from</span> statsforecast <span class="im">import</span> StatsForecast</span>
-<span id="cb26-7"><a href="exponential-smoothing.html#cb26-7" tabindex="-1"></a><span class="im">from</span> statsforecast.utils <span class="im">import</span> AirPassengers</span>
-<span id="cb26-8"><a href="exponential-smoothing.html#cb26-8" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.tsatools <span class="im">import</span> detrend</span>
-<span id="cb26-9"><a href="exponential-smoothing.html#cb26-9" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
-<span id="cb26-10"><a href="exponential-smoothing.html#cb26-10" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.api <span class="im">import</span> ExponentialSmoothing, SimpleExpSmoothing, Holt</span>
-<span id="cb26-11"><a href="exponential-smoothing.html#cb26-11" tabindex="-1"></a></span>
-<span id="cb26-12"><a href="exponential-smoothing.html#cb26-12" tabindex="-1"></a></span>
-<span id="cb26-13"><a href="exponential-smoothing.html#cb26-13" tabindex="-1"></a>steel<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">steel.csv&quot;</span>)</span>
-<span id="cb26-14"><a href="exponential-smoothing.html#cb26-14" tabindex="-1"></a>df <span class="op">=</span> pd.date_range(start<span class="op">=</span><span class="st">&#39;1932-07-01&#39;</span>, end<span class="op">=</span><span class="st">&#39;1980-07-01&#39;</span>, freq<span class="op">=</span><span class="st">&#39;6ME&#39;</span>)</span>
-<span id="cb26-15"><a href="exponential-smoothing.html#cb26-15" tabindex="-1"></a>steel.index<span class="op">=</span>pd.to_datetime(df)</span>
-<span id="cb26-16"><a href="exponential-smoothing.html#cb26-16" tabindex="-1"></a></span>
-<span id="cb26-17"><a href="exponential-smoothing.html#cb26-17" tabindex="-1"></a>steel_train<span class="op">=</span>steel.head(<span class="dv">87</span>)</span>
-<span id="cb26-18"><a href="exponential-smoothing.html#cb26-18" tabindex="-1"></a>steel_test <span class="op">=</span> steel.tail(<span class="dv">9</span>)</span>
-<span id="cb26-19"><a href="exponential-smoothing.html#cb26-19" tabindex="-1"></a></span>
-<span id="cb26-20"><a href="exponential-smoothing.html#cb26-20" tabindex="-1"></a>fit <span class="op">=</span> SimpleExpSmoothing(steel_train[<span class="st">&#39;steelshp&#39;</span>]).fit()</span>
-<span id="cb26-21"><a href="exponential-smoothing.html#cb26-21" tabindex="-1"></a>fit.params[<span class="st">&#39;smoothing_level&#39;</span>]</span></code></pre></div>
-<pre><code>## 0.4664238093532132</code></pre>
+<span id="cb26-5"><a href="exponential-smoothing.html#cb26-5" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb26-6"><a href="exponential-smoothing.html#cb26-6" tabindex="-1"></a><span class="im">from</span> statsforecast.models <span class="im">import</span> ETS</span>
+<span id="cb26-7"><a href="exponential-smoothing.html#cb26-7" tabindex="-1"></a><span class="im">from</span> statsforecast <span class="im">import</span> StatsForecast</span>
+<span id="cb26-8"><a href="exponential-smoothing.html#cb26-8" tabindex="-1"></a><span class="im">from</span> statsforecast.utils <span class="im">import</span> AirPassengers</span>
+<span id="cb26-9"><a href="exponential-smoothing.html#cb26-9" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.tsatools <span class="im">import</span> detrend</span>
+<span id="cb26-10"><a href="exponential-smoothing.html#cb26-10" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
+<span id="cb26-11"><a href="exponential-smoothing.html#cb26-11" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.api <span class="im">import</span> ExponentialSmoothing, SimpleExpSmoothing, Holt</span>
+<span id="cb26-12"><a href="exponential-smoothing.html#cb26-12" tabindex="-1"></a><span class="im">from</span> statsforecast.models <span class="im">import</span> AutoETS</span>
+<span id="cb26-13"><a href="exponential-smoothing.html#cb26-13" tabindex="-1"></a></span>
+<span id="cb26-14"><a href="exponential-smoothing.html#cb26-14" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="exponential-smoothing.html#cb26-15" tabindex="-1"></a>steel<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">steel.csv&quot;</span>)</span>
+<span id="cb26-16"><a href="exponential-smoothing.html#cb26-16" tabindex="-1"></a>df <span class="op">=</span> pd.date_range(start<span class="op">=</span><span class="st">&#39;1932-07-01&#39;</span>, end<span class="op">=</span><span class="st">&#39;1980-07-01&#39;</span>, freq<span class="op">=</span><span class="st">&#39;6ME&#39;</span>)</span>
+<span id="cb26-17"><a href="exponential-smoothing.html#cb26-17" tabindex="-1"></a>steel.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb26-18"><a href="exponential-smoothing.html#cb26-18" tabindex="-1"></a></span>
+<span id="cb26-19"><a href="exponential-smoothing.html#cb26-19" tabindex="-1"></a>steel_train<span class="op">=</span>steel.head(<span class="dv">87</span>)</span>
+<span id="cb26-20"><a href="exponential-smoothing.html#cb26-20" tabindex="-1"></a>steel_test <span class="op">=</span> steel.tail(<span class="dv">9</span>)</span>
+<span id="cb26-21"><a href="exponential-smoothing.html#cb26-21" tabindex="-1"></a></span>
+<span id="cb26-22"><a href="exponential-smoothing.html#cb26-22" tabindex="-1"></a>fit <span class="op">=</span> SimpleExpSmoothing(steel_train[<span class="st">&#39;steelshp&#39;</span>]).fit()</span>
+<span id="cb26-23"><a href="exponential-smoothing.html#cb26-23" tabindex="-1"></a>fit.params[<span class="st">&#39;smoothing_level&#39;</span>]</span></code></pre></div>
+<pre><code>## 0.4769767441860465</code></pre>
 <div class="sourceCode" id="cb28"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="exponential-smoothing.html#cb28-1" tabindex="-1"></a>fcast <span class="op">=</span> fit.forecast(<span class="dv">9</span>)</span>
 <span id="cb28-2"><a href="exponential-smoothing.html#cb28-2" tabindex="-1"></a>fcast</span></code></pre></div>
-<pre><code>## 1976-01-31    6198.30587
-## 1976-07-31    6198.30587
-## 1977-01-31    6198.30587
-## 1977-07-31    6198.30587
-## 1978-01-31    6198.30587
-## 1978-07-31    6198.30587
-## 1979-01-31    6198.30587
-## 1979-07-31    6198.30587
-## 1980-01-31    6198.30587
+<pre><code>## 1976-01-31    6188.807035
+## 1976-07-31    6188.807035
+## 1977-01-31    6188.807035
+## 1977-07-31    6188.807035
+## 1978-01-31    6188.807035
+## 1978-07-31    6188.807035
+## 1979-01-31    6188.807035
+## 1979-07-31    6188.807035
+## 1980-01-31    6188.807035
 ## Freq: 6ME, dtype: float64</code></pre>
 <div class="sourceCode" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="exponential-smoothing.html#cb30-1" tabindex="-1"></a>plt.plot(steel_train[<span class="st">&quot;steelshp&quot;</span>],color<span class="op">=</span><span class="st">&quot;black&quot;</span>)</span>
 <span id="cb30-2"><a href="exponential-smoothing.html#cb30-2" tabindex="-1"></a>plt.plot(fcast,color<span class="op">=</span><span class="st">&quot;blue&quot;</span>)</span>
 <span id="cb30-3"><a href="exponential-smoothing.html#cb30-3" tabindex="-1"></a>plt.show()</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/simple%20exponential%20smoothing-1.png" width="672" /></p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="exponential-smoothing.html#cb31-1" tabindex="-1"></a><span class="co">##### Using Statsforecast</span></span>
+<span id="cb31-2"><a href="exponential-smoothing.html#cb31-2" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="exponential-smoothing.html#cb31-3" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="exponential-smoothing.html#cb31-4" tabindex="-1"></a>d <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: steel.index, <span class="st">&#39;y&#39;</span>: steel[<span class="st">&#39;steelshp&#39;</span>]}</span>
+<span id="cb31-5"><a href="exponential-smoothing.html#cb31-5" tabindex="-1"></a>steel_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d)</span>
+<span id="cb31-6"><a href="exponential-smoothing.html#cb31-6" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="exponential-smoothing.html#cb31-7" tabindex="-1"></a>steel_train<span class="op">=</span>steel_sf.head(<span class="dv">87</span>)</span>
+<span id="cb31-8"><a href="exponential-smoothing.html#cb31-8" tabindex="-1"></a>steel_test <span class="op">=</span> steel_sf.tail(<span class="dv">9</span>)</span>
+<span id="cb31-9"><a href="exponential-smoothing.html#cb31-9" tabindex="-1"></a></span>
+<span id="cb31-10"><a href="exponential-smoothing.html#cb31-10" tabindex="-1"></a>steel_SES <span class="op">=</span> StatsForecast(models <span class="op">=</span> [AutoETS(model<span class="op">=</span>[<span class="st">&quot;A&quot;</span>,<span class="st">&quot;N&quot;</span>,<span class="st">&quot;N&quot;</span>],  alias<span class="op">=</span><span class="st">&quot;AutoETS&quot;</span>, season_length<span class="op">=</span><span class="dv">2</span>)], freq <span class="op">=</span> <span class="st">&#39;6ME&#39;</span>)</span>
+<span id="cb31-11"><a href="exponential-smoothing.html#cb31-11" tabindex="-1"></a>steel_model <span class="op">=</span> steel_SES.fit(df <span class="op">=</span> steel_train)</span>
+<span id="cb31-12"><a href="exponential-smoothing.html#cb31-12" tabindex="-1"></a></span>
+<span id="cb31-13"><a href="exponential-smoothing.html#cb31-13" tabindex="-1"></a>result <span class="op">=</span> steel_SES.fitted_[<span class="dv">0</span>,<span class="dv">0</span>].model_[<span class="st">&#39;par&#39;</span>]</span>
+<span id="cb31-14"><a href="exponential-smoothing.html#cb31-14" tabindex="-1"></a>result</span></code></pre></div>
+<pre><code>## array([4.66739272e-01,            nan,            nan,            nan,
+##        6.27096958e+03])</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="exponential-smoothing.html#cb33-1" tabindex="-1"></a>y_hat1<span class="op">=</span>steel_model.predict(h<span class="op">=</span><span class="dv">9</span>)</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\Lib\site-packages\statsforecast\core.py:492: FutureWarning: In a future version the predictions will have the id as a column. You can set the `NIXTLA_ID_AS_COL` environment variable to adopt the new behavior and to suppress this warning.
+##   warnings.warn(</code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="exponential-smoothing.html#cb35-1" tabindex="-1"></a>yhat<span class="op">=</span>y_hat1.reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb35-2"><a href="exponential-smoothing.html#cb35-2" tabindex="-1"></a>forecast<span class="op">=</span>pd.Series(pd.date_range(<span class="st">&quot;1976-01-31&quot;</span>, freq<span class="op">=</span><span class="st">&quot;6ME&quot;</span>, periods<span class="op">=</span><span class="dv">9</span>))</span>
+<span id="cb35-3"><a href="exponential-smoothing.html#cb35-3" tabindex="-1"></a>forecast<span class="op">=</span>pd.DataFrame(forecast)</span>
+<span id="cb35-4"><a href="exponential-smoothing.html#cb35-4" tabindex="-1"></a>forecast.columns<span class="op">=</span>[<span class="st">&quot;ds&quot;</span>]</span>
+<span id="cb35-5"><a href="exponential-smoothing.html#cb35-5" tabindex="-1"></a>forecast[<span class="st">&quot;hat&quot;</span>]<span class="op">=</span>yhat[<span class="st">&#39;AutoETS&#39;</span>]</span>
+<span id="cb35-6"><a href="exponential-smoothing.html#cb35-6" tabindex="-1"></a>forecast[<span class="st">&quot;unique_id&quot;</span>]<span class="op">=</span><span class="st">&quot;1&quot;</span></span>
+<span id="cb35-7"><a href="exponential-smoothing.html#cb35-7" tabindex="-1"></a>sns.lineplot(steel_train,x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;y&quot;</span>, label<span class="op">=</span><span class="st">&quot;Train&quot;</span>)</span>
+<span id="cb35-8"><a href="exponential-smoothing.html#cb35-8" tabindex="-1"></a>sns.lineplot(steel_test, x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;y&quot;</span>, label<span class="op">=</span><span class="st">&quot;Test&quot;</span>)</span>
+<span id="cb35-9"><a href="exponential-smoothing.html#cb35-9" tabindex="-1"></a>sns.lineplot(forecast,x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;hat&quot;</span>, label<span class="op">=</span><span class="st">&quot;Forecast&quot;</span>,)</span>
+<span id="cb35-10"><a href="exponential-smoothing.html#cb35-10" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/simple%20exponential%20smoothing-2.png" width="672" /></p>
 <p>The Holt models in Python:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="exponential-smoothing.html#cb31-1" tabindex="-1"></a>fit1 <span class="op">=</span> Holt(steel_train[<span class="st">&#39;steelshp&#39;</span>]).fit()</span>
-<span id="cb31-2"><a href="exponential-smoothing.html#cb31-2" tabindex="-1"></a>fit1.summary()</span></code></pre></div>
-<table class="simpletable">
-<caption>Holt Model Results</caption>
-<tr>
-  <th>Dep. Variable:</th>    <td>steelshp</td> <th>  No. Observations:  </th>        <td>87</td>       
-</tr>
-<tr>
-  <th>Model:</th>              <td>Holt</td>   <th>  SSE                </th>   <td>19512718.035</td>  
-</tr>
-<tr>
-  <th>Optimized:</th>          <td>True</td>   <th>  AIC                </th>     <td>1079.898</td>    
-</tr>
-<tr>
-  <th>Trend:</th>            <td>Additive</td> <th>  BIC                </th>     <td>1089.762</td>    
-</tr>
-<tr>
-  <th>Seasonal:</th>           <td>None</td>   <th>  AICC               </th>     <td>1080.948</td>    
-</tr>
-<tr>
-  <th>Seasonal Periods:</th>   <td>None</td>   <th>  Date:              </th> <td>Thu, 15 Aug 2024</td>
-</tr>
-<tr>
-  <th>Box-Cox:</th>            <td>False</td>  <th>  Time:              </th>     <td>12:12:39</td>    
-</tr>
-<tr>
-  <th>Box-Cox Coeff.:</th>     <td>None</td>   <th>                     </th>         <td> </td>       
-</tr>
-</table>
-<table class="simpletable">
-<tr>
-         <td></td>                 <th>coeff</th>                <th>code</th>               <th>optimized</th>     
-</tr>
-<tr>
-  <th>smoothing_level</th> <td>           0.5430284</td> <td>               alpha</td> <td>                True</td>
-</tr>
-<tr>
-  <th>smoothing_trend</th> <td>           0.0821604</td> <td>                beta</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_level</th>   <td>           5992.3106</td> <td>                 l.0</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_trend</th>   <td>          -39.011692</td> <td>                 b.0</td> <td>                True</td>
-</tr>
-</table>
-<div class="sourceCode" id="cb32"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="exponential-smoothing.html#cb32-1" tabindex="-1"></a>fcast1 <span class="op">=</span> fit1.forecast(<span class="dv">9</span>)</span>
-<span id="cb32-2"><a href="exponential-smoothing.html#cb32-2" tabindex="-1"></a>fcast1</span></code></pre></div>
-<pre><code>## 1976-01-31    6036.814543
-## 1976-07-31    5970.112066
-## 1977-01-31    5903.409589
-## 1977-07-31    5836.707112
-## 1978-01-31    5770.004635
-## 1978-07-31    5703.302158
-## 1979-01-31    5636.599681
-## 1979-07-31    5569.897204
-## 1980-01-31    5503.194727
-## Freq: 6ME, dtype: float64</code></pre>
-<div class="sourceCode" id="cb34"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="exponential-smoothing.html#cb34-1" tabindex="-1"></a>fit2 <span class="op">=</span> Holt(steel_train[<span class="st">&#39;steelshp&#39;</span>],exponential<span class="op">=</span><span class="va">True</span>).fit()</span></code></pre></div>
-<pre><code>## C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\holtwinters\model.py:915: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+<div class="sourceCode" id="cb36"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="exponential-smoothing.html#cb36-1" tabindex="-1"></a><span class="co">#### This code uses the new Statsforecast package</span></span>
+<span id="cb36-2"><a href="exponential-smoothing.html#cb36-2" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="exponential-smoothing.html#cb36-3" tabindex="-1"></a><span class="co">### Holt Model</span></span>
+<span id="cb36-4"><a href="exponential-smoothing.html#cb36-4" tabindex="-1"></a></span>
+<span id="cb36-5"><a href="exponential-smoothing.html#cb36-5" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
+<span id="cb36-6"><a href="exponential-smoothing.html#cb36-6" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb36-7"><a href="exponential-smoothing.html#cb36-7" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb36-8"><a href="exponential-smoothing.html#cb36-8" tabindex="-1"></a></span>
+<span id="cb36-9"><a href="exponential-smoothing.html#cb36-9" tabindex="-1"></a></span>
+<span id="cb36-10"><a href="exponential-smoothing.html#cb36-10" tabindex="-1"></a>d <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: usair_p.index, <span class="st">&#39;y&#39;</span>: usair_p[<span class="st">&#39;Passengers&#39;</span>]}</span>
+<span id="cb36-11"><a href="exponential-smoothing.html#cb36-11" tabindex="-1"></a>usair_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d)</span>
+<span id="cb36-12"><a href="exponential-smoothing.html#cb36-12" tabindex="-1"></a></span>
+<span id="cb36-13"><a href="exponential-smoothing.html#cb36-13" tabindex="-1"></a><span class="co">### train has 192 observations</span></span>
+<span id="cb36-14"><a href="exponential-smoothing.html#cb36-14" tabindex="-1"></a><span class="co">### test has 27 observations</span></span>
+<span id="cb36-15"><a href="exponential-smoothing.html#cb36-15" tabindex="-1"></a></span>
+<span id="cb36-16"><a href="exponential-smoothing.html#cb36-16" tabindex="-1"></a>air_train <span class="op">=</span> usair_sf.head(<span class="dv">192</span>)</span>
+<span id="cb36-17"><a href="exponential-smoothing.html#cb36-17" tabindex="-1"></a>air_test <span class="op">=</span> usair_sf.tail(<span class="dv">27</span>)</span>
+<span id="cb36-18"><a href="exponential-smoothing.html#cb36-18" tabindex="-1"></a></span>
+<span id="cb36-19"><a href="exponential-smoothing.html#cb36-19" tabindex="-1"></a>air_holt <span class="op">=</span> StatsForecast(models <span class="op">=</span> [AutoETS(model<span class="op">=</span>[<span class="st">&quot;A&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;N&quot;</span>],  alias<span class="op">=</span><span class="st">&quot;AutoETS&quot;</span>, season_length<span class="op">=</span><span class="dv">12</span>)], freq <span class="op">=</span> <span class="st">&#39;ME&#39;</span>)</span>
+<span id="cb36-20"><a href="exponential-smoothing.html#cb36-20" tabindex="-1"></a>air_model <span class="op">=</span> air_holt.fit(df <span class="op">=</span> air_train)</span>
+<span id="cb36-21"><a href="exponential-smoothing.html#cb36-21" tabindex="-1"></a></span>
+<span id="cb36-22"><a href="exponential-smoothing.html#cb36-22" tabindex="-1"></a>result <span class="op">=</span> air_holt.fitted_[<span class="dv">0</span>,<span class="dv">0</span>].model_[<span class="st">&#39;par&#39;</span>]</span>
+<span id="cb36-23"><a href="exponential-smoothing.html#cb36-23" tabindex="-1"></a>result</span></code></pre></div>
+<pre><code>## array([5.69871723e-01, 1.00000000e-04,            nan,            nan,
+##        3.48788866e+04, 1.29335525e+02])</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="exponential-smoothing.html#cb38-1" tabindex="-1"></a>y_hat1<span class="op">=</span>air_model.predict(h<span class="op">=</span><span class="dv">27</span>)</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\Lib\site-packages\statsforecast\core.py:492: FutureWarning: In a future version the predictions will have the id as a column. You can set the `NIXTLA_ID_AS_COL` environment variable to adopt the new behavior and to suppress this warning.
 ##   warnings.warn(</code></pre>
-<div class="sourceCode" id="cb36"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="exponential-smoothing.html#cb36-1" tabindex="-1"></a>fit2.summary()</span></code></pre></div>
-<table class="simpletable">
-<caption>Holt Model Results</caption>
-<tr>
-  <th>Dep. Variable:</th>       <td>steelshp</td>    <th>  No. Observations:  </th>        <td>87</td>       
-</tr>
-<tr>
-  <th>Model:</th>                 <td>Holt</td>      <th>  SSE                </th>   <td>20441975.260</td>  
-</tr>
-<tr>
-  <th>Optimized:</th>             <td>True</td>      <th>  AIC                </th>     <td>1083.946</td>    
-</tr>
-<tr>
-  <th>Trend:</th>            <td>Multiplicative</td> <th>  BIC                </th>     <td>1093.809</td>    
-</tr>
-<tr>
-  <th>Seasonal:</th>              <td>None</td>      <th>  AICC               </th>     <td>1084.996</td>    
-</tr>
-<tr>
-  <th>Seasonal Periods:</th>      <td>None</td>      <th>  Date:              </th> <td>Thu, 15 Aug 2024</td>
-</tr>
-<tr>
-  <th>Box-Cox:</th>               <td>False</td>     <th>  Time:              </th>     <td>12:12:39</td>    
-</tr>
-<tr>
-  <th>Box-Cox Coeff.:</th>        <td>None</td>      <th>                     </th>         <td> </td>       
-</tr>
-</table>
-<table class="simpletable">
-<tr>
-         <td></td>                 <th>coeff</th>                <th>code</th>               <th>optimized</th>     
-</tr>
-<tr>
-  <th>smoothing_level</th> <td>           0.5471429</td> <td>               alpha</td> <td>                True</td>
-</tr>
-<tr>
-  <th>smoothing_trend</th> <td>           0.0705991</td> <td>                beta</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_level</th>   <td>           5980.0000</td> <td>                 l.0</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_trend</th>   <td>           1.0284281</td> <td>                 b.0</td> <td>                True</td>
-</tr>
-</table>
-<div class="sourceCode" id="cb37"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="exponential-smoothing.html#cb37-1" tabindex="-1"></a>fcast2 <span class="op">=</span> fit2.forecast(<span class="dv">9</span>)</span>
-<span id="cb37-2"><a href="exponential-smoothing.html#cb37-2" tabindex="-1"></a>fcast2</span></code></pre></div>
-<pre><code>## 1976-01-31    6064.909101
-## 1976-07-31    6017.661547
-## 1977-01-31    5970.782067
-## 1977-07-31    5924.267792
-## 1978-01-31    5878.115878
-## 1978-07-31    5832.323502
-## 1979-01-31    5786.887863
-## 1979-07-31    5741.806182
-## 1980-01-31    5697.075702
-## Freq: 6ME, dtype: float64</code></pre>
-<div class="sourceCode" id="cb39"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb39-1"><a href="exponential-smoothing.html#cb39-1" tabindex="-1"></a>fit3 <span class="op">=</span> Holt(steel_train[<span class="st">&#39;steelshp&#39;</span>],damped<span class="op">=</span><span class="va">True</span>).fit()</span></code></pre></div>
-<pre><code>## &lt;string&gt;:1: FutureWarning: the &#39;damped&#39; keyword is deprecated, use &#39;damped_trend&#39; instead.</code></pre>
-<div class="sourceCode" id="cb41"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb41-1"><a href="exponential-smoothing.html#cb41-1" tabindex="-1"></a>fit3.summary()</span></code></pre></div>
-<table class="simpletable">
-<caption>Holt Model Results</caption>
-<tr>
-  <th>Dep. Variable:</th>    <td>steelshp</td> <th>  No. Observations:  </th>        <td>87</td>       
-</tr>
-<tr>
-  <th>Model:</th>              <td>Holt</td>   <th>  SSE                </th>   <td>18715743.199</td>  
-</tr>
-<tr>
-  <th>Optimized:</th>          <td>True</td>   <th>  AIC                </th>     <td>1078.270</td>    
-</tr>
-<tr>
-  <th>Trend:</th>            <td>Additive</td> <th>  BIC                </th>     <td>1090.600</td>    
-</tr>
-<tr>
-  <th>Seasonal:</th>           <td>None</td>   <th>  AICC               </th>     <td>1079.688</td>    
-</tr>
-<tr>
-  <th>Seasonal Periods:</th>   <td>None</td>   <th>  Date:              </th> <td>Thu, 15 Aug 2024</td>
-</tr>
-<tr>
-  <th>Box-Cox:</th>            <td>False</td>  <th>  Time:              </th>     <td>12:12:39</td>    
-</tr>
-<tr>
-  <th>Box-Cox Coeff.:</th>     <td>None</td>   <th>                     </th>         <td> </td>       
-</tr>
-</table>
-<table class="simpletable">
-<tr>
-         <td></td>                 <th>coeff</th>                <th>code</th>               <th>optimized</th>     
-</tr>
-<tr>
-  <th>smoothing_level</th> <td>           0.4851218</td> <td>               alpha</td> <td>                True</td>
-</tr>
-<tr>
-  <th>smoothing_trend</th> <td>           0.0417095</td> <td>                beta</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_level</th>   <td>           6259.5945</td> <td>                 l.0</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_trend</th>   <td>           10.189748</td> <td>                 b.0</td> <td>                True</td>
-</tr>
-<tr>
-  <th>damping_trend</th>   <td>           0.9710694</td> <td>                 phi</td> <td>                True</td>
-</tr>
-</table>
-<div class="sourceCode" id="cb42"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="exponential-smoothing.html#cb42-1" tabindex="-1"></a>fcast3 <span class="op">=</span> fit3.forecast(<span class="dv">9</span>)</span>
-<span id="cb42-2"><a href="exponential-smoothing.html#cb42-2" tabindex="-1"></a>fcast3</span></code></pre></div>
-<pre><code>## 1976-01-31    6136.055442
-## 1976-07-31    6106.850781
-## 1977-01-31    6078.491030
-## 1977-07-31    6050.951744
-## 1978-01-31    6024.209187
-## 1978-07-31    5998.240309
-## 1979-01-31    5973.022727
-## 1979-07-31    5948.534705
-## 1980-01-31    5924.755137
-## Freq: 6ME, dtype: float64</code></pre>
-<div class="sourceCode" id="cb44"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb44-1"><a href="exponential-smoothing.html#cb44-1" tabindex="-1"></a>fit4 <span class="op">=</span> Holt(steel_train[<span class="st">&#39;steelshp&#39;</span>],exponential<span class="op">=</span><span class="va">True</span>,damped<span class="op">=</span><span class="va">True</span>).fit()</span></code></pre></div>
-<pre><code>## &lt;string&gt;:1: FutureWarning: the &#39;damped&#39; keyword is deprecated, use &#39;damped_trend&#39; instead.
-## C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\holtwinters\model.py:83: RuntimeWarning: overflow encountered in matmul
-##   return err.T @ err</code></pre>
-<div class="sourceCode" id="cb46"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb46-1"><a href="exponential-smoothing.html#cb46-1" tabindex="-1"></a>fit4.summary()</span></code></pre></div>
-<table class="simpletable">
-<caption>Holt Model Results</caption>
-<tr>
-  <th>Dep. Variable:</th>       <td>steelshp</td>    <th>  No. Observations:  </th>        <td>87</td>       
-</tr>
-<tr>
-  <th>Model:</th>                 <td>Holt</td>      <th>  SSE                </th>   <td>19184543.322</td>  
-</tr>
-<tr>
-  <th>Optimized:</th>             <td>True</td>      <th>  AIC                </th>     <td>1080.423</td>    
-</tr>
-<tr>
-  <th>Trend:</th>            <td>Multiplicative</td> <th>  BIC                </th>     <td>1092.752</td>    
-</tr>
-<tr>
-  <th>Seasonal:</th>              <td>None</td>      <th>  AICC               </th>     <td>1081.840</td>    
-</tr>
-<tr>
-  <th>Seasonal Periods:</th>      <td>None</td>      <th>  Date:              </th> <td>Thu, 15 Aug 2024</td>
-</tr>
-<tr>
-  <th>Box-Cox:</th>               <td>False</td>     <th>  Time:              </th>     <td>12:12:39</td>    
-</tr>
-<tr>
-  <th>Box-Cox Coeff.:</th>        <td>None</td>      <th>                     </th>         <td> </td>       
-</tr>
-</table>
-<table class="simpletable">
-<tr>
-         <td></td>                 <th>coeff</th>                <th>code</th>               <th>optimized</th>     
-</tr>
-<tr>
-  <th>smoothing_level</th> <td>           0.5269222</td> <td>               alpha</td> <td>                True</td>
-</tr>
-<tr>
-  <th>smoothing_trend</th> <td>           0.0654773</td> <td>                beta</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_level</th>   <td>           6009.5254</td> <td>                 l.0</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_trend</th>   <td>           0.9982269</td> <td>                 b.0</td> <td>                True</td>
-</tr>
-<tr>
-  <th>damping_trend</th>   <td>           0.9829782</td> <td>                 phi</td> <td>                True</td>
-</tr>
-</table>
-<div class="sourceCode" id="cb47"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb47-1"><a href="exponential-smoothing.html#cb47-1" tabindex="-1"></a>fcast4 <span class="op">=</span> fit4.forecast(<span class="dv">9</span>)</span>
-<span id="cb47-2"><a href="exponential-smoothing.html#cb47-2" tabindex="-1"></a>fcast4</span></code></pre></div>
-<pre><code>## 1976-01-31    6082.733658
-## 1976-07-31    6039.706005
-## 1977-01-31    5997.707411
-## 1977-07-31    5956.708353
-## 1978-01-31    5916.680330
-## 1978-07-31    5877.595817
-## 1979-01-31    5839.428234
-## 1979-07-31    5802.151898
-## 1980-01-31    5765.741996
-## Freq: 6ME, dtype: float64</code></pre>
-<div class="sourceCode" id="cb49"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb49-1"><a href="exponential-smoothing.html#cb49-1" tabindex="-1"></a>ax<span class="op">=</span>steel_train.plot(color<span class="op">=</span><span class="st">&quot;black&quot;</span>,figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
-<span id="cb49-2"><a href="exponential-smoothing.html#cb49-2" tabindex="-1"></a>fcast1.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;blue&quot;</span>)</span>
-<span id="cb49-3"><a href="exponential-smoothing.html#cb49-3" tabindex="-1"></a>fcast2.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;orange&quot;</span>)</span>
-<span id="cb49-4"><a href="exponential-smoothing.html#cb49-4" tabindex="-1"></a>fcast3.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;purple&quot;</span>)</span>
-<span id="cb49-5"><a href="exponential-smoothing.html#cb49-5" tabindex="-1"></a>fcast4.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;gray&quot;</span>)</span>
-<span id="cb49-6"><a href="exponential-smoothing.html#cb49-6" tabindex="-1"></a>steel_test.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;red&quot;</span>)</span>
-<span id="cb49-7"><a href="exponential-smoothing.html#cb49-7" tabindex="-1"></a>plt.show()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/holt%20models-3.png" width="1152" /></p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="exponential-smoothing.html#cb40-1" tabindex="-1"></a>yhat<span class="op">=</span>y_hat1.reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb40-2"><a href="exponential-smoothing.html#cb40-2" tabindex="-1"></a>forecast<span class="op">=</span>pd.Series(pd.date_range(<span class="st">&quot;2006-01-01&quot;</span>, freq<span class="op">=</span><span class="st">&quot;ME&quot;</span>, periods<span class="op">=</span><span class="dv">27</span>))</span>
+<span id="cb40-3"><a href="exponential-smoothing.html#cb40-3" tabindex="-1"></a>forecast<span class="op">=</span>pd.DataFrame(forecast)</span>
+<span id="cb40-4"><a href="exponential-smoothing.html#cb40-4" tabindex="-1"></a>forecast.columns<span class="op">=</span>[<span class="st">&quot;ds&quot;</span>]</span>
+<span id="cb40-5"><a href="exponential-smoothing.html#cb40-5" tabindex="-1"></a>forecast[<span class="st">&quot;hat&quot;</span>]<span class="op">=</span>yhat[<span class="st">&#39;AutoETS&#39;</span>]</span>
+<span id="cb40-6"><a href="exponential-smoothing.html#cb40-6" tabindex="-1"></a>forecast[<span class="st">&quot;unique_id&quot;</span>]<span class="op">=</span><span class="st">&quot;1&quot;</span></span>
+<span id="cb40-7"><a href="exponential-smoothing.html#cb40-7" tabindex="-1"></a>sns.lineplot(air_train,x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;y&quot;</span>, label<span class="op">=</span><span class="st">&quot;Train&quot;</span>)</span>
+<span id="cb40-8"><a href="exponential-smoothing.html#cb40-8" tabindex="-1"></a>sns.lineplot(air_test, x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;y&quot;</span>, label<span class="op">=</span><span class="st">&quot;Test&quot;</span>)</span>
+<span id="cb40-9"><a href="exponential-smoothing.html#cb40-9" tabindex="-1"></a>sns.lineplot(forecast,x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;hat&quot;</span>, label<span class="op">=</span><span class="st">&quot;Forecast&quot;</span>,)</span>
+<span id="cb40-10"><a href="exponential-smoothing.html#cb40-10" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/holt%20models-5.png" width="672" /></p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb41-1"><a href="exponential-smoothing.html#cb41-1" tabindex="-1"></a><span class="co">### Damped trend</span></span>
+<span id="cb41-2"><a href="exponential-smoothing.html#cb41-2" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="exponential-smoothing.html#cb41-3" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="exponential-smoothing.html#cb41-4" tabindex="-1"></a>air_holt <span class="op">=</span> StatsForecast(models <span class="op">=</span> [AutoETS(model<span class="op">=</span>[<span class="st">&quot;A&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;N&quot;</span>],  damped<span class="op">=</span><span class="va">True</span>, alias<span class="op">=</span><span class="st">&quot;AutoETS&quot;</span>, season_length<span class="op">=</span><span class="dv">12</span>)], freq <span class="op">=</span> <span class="st">&#39;ME&#39;</span>)</span>
+<span id="cb41-5"><a href="exponential-smoothing.html#cb41-5" tabindex="-1"></a>air_model <span class="op">=</span> air_holt.fit(df <span class="op">=</span> air_train)</span>
+<span id="cb41-6"><a href="exponential-smoothing.html#cb41-6" tabindex="-1"></a></span>
+<span id="cb41-7"><a href="exponential-smoothing.html#cb41-7" tabindex="-1"></a>result <span class="op">=</span> air_holt.fitted_[<span class="dv">0</span>,<span class="dv">0</span>].model_[<span class="st">&#39;par&#39;</span>]</span>
+<span id="cb41-8"><a href="exponential-smoothing.html#cb41-8" tabindex="-1"></a>result</span></code></pre></div>
+<pre><code>## array([5.71199778e-01, 1.00000000e-04,            nan, 9.79993121e-01,
+##        3.46022280e+04, 3.16699140e+02])</code></pre>
+<div class="sourceCode" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="exponential-smoothing.html#cb43-1" tabindex="-1"></a>y_hat1<span class="op">=</span>air_model.predict(h<span class="op">=</span><span class="dv">27</span>)</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\Lib\site-packages\statsforecast\core.py:492: FutureWarning: In a future version the predictions will have the id as a column. You can set the `NIXTLA_ID_AS_COL` environment variable to adopt the new behavior and to suppress this warning.
+##   warnings.warn(</code></pre>
+<div class="sourceCode" id="cb45"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb45-1"><a href="exponential-smoothing.html#cb45-1" tabindex="-1"></a>yhat<span class="op">=</span>y_hat1.reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb45-2"><a href="exponential-smoothing.html#cb45-2" tabindex="-1"></a>forecast<span class="op">=</span>pd.Series(pd.date_range(<span class="st">&quot;2006-01-01&quot;</span>, freq<span class="op">=</span><span class="st">&quot;ME&quot;</span>, periods<span class="op">=</span><span class="dv">27</span>))</span>
+<span id="cb45-3"><a href="exponential-smoothing.html#cb45-3" tabindex="-1"></a>forecast<span class="op">=</span>pd.DataFrame(forecast)</span>
+<span id="cb45-4"><a href="exponential-smoothing.html#cb45-4" tabindex="-1"></a>forecast.columns<span class="op">=</span>[<span class="st">&quot;ds&quot;</span>]</span>
+<span id="cb45-5"><a href="exponential-smoothing.html#cb45-5" tabindex="-1"></a>forecast[<span class="st">&quot;hat&quot;</span>]<span class="op">=</span>yhat[<span class="st">&#39;AutoETS&#39;</span>]</span>
+<span id="cb45-6"><a href="exponential-smoothing.html#cb45-6" tabindex="-1"></a>forecast[<span class="st">&quot;unique_id&quot;</span>]<span class="op">=</span><span class="st">&quot;1&quot;</span></span>
+<span id="cb45-7"><a href="exponential-smoothing.html#cb45-7" tabindex="-1"></a>sns.lineplot(air_train,x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;y&quot;</span>, label<span class="op">=</span><span class="st">&quot;Train&quot;</span>)</span>
+<span id="cb45-8"><a href="exponential-smoothing.html#cb45-8" tabindex="-1"></a>sns.lineplot(air_test, x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;y&quot;</span>, label<span class="op">=</span><span class="st">&quot;Test&quot;</span>)</span>
+<span id="cb45-9"><a href="exponential-smoothing.html#cb45-9" tabindex="-1"></a>sns.lineplot(forecast,x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;hat&quot;</span>, label<span class="op">=</span><span class="st">&quot;Forecast&quot;</span>,)</span>
+<span id="cb45-10"><a href="exponential-smoothing.html#cb45-10" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/holt%20models-6.png" width="672" /></p>
 <p>Seasonal models in Python:</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb50-1"><a href="exponential-smoothing.html#cb50-1" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb50-2"><a href="exponential-smoothing.html#cb50-2" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb50-3"><a href="exponential-smoothing.html#cb50-3" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
-<span id="cb50-4"><a href="exponential-smoothing.html#cb50-4" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
-<span id="cb50-5"><a href="exponential-smoothing.html#cb50-5" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
-<span id="cb50-6"><a href="exponential-smoothing.html#cb50-6" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
-<span id="cb50-7"><a href="exponential-smoothing.html#cb50-7" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
-<span id="cb50-8"><a href="exponential-smoothing.html#cb50-8" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
-<span id="cb50-9"><a href="exponential-smoothing.html#cb50-9" tabindex="-1"></a></span>
-<span id="cb50-10"><a href="exponential-smoothing.html#cb50-10" tabindex="-1"></a></span>
-<span id="cb50-11"><a href="exponential-smoothing.html#cb50-11" tabindex="-1"></a>usair_train <span class="op">=</span> usair_p.head(<span class="dv">192</span>)</span>
-<span id="cb50-12"><a href="exponential-smoothing.html#cb50-12" tabindex="-1"></a>usair_test <span class="op">=</span> usair_p.tail(<span class="dv">27</span>)</span>
-<span id="cb50-13"><a href="exponential-smoothing.html#cb50-13" tabindex="-1"></a></span>
-<span id="cb50-14"><a href="exponential-smoothing.html#cb50-14" tabindex="-1"></a><span class="co">#### Caution!!!!! These did not converge!!! Would NOT recommend using them!</span></span>
-<span id="cb50-15"><a href="exponential-smoothing.html#cb50-15" tabindex="-1"></a></span>
-<span id="cb50-16"><a href="exponential-smoothing.html#cb50-16" tabindex="-1"></a>usair_train[<span class="st">&#39;HWES_ADD&#39;</span>] <span class="op">=</span> ExponentialSmoothing(usair_train[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit().fittedvalues</span></code></pre></div>
-<pre><code>## C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\holtwinters\model.py:915: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
-##   warnings.warn(
-## &lt;string&gt;:4: SettingWithCopyWarning: 
-## A value is trying to be set on a copy of a slice from a DataFrame.
-## Try using .loc[row_indexer,col_indexer] = value instead
-## 
-## See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy</code></pre>
-<div class="sourceCode" id="cb52"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb52-1"><a href="exponential-smoothing.html#cb52-1" tabindex="-1"></a>usair_train[<span class="st">&#39;HWES_MUL&#39;</span>] <span class="op">=</span> ExponentialSmoothing(usair_train[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;mul&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;mul&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit().fittedvalues</span></code></pre></div>
-<pre><code>## C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\holtwinters\model.py:915: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
-##   warnings.warn(
-## &lt;string&gt;:2: SettingWithCopyWarning: 
-## A value is trying to be set on a copy of a slice from a DataFrame.
-## Try using .loc[row_indexer,col_indexer] = value instead
-## 
-## See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy</code></pre>
-<div class="sourceCode" id="cb54"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb54-1"><a href="exponential-smoothing.html#cb54-1" tabindex="-1"></a>usair_train[[<span class="st">&#39;Passengers&#39;</span>,<span class="st">&#39;HWES_ADD&#39;</span>,<span class="st">&#39;HWES_MUL&#39;</span>]].plot(title<span class="op">=</span><span class="st">&#39;Holt Winters Exponential Smoothing: Additive and Multiplicative Seasonality&#39;</span>)</span>
-<span id="cb54-2"><a href="exponential-smoothing.html#cb54-2" tabindex="-1"></a>plt.show()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/seasonal%20models-5.png" width="672" /></p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb55-1"><a href="exponential-smoothing.html#cb55-1" tabindex="-1"></a>fit1<span class="op">=</span>ExponentialSmoothing(usair_train[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;mul&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit()</span></code></pre></div>
-<pre><code>## C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\holtwinters\model.py:915: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+<div class="sourceCode" id="cb46"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb46-1"><a href="exponential-smoothing.html#cb46-1" tabindex="-1"></a><span class="co">###  Using Statsforecast</span></span>
+<span id="cb46-2"><a href="exponential-smoothing.html#cb46-2" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="exponential-smoothing.html#cb46-3" tabindex="-1"></a><span class="co">### Additive Seasonality</span></span>
+<span id="cb46-4"><a href="exponential-smoothing.html#cb46-4" tabindex="-1"></a></span>
+<span id="cb46-5"><a href="exponential-smoothing.html#cb46-5" tabindex="-1"></a>air_holtw <span class="op">=</span> StatsForecast(models <span class="op">=</span> [AutoETS(model<span class="op">=</span>[<span class="st">&quot;A&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;A&quot;</span>],  alias<span class="op">=</span><span class="st">&quot;AutoETS&quot;</span>, season_length<span class="op">=</span><span class="dv">12</span>)], freq <span class="op">=</span> <span class="st">&#39;ME&#39;</span>)</span>
+<span id="cb46-6"><a href="exponential-smoothing.html#cb46-6" tabindex="-1"></a>air_model <span class="op">=</span> air_holtw.fit(df <span class="op">=</span> air_train)</span>
+<span id="cb46-7"><a href="exponential-smoothing.html#cb46-7" tabindex="-1"></a></span>
+<span id="cb46-8"><a href="exponential-smoothing.html#cb46-8" tabindex="-1"></a>result <span class="op">=</span> air_holtw.fitted_[<span class="dv">0</span>,<span class="dv">0</span>].model_[<span class="st">&#39;par&#39;</span>]</span>
+<span id="cb46-9"><a href="exponential-smoothing.html#cb46-9" tabindex="-1"></a>result</span></code></pre></div>
+<pre><code>## array([ 4.81222943e-01,  1.59916114e-02,  2.42485779e-01,  8.90792825e-01,
+##         3.77019540e+04,  5.67094839e+02, -9.99248746e+02, -2.53068050e+03,
+##         1.17586756e+03, -2.77023876e+03,  5.79529172e+03,  4.08571477e+03,
+##         2.44858026e+03, -1.89481694e+02, -5.21476747e+02,  1.96822431e+03,
+##        -4.80880072e+03, -3.65375146e+03])</code></pre>
+<div class="sourceCode" id="cb48"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb48-1"><a href="exponential-smoothing.html#cb48-1" tabindex="-1"></a>y_hat1<span class="op">=</span>air_model.predict(h<span class="op">=</span><span class="dv">27</span>)</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\Lib\site-packages\statsforecast\core.py:492: FutureWarning: In a future version the predictions will have the id as a column. You can set the `NIXTLA_ID_AS_COL` environment variable to adopt the new behavior and to suppress this warning.
 ##   warnings.warn(</code></pre>
-<div class="sourceCode" id="cb57"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb57-1"><a href="exponential-smoothing.html#cb57-1" tabindex="-1"></a>fit1.summary()</span></code></pre></div>
-<table class="simpletable">
-<caption>ExponentialSmoothing Model Results</caption>
-<tr>
-  <th>Dep. Variable:</th>         <td>Passengers</td>      <th>  No. Observations:  </th>        <td>192</td>      
-</tr>
-<tr>
-  <th>Model:</th>            <td>ExponentialSmoothing</td> <th>  SSE                </th>   <td>776185668.189</td> 
-</tr>
-<tr>
-  <th>Optimized:</th>                <td>True</td>         <th>  AIC                </th>     <td>2952.782</td>    
-</tr>
-<tr>
-  <th>Trend:</th>                  <td>Additive</td>       <th>  BIC                </th>     <td>3004.902</td>    
-</tr>
-<tr>
-  <th>Seasonal:</th>            <td>Multiplicative</td>    <th>  AICC               </th>     <td>2956.736</td>    
-</tr>
-<tr>
-  <th>Seasonal Periods:</th>          <td>12</td>          <th>  Date:              </th> <td>Thu, 15 Aug 2024</td>
-</tr>
-<tr>
-  <th>Box-Cox:</th>                  <td>False</td>        <th>  Time:              </th>     <td>12:12:42</td>    
-</tr>
-<tr>
-  <th>Box-Cox Coeff.:</th>           <td>None</td>         <th>                     </th>         <td> </td>       
-</tr>
-</table>
-<table class="simpletable">
-<tr>
-           <td></td>                  <th>coeff</th>                <th>code</th>               <th>optimized</th>     
-</tr>
-<tr>
-  <th>smoothing_level</th>    <td>           0.3939286</td> <td>               alpha</td> <td>                True</td>
-</tr>
-<tr>
-  <th>smoothing_trend</th>    <td>           0.0218849</td> <td>                beta</td> <td>                True</td>
-</tr>
-<tr>
-  <th>smoothing_seasonal</th> <td>           0.2754870</td> <td>               gamma</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_level</th>      <td>           38232.794</td> <td>                 l.0</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_trend</th>      <td>          -95.864899</td> <td>                 b.0</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.0</th>  <td>           0.8828055</td> <td>                 s.0</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.1</th>  <td>           0.8473624</td> <td>                 s.1</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.2</th>  <td>           1.0108916</td> <td>                 s.2</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.3</th>  <td>           0.9777503</td> <td>                 s.3</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.4</th>  <td>           1.0088677</td> <td>                 s.4</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.5</th>  <td>           1.0761260</td> <td>                 s.5</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.6</th>  <td>           1.1385855</td> <td>                 s.6</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.7</th>  <td>           1.1824059</td> <td>                 s.7</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.8</th>  <td>           0.9607449</td> <td>                 s.8</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.9</th>  <td>           1.0081718</td> <td>                 s.9</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.10</th> <td>           0.9385590</td> <td>                s.10</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.11</th> <td>           0.9677292</td> <td>                s.11</td> <td>                True</td>
-</tr>
-</table>
-<div class="sourceCode" id="cb58"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb58-1"><a href="exponential-smoothing.html#cb58-1" tabindex="-1"></a>fit2<span class="op">=</span>ExponentialSmoothing(usair_train[<span class="st">&#39;Passengers&#39;</span>],trend<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal<span class="op">=</span><span class="st">&#39;add&#39;</span>,seasonal_periods<span class="op">=</span><span class="dv">12</span>).fit()</span></code></pre></div>
-<pre><code>## C:\PROGRA~3\ANACON~1\envs\R_Env2\lib\site-packages\statsmodels\tsa\holtwinters\model.py:915: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+<div class="sourceCode" id="cb50"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb50-1"><a href="exponential-smoothing.html#cb50-1" tabindex="-1"></a>yhat<span class="op">=</span>y_hat1.reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb50-2"><a href="exponential-smoothing.html#cb50-2" tabindex="-1"></a>forecast<span class="op">=</span>pd.Series(pd.date_range(<span class="st">&quot;2006-01-01&quot;</span>, freq<span class="op">=</span><span class="st">&quot;ME&quot;</span>, periods<span class="op">=</span><span class="dv">27</span>))</span>
+<span id="cb50-3"><a href="exponential-smoothing.html#cb50-3" tabindex="-1"></a>forecast<span class="op">=</span>pd.DataFrame(forecast)</span>
+<span id="cb50-4"><a href="exponential-smoothing.html#cb50-4" tabindex="-1"></a>forecast.columns<span class="op">=</span>[<span class="st">&quot;ds&quot;</span>]</span>
+<span id="cb50-5"><a href="exponential-smoothing.html#cb50-5" tabindex="-1"></a>forecast[<span class="st">&quot;hat&quot;</span>]<span class="op">=</span>yhat[<span class="st">&#39;AutoETS&#39;</span>]</span>
+<span id="cb50-6"><a href="exponential-smoothing.html#cb50-6" tabindex="-1"></a>forecast[<span class="st">&quot;unique_id&quot;</span>]<span class="op">=</span><span class="st">&quot;1&quot;</span></span>
+<span id="cb50-7"><a href="exponential-smoothing.html#cb50-7" tabindex="-1"></a>sns.lineplot(air_train,x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;y&quot;</span>, label<span class="op">=</span><span class="st">&quot;Train&quot;</span>)</span>
+<span id="cb50-8"><a href="exponential-smoothing.html#cb50-8" tabindex="-1"></a>sns.lineplot(air_test, x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;y&quot;</span>, label<span class="op">=</span><span class="st">&quot;Test&quot;</span>)</span>
+<span id="cb50-9"><a href="exponential-smoothing.html#cb50-9" tabindex="-1"></a>sns.lineplot(forecast,x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;hat&quot;</span>, label<span class="op">=</span><span class="st">&quot;Forecast&quot;</span>,)</span>
+<span id="cb50-10"><a href="exponential-smoothing.html#cb50-10" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/seasonal%20models-9.png" width="672" /></p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb51-1"><a href="exponential-smoothing.html#cb51-1" tabindex="-1"></a><span class="co">### Multiplicative Seasonality</span></span>
+<span id="cb51-2"><a href="exponential-smoothing.html#cb51-2" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="exponential-smoothing.html#cb51-3" tabindex="-1"></a>air_holtw <span class="op">=</span> StatsForecast(models <span class="op">=</span> [AutoETS(model<span class="op">=</span>[<span class="st">&quot;M&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;M&quot;</span>],  alias<span class="op">=</span><span class="st">&quot;AutoETS&quot;</span>, season_length<span class="op">=</span><span class="dv">12</span>)], freq <span class="op">=</span> <span class="st">&#39;ME&#39;</span>)</span>
+<span id="cb51-4"><a href="exponential-smoothing.html#cb51-4" tabindex="-1"></a>air_model <span class="op">=</span> air_holtw.fit(df <span class="op">=</span> air_train)</span>
+<span id="cb51-5"><a href="exponential-smoothing.html#cb51-5" tabindex="-1"></a></span>
+<span id="cb51-6"><a href="exponential-smoothing.html#cb51-6" tabindex="-1"></a>result <span class="op">=</span> air_holtw.fitted_[<span class="dv">0</span>,<span class="dv">0</span>].model_[<span class="st">&#39;par&#39;</span>]</span>
+<span id="cb51-7"><a href="exponential-smoothing.html#cb51-7" tabindex="-1"></a>result</span></code></pre></div>
+<pre><code>## array([9.45573068e-02, 2.64219583e-03, 2.54391669e-02,            nan,
+##        3.72394856e+04, 1.57545432e+02, 9.69302717e-01, 9.46292042e-01,
+##        9.96735467e-01, 9.23896361e-01, 1.13023141e+00, 1.12016781e+00,
+##        1.07916358e+00, 1.02341081e+00, 1.00200872e+00, 1.04798340e+00,
+##        8.69839578e-01, 8.90968112e-01])</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb53-1"><a href="exponential-smoothing.html#cb53-1" tabindex="-1"></a>y_hat1<span class="op">=</span>air_model.predict(h<span class="op">=</span><span class="dv">27</span>)</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\Lib\site-packages\statsforecast\core.py:492: FutureWarning: In a future version the predictions will have the id as a column. You can set the `NIXTLA_ID_AS_COL` environment variable to adopt the new behavior and to suppress this warning.
 ##   warnings.warn(</code></pre>
-<div class="sourceCode" id="cb60"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb60-1"><a href="exponential-smoothing.html#cb60-1" tabindex="-1"></a>fit2.summary()</span></code></pre></div>
-<table class="simpletable">
-<caption>ExponentialSmoothing Model Results</caption>
-<tr>
-  <th>Dep. Variable:</th>         <td>Passengers</td>      <th>  No. Observations:  </th>        <td>192</td>      
-</tr>
-<tr>
-  <th>Model:</th>            <td>ExponentialSmoothing</td> <th>  SSE                </th>   <td>786859595.372</td> 
-</tr>
-<tr>
-  <th>Optimized:</th>                <td>True</td>         <th>  AIC                </th>     <td>2955.404</td>    
-</tr>
-<tr>
-  <th>Trend:</th>                  <td>Additive</td>       <th>  BIC                </th>     <td>3007.524</td>    
-</tr>
-<tr>
-  <th>Seasonal:</th>               <td>Additive</td>       <th>  AICC               </th>     <td>2959.358</td>    
-</tr>
-<tr>
-  <th>Seasonal Periods:</th>          <td>12</td>          <th>  Date:              </th> <td>Thu, 15 Aug 2024</td>
-</tr>
-<tr>
-  <th>Box-Cox:</th>                  <td>False</td>        <th>  Time:              </th>     <td>12:12:42</td>    
-</tr>
-<tr>
-  <th>Box-Cox Coeff.:</th>           <td>None</td>         <th>                     </th>         <td> </td>       
-</tr>
-</table>
-<table class="simpletable">
-<tr>
-           <td></td>                  <th>coeff</th>                <th>code</th>               <th>optimized</th>     
-</tr>
-<tr>
-  <th>smoothing_level</th>    <td>           0.4292857</td> <td>               alpha</td> <td>                True</td>
-</tr>
-<tr>
-  <th>smoothing_trend</th>    <td>           0.0225940</td> <td>                beta</td> <td>                True</td>
-</tr>
-<tr>
-  <th>smoothing_seasonal</th> <td>           0.2989456</td> <td>               gamma</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_level</th>      <td>           38232.794</td> <td>                 l.0</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_trend</th>      <td>          -95.864899</td> <td>                 b.0</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.0</th>  <td>          -4632.4028</td> <td>                 s.0</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.1</th>  <td>          -6032.6319</td> <td>                 s.1</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.2</th>  <td>           494.52431</td> <td>                 s.2</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.3</th>  <td>          -873.71528</td> <td>                 s.3</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.4</th>  <td>           368.01389</td> <td>                 s.4</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.5</th>  <td>           3047.9618</td> <td>                 s.5</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.6</th>  <td>           5402.8993</td> <td>                 s.6</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.7</th>  <td>           7100.5243</td> <td>                 s.7</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.8</th>  <td>          -1505.9653</td> <td>                 s.8</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.9</th>  <td>           325.04514</td> <td>                 s.9</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.10</th> <td>          -2405.4861</td> <td>                s.10</td> <td>                True</td>
-</tr>
-<tr>
-  <th>initial_seasons.11</th> <td>          -1288.7674</td> <td>                s.11</td> <td>                True</td>
-</tr>
-</table>
-<div class="sourceCode" id="cb61"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb61-1"><a href="exponential-smoothing.html#cb61-1" tabindex="-1"></a>fcast1<span class="op">=</span>fit1.forecast(<span class="dv">27</span>)</span>
-<span id="cb61-2"><a href="exponential-smoothing.html#cb61-2" tabindex="-1"></a>fcast2<span class="op">=</span>fit2.forecast(<span class="dv">27</span>)</span>
-<span id="cb61-3"><a href="exponential-smoothing.html#cb61-3" tabindex="-1"></a></span>
-<span id="cb61-4"><a href="exponential-smoothing.html#cb61-4" tabindex="-1"></a>ax<span class="op">=</span>usair_train[<span class="st">&quot;Passengers&quot;</span>].plot(color<span class="op">=</span><span class="st">&quot;black&quot;</span>,figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
-<span id="cb61-5"><a href="exponential-smoothing.html#cb61-5" tabindex="-1"></a>fcast1.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;blue&quot;</span>)</span>
-<span id="cb61-6"><a href="exponential-smoothing.html#cb61-6" tabindex="-1"></a>fcast2.plot(ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">&quot;orange&quot;</span>)</span>
-<span id="cb61-7"><a href="exponential-smoothing.html#cb61-7" tabindex="-1"></a>usair_test[<span class="st">&quot;Passengers&quot;</span>].plot(ax<span class="op">=</span>ax,color <span class="op">=</span> <span class="st">&quot;red&quot;</span>)</span>
-<span id="cb61-8"><a href="exponential-smoothing.html#cb61-8" tabindex="-1"></a>plt.show()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/seasonal%20models-6.png" width="1152" /></p>
-<div class="sourceCode" id="cb62"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb62-1"><a href="exponential-smoothing.html#cb62-1" tabindex="-1"></a>error<span class="op">=</span>usair_test[<span class="st">&#39;Passengers&#39;</span>]<span class="op">-</span>fcast1</span>
-<span id="cb62-2"><a href="exponential-smoothing.html#cb62-2" tabindex="-1"></a>MAE<span class="op">=</span>np.mean(<span class="bu">abs</span>(error))</span>
-<span id="cb62-3"><a href="exponential-smoothing.html#cb62-3" tabindex="-1"></a>MAE</span></code></pre></div>
-<pre><code>## 951.5467587577447</code></pre>
-<div class="sourceCode" id="cb64"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb64-1"><a href="exponential-smoothing.html#cb64-1" tabindex="-1"></a>MAPE<span class="op">=</span>np.mean(<span class="bu">abs</span>(error)<span class="op">/</span>usair_test[<span class="st">&#39;Passengers&#39;</span>])</span>
-<span id="cb64-2"><a href="exponential-smoothing.html#cb64-2" tabindex="-1"></a>MAPE</span></code></pre></div>
-<pre><code>## 0.01522735714071667</code></pre>
+<div class="sourceCode" id="cb55"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb55-1"><a href="exponential-smoothing.html#cb55-1" tabindex="-1"></a>yhat<span class="op">=</span>y_hat1.reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb55-2"><a href="exponential-smoothing.html#cb55-2" tabindex="-1"></a>forecast<span class="op">=</span>pd.Series(pd.date_range(<span class="st">&quot;2006-01-01&quot;</span>, freq<span class="op">=</span><span class="st">&quot;ME&quot;</span>, periods<span class="op">=</span><span class="dv">27</span>))</span>
+<span id="cb55-3"><a href="exponential-smoothing.html#cb55-3" tabindex="-1"></a>forecast<span class="op">=</span>pd.DataFrame(forecast)</span>
+<span id="cb55-4"><a href="exponential-smoothing.html#cb55-4" tabindex="-1"></a>forecast.columns<span class="op">=</span>[<span class="st">&quot;ds&quot;</span>]</span>
+<span id="cb55-5"><a href="exponential-smoothing.html#cb55-5" tabindex="-1"></a>forecast[<span class="st">&quot;hat&quot;</span>]<span class="op">=</span>yhat[<span class="st">&#39;AutoETS&#39;</span>]</span>
+<span id="cb55-6"><a href="exponential-smoothing.html#cb55-6" tabindex="-1"></a>forecast[<span class="st">&quot;unique_id&quot;</span>]<span class="op">=</span><span class="st">&quot;1&quot;</span></span>
+<span id="cb55-7"><a href="exponential-smoothing.html#cb55-7" tabindex="-1"></a>sns.lineplot(air_train,x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;y&quot;</span>, label<span class="op">=</span><span class="st">&quot;Train&quot;</span>)</span>
+<span id="cb55-8"><a href="exponential-smoothing.html#cb55-8" tabindex="-1"></a>sns.lineplot(air_test, x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;y&quot;</span>, label<span class="op">=</span><span class="st">&quot;Test&quot;</span>)</span>
+<span id="cb55-9"><a href="exponential-smoothing.html#cb55-9" tabindex="-1"></a>sns.lineplot(forecast,x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;hat&quot;</span>, label<span class="op">=</span><span class="st">&quot;Forecast&quot;</span>,)</span>
+<span id="cb55-10"><a href="exponential-smoothing.html#cb55-10" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/seasonal%20models-10.png" width="672" /></p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb56-1"><a href="exponential-smoothing.html#cb56-1" tabindex="-1"></a><span class="co">### AutoETS</span></span>
+<span id="cb56-2"><a href="exponential-smoothing.html#cb56-2" tabindex="-1"></a></span>
+<span id="cb56-3"><a href="exponential-smoothing.html#cb56-3" tabindex="-1"></a>air_holtw <span class="op">=</span> StatsForecast(models <span class="op">=</span> [AutoETS(model<span class="op">=</span>[<span class="st">&quot;Z&quot;</span>,<span class="st">&quot;Z&quot;</span>,<span class="st">&quot;Z&quot;</span>],  alias<span class="op">=</span><span class="st">&quot;AutoETS&quot;</span>, season_length<span class="op">=</span><span class="dv">12</span>)], freq <span class="op">=</span> <span class="st">&#39;ME&#39;</span>)</span>
+<span id="cb56-4"><a href="exponential-smoothing.html#cb56-4" tabindex="-1"></a>air_model <span class="op">=</span> air_holtw.fit(df <span class="op">=</span> air_train)</span>
+<span id="cb56-5"><a href="exponential-smoothing.html#cb56-5" tabindex="-1"></a></span>
+<span id="cb56-6"><a href="exponential-smoothing.html#cb56-6" tabindex="-1"></a>result <span class="op">=</span> air_holtw.fitted_[<span class="dv">0</span>,<span class="dv">0</span>].model_[<span class="st">&#39;par&#39;</span>]</span>
+<span id="cb56-7"><a href="exponential-smoothing.html#cb56-7" tabindex="-1"></a>result</span></code></pre></div>
+<pre><code>## array([ 3.53928248e-01,             nan,  2.91330703e-01,             nan,
+##         3.88348407e+04, -8.30637153e+02, -2.79366612e+03,  3.48960549e+02,
+##        -1.64504368e+03,  6.41938336e+03,  5.16183884e+03,  2.80318982e+03,
+##         1.24549104e+02, -1.04962061e+03,  9.50906067e+02, -5.57370399e+03,
+##        -3.91615619e+03])</code></pre>
+<div class="sourceCode" id="cb58"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb58-1"><a href="exponential-smoothing.html#cb58-1" tabindex="-1"></a>y_hat1<span class="op">=</span>air_model.predict(h<span class="op">=</span><span class="dv">27</span>)</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\Lib\site-packages\statsforecast\core.py:492: FutureWarning: In a future version the predictions will have the id as a column. You can set the `NIXTLA_ID_AS_COL` environment variable to adopt the new behavior and to suppress this warning.
+##   warnings.warn(</code></pre>
+<div class="sourceCode" id="cb60"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb60-1"><a href="exponential-smoothing.html#cb60-1" tabindex="-1"></a>yhat<span class="op">=</span>y_hat1.reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb60-2"><a href="exponential-smoothing.html#cb60-2" tabindex="-1"></a>forecast<span class="op">=</span>pd.Series(pd.date_range(<span class="st">&quot;2006-01-01&quot;</span>, freq<span class="op">=</span><span class="st">&quot;ME&quot;</span>, periods<span class="op">=</span><span class="dv">27</span>))</span>
+<span id="cb60-3"><a href="exponential-smoothing.html#cb60-3" tabindex="-1"></a>forecast<span class="op">=</span>pd.DataFrame(forecast)</span>
+<span id="cb60-4"><a href="exponential-smoothing.html#cb60-4" tabindex="-1"></a>forecast.columns<span class="op">=</span>[<span class="st">&quot;ds&quot;</span>]</span>
+<span id="cb60-5"><a href="exponential-smoothing.html#cb60-5" tabindex="-1"></a>forecast[<span class="st">&quot;hat&quot;</span>]<span class="op">=</span>yhat[<span class="st">&#39;AutoETS&#39;</span>]</span>
+<span id="cb60-6"><a href="exponential-smoothing.html#cb60-6" tabindex="-1"></a>forecast[<span class="st">&quot;unique_id&quot;</span>]<span class="op">=</span><span class="st">&quot;1&quot;</span></span>
+<span id="cb60-7"><a href="exponential-smoothing.html#cb60-7" tabindex="-1"></a>sns.lineplot(air_train,x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;y&quot;</span>, label<span class="op">=</span><span class="st">&quot;Train&quot;</span>)</span>
+<span id="cb60-8"><a href="exponential-smoothing.html#cb60-8" tabindex="-1"></a>sns.lineplot(air_test, x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;y&quot;</span>, label<span class="op">=</span><span class="st">&quot;Test&quot;</span>)</span>
+<span id="cb60-9"><a href="exponential-smoothing.html#cb60-9" tabindex="-1"></a>sns.lineplot(forecast,x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;hat&quot;</span>, label<span class="op">=</span><span class="st">&quot;Forecast&quot;</span>,)</span>
+<span id="cb60-10"><a href="exponential-smoothing.html#cb60-10" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/seasonal%20models-11.png" width="672" /></p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb61-1"><a href="exponential-smoothing.html#cb61-1" tabindex="-1"></a><span class="co">### Comparing models:</span></span>
+<span id="cb61-2"><a href="exponential-smoothing.html#cb61-2" tabindex="-1"></a></span>
+<span id="cb61-3"><a href="exponential-smoothing.html#cb61-3" tabindex="-1"></a>air_holtw <span class="op">=</span> StatsForecast(models <span class="op">=</span> [AutoETS(model<span class="op">=</span>[<span class="st">&quot;A&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;A&quot;</span>], alias <span class="op">=</span> <span class="st">&quot;Additive&quot;</span>, season_length<span class="op">=</span><span class="dv">12</span>), </span>
+<span id="cb61-4"><a href="exponential-smoothing.html#cb61-4" tabindex="-1"></a>                                    AutoETS(model<span class="op">=</span>[<span class="st">&quot;M&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;M&quot;</span>], alias <span class="op">=</span> <span class="st">&quot;Multiplicative&quot;</span>,   season_length<span class="op">=</span><span class="dv">12</span>)], freq <span class="op">=</span> <span class="st">&#39;ME&#39;</span>)</span>
+<span id="cb61-5"><a href="exponential-smoothing.html#cb61-5" tabindex="-1"></a>air_model <span class="op">=</span> air_holtw.fit(df <span class="op">=</span> air_train)</span>
+<span id="cb61-6"><a href="exponential-smoothing.html#cb61-6" tabindex="-1"></a></span>
+<span id="cb61-7"><a href="exponential-smoothing.html#cb61-7" tabindex="-1"></a></span>
+<span id="cb61-8"><a href="exponential-smoothing.html#cb61-8" tabindex="-1"></a>y_hat1<span class="op">=</span>air_model.predict(h<span class="op">=</span><span class="dv">27</span>)</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\Lib\site-packages\statsforecast\core.py:492: FutureWarning: In a future version the predictions will have the id as a column. You can set the `NIXTLA_ID_AS_COL` environment variable to adopt the new behavior and to suppress this warning.
+##   warnings.warn(</code></pre>
+<div class="sourceCode" id="cb63"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb63-1"><a href="exponential-smoothing.html#cb63-1" tabindex="-1"></a>y_hat1</span></code></pre></div>
+<pre><code>##                   ds      Additive  Multiplicative
+## unique_id                                         
+## 1         2005-12-31  55463.046875    55276.296875
+## 1         2006-01-31  54885.386719    54177.058594
+## 1         2006-02-28  65846.859375    65606.875000
+## 1         2006-03-31  62177.195312    62759.925781
+## 1         2006-04-30  63248.167969    64265.078125
+## 1         2006-05-31  66142.429688    67983.453125
+## 1         2006-06-30  68683.671875    71003.070312
+## 1         2006-07-31  66152.406250    71539.562500
+## 1         2006-08-31  54251.707031    58415.742188
+## 1         2006-09-30  59907.390625    63461.949219
+## 1         2006-10-31  58180.179688    60389.761719
+## 1         2006-11-30  59900.917969    62076.480469
+## 1         2006-12-31  55417.457031    57164.699219
+## 1         2007-01-31  54844.781250    56022.656250
+## 1         2007-02-28  65810.687500    67835.507812
+## 1         2007-03-31  62144.972656    64885.832031
+## 1         2007-04-30  63219.460938    66435.843750
+## 1         2007-05-31  66116.859375    70273.367188
+## 1         2007-06-30  68660.890625    73388.007812
+## 1         2007-07-31  66132.117188    73935.812500
+## 1         2007-08-31  54233.632812    60366.957031
+## 1         2007-09-30  59891.289062    65575.835938
+## 1         2007-10-31  58165.839844    62395.746094
+## 1         2007-11-30  59888.144531    64132.800781
+## 1         2007-12-31  55406.078125    59053.101562
+## 1         2008-01-31  54834.640625    57868.250000
+## 1         2008-02-29  65801.656250    70064.148438</code></pre>
+<div class="sourceCode" id="cb65"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb65-1"><a href="exponential-smoothing.html#cb65-1" tabindex="-1"></a>y_hat1<span class="op">=</span>air_model.predict(h<span class="op">=</span><span class="dv">27</span>)</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\Lib\site-packages\statsforecast\core.py:492: FutureWarning: In a future version the predictions will have the id as a column. You can set the `NIXTLA_ID_AS_COL` environment variable to adopt the new behavior and to suppress this warning.
+##   warnings.warn(</code></pre>
+<div class="sourceCode" id="cb67"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb67-1"><a href="exponential-smoothing.html#cb67-1" tabindex="-1"></a>yhat<span class="op">=</span>y_hat1.reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb67-2"><a href="exponential-smoothing.html#cb67-2" tabindex="-1"></a>forecast<span class="op">=</span>pd.Series(pd.date_range(<span class="st">&quot;2006-01-01&quot;</span>, freq<span class="op">=</span><span class="st">&quot;ME&quot;</span>, periods<span class="op">=</span><span class="dv">27</span>))</span>
+<span id="cb67-3"><a href="exponential-smoothing.html#cb67-3" tabindex="-1"></a>forecast<span class="op">=</span>pd.DataFrame(forecast)</span>
+<span id="cb67-4"><a href="exponential-smoothing.html#cb67-4" tabindex="-1"></a>forecast.columns<span class="op">=</span>[<span class="st">&quot;ds&quot;</span>]</span>
+<span id="cb67-5"><a href="exponential-smoothing.html#cb67-5" tabindex="-1"></a>forecast[<span class="st">&quot;hat1&quot;</span>]<span class="op">=</span>yhat[<span class="st">&#39;Additive&#39;</span>]</span>
+<span id="cb67-6"><a href="exponential-smoothing.html#cb67-6" tabindex="-1"></a>forecast[<span class="st">&quot;hat2&quot;</span>]<span class="op">=</span>yhat[<span class="st">&#39;Multiplicative&#39;</span>]</span>
+<span id="cb67-7"><a href="exponential-smoothing.html#cb67-7" tabindex="-1"></a>forecast[<span class="st">&quot;unique_id&quot;</span>]<span class="op">=</span><span class="st">&quot;1&quot;</span></span>
+<span id="cb67-8"><a href="exponential-smoothing.html#cb67-8" tabindex="-1"></a>sns.lineplot(air_train,x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;y&quot;</span>, label<span class="op">=</span><span class="st">&quot;Train&quot;</span>)</span>
+<span id="cb67-9"><a href="exponential-smoothing.html#cb67-9" tabindex="-1"></a>sns.lineplot(air_test, x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;y&quot;</span>, label<span class="op">=</span><span class="st">&quot;Test&quot;</span>)</span>
+<span id="cb67-10"><a href="exponential-smoothing.html#cb67-10" tabindex="-1"></a>sns.lineplot(forecast,x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;hat1&quot;</span>, label<span class="op">=</span><span class="st">&quot;Additive&quot;</span>)</span>
+<span id="cb67-11"><a href="exponential-smoothing.html#cb67-11" tabindex="-1"></a>sns.lineplot(forecast,x<span class="op">=</span><span class="st">&quot;ds&quot;</span>, y<span class="op">=</span><span class="st">&quot;hat2&quot;</span>, label<span class="op">=</span><span class="st">&quot;Multiplicative&quot;</span>)</span>
+<span id="cb67-12"><a href="exponential-smoothing.html#cb67-12" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/seasonal%20models-12.png" width="672" /></p>
 </div>
 <div id="sas-code-for-exponential-smoothing-models" class="section level2 hasAnchor" number="3.7">
 <h2><span class="header-section-number">3.7</span> SAS Code for Exponential Smoothing Models<a href="exponential-smoothing.html#sas-code-for-exponential-smoothing-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>

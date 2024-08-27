@@ -18,13 +18,13 @@ library(aTSA)
 
 library(reticulate)
 
-use_python("C:\\ProgramData\\Anaconda3\\envs\\R_Env2\\python.exe")
-#use_python("C:\\ProgramData\\Anaconda3\\python.exe")
+
+use_python("C:\\ProgramData\\Anaconda3\\python.exe")
 
 file.dir = "https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/" 
 input.file1 = "usairlines.csv"
 input.file2 = "steel.csv"
-input.file3 = "leadyear.csv"
+input.file3 = "leadyear2.csv"
 input.file4 = "ebay9899.csv"
 input.file5 = "fpp_insurance.csv" 
 input.file6 = "ar2.csv"
@@ -271,12 +271,14 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import pyplot
+import seaborn as sns
 from statsforecast.models import ETS
 from statsforecast import StatsForecast
 from statsforecast.utils import AirPassengers
 from statsmodels.tsa.tsatools import detrend
 from sklearn.metrics import mean_squared_error
 from statsmodels.tsa.api import ExponentialSmoothing, SimpleExpSmoothing, Holt
+from statsforecast.models import AutoETS
 
 
 steel=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\steel.csv")
@@ -296,6 +298,34 @@ plt.plot(steel_train["steelshp"],color="black")
 plt.plot(fcast,color="blue")
 plt.show()
 
+##### Using Statsforecast
+
+
+d = {'unique_id': 1, 'ds': steel.index, 'y': steel['steelshp']}
+steel_sf = pd.DataFrame(data = d)
+
+steel_train=steel_sf.head(87)
+steel_test = steel_sf.tail(9)
+
+steel_SES = StatsForecast(models = [AutoETS(model=["A","N","N"],  alias="AutoETS", season_length=2)], freq = '6ME')
+steel_model = steel_SES.fit(df = steel_train)
+
+result = steel_SES.fitted_[0,0].model_['par']
+result
+
+
+y_hat1=steel_model.predict(h=9)
+yhat=y_hat1.reset_index(drop=True)
+forecast=pd.Series(pd.date_range("1976-01-31", freq="6ME", periods=9))
+forecast=pd.DataFrame(forecast)
+forecast.columns=["ds"]
+forecast["hat"]=yhat['AutoETS']
+forecast["unique_id"]="1"
+sns.lineplot(steel_train,x="ds", y="y", label="Train")
+sns.lineplot(steel_test, x="ds", y="y", label="Test")
+sns.lineplot(forecast,x="ds", y="hat", label="Forecast",)
+plt.show()
+
 ```
 
 
@@ -303,33 +333,62 @@ The Holt models in Python:
 
 ```{python holt models}
 
+#### This code uses the new Statsforecast package
+
+### Holt Model
+
+usair_p=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\usairlines.csv")
+df=pd.date_range(start='1/1/1990', end='3/1/2008', freq='MS')
+usair_p.index=pd.to_datetime(df)
 
 
-fit1 = Holt(steel_train['steelshp']).fit()
-fit1.summary()
-fcast1 = fit1.forecast(9)
-fcast1
-fit2 = Holt(steel_train['steelshp'],exponential=True).fit()
-fit2.summary()
-fcast2 = fit2.forecast(9)
-fcast2
-fit3 = Holt(steel_train['steelshp'],damped=True).fit()
-fit3.summary()
-fcast3 = fit3.forecast(9)
-fcast3
-fit4 = Holt(steel_train['steelshp'],exponential=True,damped=True).fit()
-fit4.summary()
-fcast4 = fit4.forecast(9)
-fcast4
+d = {'unique_id': 1, 'ds': usair_p.index, 'y': usair_p['Passengers']}
+usair_sf = pd.DataFrame(data = d)
 
-ax=steel_train.plot(color="black",figsize=(12,8))
-fcast1.plot(ax=ax,color="blue")
-fcast2.plot(ax=ax,color="orange")
-fcast3.plot(ax=ax,color="purple")
-fcast4.plot(ax=ax,color="gray")
-steel_test.plot(ax=ax,color="red")
+### train has 192 observations
+### test has 27 observations
+
+air_train = usair_sf.head(192)
+air_test = usair_sf.tail(27)
+
+air_holt = StatsForecast(models = [AutoETS(model=["A","A","N"],  alias="AutoETS", season_length=12)], freq = 'ME')
+air_model = air_holt.fit(df = air_train)
+
+result = air_holt.fitted_[0,0].model_['par']
+result
+
+y_hat1=air_model.predict(h=27)
+yhat=y_hat1.reset_index(drop=True)
+forecast=pd.Series(pd.date_range("2006-01-01", freq="ME", periods=27))
+forecast=pd.DataFrame(forecast)
+forecast.columns=["ds"]
+forecast["hat"]=yhat['AutoETS']
+forecast["unique_id"]="1"
+sns.lineplot(air_train,x="ds", y="y", label="Train")
+sns.lineplot(air_test, x="ds", y="y", label="Test")
+sns.lineplot(forecast,x="ds", y="hat", label="Forecast",)
 plt.show()
 
+### Damped trend
+
+
+air_holt = StatsForecast(models = [AutoETS(model=["A","A","N"],  damped=True, alias="AutoETS", season_length=12)], freq = 'ME')
+air_model = air_holt.fit(df = air_train)
+
+result = air_holt.fitted_[0,0].model_['par']
+result
+
+y_hat1=air_model.predict(h=27)
+yhat=y_hat1.reset_index(drop=True)
+forecast=pd.Series(pd.date_range("2006-01-01", freq="ME", periods=27))
+forecast=pd.DataFrame(forecast)
+forecast.columns=["ds"]
+forecast["hat"]=yhat['AutoETS']
+forecast["unique_id"]="1"
+sns.lineplot(air_train,x="ds", y="y", label="Train")
+sns.lineplot(air_test, x="ds", y="y", label="Test")
+sns.lineplot(forecast,x="ds", y="hat", label="Forecast",)
+plt.show()
 
 
 ```
@@ -338,49 +397,92 @@ plt.show()
 Seasonal models in Python:
 
 ```{python seasonal models}
+###  Using Statsforecast
 
-import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib import pyplot
-from statsmodels.tsa.seasonal import seasonal_decompose
-from statsmodels.tsa.seasonal import STL
-usair_p=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\usairlines.csv")
-df=pd.date_range(start='1/1/1990', end='3/1/2008', freq='MS')
-usair_p.index=pd.to_datetime(df)
+### Additive Seasonality
 
+air_holtw = StatsForecast(models = [AutoETS(model=["A","A","A"],  alias="AutoETS", season_length=12)], freq = 'ME')
+air_model = air_holtw.fit(df = air_train)
 
-usair_train = usair_p.head(192)
-usair_test = usair_p.tail(27)
+result = air_holtw.fitted_[0,0].model_['par']
+result
 
-#### Caution!!!!! These did not converge!!! Would NOT recommend using them!
-
-usair_train['HWES_ADD'] = ExponentialSmoothing(usair_train['Passengers'],trend='add',seasonal='add',seasonal_periods=12).fit().fittedvalues
-
-usair_train['HWES_MUL'] = ExponentialSmoothing(usair_train['Passengers'],trend='mul',seasonal='mul',seasonal_periods=12).fit().fittedvalues
-
-usair_train[['Passengers','HWES_ADD','HWES_MUL']].plot(title='Holt Winters Exponential Smoothing: Additive and Multiplicative Seasonality')
+y_hat1=air_model.predict(h=27)
+yhat=y_hat1.reset_index(drop=True)
+forecast=pd.Series(pd.date_range("2006-01-01", freq="ME", periods=27))
+forecast=pd.DataFrame(forecast)
+forecast.columns=["ds"]
+forecast["hat"]=yhat['AutoETS']
+forecast["unique_id"]="1"
+sns.lineplot(air_train,x="ds", y="y", label="Train")
+sns.lineplot(air_test, x="ds", y="y", label="Test")
+sns.lineplot(forecast,x="ds", y="hat", label="Forecast",)
 plt.show()
 
-fit1=ExponentialSmoothing(usair_train['Passengers'],trend='add',seasonal='mul',seasonal_periods=12).fit()
-fit1.summary()
+### Multiplicative Seasonality
 
-fit2=ExponentialSmoothing(usair_train['Passengers'],trend='add',seasonal='add',seasonal_periods=12).fit()
-fit2.summary()
+air_holtw = StatsForecast(models = [AutoETS(model=["M","A","M"],  alias="AutoETS", season_length=12)], freq = 'ME')
+air_model = air_holtw.fit(df = air_train)
 
-fcast1=fit1.forecast(27)
-fcast2=fit2.forecast(27)
+result = air_holtw.fitted_[0,0].model_['par']
+result
 
-ax=usair_train["Passengers"].plot(color="black",figsize=(12,8))
-fcast1.plot(ax=ax,color="blue")
-fcast2.plot(ax=ax,color="orange")
-usair_test["Passengers"].plot(ax=ax,color = "red")
+y_hat1=air_model.predict(h=27)
+yhat=y_hat1.reset_index(drop=True)
+forecast=pd.Series(pd.date_range("2006-01-01", freq="ME", periods=27))
+forecast=pd.DataFrame(forecast)
+forecast.columns=["ds"]
+forecast["hat"]=yhat['AutoETS']
+forecast["unique_id"]="1"
+sns.lineplot(air_train,x="ds", y="y", label="Train")
+sns.lineplot(air_test, x="ds", y="y", label="Test")
+sns.lineplot(forecast,x="ds", y="hat", label="Forecast",)
 plt.show()
 
-error=usair_test['Passengers']-fcast1
-MAE=np.mean(abs(error))
-MAE
-MAPE=np.mean(abs(error)/usair_test['Passengers'])
-MAPE
+### AutoETS
+
+air_holtw = StatsForecast(models = [AutoETS(model=["Z","Z","Z"],  alias="AutoETS", season_length=12)], freq = 'ME')
+air_model = air_holtw.fit(df = air_train)
+
+result = air_holtw.fitted_[0,0].model_['par']
+result
+
+y_hat1=air_model.predict(h=27)
+yhat=y_hat1.reset_index(drop=True)
+forecast=pd.Series(pd.date_range("2006-01-01", freq="ME", periods=27))
+forecast=pd.DataFrame(forecast)
+forecast.columns=["ds"]
+forecast["hat"]=yhat['AutoETS']
+forecast["unique_id"]="1"
+sns.lineplot(air_train,x="ds", y="y", label="Train")
+sns.lineplot(air_test, x="ds", y="y", label="Test")
+sns.lineplot(forecast,x="ds", y="hat", label="Forecast",)
+plt.show()
+
+
+### Comparing models:
+
+air_holtw = StatsForecast(models = [AutoETS(model=["A","A","A"], alias = "Additive", season_length=12), 
+                                    AutoETS(model=["M","A","M"], alias = "Multiplicative",   season_length=12)], freq = 'ME')
+air_model = air_holtw.fit(df = air_train)
+
+
+y_hat1=air_model.predict(h=27)
+y_hat1
+
+y_hat1=air_model.predict(h=27)
+yhat=y_hat1.reset_index(drop=True)
+forecast=pd.Series(pd.date_range("2006-01-01", freq="ME", periods=27))
+forecast=pd.DataFrame(forecast)
+forecast.columns=["ds"]
+forecast["hat1"]=yhat['Additive']
+forecast["hat2"]=yhat['Multiplicative']
+forecast["unique_id"]="1"
+sns.lineplot(air_train,x="ds", y="y", label="Train")
+sns.lineplot(air_test, x="ds", y="y", label="Test")
+sns.lineplot(forecast,x="ds", y="hat1", label="Additive")
+sns.lineplot(forecast,x="ds", y="hat2", label="Multiplicative")
+plt.show()
 
 ```
 
