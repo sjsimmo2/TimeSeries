@@ -18,8 +18,7 @@ library(aTSA)
 
 library(reticulate)
 
-use_python("C:\\ProgramData\\Anaconda3\\envs\\R_Env2\\python.exe")
-#use_python("C:\\ProgramData\\Anaconda3\\python.exe")
+use_python("C:\\ProgramData\\Anaconda3\\python.exe")
 
 file.dir = "https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/" 
 input.file1 = "usairlines.csv"
@@ -59,7 +58,7 @@ Before we can try to model the dependency structure (the AR and MA terms), we mu
 
 ```{r plot}
 
-Quotes.ts<-Quotes |> mutate(date = seq(ymd('2002-01-01'),ymd('2005-04-21'),by='months')) |>
+Quotes.ts<-Quotes |> mutate(date = seq(ymd('2002-01-01'),ymd('2005-04-01'),by='months')) |>
 mutate(month=yearmonth(date)) |> as_tsibble(index=month)
 
 Quotes_train<-Quotes.ts %>% filter(year(date)<2005)
@@ -129,7 +128,7 @@ ggPacf(Y[1:731,])
 
 Y.1 <-data.frame(Y)
 
-Y.ts<-Y.1 %>% mutate(date = seq(ymd('2000-01-01'),ymd('2002-9-26'),by='day'))  %>% as_tsibble(index=date)
+Y.ts<-Y.1 %>% mutate(date = seq(ymd('2000-01-01'),ymd('2002-09-26'),by='day'))  %>% as_tsibble(index=date)
 
 Y_train <- Y.ts %>% filter(year(date)<2002)
 
@@ -219,6 +218,7 @@ autoplot(Quotes_train,Quotes)+labs(title="Time Series of Monthly Stock quotes", 
 Quotes_train %>% gg_tsdisplay(Quotes,plot_type = 'partial')
 ```
 
+We will try AR(1), MA(1) and perform two automatic searches:
 
 
 ```{r}
@@ -233,6 +233,10 @@ t(quotes_model2)
 
 glance(quotes_model) %>% arrange(AICc) %>% select(.model:BIC)
 ```
+
+
+Choosing the search1 model, we will look at residuals for white noise (no spikes in correlation plots and not significant for the Ljung-Box test):
+
 ```{r}
 quotes_model %>% select(search1) %>% residuals() %>% ggAcf()
 quotes_model %>% select(search1) %>% residuals() %>% ggPacf()
@@ -706,6 +710,8 @@ from statsmodels.graphics.tsaplots import plot_pacf
 from statsmodels.tsa.arima.model import ARIMA
 
 quotes=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\fpp_insurance.csv")
+df = pd.date_range(start='2002-01-01', end='2005-05-01', freq='ME')
+quotes.index=pd.to_datetime(df)
 y=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\ar2.csv")
 quotes_train = quotes.head(36)
 y_train = y.head(731)
@@ -716,7 +722,9 @@ print(f'ADF p-value: {result[1]}')
 plot_acf(quotes_train["Quotes"],lags=12)
 pyplot.show()
 plot_pacf(quotes_train["Quotes"],lags=12)
-pyplot.show
+pyplot.show()
+
+### Using statsmodel...the older way of doing this..
 
 model = ARIMA(y_train, order=(2,0,0))
 model_fit = model.fit()
@@ -775,27 +783,129 @@ Fitting ARIMA models.
 
 ```{python}
 
-import pmdarima as pm
+## Fit AR(2) model to AR2 data set
+
+from statsforecast import StatsForecast
+from statsforecast.models import ARIMA
+
+y=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\ar2.csv")
+df = pd.date_range(start='2000-01-01', end='2002-09-26', freq='D')
+y.index=pd.to_datetime(df)
+
+d = {'unique_id': 1, 'ds': y.index, 'y': y['Y']}
+y_sf = pd.DataFrame(data = d)
+y_train = y_sf.head(731)
+y_test = y_sf.tail(69)
 
 
-### Testing stationarity 
-max2 = hurricane_train["MeanVMax"]
 
-result=adfuller(max2)
-print(f'ADF p-value: {result[1]}')
+model_SD_ARIMA = StatsForecast(models = [ARIMA(order=(2, 0, 0),season_length=12)], freq = 'D')
+model_SD_ARIMA.fit(df = y_train)
 
-### Same result as auto.arima in R!
-model1=pm.auto_arima(max2, start_p=0,start_q=0,max_p=5,max_q=5,seasonal=False)
-model1.summary()
 
-# Force d=0
-model2=pm.auto_arima(max2, start_p=0,start_q=0,max_p=5,max_q=5,d=0,seasonal=False)
-model2.summary()
 
+model_SD_ARIMA.fitted_[0][0].model_.get("arma")
+model_SD_ARIMA.fitted_[0][0].model_.get("coef")
+model_SD_ARIMA.fitted_[0][0].model_.get("aic")
+
+### Fit MA(2) model to x
+
+x=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\MA2.csv")
+df = pd.date_range(start='2000-01-01', end='2000-04-09', freq='D')
+x.index=pd.to_datetime(df)
+
+d = {'unique_id': 1, 'ds': x.index, 'y': x['x']}
+x_sf = pd.DataFrame(data = d)
+x_train = x_sf.head(74)
+x_test = x_sf.tail(26)
+
+model_MA2 = StatsForecast(models = [ARIMA(order=(0, 0, 2))], freq = 'D')
+model_MA2.fit(df = x_train)
+
+
+
+model_MA2.fitted_[0][0].model_.get("arma")
+model_MA2.fitted_[0][0].model_.get("coef")
+model_MA2.fitted_[0][0].model_.get("aic")
+
+resid=model_MA2.fitted_[0][0].model_.get("residuals")
+
+plot_acf(resid,lags=12)
+pyplot.show()
+plot_pacf(resid,lags=12)
+pyplot.show()
 
 
 ```
 
+Using the Quotes data set for different models in ARIMA:
+
+```{python}
+
+## Compare two different models plus automatic search on Quotes data set:
+
+
+from statsforecast.models import AutoARIMA
+from statsforecast.arima import arima_string
+
+
+d = {'unique_id': 1, 'ds': quotes.index, 'y': quotes['Quotes']}
+quotes_sf = pd.DataFrame(data = d)
+quotes_train = quotes_sf.head(36)
+quotes_test = quotes_sf.tail(4)
+
+
+plot_acf(quotes_train["y"],lags=12)
+pyplot.show()
+plot_pacf(quotes_train["y"],lags=12)
+pyplot.show()
+
+
+## AR(1) model
+
+model_Quotes = StatsForecast(models = [ARIMA(order=(1, 0, 0))], freq = 'ME')
+model_Quotes.fit(df = quotes_train)
+
+
+
+model_Quotes.fitted_[0][0].model_.get("arma")
+model_Quotes.fitted_[0][0].model_.get("coef")
+model_Quotes.fitted_[0][0].model_.get("aic")
+
+## MA(1) model
+
+model_Quotes2 = StatsForecast(models = [ARIMA(order=(0, 0, 1))], freq = 'ME')
+model_Quotes2.fit(df = quotes_train)
+
+
+
+model_Quotes2.fitted_[0][0].model_.get("arma")
+model_Quotes2.fitted_[0][0].model_.get("coef")
+model_Quotes2.fitted_[0][0].model_.get("aic")
+
+###  Now the automatic search....choose the AR(1) model
+
+model_Quotes = StatsForecast(models = [AutoARIMA(seasonal=False)], freq = 'ME')
+model_Quotes.fit(df = quotes_train)
+
+model_Quotes.fitted_[0][0].model_.get("arma")
+model_Quotes.fitted_[0][0].model_.get("coef")
+model_Quotes.fitted_[0][0].model_.get("aic")
+
+resid=model_Quotes.fitted_[0][0].model_.get("residuals")
+
+plot_acf(resid,lags=12)
+pyplot.show()
+plot_pacf(resid,lags=12)
+pyplot.show()
+
+
+
+# Perform the Ljung-Box test
+lb_test = diag.acorr_ljungbox(resid, lags=[10], model_df=1)
+print(lb_test)
+
+```
 
 
 ## SAS Code for ARMA/ARIMA
