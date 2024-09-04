@@ -283,6 +283,9 @@ t(hurr_model2)
 
 glance(hurr_model) %>% arrange(AICc) %>% select(.model:BIC)
 ```
+
+Looking at the ACF and PACF on the residuals of MA(2) model.
+
 ```{r}
 hurr_model %>% select(ma2) %>% residuals() %>% ggAcf()
 hurr_model %>% select(ma2) %>% residuals() %>% ggPacf()
@@ -291,7 +294,7 @@ hurr_model %>% select(ma2) %>% gg_tsresiduals()
 
 ```
 
-
+Looking at the ACF and PACF on the ARIMA(3,1,2) model and Ljung-Box test.
 
 ```{r}
 hurr_model %>% select(arima32) %>% residuals() %>% ggAcf()
@@ -639,6 +642,8 @@ augment(Raleigh_linear) %>% filter(.model=='trend2') %>% features(.innov,ljung_b
 
 
 ```
+
+
 Comparing the Raleigh data set using a random walk with drift to the trend model:
 
 ```{r}
@@ -741,14 +746,14 @@ plot_pacf(residuals,lags=12)
 pyplot.show()
 ```
 
-
+Using ndiffs to see if we need to take a difference:
 
 ```{python}
 from pmdarima.arima import ndiffs
 
-hurricane = pd.read_csv("https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/hurrican.csv")
-hurricane2 = hurricane.dropna(axis=0)
-hurricane_train =hurricane2.head(149)
+hurr = pd.read_csv("https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/hurrican.csv")
+hurr2 = hurr.dropna(axis=0)
+hurricane_train =hurr2.head(149)
 hurricane_train
 n_diffs = ndiffs(hurricane_train["MeanVMax"])
 print(n_diffs)
@@ -892,6 +897,13 @@ model_Quotes.fitted_[0][0].model_.get("arma")
 model_Quotes.fitted_[0][0].model_.get("coef")
 model_Quotes.fitted_[0][0].model_.get("aic")
 
+### Even though the automatic search choose AR(1), it did NOT include intercept.
+### Made AR term close to 1 (very close to a random walk).
+### Refitting the AR(1) model:
+
+model_Quotes = StatsForecast(models = [ARIMA(order=(1, 0, 0))], freq = 'ME')
+model_Quotes.fit(df = quotes_train)
+
 resid=model_Quotes.fitted_[0][0].model_.get("residuals")
 
 plot_acf(resid,lags=12)
@@ -904,6 +916,107 @@ pyplot.show()
 # Perform the Ljung-Box test
 lb_test = diag.acorr_ljungbox(resid, lags=[10], model_df=1)
 print(lb_test)
+
+```
+
+
+Now for using the hurricane data set:
+
+```{python}
+
+###Note that hurr2 is being redefined here.
+
+
+df = pd.date_range(start='1851-01-01', end='2008-01-01', freq='YE')
+hurr.index=pd.to_datetime(df)
+hurr2 = hurr.dropna(axis=0)
+
+d = {'unique_id': 1, 'ds': hurr2.index, 'y': hurr2['MeanVMax']}
+hurr_sf = pd.DataFrame(data = d)
+hurr_train = hurr_sf.head(149)
+hurr_test = hurr_sf.tail(9)
+
+###Looks like we need to take differences:
+n_diffs=ndiffs(hurr_train["y"])
+print(n_diffs)
+
+hurr2['MVM_diff'] = hurr2['MeanVMax'].diff()
+hurr3 = hurr2.dropna(axis=0)
+
+df = pd.date_range(start='1854-01-01', end='2008-01-01', freq='YE')
+hurr3.index=pd.to_datetime(df)
+
+
+d = {'unique_id': 1, 'ds': hurr3.index, 'y': hurr3['MVM_diff']}
+hurr_sf = pd.DataFrame(data = d)
+hurr_train = hurr_sf.head(146)
+
+
+plot_acf(hurr_train['y'],lags=12)
+pyplot.show()
+plot_pacf(hurr_train['y'],lags=12)
+pyplot.show()
+
+### Now to fit models
+
+model_hurr = StatsForecast(models = [ARIMA(order=(3, 1, 0))], freq = 'YE')
+model_hurr.fit(df = hurr_train)
+
+
+
+model_hurr.fitted_[0][0].model_.get("arma")
+model_hurr.fitted_[0][0].model_.get("coef")
+model_hurr.fitted_[0][0].model_.get("aic")
+
+model_hurr = StatsForecast(models = [ARIMA(order=(0, 1, 2))], freq = 'YE')
+model_hurr.fit(df = hurr_train)
+
+
+
+model_hurr.fitted_[0][0].model_.get("arma")
+model_hurr.fitted_[0][0].model_.get("coef")
+model_hurr.fitted_[0][0].model_.get("aic")
+
+model_hurr1 = StatsForecast(models = [ARIMA(order=(3, 1, 2))], freq = 'YE')
+model_hurr1.fit(df = hurr_train)
+
+
+
+model_hurr1.fitted_[0][0].model_.get("arma")
+model_hurr1.fitted_[0][0].model_.get("coef")
+model_hurr1.fitted_[0][0].model_.get("aic")
+
+
+model_hurr = StatsForecast(models = [AutoARIMA(seasonal=False)], freq = 'YE')
+model_hurr.fit(df = quotes_train)
+
+model_hurr.fitted_[0][0].model_.get("arma")
+model_hurr.fitted_[0][0].model_.get("coef")
+model_hurr.fitted_[0][0].model_.get("aic")
+
+resid=model_hurr1.fitted_[0][0].model_.get("residuals")
+plot_acf(resid,lags=12)
+pyplot.show()
+plot_pacf(resid,lags=12)
+pyplot.show()
+lb_test = diag.acorr_ljungbox(resid, lags=[10], model_df=5)
+print(lb_test)
+
+```
+
+Get some measures of accuracy on validation data:
+
+```{python}
+##Hurricane data
+
+y_hat1=model_hurr1.predict(h=8)
+yhat=y_hat1.reset_index(drop=True)
+test = hurr_test.reset_index(drop=True)
+abs_error= np.absolute(test['y']-yhat["ARIMA"])
+MAE = np.mean(abs_error)
+MAE
+MAPE = np.mean(abs_error/np.absolute(test['y']))
+MAPE
 
 ```
 
