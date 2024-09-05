@@ -23,7 +23,7 @@
 <meta name="author" content="by Dr. Susan Simmons and Dr. Aric LaBarr" />
 
 
-<meta name="date" content="2024-09-04" />
+<meta name="date" content="2024-09-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -459,7 +459,7 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="arima.html#cb51-1" tabindex="-1"></a>hurr_model <span class="ot">&lt;-</span>Hurricane_train <span class="sc">%&gt;%</span></span>
 <span id="cb51-2"><a href="arima.html#cb51-2" tabindex="-1"></a>  <span class="fu">model</span>(<span class="at">ar3 =</span> <span class="fu">ARIMA</span>(MeanVMax <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">0</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)),</span>
-<span id="cb51-3"><a href="arima.html#cb51-3" tabindex="-1"></a>        <span class="at">ma2 =</span> <span class="fu">ARIMA</span>(MeanVMax <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>)),</span>
+<span id="cb51-3"><a href="arima.html#cb51-3" tabindex="-1"></a>        <span class="at">ma2 =</span> <span class="fu">ARIMA</span>(MeanVMax <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)),</span>
 <span id="cb51-4"><a href="arima.html#cb51-4" tabindex="-1"></a>        <span class="at">arima32 =</span> <span class="fu">ARIMA</span>(MeanVMax<span class="sc">~</span><span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">2</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)),</span>
 <span id="cb51-5"><a href="arima.html#cb51-5" tabindex="-1"></a>        <span class="at">search1 =</span> <span class="fu">ARIMA</span>(MeanVMax),</span>
 <span id="cb51-6"><a href="arima.html#cb51-6" tabindex="-1"></a>        <span class="at">search2 =</span> <span class="fu">ARIMA</span>(MeanVMax,<span class="at">stepwise =</span> F))</span>
@@ -954,8 +954,8 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 ## ==============================================================================
 ## Dep. Variable:                      Y   No. Observations:                  731
 ## Model:                 ARIMA(2, 0, 0)   Log Likelihood               -2696.123
-## Date:                Wed, 04 Sep 2024   AIC                           5400.247
-## Time:                        15:33:07   BIC                           5418.625
+## Date:                Thu, 05 Sep 2024   AIC                           5400.247
+## Time:                        08:35:25   BIC                           5418.625
 ## Sample:                             0   HQIC                          5407.337
 ##                                 - 731                                         
 ## Covariance Type:                  opg                                         
@@ -1031,8 +1031,8 @@ The first value in the Ljung-Box test is the test statistic and the second value
 ## ==============================================================================
 ## Dep. Variable:                      Y   No. Observations:                  731
 ## Model:                 ARIMA(2, 0, 0)   Log Likelihood               -2696.123
-## Date:                Wed, 04 Sep 2024   AIC                           5400.247
-## Time:                        15:33:09   BIC                           5418.625
+## Date:                Thu, 05 Sep 2024   AIC                           5400.247
+## Time:                        08:35:26   BIC                           5418.625
 ## Sample:                             0   HQIC                          5407.337
 ##                                 - 731                                         
 ## Covariance Type:                  opg                                         

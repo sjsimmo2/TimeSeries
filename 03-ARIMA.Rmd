@@ -273,7 +273,7 @@ Hurricane_train %>% gg_tsdisplay(mean_diff,plot_type = 'partial')
 ```{r}
 hurr_model <-Hurricane_train %>%
   model(ar3 = ARIMA(MeanVMax ~ 0 + pdq(3,1,0) + PDQ(0,0,0)),
-        ma2 = ARIMA(MeanVMax ~ 0 + pdq(0,1,2) + PDQ(0,1,0)),
+        ma2 = ARIMA(MeanVMax ~ 0 + pdq(0,1,2) + PDQ(0,0,0)),
         arima32 = ARIMA(MeanVMax~0 + pdq(3,1,2) + PDQ(0,0,0)),
         search1 = ARIMA(MeanVMax),
         search2 = ARIMA(MeanVMax,stepwise = F))
