@@ -23,7 +23,7 @@
 <meta name="author" content="by Dr. Susan Simmons and Dr. Aric LaBarr" />
 
 
-<meta name="date" content="2024-09-05" />
+<meta name="date" content="2024-09-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -560,6 +560,7 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 <pre><code>## Warning: Removed 1 row containing missing values or values outside the scale range
 ## (`geom_point()`).</code></pre>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-13-3.png" width="672" /></p>
+<p>Looking at the ACF and PACF, we will try a few models and also use an automatic search.</p>
 <div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="arima.html#cb85-1" tabindex="-1"></a>consume_model <span class="ot">&lt;-</span>consume_train <span class="sc">%&gt;%</span></span>
 <span id="cb85-2"><a href="arima.html#cb85-2" tabindex="-1"></a>  <span class="fu">model</span>(<span class="at">ar1 =</span> <span class="fu">ARIMA</span>(Disposable_income <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)),</span>
 <span id="cb85-3"><a href="arima.html#cb85-3" tabindex="-1"></a>        <span class="at">ma1 =</span> <span class="fu">ARIMA</span>(Disposable_income <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)),</span>
@@ -587,6 +588,7 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 ## 4 ar6       520.   -392.  800.  802.  820.
 ## 5 ar1       571.   -399.  803.  803.  811.
 ## 6 ma6       610.   -400.  814.  815.  831.</code></pre>
+<p>Trying a few other models…just to see…</p>
 <div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="arima.html#cb89-1" tabindex="-1"></a>consume_modelt1 <span class="ot">&lt;-</span>consume_train <span class="sc">%&gt;%</span></span>
 <span id="cb89-2"><a href="arima.html#cb89-2" tabindex="-1"></a>  <span class="fu">model</span>(<span class="at">arima11 =</span> <span class="fu">ARIMA</span>(Disposable_income <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)),</span>
 <span id="cb89-3"><a href="arima.html#cb89-3" tabindex="-1"></a>        <span class="at">arima21 =</span> <span class="fu">ARIMA</span>(Disposable_income <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)),</span>
@@ -621,6 +623,7 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 ## 1 arima20   551.   -397.  801.  802.  811.
 ## 2 arima30   548.   -396.  802.  802.  814.
 ## 3 arima11   665.   -405.  816.  817.  824.</code></pre>
+<p>Taking a few models and putting them onto the validation data set.</p>
 <div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="arima.html#cb97-1" tabindex="-1"></a>consume_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(ar6) <span class="sc">%&gt;%</span> <span class="fu">residuals</span>() <span class="sc">%&gt;%</span> <span class="fu">ggAcf</span>(<span class="at">lag.max =</span> <span class="dv">10</span>)</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 <div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="arima.html#cb98-1" tabindex="-1"></a>consume_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(ar6) <span class="sc">%&gt;%</span> <span class="fu">residuals</span>() <span class="sc">%&gt;%</span> <span class="fu">ggPacf</span>(<span class="at">lag.max =</span> <span class="dv">10</span>)</span></code></pre></div>
@@ -670,6 +673,7 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 <pre><code>## Warning: Removed 2 rows containing missing values or values outside the scale range
 ## (`geom_point()`).</code></pre>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-17-2.png" width="672" /></p>
+<p>Now we will try a few models:</p>
 <div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="arima.html#cb110-1" tabindex="-1"></a>Raleigh_model <span class="ot">&lt;-</span>Raleigh_train <span class="sc">%&gt;%</span></span>
 <span id="cb110-2"><a href="arima.html#cb110-2" tabindex="-1"></a>  <span class="fu">model</span>(</span>
 <span id="cb110-3"><a href="arima.html#cb110-3" tabindex="-1"></a>        <span class="at">ma5 =</span> <span class="fu">ARIMA</span>(price_index <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">5</span>)<span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)<span class="sc">+</span><span class="dv">0</span>),</span>
@@ -696,6 +700,7 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 ## 3 search1   8.36   -223.  455.  456.  468.
 ## 4 ar2       9.50   -229.  464.  464.  471.
 ## 5 ma2      10.1    -231.  468.  469.  476.</code></pre>
+<p>Looking at residuals:</p>
 <div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="arima.html#cb114-1" tabindex="-1"></a>Raleigh_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(search1) <span class="sc">%&gt;%</span> <span class="fu">residuals</span>() <span class="sc">%&gt;%</span> <span class="fu">ggAcf</span>(<span class="at">lag.max =</span> <span class="dv">10</span>)</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="arima.html#cb115-1" tabindex="-1"></a>Raleigh_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(search1) <span class="sc">%&gt;%</span> <span class="fu">residuals</span>() <span class="sc">%&gt;%</span> <span class="fu">ggPacf</span>(<span class="at">lag.max =</span> <span class="dv">10</span>)</span></code></pre></div>
@@ -707,6 +712,7 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 ##   .model  lb_stat lb_pvalue
 ##   &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;
 ## 1 search1    7.76     0.257</code></pre>
+<p>Forecasting chosen model onto the validatoin data set:</p>
 <div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="arima.html#cb119-1" tabindex="-1"></a>pred_arima123 <span class="ot">&lt;-</span> Raleigh_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(search1) <span class="sc">%&gt;%</span></span>
 <span id="cb119-2"><a href="arima.html#cb119-2" tabindex="-1"></a>  fabletools<span class="sc">::</span><span class="fu">forecast</span>(<span class="at">h=</span><span class="dv">5</span>)</span>
 <span id="cb119-3"><a href="arima.html#cb119-3" tabindex="-1"></a></span>
@@ -954,8 +960,8 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 ## ==============================================================================
 ## Dep. Variable:                      Y   No. Observations:                  731
 ## Model:                 ARIMA(2, 0, 0)   Log Likelihood               -2696.123
-## Date:                Thu, 05 Sep 2024   AIC                           5400.247
-## Time:                        08:35:25   BIC                           5418.625
+## Date:                Fri, 06 Sep 2024   AIC                           5400.247
+## Time:                        09:51:21   BIC                           5418.625
 ## Sample:                             0   HQIC                          5407.337
 ##                                 - 731                                         
 ## Covariance Type:                  opg                                         
@@ -1031,8 +1037,8 @@ The first value in the Ljung-Box test is the test statistic and the second value
 ## ==============================================================================
 ## Dep. Variable:                      Y   No. Observations:                  731
 ## Model:                 ARIMA(2, 0, 0)   Log Likelihood               -2696.123
-## Date:                Thu, 05 Sep 2024   AIC                           5400.247
-## Time:                        08:35:26   BIC                           5418.625
+## Date:                Fri, 06 Sep 2024   AIC                           5400.247
+## Time:                        09:51:22   BIC                           5418.625
 ## Sample:                             0   HQIC                          5407.337
 ##                                 - 731                                         
 ## Covariance Type:                  opg                                         
@@ -1133,7 +1139,7 @@ The first value in the Ljung-Box test is the test statistic and the second value
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-29-16.png" width="672" /></p>
 <div class="sourceCode" id="cb187"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb187-1"><a href="arima.html#cb187-1" tabindex="-1"></a><span class="co">## AR(1) model</span></span>
 <span id="cb187-2"><a href="arima.html#cb187-2" tabindex="-1"></a></span>
-<span id="cb187-3"><a href="arima.html#cb187-3" tabindex="-1"></a>model_Quotes <span class="op">=</span> StatsForecast(models <span class="op">=</span> [ARIMA(order<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>))], freq <span class="op">=</span> <span class="st">&#39;ME&#39;</span>)</span>
+<span id="cb187-3"><a href="arima.html#cb187-3" tabindex="-1"></a>model_Quotes <span class="op">=</span> StatsForecast(models <span class="op">=</span> [ARIMA(order<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>), include_mean<span class="op">=</span><span class="va">True</span>)], freq <span class="op">=</span> <span class="st">&#39;ME&#39;</span>)</span>
 <span id="cb187-4"><a href="arima.html#cb187-4" tabindex="-1"></a>model_Quotes.fit(df <span class="op">=</span> quotes_train)</span></code></pre></div>
 <pre><code>## StatsForecast(models=[ARIMA])</code></pre>
 <div class="sourceCode" id="cb189"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb189-1"><a href="arima.html#cb189-1" tabindex="-1"></a>model_Quotes.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;arma&quot;</span>)</span></code></pre></div>
@@ -1144,7 +1150,7 @@ The first value in the Ljung-Box test is the test statistic and the second value
 <pre><code>## 143.5893107658691</code></pre>
 <div class="sourceCode" id="cb195"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb195-1"><a href="arima.html#cb195-1" tabindex="-1"></a><span class="co">## MA(1) model</span></span>
 <span id="cb195-2"><a href="arima.html#cb195-2" tabindex="-1"></a></span>
-<span id="cb195-3"><a href="arima.html#cb195-3" tabindex="-1"></a>model_Quotes2 <span class="op">=</span> StatsForecast(models <span class="op">=</span> [ARIMA(order<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>))], freq <span class="op">=</span> <span class="st">&#39;ME&#39;</span>)</span>
+<span id="cb195-3"><a href="arima.html#cb195-3" tabindex="-1"></a>model_Quotes2 <span class="op">=</span> StatsForecast(models <span class="op">=</span> [ARIMA(order<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>), include_mean<span class="op">=</span><span class="va">True</span>)], freq <span class="op">=</span> <span class="st">&#39;ME&#39;</span>)</span>
 <span id="cb195-4"><a href="arima.html#cb195-4" tabindex="-1"></a>model_Quotes2.fit(df <span class="op">=</span> quotes_train)</span></code></pre></div>
 <pre><code>## StatsForecast(models=[ARIMA])</code></pre>
 <div class="sourceCode" id="cb197"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb197-1"><a href="arima.html#cb197-1" tabindex="-1"></a>model_Quotes2.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;arma&quot;</span>)</span></code></pre></div>
@@ -1288,6 +1294,49 @@ The first value in the Ljung-Box test is the test statistic and the second value
 <div class="sourceCode" id="cb263"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb263-1"><a href="arima.html#cb263-1" tabindex="-1"></a>MAPE <span class="op">=</span> np.mean(abs_error<span class="op">/</span>np.absolute(test[<span class="st">&#39;y&#39;</span>]))</span>
 <span id="cb263-2"><a href="arima.html#cb263-2" tabindex="-1"></a>MAPE</span></code></pre></div>
 <pre><code>## 1.0224984187047392</code></pre>
+<p>An example with trend (fitting it with both differencing and linear regression)</p>
+<div class="sourceCode" id="cb265"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb265-1"><a href="arima.html#cb265-1" tabindex="-1"></a>consume <span class="op">=</span> pd.read_csv(<span class="st">&quot;https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/consume1982.csv&quot;</span>)</span>
+<span id="cb265-2"><a href="arima.html#cb265-2" tabindex="-1"></a></span>
+<span id="cb265-3"><a href="arima.html#cb265-3" tabindex="-1"></a></span>
+<span id="cb265-4"><a href="arima.html#cb265-4" tabindex="-1"></a>df <span class="op">=</span> pd.date_range(start<span class="op">=</span><span class="st">&#39;1982-09-01&#39;</span>, end<span class="op">=</span><span class="st">&#39;1990-07-01&#39;</span>, freq<span class="op">=</span><span class="st">&#39;ME&#39;</span>)</span>
+<span id="cb265-5"><a href="arima.html#cb265-5" tabindex="-1"></a>consume.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb265-6"><a href="arima.html#cb265-6" tabindex="-1"></a></span>
+<span id="cb265-7"><a href="arima.html#cb265-7" tabindex="-1"></a>consume2 <span class="op">=</span>consume</span>
+<span id="cb265-8"><a href="arima.html#cb265-8" tabindex="-1"></a></span>
+<span id="cb265-9"><a href="arima.html#cb265-9" tabindex="-1"></a></span>
+<span id="cb265-10"><a href="arima.html#cb265-10" tabindex="-1"></a>d <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: consume.index, <span class="st">&#39;y&#39;</span>: consume[<span class="st">&#39;Disposable_income&#39;</span>]}</span>
+<span id="cb265-11"><a href="arima.html#cb265-11" tabindex="-1"></a>consume_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d)</span>
+<span id="cb265-12"><a href="arima.html#cb265-12" tabindex="-1"></a>consume_train <span class="op">=</span> consume_sf.head(<span class="dv">88</span>)</span>
+<span id="cb265-13"><a href="arima.html#cb265-13" tabindex="-1"></a>consume_test <span class="op">=</span> consume_sf.tail(<span class="dv">8</span>)</span>
+<span id="cb265-14"><a href="arima.html#cb265-14" tabindex="-1"></a></span>
+<span id="cb265-15"><a href="arima.html#cb265-15" tabindex="-1"></a>n_diffs<span class="op">=</span>ndiffs(consume_train[<span class="st">&quot;y&quot;</span>])</span>
+<span id="cb265-16"><a href="arima.html#cb265-16" tabindex="-1"></a><span class="bu">print</span>(n_diffs)</span></code></pre></div>
+<pre><code>## 1</code></pre>
+<div class="sourceCode" id="cb267"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb267-1"><a href="arima.html#cb267-1" tabindex="-1"></a>consume2[<span class="st">&#39;income_diff&#39;</span>] <span class="op">=</span> consume[<span class="st">&#39;Disposable_income&#39;</span>].diff()</span>
+<span id="cb267-2"><a href="arima.html#cb267-2" tabindex="-1"></a>consume3 <span class="op">=</span> consume2.dropna(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb267-3"><a href="arima.html#cb267-3" tabindex="-1"></a>d <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: consume3.index, <span class="st">&#39;y&#39;</span>: consume3[<span class="st">&#39;income_diff&#39;</span>]}</span>
+<span id="cb267-4"><a href="arima.html#cb267-4" tabindex="-1"></a>consume_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d)</span>
+<span id="cb267-5"><a href="arima.html#cb267-5" tabindex="-1"></a>consume_train_diff <span class="op">=</span> consume_sf.head(<span class="dv">87</span>)</span>
+<span id="cb267-6"><a href="arima.html#cb267-6" tabindex="-1"></a>consume_test_diff <span class="op">=</span> consume_sf.tail(<span class="dv">8</span>)</span>
+<span id="cb267-7"><a href="arima.html#cb267-7" tabindex="-1"></a></span>
+<span id="cb267-8"><a href="arima.html#cb267-8" tabindex="-1"></a>plot_acf(consume_train_diff[<span class="st">&#39;y&#39;</span>],lags<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb267-9"><a href="arima.html#cb267-9" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-32-31.png" width="672" /></p>
+<div class="sourceCode" id="cb268"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb268-1"><a href="arima.html#cb268-1" tabindex="-1"></a>plot_pacf(consume_train_diff[<span class="st">&#39;y&#39;</span>],lags<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb268-2"><a href="arima.html#cb268-2" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-32-32.png" width="672" /></p>
+<div class="sourceCode" id="cb269"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb269-1"><a href="arima.html#cb269-1" tabindex="-1"></a>model_consume <span class="op">=</span> StatsForecast(models <span class="op">=</span> [ARIMA(order<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>), alias<span class="op">=</span><span class="st">&quot;AR1&quot;</span>),</span>
+<span id="cb269-2"><a href="arima.html#cb269-2" tabindex="-1"></a>                                       ARIMA(order<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>), alias<span class="op">=</span><span class="st">&quot;MA1&quot;</span>),</span>
+<span id="cb269-3"><a href="arima.html#cb269-3" tabindex="-1"></a>                                       ARIMA(order<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">1</span>, <span class="dv">0</span>), alias<span class="op">=</span><span class="st">&quot;AR6&quot;</span>),</span>
+<span id="cb269-4"><a href="arima.html#cb269-4" tabindex="-1"></a>                                       ARIMA(order<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">6</span>), alias<span class="op">=</span><span class="st">&quot;MA6&quot;</span>)], freq <span class="op">=</span> <span class="st">&#39;ME&#39;</span>)</span>
+<span id="cb269-5"><a href="arima.html#cb269-5" tabindex="-1"></a>model_consume.fit(df <span class="op">=</span> consume_train)</span></code></pre></div>
+<pre><code>## StatsForecast(models=[AR1,MA1,AR6,MA6])</code></pre>
+<div class="sourceCode" id="cb271"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb271-1"><a href="arima.html#cb271-1" tabindex="-1"></a>model_consume.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;arma&quot;</span>)</span></code></pre></div>
+<pre><code>## (1, 0, 0, 0, 1, 1, 0)</code></pre>
+<div class="sourceCode" id="cb273"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb273-1"><a href="arima.html#cb273-1" tabindex="-1"></a>model_consume.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;coef&quot;</span>)</span></code></pre></div>
+<pre><code>## {&#39;ar1&#39;: -0.14296616906842946}</code></pre>
+<div class="sourceCode" id="cb275"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb275-1"><a href="arima.html#cb275-1" tabindex="-1"></a>model_consume.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;aic&quot;</span>)</span></code></pre></div>
+<pre><code>## 814.5172941298374</code></pre>
 </div>
 <div id="sas-code-for-armaarima" class="section level2 hasAnchor" number="4.10">
 <h2><span class="header-section-number">4.10</span> SAS Code for ARMA/ARIMA<a href="arima.html#sas-code-for-armaarima" class="anchor-section" aria-label="Anchor link to header"></a></h2>

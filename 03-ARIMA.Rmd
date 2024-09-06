@@ -363,7 +363,7 @@ autoplot(consume_train,income_diff)+labs(title="Time Series of Differenced Month
 consume_train %>% gg_tsdisplay(income_diff,plot_type = 'partial')
 ```
 
-
+Looking at the ACF and PACF, we will try a few models and also use an automatic search.
 
 ```{r}
 consume_model <-consume_train %>%
@@ -383,26 +383,7 @@ glance(consume_model) %>% arrange(AICc) %>% select(.model:BIC)
 ```
 
 
-
-
-
-```{r}
-consume_modelt1 <-consume_train %>%
-  model(arima11 = ARIMA(Disposable_income ~ pdq(1,1,1) + PDQ(0,0,0)),
-        arima21 = ARIMA(Disposable_income ~ pdq(2,1,1) + PDQ(0,0,0)),
-        arima20 = ARIMA(Disposable_income ~ pdq(2,1,0) + PDQ(0,0,0)),
-        arima12 = ARIMA(Disposable_income ~ pdq(1,1,2) + PDQ(0,0,0)),
-        arima30 = ARIMA(Disposable_income ~ pdq(3,1,0) + PDQ(0,0,0))
-        )
-
-consume_modelt2<-as.data.frame(consume_modelt1)
-t(consume_modelt2)
-
-glance(consume_modelt1) %>% arrange(AICc) %>% select(.model:BIC)
-
-```
-
-
+Selecting the ARIMA(6,1,0) model.  White noise looks good and forecast is good.
 
 ```{r}
 consume_model %>% select(ar6) %>% residuals() %>% ggAcf(lag.max = 10)
@@ -449,6 +430,7 @@ Raleigh_train %>% gg_tsdisplay(diff_price,plot_type = 'partial')
 
 ```
 
+Now we will try a few models:
 
 
 ```{r}
@@ -468,7 +450,7 @@ glance(Raleigh_model) %>% arrange(AICc) %>% select(.model:BIC)
 ```
 
 
-
+Looking at residuals:
 
 
 ```{r}
@@ -478,6 +460,9 @@ Raleigh_model %>% select(search1) %>% gg_tsresiduals()
 
 augment(Raleigh_model) %>% filter(.model=='search1') %>% features(.innov,ljung_box, lag=10, dof = 4)
 ```
+
+Forecasting chosen model onto the validatoin data set:
+
 ```{r}
 pred_arima123 <- Raleigh_model %>% select(search1) %>%
   fabletools::forecast(h=5)
@@ -488,6 +473,9 @@ MAE_arima123 <- mean(abs(error_arima123))
 
 Raleigh_model %>% select(search1) %>% fabletools::forecast(h=5) %>% autoplot(Raleigh_train)
 ```
+
+
+
 ```{r}
 pred_data <- tibble(
   quarter = yearquarter(seq.Date(from = as.Date("2023-01-01"),
@@ -868,7 +856,7 @@ pyplot.show()
 
 ## AR(1) model
 
-model_Quotes = StatsForecast(models = [ARIMA(order=(1, 0, 0))], freq = 'ME')
+model_Quotes = StatsForecast(models = [ARIMA(order=(1, 0, 0), include_mean=True)], freq = 'ME')
 model_Quotes.fit(df = quotes_train)
 
 
@@ -879,7 +867,7 @@ model_Quotes.fitted_[0][0].model_.get("aic")
 
 ## MA(1) model
 
-model_Quotes2 = StatsForecast(models = [ARIMA(order=(0, 0, 1))], freq = 'ME')
+model_Quotes2 = StatsForecast(models = [ARIMA(order=(0, 0, 1), include_mean=True)], freq = 'ME')
 model_Quotes2.fit(df = quotes_train)
 
 
@@ -901,7 +889,7 @@ model_Quotes.fitted_[0][0].model_.get("aic")
 ### Made AR term close to 1 (very close to a random walk).
 ### Refitting the AR(1) model:
 
-model_Quotes = StatsForecast(models = [ARIMA(order=(1, 0, 0))], freq = 'ME')
+model_Quotes = StatsForecast(models = [ARIMA(order=(1, 0, 0), include_mean=True)], freq = 'ME')
 model_Quotes.fit(df = quotes_train)
 
 resid=model_Quotes.fitted_[0][0].model_.get("residuals")
@@ -1017,6 +1005,53 @@ MAE = np.mean(abs_error)
 MAE
 MAPE = np.mean(abs_error/np.absolute(test['y']))
 MAPE
+
+```
+
+
+An example with trend (fitting it with both differencing and linear regression)
+
+```{python}
+consume = pd.read_csv("https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/consume1982.csv")
+
+
+df = pd.date_range(start='1982-09-01', end='1990-07-01', freq='ME')
+consume.index=pd.to_datetime(df)
+
+consume2 =consume
+
+
+d = {'unique_id': 1, 'ds': consume.index, 'y': consume['Disposable_income']}
+consume_sf = pd.DataFrame(data = d)
+consume_train = consume_sf.head(88)
+consume_test = consume_sf.tail(8)
+
+n_diffs=ndiffs(consume_train["y"])
+print(n_diffs)
+
+consume2['income_diff'] = consume['Disposable_income'].diff()
+consume3 = consume2.dropna(axis=0)
+d = {'unique_id': 1, 'ds': consume3.index, 'y': consume3['income_diff']}
+consume_sf = pd.DataFrame(data = d)
+consume_train_diff = consume_sf.head(87)
+consume_test_diff = consume_sf.tail(8)
+
+plot_acf(consume_train_diff['y'],lags=12)
+pyplot.show()
+plot_pacf(consume_train_diff['y'],lags=12)
+pyplot.show()
+
+model_consume = StatsForecast(models = [ARIMA(order=(1, 1, 0), alias="AR1"),
+                                       ARIMA(order=(0, 1, 1), alias="MA1"),
+                                       ARIMA(order=(6, 1, 0), alias="AR6"),
+                                       ARIMA(order=(0, 1, 6), alias="MA6")], freq = 'ME')
+model_consume.fit(df = consume_train)
+
+
+
+model_consume.fitted_[0][0].model_.get("arma")
+model_consume.fitted_[0][0].model_.get("coef")
+model_consume.fitted_[0][0].model_.get("aic")
 
 ```
 
