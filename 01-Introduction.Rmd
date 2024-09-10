@@ -324,6 +324,42 @@ dcmp.fitted_[0, 0].model_.plot(subplots=True, grid=True)
 plt.tight_layout()
 plt.show()
 
+## The following code calculates the Fs and Ft (many thanks to Fred!)
+
+data = usair_p["Passengers"]
+# Perform STL decomposition
+stl = STL(data, period=12)  # Adjust period as needed for your data
+result = stl.fit()
+# Extract components
+trend = result.trend
+seasonal = result.seasonal
+residual = result.resid
+t_and_r = trend + residual
+# Ensure all series are aligned
+if not trend.empty and not residual.empty and not seasonal.empty:
+    # Calculate Trend Strength
+    var_residual = residual.var()
+    var_t_plus_r = t_and_r.var()
+    var_detrended = (data - trend).var()
+    if var_detrended == 0:
+        trend_strength = 0
+        print("Trend Strength: 0 (Detrended variance is zero)")
+    else:
+        trend_strength = 1 - (var_residual / var_t_plus_r)
+        trend_strength = max(0, trend_strength)  # Avoid negative strength
+        print(f"Trend Strength: {trend_strength:.2f}")
+    # Calculate Seasonal Strength
+    var_seasonal = seasonal.var()
+    if var_detrended == 0:
+        seasonal_strength = 0
+        print("Seasonal Strength: 0 (Detrended variance is zero)")
+    else:
+        seasonal_strength = var_seasonal / var_detrended
+        seasonal_strength = max(0, seasonal_strength)  # Avoid negative strength
+        print(f"Seasonal Strength: {seasonal_strength:.2f}")
+else:
+    print("Trend, Seasonal, or Residual series is empty or misaligned.")
+
 ```
 
 
