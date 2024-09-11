@@ -518,8 +518,8 @@ autoplot(consume_train, Disposable_income) +
        x = "Time", y = "Dollars (000)") +
   theme_minimal()
 
-consume_linear %>% residuals() %>% ggAcf(lag.max = 10)
-consume_linear %>% residuals() %>% ggPacf(lag.max = 10)
+consume_linear %>% residuals() %>% ggAcf(lag.max = 12)
+consume_linear %>% residuals() %>% ggPacf(lag.max = 12)
 
 
 ```
@@ -538,6 +538,8 @@ consume_linear2<-as.data.frame(consume_linear)
 t(consume_linear2)
 
 glance(consume_linear) %>% arrange(AICc) %>% select(.model:BIC)
+
+
 
 ```
 
@@ -683,6 +685,85 @@ ggplot(combined_data, aes(x = quarter, y = value, color = Line)) +
 
 ```
 
+```{r}
+
+#### Fitting a Quadratic ARIMAX
+
+### First we need to create the x-variables
+### I called them time and time2 (time is just a sequence from 1 to n and time2 is time squared)
+Raleigh2.ts <- Raleigh.ts %>% mutate(time = 1:n(), time2= time^2)
+
+
+## Create training data set
+Raleigh_train2 <-Raleigh2.ts %>% filter(quarter <yearquarter("2023 Q1"))
+
+
+##Create linear model
+lm.raleigh<-lm(price_index~time+time2,data=Raleigh_train2)
+
+
+## Make sure residuals are stationary
+ndiffs(resid(lm.raleigh))
+
+### Look for AR and MA terms on the residuals
+ggAcf(resid(lm.raleigh))
+ggPacf(resid(lm.raleigh))
+
+## Put it all together in a model..notice that I have time and time2 in regression
+
+fit <- Raleigh_train2 %>% model(ARIMA(price_index~ time +time2 + PDQ(0,0,0)))
+
+### Do I have white noise for the residuals of this model?
+fit %>% residuals() %>% ggAcf(lag.max = 10)
+fit %>% residuals() %>% ggPacf(lag.max = 10)
+
+## To forecast, we need to create a new data set with time and time2
+## The training data ended at observation 92
+Raleigh_future<- new_data(Raleigh_train2,5) %>% mutate(time=seq(93,97), time2=time^2)
+
+## Now we can forecast and plot
+fabletools::forecast(fit,new_data=Raleigh_future) %>% autoplot(Raleigh_train2)
+## Save forecasts
+fit.quad<-fabletools::forecast(fit,new_data=Raleigh_future) 
+
+##Compare error and also look at plots
+error_lm <- Raleigh.ts$price_index[93:97] - pred_lm$.mean
+MAPE_lm <-mean(abs(error_lm/Raleigh.ts$price_index[93:97]))
+MAE_lm <- mean(abs(error_lm))
+
+error_quad <-Raleigh.ts$price_index[93:97] - fit.quad$.mean
+MAPE_quad <-mean(abs(error_quad/Raleigh.ts$price_index[93:97]))
+MAE_quad <- mean(abs(error_quad))
+
+MAPE_lm
+MAPE_quad
+
+MAE_lm
+MAE_quad
+
+pred_quad <- tibble(
+  quarter = yearquarter(seq.Date(from = as.Date("2023-01-01"),
+                                 to = as.Date("2024-01-01"),
+                                 by = "quarter")),
+  value = fit.quad$.mean  
+)
+
+combined_data <- bind_rows(
+  test_data %>% mutate(Line = "Actual"),
+  pred_rw %>% mutate(Line = "Random Walk"),
+  pred_lm2 %>% mutate(Line = "Linear Model"),
+  pred_quad %>% mutate(Line = "Quadratic")
+)
+
+ggplot(combined_data, aes(x = quarter, y = value, color = Line)) +
+  geom_line(linetype = "solid") +
+  labs(title = "Predicted versus Actual values",
+       x = "Date", y = "Raleigh Price Index",
+       color = "Legend") +
+  theme_minimal()
+
+
+```
 
 
 
@@ -701,6 +782,7 @@ from statsmodels.tsa.stattools import adfuller
 from statsmodels.graphics.tsaplots import plot_acf
 from statsmodels.graphics.tsaplots import plot_pacf
 from statsmodels.tsa.arima.model import ARIMA
+import statsmodels.api as sm
 
 quotes=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\fpp_insurance.csv")
 df = pd.date_range(start='2002-01-01', end='2005-05-01', freq='ME')
@@ -792,7 +874,7 @@ y_test = y_sf.tail(69)
 
 
 
-model_SD_ARIMA = StatsForecast(models = [ARIMA(order=(2, 0, 0),season_length=12)], freq = 'D')
+model_SD_ARIMA = StatsForecast(models = [ARIMA(order=(2, 0, 0))], freq = 'D')
 model_SD_ARIMA.fit(df = y_train)
 
 
@@ -815,7 +897,9 @@ x_test = x_sf.tail(26)
 model_MA2 = StatsForecast(models = [ARIMA(order=(0, 0, 2))], freq = 'D')
 model_MA2.fit(df = x_train)
 
-
+#### Note: when you get the "ARMA" values for the model, it is listed as:
+###  p q P Q seasonlength d D
+### when it is NOT considering seasonality, season length is set to 1.
 
 model_MA2.fitted_[0][0].model_.get("arma")
 model_MA2.fitted_[0][0].model_.get("coef")
@@ -1024,7 +1108,7 @@ consume2 =consume
 d = {'unique_id': 1, 'ds': consume.index, 'y': consume['Disposable_income']}
 consume_sf = pd.DataFrame(data = d)
 consume_train = consume_sf.head(88)
-consume_test = consume_sf.tail(8)
+consume_test = consume_sf.tail(6)
 
 n_diffs=ndiffs(consume_train["y"])
 print(n_diffs)
@@ -1034,17 +1118,17 @@ consume3 = consume2.dropna(axis=0)
 d = {'unique_id': 1, 'ds': consume3.index, 'y': consume3['income_diff']}
 consume_sf = pd.DataFrame(data = d)
 consume_train_diff = consume_sf.head(87)
-consume_test_diff = consume_sf.tail(8)
+consume_test_diff = consume_sf.tail(6)
 
 plot_acf(consume_train_diff['y'],lags=12)
 pyplot.show()
 plot_pacf(consume_train_diff['y'],lags=12)
 pyplot.show()
 
-model_consume = StatsForecast(models = [ARIMA(order=(1, 1, 0), alias="AR1"),
-                                       ARIMA(order=(0, 1, 1), alias="MA1"),
-                                       ARIMA(order=(6, 1, 0), alias="AR6"),
-                                       ARIMA(order=(0, 1, 6), alias="MA6")], freq = 'ME')
+model_consume = StatsForecast(models = [ARIMA(order=(1, 1, 0), alias="AR1",include_drift=True),
+                                       ARIMA(order=(0, 1, 1), alias="MA1",include_drift=True),
+                                       ARIMA(order=(6, 1, 0), alias="AR6",include_drift=True),
+                                       ARIMA(order=(0, 1, 6), alias="MA6",include_drift=True)], freq = 'ME')
 model_consume.fit(df = consume_train)
 
 
@@ -1053,8 +1137,42 @@ model_consume.fitted_[0][0].model_.get("arma")
 model_consume.fitted_[0][0].model_.get("coef")
 model_consume.fitted_[0][0].model_.get("aic")
 
+model_consume.fitted_[0][1].model_.get("arma")
+model_consume.fitted_[0][1].model_.get("coef")
+model_consume.fitted_[0][1].model_.get("aic")
+
+model_consume.fitted_[0][2].model_.get("arma")
+model_consume.fitted_[0][2].model_.get("coef")
+model_consume.fitted_[0][2].model_.get("aic")
+
+model_consume.fitted_[0][3].model_.get("arma")
+model_consume.fitted_[0][3].model_.get("coef")
+model_consume.fitted_[0][3].model_.get("aic")
+
 ```
 
+
+
+```{python}
+### Now for looking at trend:
+consume = pd.read_csv("https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/consume1982.csv")
+
+
+df = pd.date_range(start='1982-09-01', end='1990-07-01', freq='ME')
+consume.index=pd.to_datetime(df)
+
+#consume2 =consume
+
+
+d = {'unique_id': 1, 'ds': consume.index, 'y': consume['Disposable_income']}
+consume_sf = pd.DataFrame(data = d)
+consume_sf['x'] = range(1, len(df) + 1)
+consume_train = consume_sf.head(88)
+consume_test = consume_sf.tail(6)
+
+
+
+```
 
 ## SAS Code for ARMA/ARIMA
 
