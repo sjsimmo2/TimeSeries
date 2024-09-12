@@ -1,13 +1,13 @@
 --- 
-title: "Time Series 1 and 2"
-author: "by Dr. Susan Simmons and Dr. Aric LaBarr "
+title: "Time Series 1"
+author: "by Dr. Susan Simmons "
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
 
 # Time series 
 
-This book contains the codes for Time Series 1 and 2.  By the end of these two courses, you should be able to:  
+This book contains the codes for Time Series 1.  By the end of this course, you should be able to:  
 * Create plots and clean time series data  
 * Understand format of time series data  
 * Identify the different characteristics of a time series (trend, cycle, seasonality, etc)  
@@ -18,13 +18,7 @@ This book contains the codes for Time Series 1 and 2.  By the end of these two c
 * Be able to fit basic ARIMA models  
 * Identify if white noise exists  
 * Identify seasonality within time series data sets  
-* Build seasonal ARIMA models  
-* Incorporate external variables into ARIMA models (dynamic regression)  
-* Fourier transformations in time series models  
-* Build Facebook Prophet models  
-* Build Neural Network Autoregressive models  
-* Ensemble different time series models  
-* Construct hierarchical time series approaches  
+
 
 All of the data sets needed for this class are on the github repository.  Enjoy your TIME in Time Series!!
 
