@@ -23,7 +23,7 @@
 <meta name="author" content="by Dr. Susan Simmons" />
 
 
-<meta name="date" content="2024-09-12" />
+<meta name="date" content="2024-09-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -862,7 +862,7 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-26-2.png" width="672" /></p>
 <div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="arima.html#cb144-1" tabindex="-1"></a><span class="do">## Put it all together in a model..notice that I have time and time2 in regression</span></span>
 <span id="cb144-2"><a href="arima.html#cb144-2" tabindex="-1"></a></span>
-<span id="cb144-3"><a href="arima.html#cb144-3" tabindex="-1"></a>fit <span class="ot">&lt;-</span> Raleigh_train2 <span class="sc">%&gt;%</span> <span class="fu">model</span>(<span class="fu">ARIMA</span>(price_index<span class="sc">~</span> time <span class="sc">+</span>time2 <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)))</span>
+<span id="cb144-3"><a href="arima.html#cb144-3" tabindex="-1"></a>fit <span class="ot">&lt;-</span> Raleigh_train2 <span class="sc">%&gt;%</span> <span class="fu">model</span>(<span class="fu">ARIMA</span>(price_index<span class="sc">~</span> time <span class="sc">+</span>time2 <span class="sc">+</span><span class="fu">pdq</span>(<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="sc">+</span><span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)<span class="sc">+</span><span class="dv">1</span>))</span>
 <span id="cb144-4"><a href="arima.html#cb144-4" tabindex="-1"></a></span>
 <span id="cb144-5"><a href="arima.html#cb144-5" tabindex="-1"></a><span class="do">### Do I have white noise for the residuals of this model?</span></span>
 <span id="cb144-6"><a href="arima.html#cb144-6" tabindex="-1"></a>fit <span class="sc">%&gt;%</span> <span class="fu">residuals</span>() <span class="sc">%&gt;%</span> <span class="fu">ggAcf</span>(<span class="at">lag.max =</span> <span class="dv">10</span>)</span></code></pre></div>
@@ -956,8 +956,8 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 ## ==============================================================================
 ## Dep. Variable:                      Y   No. Observations:                  731
 ## Model:                 ARIMA(2, 0, 0)   Log Likelihood               -2696.123
-## Date:                Thu, 12 Sep 2024   AIC                           5400.247
-## Time:                        07:53:13   BIC                           5418.625
+## Date:                Fri, 13 Sep 2024   AIC                           5400.247
+## Time:                        12:29:57   BIC                           5418.625
 ## Sample:                             0   HQIC                          5407.337
 ##                                 - 731                                         
 ## Covariance Type:                  opg                                         
@@ -1033,8 +1033,8 @@ The first value in the Ljung-Box test is the test statistic and the second value
 ## ==============================================================================
 ## Dep. Variable:                      Y   No. Observations:                  731
 ## Model:                 ARIMA(2, 0, 0)   Log Likelihood               -2696.123
-## Date:                Thu, 12 Sep 2024   AIC                           5400.247
-## Time:                        07:53:14   BIC                           5418.625
+## Date:                Fri, 13 Sep 2024   AIC                           5400.247
+## Time:                        12:30:00   BIC                           5418.625
 ## Sample:                             0   HQIC                          5407.337
 ##                                 - 731                                         
 ## Covariance Type:                  opg                                         

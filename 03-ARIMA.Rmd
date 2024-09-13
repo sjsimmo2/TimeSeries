@@ -711,7 +711,7 @@ ggPacf(resid(lm.raleigh))
 
 ## Put it all together in a model..notice that I have time and time2 in regression
 
-fit <- Raleigh_train2 %>% model(ARIMA(price_index~ time +time2 + PDQ(0,0,0)))
+fit <- Raleigh_train2 %>% model(ARIMA(price_index~ time +time2 +pdq(2,0,2)+PDQ(0,0,0)+1))
 
 ### Do I have white noise for the residuals of this model?
 fit %>% residuals() %>% ggAcf(lag.max = 10)
