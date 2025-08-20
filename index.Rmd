@@ -7,7 +7,7 @@ site: bookdown::bookdown_site
 
 # Time series 
 
-This book contains the codes for Time Series 1.  By the end of this course, you should be able to:  
+This book contains the codes for Time Series.  By the end of this course, you should be able to:  
 * Create plots and clean time series data  
 * Understand format of time series data  
 * Identify the different characteristics of a time series (trend, cycle, seasonality, etc)  

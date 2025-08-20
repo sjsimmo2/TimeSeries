@@ -1,7 +1,7 @@
 # Introduction
 
 
-This document provides the code and output from Time Series I. This is a living document and may be updated throughout the semester (when this occurs, you will be notified that it has been updated).  First, here is a list of some the libraries that you will need:
+This document provides the code and output from Time Series. This is a living document and may be updated throughout the semester.  First, here is a list of some the libraries that you will need:
 
 ```{r libraries, message=FALSE,warning=FALSE}
 library(readr)
@@ -40,9 +40,6 @@ input.file5 = "fpp_insurance.csv"
 input.file6 = "ar2.csv"
 input.file7 = "MA2.csv"
 input.file8 = "hurrican.csv"
-
-# Reads the data at specified directory
-# If the file directory is incorrect, then this won't run
 
 
 USAirlines = read_csv(paste(file.dir, input.file1,sep = ""),show_col_types = FALSE)
