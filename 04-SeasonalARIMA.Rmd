@@ -1,0 +1,846 @@
+
+
+# Seasonal ARIMA
+
+
+```{r, message=FALSE,echo=FALSE}
+library(readr)
+library(fpp3)
+library(fable)
+library(fabletools)
+library(lubridate)
+library(expsmooth)
+library(lmtest)
+library(zoo)
+library(seasonal)
+library(ggplot2)
+library(seasonalview)
+library(aTSA)
+
+library(reticulate)
+
+use_python("C:\\ProgramData\\Anaconda3\\python.exe")
+
+file.dir = "https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/" 
+input.file1 = "usairlines.csv"
+input.file2 = "steel.csv"
+input.file3 = "leadyear2.csv"
+input.file4 = "ebay9899.csv"
+input.file5 = "fpp_insurance.csv" 
+input.file6 = "ar2.csv"
+input.file7 = "MA2.csv"
+input.file8 = "hurrican.csv"
+input.file9 = "consume1982.csv"
+input.file10 = "Raleighhouse.csv"
+
+# Reads the data at specified directory
+# If the file directory is incorrect, then this won't run
+USAirlines = read_csv(paste(file.dir, input.file1,sep = ""),show_col_types = FALSE)
+Steel = read_csv(paste(file.dir, input.file2, sep = ""),show_col_types = FALSE)
+Lead.Year = read_csv(paste(file.dir, input.file3, sep = ""),show_col_types = FALSE)
+Ebay = read_csv(paste(file.dir, input.file4, sep = ""),show_col_types = FALSE)
+Quotes= read_csv(paste(file.dir, input.file5, sep = ""),show_col_types = FALSE)
+Y= read_csv(paste(file.dir, input.file6, sep = ""),show_col_types = FALSE)
+x=read_csv(paste(file.dir, input.file7, sep = ""),show_col_types = FALSE)
+hurricane=read_csv(paste(file.dir, input.file8, sep = ""),show_col_types = FALSE)
+temp<-read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\minntemp.csv", show_col_types = FALSE)
+consume <- read_csv(paste(file.dir, input.file9, sep = ""),show_col_types = FALSE)
+Raleigh <- read_csv(paste(file.dir, input.file10, sep = ""),show_col_types = FALSE)
+
+
+
+USAirlines <- USAirlines %>% 
+  mutate(date = yearmonth(lubridate::make_date(Year, Month)))
+USAirlines_ts <- as_tsibble(USAirlines, index = date)
+
+train <- USAirlines_ts %>%
+  select(Passengers, date, Month) %>%
+  filter_index(~ "2007-03")
+
+test <- USAirlines_ts %>%
+  select(Passengers, date, Month) %>%
+  filter_index("2007-04" ~ .)
+```
+
+
+```{python,message=FALSE,echo=FALSE}
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+import seaborn as sns
+
+from statsforecast import StatsForecast
+
+usair = pd.read_csv("https://raw.githubusercontent.com/sjsimmo2/TimeSeries/master/usairlines.csv")
+
+df = pd.date_range(start = '1/1/1990', end = '3/1/2008', freq = 'MS')
+usair.index = pd.to_datetime(df)
+
+train = usair.head(207)
+test = usair.tail(12)
+
+d = {'unique_id': 1, 'ds': train.index, 'y': train['Passengers']}
+train_sf = pd.DataFrame(data = d)
+
+d = {'unique_id': 1, 'ds': test.index, 'y': test['Passengers']}
+test_sf = pd.DataFrame(data = d)
+```
+
+
+## Seasonality
+
+Seasonality is the component of time series that represents the effects of seasonal variation. The seasonal component of a time series is the repeated pattern over a fixed period of time. For example, the airlines dataset we've been working through (shown below) shows seasonality every 12 observations (12 months) where we see different patterns in summer and holiday times of the year as compared to other times of the year. Seasonality occurs over a fixed and known period of time. 
+
+
+```{r}
+
+autoplot(USAirlines_ts, Passengers) + labs(title="Time Series plot for Passengers", x="Date",y="Passengers")
+```
+
+
+The length of the seasonal periods is denoted as S. Therefore, seasonal factors repeat every S units of time.
+
+As mentioned in the stationarity section, seasonal models are not stationary by default because the time series doesn't revert to a long term mean. When your data has both trend and seasonality, the seasonality should be the first problem you try and correct to make stationary. We do this because making the data stationary by accounting for the seasonality might also account for trend. This is not true for trend. Our process for building ARIMA models is the following:
+
+Similar to when we accounted for trend, seasonality can be solved with a deterministic or stochastic solution.
+
+Deterministic - Seasonal dummy variables, Fourier transformations, predictor variables
+
+Stochastic - Seasonal differences
+
+Once data is made stationary, we can model with traditional and seasonal ARIMA approaches. When we forecast our data we account for the deterministic or stochastic solution above and build that into our forecasts.
+
+## Seasonal "Unit-Root" Testing
+
+Similar to trend, we can perform statistical tests to try and evaluate whether we need to take a seasonal difference or perform more deterministic solutions. However, seasonal unit root tests have problems with large seasonal frequencies - values of S that are larger than 12. To counter these problems with seasonal unit roots we use measures of seasonal strength instead:
+
+
+$$
+F_S = \max{(0, 1 - \frac{Var(E_t)}{Var(S_t + E_t)})}
+$$
+
+where $E_t$ is the error component and $S_t$ is the seasonal component. These components both come from a time series decomposition of the data. If $F_S < 0.64$ then no seasonal differencing would be recommended, while if $F_S \ge 0.64$ then take one seasonal difference.
+
+The only downside of this approach is that if your data has any real amount of seasonality it would just recommend taking the differences without any notion of deterministic solutions. Therefore, this really isn't an approach to compare whether you should use deterministic or stochastic solution for your specific problem. In practice, we typically model our data with both deterministic and stochastic solutions and compare the forecasts to see which was more accurate.
+
+Let's see how to evaluate this in each of our softwares!
+
+### R
+
+R has this functionality built in with its unitroot_nsdiffs option inside of the features function. We just need to specify the variable we want to calculate this test on, which for us is the variable Passengers. The output reports the number of seasonal differences it suggests (either 1 or 0) based on the cut-off described above.
+
+```{r}
+train %>% 
+  features(Passengers, unitroot_nsdiffs)
+
+```
+
+
+### Python
+
+Python doesn't have a built in function at the time of writing this to calculate this. However, we can easily calculate this ourselves from the time series decomposition we have done in previous sections. Inside of our StatsForecast function we use the MSTL function with a frequency set to monthly data. This MSTL function calculates the STL version of the decomposition. We then use the fit function with the df = option to specify our training data we want to decompose. We can then use the .fitted_[0,0].model_ functions to print out each of the above components for each observation in our training data.
+
+
+```{python}
+from statsforecast import StatsForecast
+from statsforecast.models import MSTL
+
+dcmp = StatsForecast(models = [MSTL(season_length = 12)], freq = 'M')
+dcmp.fit(df = train_sf)
+
+result = dcmp.fitted_[0,0].model_
+result
+```
+
+
+Now that we have our components, we can calculate $F_S$ by hand. We just use the var function from numpy to calculate the variance.
+
+
+```{python}
+import numpy as np
+
+FS = 1 - (np.var(result['remainder'])/(np.var(result['remainder']) + np.var(result['seasonal'])))
+
+FS
+```
+
+
+### SAS
+
+SAS doesn't have a built in function at the time of writing this to calculate this. However, we can easily calculate this ourselves from the time series decomposition we have done in previous sections. By default SAS will provide the classical decomposition. In the PROC TIMESERIES procedure, we use the data =option to provide our training data and the plots = (series decomp) option to ask SAS for a plot of the original data series and a plot of the decomposition. The outdecomp option saves the dataset with teh decomposition of our time series. The ID statement is where we provide our date variable and specify our monthly seasonality with the interval = month option. Next, in the VAR statement we provide our target variable, Passengers.
+
+```{r, eval=FALSE}
+proc timeseries data = work.train plots = (series decomp) outdecomp = decomp;
+	id date interval = month;
+	var Passengers;
+run;
+```
+
+
+
+Now that we have our components, we can calculate $F_S$ by hand. First, we need to combine our seasonal and error components represented in our data as SC and IC respectively. Once we combine these together in a DATA STEP we can use the PROC MEANS procedure to calculate the variance of each of them. We just use the var option in the PROC MEANS statement and name the variables in the VAR statement. From there we can use another DATA STEP to calculate the value of $F_S$ and print it out with the PROC PRINT procedure.
+
+
+```{r, eval=FALSE}
+data decomp;
+	set decomp;
+	S_E = SC + IC;
+run;
+
+proc means data = decomp var;
+	var IC S_E;
+run;
+
+data calculation;
+	FS = 1 - (0.0011888/0.0084828);
+run;
+
+proc print data = calculation;
+run;
+```
+
+
+
+The tests above suggest taking a seasonal difference. However, let's solve our problem with both a deterministic approach and stochastic approach to see which is better for our data.
+
+## Deterministic Solution
+
+Unlike trend, there are many different approaches to accounting for seasonality deterministically. The approaches we will discuss are seasonal dummy variables, Fourier transforms, and predictor variables.
+
+**Seasonal Dummy Variables**
+
+Seasonal dummy variables are exactly what their name implies. We will use a set of dummy variables to account for the seasonal effects in our dataset. For a time series with S periods within a season, there will be S-1 dummy variables - one for each period (and one accounted for with the intercept).
+
+Since our US airlines dataset is monthly, we will build a dummy variable for each month and pick one to not include. For example, we could build the following model:
+
+$$
+Y_t = \beta_0 + \beta_1JAN + \beta_2FEB + \cdots + \beta_{11}NOV + e_t 
+$$
+
+In the above model, we chose to leave out the month of December's dummy variable since our model has an intercept. In fact, the intercept $\beta_0$ is the average effect of December. Each of the coefficients on the respective variables measures the average difference in effect from that month and December (our reference level).
+
+Let's see how to do this in each of our softwares!
+
+### R
+
+Adding external variables to an ARIMA model in R is quite straightforward. By using the formula structure in the ARIMA function in the model function (from the fable package), we can add these dummy variables to our model as well as build out an automatic ARIMA model. We specify that the Month variable in our dataset is a categorical variable with the factor function. To prevent the model from automatically trying to take a seasonal difference we use the PDQ function where we specify the D = 0 option.
+
+```{r}
+model_SD_ARIMA <- train %>%
+  model(ARIMA(Passengers ~ factor(Month) + PDQ(D = 0)))
+report(model_SD_ARIMA)
+```
+
+
+R found the "best" model based on automatic selection using seasonal dummy variables as the ARIMA model with one autoregressive (AR) term, one regular difference, one moving average (MA) term, and two seasonal moving average (SMA) terms. Seasonal AR and MA terms are discussed below in the seasonal ARIMA section.
+
+### Python
+
+Adding external variables to an ARIMA model in Python is quite straightforward. First, we use the get_dummies function from pandas to make our Month variable into dummy variables. By using the merge function on our training dataset we can add this new variable to our training data.
+
+```{python}
+d_X = {'unique_id': 1, 'ds': train.index, 'Month': usair['Month'].head(n = 207)}
+X_sf = pd.DataFrame(data = d_X)
+
+X_sf = pd.get_dummies(X_sf, columns = ['Month'])
+
+train_sf_X = train_sf.merge(X_sf, how = 'left', on = ['unique_id', 'ds']) 
+```
+
+
+Now, in the AutoARIMA function, we can add these seasonal dummy variables to our model as well as build out an automatic ARIMA by just putting the training dataset with these new columns in the .fit function. This means we have to be careful about which datasets we use since Python automatically assumes any additional column (beyond unique_id, ds, and y) are predictor variables. We use the .fitted_[0][0].model_.get() and function to evaluate our model by asking for the order of the ARIMA model (arma), the coefficients in the ARIMA model (coef) and the AIC (aic). To prevent the model from automatically trying to take a seasonal difference we use the D = 0 option. To make sure it knows this data has possible seasonal correlations we also use the season_length = 12 option.
+
+```{python}
+from statsforecast.models import AutoARIMA, ARIMA
+
+model_SD_ARIMA = StatsForecast(models = [AutoARIMA(D = 0, season_length = 12)], freq = 'M')
+model_SD_ARIMA.fit(df = train_sf_X)
+
+model_SD_ARIMA.fitted_[0][0].model_.get("arma")
+model_SD_ARIMA.fitted_[0][0].model_.get("coef")
+model_SD_ARIMA.fitted_[0][0].model_.get("aic")
+```
+
+
+
+Python found the "best" model based on automatic selection using seasonal dummy variables as the ARIMA model with one autoregressive (AR) term, one regular difference, one moving average (MA) term, and two seasonal moving average (SMA) terms. Seasonal AR and MA terms are discussed below in the seasonal ARIMA section.
+
+### SAS
+
+Adding external variables to an ARIMA model in SAS is quite straightforward. First, we use the DATA STEP to make our Month variable into dummy variables.
+
+From there we use the PROC ARIMA procedure with this newly created dataset. With the IDENTIFY statement we give our target variable with the VAR option. We also include the CROSSCORR option with our all of our dummy variables we just calculated. Unfortunately, we cannot use the automatic selection techniques here since they will just be on the original target variable. We then use the ESTIMATE statement to define our model with only the seasonal dummy variables. The INPUT option is where we put our dummy variables into the actual model. We finish with the FORECAST statement with the LEAD option set to 0 to just give us fitted values from our training dataset. The OUT option at the very beginning of the procedure will save the model predictions and residuals which we will use in the next PROC ARIMA.
+
+Since the PROC ARIMA procedure can only do automatic selection techniques on the variables in the IDENTIFY which don't include the dummy variables yet, we have to use the residuals from our seasonal dummy variables model to put in another PROC ARIMA procedure to get an automatic selection for our model. First, we run the residuals through a Dickey-Fuller test using the STATIONARITY option with the ADF option inside of it to see if we need to difference. After looking at the results below we see we need to take a difference so we rerun the PROC ARIMA procedure with the additional IDENTIFY statement on the first difference of the residuals using the (1) notation. Then we can use the MINIC to do automatic selection.
+
+
+```{r, eval=FALSE}
+
+data train_sd;
+	set train;
+	if month=1 then Jan = 1; else Jan=0;
+	if month=2 then Feb = 1; else Feb=0;
+	if month=3 then Mar = 1; else Mar=0;
+	if month=4 then Apr = 1; else Apr=0;
+	if month=5 then May = 1; else May=0;
+	if month=6 then Jun = 1; else Jun=0;
+	if month=7 then Jul = 1; else Jul=0;
+	if month=8 then Aug = 1; else Aug=0;
+	if month=9 then Sep = 1; else Sep=0;
+	if month=10 then Oct = 1; else Oct=0;
+	if month=11 then Nov = 1; else Nov=0;
+	if month=12 then Dec = 1; else Dec=0;
+run;
+
+proc arima data = train_sd out = train_sd_f ;
+	identify var = Passengers nlag = 36 crosscorr = (JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV);
+	estimate input = (JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV);
+	forecast lead = 0;
+run;
+
+proc arima data = train_sd_f;
+	identify var = residual nlag = 36 stationarity=(adf = 5);
+	identify var = residual(1) nlag = 36 minic P=(1:24) Q=(1:24);
+run;
+
+
+```
+
+
+![SAS output](Q:\\My Drive\\Fall 2017 - Time Series\\Lessons\\Lessons 2022\\TimeSeries\\9_b_SAS.png)
+
+The results from the MINIC selection gave us only an ARIMA (1,1,1) model. However, there appears to be spikes in our correlation plots below at seasonal lags (explained in the section below on seasonal ARIMA).
+
+![SAS output](Q:\\My Drive\\Fall 2017 - Time Series\\Lessons\\Lessons 2022\\TimeSeries\\9_bb_SAS.png)
+
+Once we decide what model we would like to build, we can go back to the original PROC ARIMA procedure and add our autoregressive (AR) lags with the P option and our moving average (MA) terms with the Q option. We have a model with lags on the seasonal lags as well which is explained in the section below.
+
+```{r,eval=FALSE}
+
+proc arima data = train_sd out = train_sd_f ;
+	identify var = Passengers(1) nlag = 36 crosscorr = (JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV);
+	estimate input = (JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV) p = (1)(12) q = (1)(12);
+run;
+
+```
+
+
+![SAS output](Q:\\My Drive\\Fall 2017 - Time Series\\Lessons\\Lessons 2022\\TimeSeries\\9_c_SAS.png)
+
+
+![SAS output](Q:\\My Drive\\Fall 2017 - Time Series\\Lessons\\Lessons 2022\\TimeSeries\\9_d_SAS.png)
+
+There are some advantages and disadvantages to the seasonal dummy variable approach. The advantages are that the model's seasonal dummy variables have some nice interpretability. They tells us the average impact each seasonal component has on the target variable. It is also a rather straight-forward approach to implement. The main disadvantages however are that if your seasonal is especially long or complex, seasonal dummy variables are burdensome. Also, the constant effect of each season that is assumed may not be appropriate.
+
+## Fourier Transformations
+
+Harmonic regression using Fourier transforms is another approach to account for seasonality deterministically. Fourier showed that a series of sine and cosine terms of the right frequencies approximate periodic patterns in a data series. To do this, we add Fourier variables to a regression model to account for the seasonal pattern. The odd terms $k=1,3,5$ etc. are accounted for with sine variables:
+
+$$
+X_{k, t} = \sin(k \times \frac{2\pi t}{S})
+$$
+
+The even terms $k = 2, 4, 6$ etc. are accounted for with cosine variables:
+
+$$
+X_{k, t} = \cos(k \times \frac{2\pi t}{S})
+$$
+
+The goal is to find the right combination of sine and cosine terms that when blended together mimic the unique pattern in our data. The idea of adding these terms together to get a new unique wave is show below:
+
+![SAS output](Q:\\My Drive\\Fall 2017 - Time Series\\Lessons\\Lessons 2022\\TimeSeries\\Fourier.png)
+
+In fact, if you add the same number of Fourier variables as you have seasonal dummy variables, you will get the same predictions. However, we typically do not need all of the Fourier variables, especially with large values of S. We need to decide how many of these values we need. One way to approach this is to build many models, while increasing the number of Fourier terms in the models and compare them all via a metric like BIC.
+
+Let's see how to do this in each of our softwares!
+
+### R
+
+Adding external variables to an ARIMA model in R is quite straightforward. By using the formula structure in the ARIMA function in the model function, we can add these fourier variables to our model as well as build out an automatic ARIMA model. The fourier function in our formula will add the Fourier variables in pairs of sine and cosine functions with the K = option defining how many pairs of the Fourier variables to add. To prevent the model from automatically trying to take a seasonal difference we use the PDQ function where we specify the D = 0 option. We can use the glance function to quickly compare all these models.
+
+
+```{r}
+model_F_ARIMA <- train %>%
+  model(
+  `K = 1` = ARIMA(Passengers ~ fourier(K=1) + PDQ(D = 0)),
+  `K = 2` = ARIMA(Passengers ~ fourier(K=2) + PDQ(D = 0)),
+  `K = 3` = ARIMA(Passengers ~ fourier(K=3) + PDQ(D = 0)),
+  `K = 4` = ARIMA(Passengers ~ fourier(K=4) + PDQ(D = 0)),
+  `K = 5` = ARIMA(Passengers ~ fourier(K=5) + PDQ(D = 0)),
+  `K = 6` = ARIMA(Passengers ~ fourier(K=6) + PDQ(D = 0))
+)
+
+glance(model_F_ARIMA)
+```
+
+Based on the results above, the model with all of the Fourier terms has the lowest values of AIC, AICc, and BIC. This model is the same as the model that we had with the seasonal dummy variables. We can see a plot of these different models below.
+
+```{r}
+model_F_ARIMA %>%
+  fabletools::forecast(h = 12) %>%
+  autoplot(train, level = 95) +
+  facet_wrap(vars(.model), ncol = 2) +
+  guides(colour = "none", fill = "none", level = "none") +
+  geom_label(
+    aes(x = yearmonth("2007 Jan"), y = 4250,
+        label = paste0("AICc = ", format(AICc))),
+    data = glance(model_F_ARIMA)
+  ) +
+  labs(title= "Comparison of Different Models",
+       y="Passengers")
+```
+
+### Python
+
+Adding external variables to an ARIMA model in Python is quite straightforward. First, we use the fourier function from the utils.feature_engineering package to make our Fourier variables. We need to specify the length of the season as well as how many pairs of sine and cosine terms to be created with the k = option.
+
+```{python}
+from utilsforecast.feature_engineering import fourier
+
+train_sf_f, test_sf_f = fourier(train_sf, freq='ME', season_length = 12, k = 6, h = 12)
+```
+
+
+Now that we have created our training data we can use a for loop to try out the six different models with up to six pairs of Fourier variables. We can compare these models based on AIC.
+
+```{python,warning=F, error=F,message=F}
+aic = np.array([])
+
+for i in range(7):
+  model_F_ARIMA = StatsForecast(models = [AutoARIMA(season_length = 12, D = 0)], freq = 'M')
+  model_F_ARIMA.fit(df = train_sf_f.iloc[:, 0:3 + 2*i])
+  aic = np.append(aic, model_F_ARIMA.fitted_[0][0].model_.get("aic"))
+  
+print(aic)
+```
+
+
+Based on the results above, the model with all of the Fourier terms has the lowest values of AIC, AICc, and BIC. This model is the same as the model that we had with the seasonal dummy variables. We can build this final model below to see what the automatic ARIMA model is with these Fourier terms.
+
+```{python}
+model_F_ARIMA = StatsForecast(models = [AutoARIMA(season_length = 12, D = 0)], freq = 'M')
+model_F_ARIMA.fit(df = train_sf_f)
+
+model_F_ARIMA.fitted_[0][0].model_.get("arma")
+model_F_ARIMA.fitted_[0][0].model_.get("coef")
+model_F_ARIMA.fitted_[0][0].model_.get("aic")
+```
+
+
+
+### SAS
+
+Adding external variables to an ARIMA model in SAS is quite straightforward. First, we use the DATA STEP to make our Fourier variables by calculating them by hand.
+
+From there we use the PROC ARIMA procedure with this newly created dataset. With the IDENTIFY statement we give our target variable with the VAR option. We also include the CROSSCORR option with our all of our Fourier variables we just calculated. We then use the ESTIMATE statement to define our model with the Fourier variables in six different combinations where we add a new pair of sine and cosine functions with each new model. The INPUT option is where we put our Fourier variables into the actual model. We can add our autoregressive (AR) lags with the P option and our moving average (MA) terms with the Q option. We have a model with lags on the seasonal lags as well which is explained in the section below.
+
+```{r,eval=FALSE}
+data train_f;
+	set train;
+	pi = constant('PI');
+	x1=cos(2*pi*1*_n_/12); x2=sin(2*pi*1*_n_/12);
+	x3=cos(2*pi*2*_n_/12); x4=sin(2*pi*2*_n_/12);
+	x5=cos(2*pi*3*_n_/12); x6=sin(2*pi*3*_n_/12);
+	x7=cos(2*pi*4*_n_/12); x8=sin(2*pi*4*_n_/12);
+	x9=cos(2*pi*5*_n_/12); x10=sin(2*pi*5*_n_/12);
+	x11=cos(2*pi*6*_n_/12); x12=sin(2*pi*6*_n_/12);
+run;
+
+
+proc arima data = train_f;
+	identify var = Passengers nlag = 36 crosscorr = (x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12);
+	estimate input = (x1 x2) p = (1)(12) q = (1)(12);
+	estimate input = (x1 x2 x3 x4) p = (1)(12) q = (1)(12);
+	estimate input = (x1 x2 x3 x4 x5 x6) p = (1)(12) q = (1)(12);
+	estimate input = (x1 x2 x3 x4 x5 x6 x7 x8) p = (1)(12) q = (1)(12);
+	estimate input = (x1 x2 x3 x4 x5 x6 x7 x8 x9 x10) p = (1)(12) q = (1)(12);
+	estimate input = (x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12) p = (1)(12) q = (1)(12);
+run;
+quit;
+```
+
+
+![SAS output](Q:\\My Drive\\Fall 2017 - Time Series\\Lessons\\Lessons 2022\\TimeSeries\\9_e_SAS.png)
+
+The results shown is the just from the model with the best AIC value.
+
+Based on the results above, the model with all of the Fourier terms has the lowest value of AIC. This model is the same as the model that we had with the seasonal dummy variables.
+
+There are some advantages and disadvantages of the Fourier term approach to accounting for seasonality. The main advantage is that Fourier terms can handle long and complex seasonality. In fact, for multiple seasons in a dataset, we can add more Fourier variables at different frequencies to account for this. The disadvantages of the Fourier approach are that the Fourier terms themselves are not really interpretable and that we need to use trial and error to find the "right" amount of variables to use.
+
+## Other Predictor Variables
+
+The last common approach to accounting for seasonality in data is to use other predictor variables that have a matching seasonality to use them in a model. Modeling these variables against the target variable might account for the seasonality in our dataset. An example of this might be outdoor temperature modeling energy usage because they have the same 24 hour cycle. This cycle might not match during certain times of the year as well as others which might need to be accounted for in modeling the seasonality.
+
+There are some advantages and disadvantages of the external predictor variable approach to accounting for seasonality. The main advantage is that these variables can handle long and complex seasonality. In fact, for multiple seasons in a dataset, we can add more predictor variables to potentially account for this. There is also the potential of nice interpretability for these variables in the model. The disadvantages of the external predictor variable approach are that we need to use trial and error to find the "right" variables to use if there are even variables we can use in this context.
+
+## Stochastic Solution
+
+When a stochastic solution is best to solve seasonality, we need to take seasonal differences to account for the seasonality. A difference on a season is when we look at the difference between the current point and the same point in the previous season: $Y_t - Y_{t-S}$. For our dataset, it can be thought of as the year over year change in our data.
+
+Let's look at a plot of the original data vs. the seasonally differenced data.
+
+```{r,echo=FALSE}
+
+train %>%
+  transmute(
+    `Number of Passengers` = Passengers,
+    `Annual Change` = difference(Passengers, 12)
+  ) %>%
+  pivot_longer(-date, names_to = "Type", values_to = "Passengers") %>%
+  mutate(
+    Type = factor(Type, levels = c(
+      "Number of Passengers",
+      "Annual Change"))
+  ) %>%
+  ggplot(aes(x = date, y = Passengers)) +
+  geom_line() +
+  facet_grid(vars(Type), scales = "free_y") +
+  labs(title = "Comparison of Differenced Data to Original", y = NULL)
+
+```
+
+There are some limitations to differencing. Differencing is hard to evaluate for long and complex seasons due to the statistical tests for stochastic differencing typically ended at a season length of 24. Therefore, long and/or complex seasons are typically best approached with deterministic solutions. In fact, it is hard to imagine a difference being very long in terms of time points logically. For example, if you had daily data and thought you had an annual season, it is hard to imagine there is an actual impact of noon on Jan 26 from last year on noon on Jan 26 of this year.
+
+Prepare for Modeling
+
+After we remove the seasonal effect through either deterministic or stochastic approaches we need to check to see if we have stationary data for modeling. Just because we remove the seasonality doesn't mean the data is fully stationary. For this we would use the same techniques as we saw in the section of stationarity. For this example we will just use the differenced data from our stochastic solution, but the following should be done if you want to check the deterministic solutions as well.
+
+Let's see how to do this in our softwares!
+
+### R
+
+R has this functionality built in with its unitroot_ndiffs option inside of the features function. We just need to specify the variable we want to calculate this test on, which for us is the seasonal difference on the variable Passengers. To get this variable we use the mutate function to create our seasonal difference of 12 lags. The output reports the number of differences it suggests based on the unit root test.
+
+```{r}
+train %>%
+  mutate(Pass_diff = difference(Passengers, lag = 12)) %>%
+  features(Pass_diff, unitroot_ndiffs)
+```
+
+
+### Python
+
+Python has this functionality built in with its adfuller function inside of the statsmodels.tsa.stattools package. We just need to specify the variable we want to calculate this test on, which for us is the seasonal difference on the variable Passengers. To get this variable we use the shift function to create our seasonal difference of 12 lags.
+
+```{python}
+from statsmodels.tsa.stattools import adfuller
+
+train["Passengers_diff"] = train["Passengers"] - train["Passengers"].shift(12)
+
+result = adfuller(train.iloc[12:207]["Passengers_diff"])
+result
+```
+
+
+### SAS
+
+SAS has this functionality built in with its STATIONARITY option inside of the IDENTIFY statement from the PROC ARIMA procedure. We just need to specify the variable we want to calculate this test on, which for us is the seasonal difference on the variable Passengers. To get this variable we use the (12) specification to create our seasonal difference of 12 lags.
+
+```{r,eval=FALSE}
+proc arima data = train;
+	identify var = Passengers(12) stationarity = (adf = 5);
+run;
+```
+
+
+![SAS output](Q:\\My Drive\\Fall 2017 - Time Series\\Lessons\\Lessons 2022\\TimeSeries\\9_k_SAS.png)
+
+Based on the results above, our differenced data is stationary. Once our data is made stationary by either deterministic or stochastic approaches, the remaining data or differences are modeled with seasonal ARIMA models. The key to these new seasonal ARIMA models is that there still might be effects at seasonal lags in the dataset, even though the main seasonality is accounted for.
+
+## Seasonal ARIMA Modeling
+
+When extending the ARIMA model framework to the seasonal ARIMA framework, we add another set of terms - P, D, Q, and S. Notice how these terms are capitalized.
+
+$$
+ARIMA(p, d, q)(P, D, Q)_S
+$$
+
+The terms represent the number of seasonal AR terms ($P$), the number of seasonal MA terms ($Q$), and the number of seasonal differences ($D$). The length of the season is still defined as $S$. Imagine we have an $ARIMA(1,0,1)(2,1,0)_{12}$ model. This would be the structure:
+
+$$
+Y_{t} - Y_{t-12} = W_t
+$$
+
+$$
+W_t = \omega + \phi_1 W_{t-1} + \phi_2 W_{t-12} + \phi_3 W_{t-24} + \theta_1 e_{t-1} + e_t
+$$
+
+where $W_t$ is the seasonal difference from $D = 1$. The regular AR term of $p = 1$ is represented by the first lag $W_{t-1}$. The seasonal AR term of $P = 2$ is represented by the first two seasonal lags $W_{t-12}$ and $W_{t-24}$. The regular MA term of $q=1$ is represented as the first error lag $e_{t-1}$.
+
+Seasonal ARIMA models have the same structure and approach as typical ARIMA models with AR and MA patterns in the ACF and PACF. The main difference is that the pattern is just on the seasonal lag instead of the individual lags. For example, if you had an $ARIMA(0,0,0)(1,0,0)_{12}$ model, then the ACF would have an exponentially decreasing pattern every 12 lags while the PACF only had a single spike at lag 12.
+
+![SAS output](Q:\\My Drive\\Fall 2017 - Time Series\\Lessons\\Lessons 2022\\TimeSeries\\SeasonalAR.png)
+
+The pattern is the same, but it is only seen on the season since we are dealing with the seasonal lag.
+
+The opposite would be true for an $ARIMA(0,0,0)(0,0,1)_{12}$ model. The PACF would have an exponentially decreasing pattern every 12 lags while the ACF only had a single spike at lag 12.
+
+![SAS output](Q:\\My Drive\\Fall 2017 - Time Series\\Lessons\\Lessons 2022\\TimeSeries\\SeasonalMA.png)
+
+The pattern is the same, but it is only seen on the season since we are dealing with the seasonal lag. For our US airlines data we can observe the lag structure on the differenced data below.
+
+```{r,echo=FALSE}
+train %>% 
+  gg_tsdisplay(difference(Passengers, 12), plot_type='partial', lag = 36)
+```
+
+From the above ACF and PACF plots we see a large spike in the PACF at lag 1 and an exponential decrease in the ACF within the first season. This would lend itself to a $p = 1$ (AR term at lag 1) with $q = 0$ (no MA term within a season). On the seasonal lags we see spikes at most of the seasons (12, 24, 36, etc.) in both plots. This kind of complicated pattern would lend itself to both a $P =1$ (seasonal AR term at lag 12) and $Q = 1$ (seasonal MA term at lag 12). Overall, for our data we can try the $ARIMA(1,0,0)(1,1,1)_{12}$ model based on these findings.
+
+Let's build this seasonal ARIMA model in each of our softwares!
+
+### R
+
+In R we can build both a specific ARIMA model and automatically select an ARIMA model using the same ARIMA function inside of the model function. To specify the specific ARIMA model we want we use the pdq and PDQ functions in the formula framework to build the regular and seasonal lags respectively. In the pdq function we specify the $p=1$ piece along with the $d=0$ and $q=0$. In the PDQ function we are specifying the $P = 1$, $D = 1$, and $Q = 1$ terms. To let R build its own ARIMA model through automatic selection we just use the ARIMA function on the Passengers variable without specifying the pdq and PDQ functions.
+
+```{r}
+model_SARIMA <- train %>% 
+  model(
+    hand = ARIMA(Passengers ~ pdq(1,0,0) + PDQ(1,1,1)),
+    auto = ARIMA(Passengers)
+  )
+```
+
+With these models built we can investigate them one at a time. Below we use the select function to first select the model by built by hand and then view a summary of this model using the report function. We can isolate the same model and also use the gg_tsresiduals function to look at the residuals from this model up to lag 36 in the code below. Lastly, we look at the Ljung-Box test for white noise using the filter function to get the model we want and the features function with the ljung_box option. We have 3 degrees of freedom (dof = 3) because we have 3 terms we are estimating in our seasonal ARIMA model - $p = 1$, $P = 1$, and $Q = 1$.
+
+```{r}
+model_SARIMA %>%
+  select(hand) %>%
+  report
+
+model_SARIMA %>%
+  select(hand) %>%
+  gg_tsresiduals(lag = 36)
+
+augment(model_SARIMA) %>%
+  filter(.model == "hand") %>%
+  features(.innov, ljung_box, lag = 36, dof = 3)
+```
+
+From the output above we can see that the estimation of the coefficients from our model summary and the residuals from the plot. We also have statistical white noise with our residuals based on the results from the Ljung-Box test.
+
+Let's use the same code as above to view the results from R's automatically selected seasonal ARIMA model.
+
+```{r}
+model_SARIMA %>%
+  select(auto) %>%
+  report
+
+model_SARIMA %>%
+  select(auto) %>%
+  gg_tsresiduals(lag = 36)
+
+augment(model_SARIMA) %>%
+  filter(.model == "auto") %>%
+  features(.innov, ljung_box, lag = 36, dof = 3)
+```
+
+From the output above we can see that the estimation of the coefficients from our model summary as well as what model R selected automatically - $ARIMA(1,0,1)(0,1,1)_{12}$. We also have statistical white noise with our residuals based on the results from the Ljung-Box test.
+
+Let's forecast both of these models using the the forecast function with the h = 12 option to forecast 12 months into the future. We also plot these two models' forecasts against each other.
+
+```{r}
+model_SARIMA_for <- fabletools::forecast(model_SARIMA, h = 12)
+
+model_SARIMA_for %>%
+  autoplot(train) +
+  autolayer(fitted(model_SARIMA), col = "blue", linetype = "dashed") + 
+  geom_vline(xintercept = as_date("2007-03-15"),color="orange",linetype="longdash")
+```
+
+Let's take both of these models to the test dataset to see which forecasts better since both of these were rather comparable on the training dataset. For this we use the accuracy function from the fabletools library.
+
+```{r}
+fabletools::accuracy(model_SARIMA_for, test)
+```
+
+Based on the output above it appears that the model built based on the ACF and PACF plots forecasts better than the automatically selected model. This isn't always the case, but still a good example to show that automatic selection techniques are good starting points, but you should not be afraid to adjust them to see if you can get better models. This model was not as good as the previously built Holt-Winters exponentially smoothing model on the testing dataset, but again, this is not always the case.
+
+### Python
+
+In Python we can build both a specific ARIMA model and automatically select an ARIMA model using the same StatsForecast function from the statsforecast package. To specify the specific ARIMA model we want we use the order and seasonal_order functions in the ARIMA function to build the regular and seasonal lags respectively. In the order function we specify the $p=1$ piece along with the $d=0$ and $q=0$. In the seasonal_order function we are specifying the $P = 1$, $D = 1$, and $Q = 1$ terms along with the season length of 12 months (season_length = 12). We also include a drift or intercept terms in our model. To let Python build its own ARIMA model through automatic selection we just use the AutoARIMA function with only specifying the season length and drift. Then we have to tell the model we have a monthly frequency to our dataset with the freq = 'ME' option. Lastly, we just use the .fit function on our training dataset.
+
+```{python}
+model_SARIMA = StatsForecast(models = [ARIMA(order = (1, 0, 0), season_length = 12, seasonal_order = (1,1,1), include_drift = True), AutoARIMA(season_length = 12, allowdrift = True)], freq = 'ME')
+model_SARIMA.fit(df = train_sf)
+```
+
+With these models built we can investigate them one at a time. Below we use the .fitted_[0][0] function to first select the model by built by hand since it was the first model built. We then use the .model_.get() function along with different inputs to view a summary of this model. Specifically we ask for the ARIMA structure (arma), coefficients (coef), and AICc (aicc) from the model. Lastly, we look at the Ljung-Box test for white noise using the residuals option to get the residuals we want and the acorr_ljungbox function for the test itself. We have 3 degrees of freedom (model_df = 3) because we have 3 terms we are estimating in our seasonal ARIMA model - $p = 1$, $P = 1$, and $Q = 1$.
+
+```{python}
+model_SARIMA.fitted_[0][0].model_.get("arma")
+model_SARIMA.fitted_[0][0].model_.get("coef")
+model_SARIMA.fitted_[0][0].model_.get("aicc")
+
+sm.stats.acorr_ljungbox(model_SARIMA.fitted_[0][0].model_.get("residuals"), lags = [36], model_df = 3)
+```
+
+From the output above we can see that the estimation of the coefficients from our model summary. We also have statistical white noise with our residuals based on the results from the Ljung-Box test.
+
+Let's use the same code as above to view the results from Python's automatically selected seasonal ARIMA model represented with the .fitted_[0][1] model.
+
+```{python}
+model_SARIMA.fitted_[0][1].model_.get("arma")
+model_SARIMA.fitted_[0][1].model_.get("coef")
+model_SARIMA.fitted_[0][1].model_.get("aicc")
+
+sm.stats.acorr_ljungbox(model_SARIMA.fitted_[0][1].model_.get("residuals"), lags = [36], model_df = 3)
+```
+
+From the output above we can see that the estimation of the coefficients from our model summary as well as what model Python selected automatically - $ARIMA(1,0,0)(0,1,2)_{12}$. We also do not have statistical white noise with our residuals based on the results from the Ljung-Box test.
+
+Let's forecast both of these models using the the forecast function with the h = 12 option to forecast 12 months into the future. We also plot these two models' forecasts against each other.
+
+```{python, warning=F, error=F, message=F}
+model_SARIMA_for = model_SARIMA.forecast(df = train_sf, h = 12, level = [95])
+
+model_SARIMA.plot(train_sf, model_SARIMA_for)
+```
+
+
+Let's take both of these models to the test dataset to see which forecasts better since both of these were rather comparable on the training dataset.
+
+```{python}
+error = np.array(test['Passengers']) - np.array(model_SARIMA_for['AutoARIMA'])
+MAPE = np.mean(abs(error)/test['Passengers'])*100
+print("Auto. MAE =", np.mean(abs(error)), "\nAuto. MAPE =", MAPE)
+
+error = np.array(test['Passengers']) - np.array(model_SARIMA_for['ARIMA'])
+MAPE = np.mean(abs(error)/test['Passengers'])*100
+print("Hand MAE =", np.mean(abs(error)), "\nHand MAPE =", MAPE)
+```
+
+Based on the output above it appears that the model built based on the ACF and PACF plots forecasts better than the automatically selected model. This isn't always the case, but still a good example to show that automatic selection techniques are good starting points, but you should not be afraid to adjust them to see if you can get better models. This model was not as good as the previously built Holt-Winters exponentially smoothing model on the testing dataset, but again, this is not always the case.
+
+### SAS
+
+In SAS we can build ARIMA models in the PROC ARIMA procedure. We can look at the IDENTIFY statement to examine the target variable. Here we are specifying the seasonal difference of the target variable using the (12) at the end of the Passengers variable in the VAR option. The MINIC option will have SAS recommend a model based on lowest BIC. The P and Q options tell SAS the bounds on the models to test with the MINIC. When running the procedure we see SAS recommend an AR term of 1 and an MA term of 12.
+
+Next, we use the ESTIMATE statements to build our models. The first estimate statement is the model we are developing by hand from looking at the ACF and PACF plots. In the P option we specify the $p=1$ and $P = 1$ lags by specifying the lags as (1)(12). In the Q option we specify the $Q = 1$ by specifying the lags as (12). The AR terms are specified in multiplicative format and not additive format ((1, 12)) as that is what is fit by default in R and Python. The difference between this is discussed in the section below. After the ESTIMATE statement we put a FORECAST statement with LEAD equaling 12 to forecast the next 12 months as well as the OUT option to save these forecasts.
+
+The second estimate statement is the model we are developing automatically from the MINIC. In the P option we specify the $p=1$ lag by specifying the lag as (1). In the Q option we specify the $Q = 1$ by specifying the lags as (12). After the ESTIMATE statement we put a FORECAST statement with LEAD equaling 12 to forecast the next 12 months as well as the OUT option to save these forecasts.
+
+```{r,eval=FALSE}
+proc arima data = train;
+	identify var = Passengers(12) nlag = 36 minic P = (0:12) Q = (0:12);
+	estimate p = (1)(12) q = (12);
+	forecast lead = 12 id = date interval = month out = work.SARIMA_hand_f;
+	estimate p = 1 q = (12);
+	forecast lead = 12 id = date interval = month out = work.SARIMA_auto_f;
+run;
+quit;
+```
+
+
+![SAS output](Q:\\My Drive\\Fall 2017 - Time Series\\Lessons\\Lessons 2022\\TimeSeries\\9_f_SAS.png)
+
+![SAS output](Q:\\My Drive\\Fall 2017 - Time Series\\Lessons\\Lessons 2022\\TimeSeries\\9_g_SAS.png)
+
+![SAS output](Q:\\My Drive\\Fall 2017 - Time Series\\Lessons\\Lessons 2022\\TimeSeries\\9_h_SAS.png)
+
+
+![SAS output](Q:\\My Drive\\Fall 2017 - Time Series\\Lessons\\Lessons 2022\\TimeSeries\\9_i_SAS.png)
+
+From the output above we can see that the estimation of the coefficients from our model summaries. We also have statistical white noise with our residuals from both models based on the results from the Ljung-Box test plots above as well.
+
+We need to isolate just the forecasted observations from the code above. For that we use the DATA STEP to just look at the predicted values from the two previous models beyond the March, 2007 training observations with the WHERE statement. Next, we use the MERGE statement in another DATA STEP to merge the original test dataset with the predicted values from the above model. Lastly, we calculate the absolute error and absolute percentage error for each observation with our last DATA STEP. To get the average of these calculations, we throw our test dataset into the PROC MEANS procedure where we specify these variables with the VAR statement.
+
+```{r,eval=FALSE}
+data SARIMA_hand_f;
+	set SARIMA_hand_f;
+	where date > '1mar2007'd;
+	Predict_SARIMA_hand = Forecast;
+	keep Predict_SARIMA_hand;
+run;
+
+data test;
+	merge test SARIMA_hand_f;
+run;
+
+data SARIMA_auto_f;
+	set SARIMA_auto_f;
+	where date > '1mar2007'd;
+	Predict_SARIMA_auto = Forecast;
+	keep Predict_SARIMA_auto;
+run;
+
+data test;
+	merge test SARIMA_auto_f;
+run;
+
+data test;
+	set test;
+	AE_SARIMA_hand = abs(Passengers - Predict_SARIMA_hand);
+	APE_SARIMA_hand = abs(Passengers - Predict_SARIMA_hand)/Passengers*100;
+	AE_SARIMA_auto = abs(Passengers - Predict_SARIMA_auto);
+	APE_SARIMA_auto = abs(Passengers - Predict_SARIMA_auto)/Passengers*100;
+run;
+
+proc means data = test;
+	var AE_SARIMA_hand APE_SARIMA_hand AE_SARIMA_auto APE_SARIMA_auto;
+run;
+
+
+```
+
+
+![SAS output](Q:\\My Drive\\Fall 2017 - Time Series\\Lessons\\Lessons 2022\\TimeSeries\\9_j_SAS.png)
+
+Based on the output above it appears that the model built based on the ACF and PACF plots forecasts better than the automatically selected model. This isn't always the case, but still a good example to show that automatic selection techniques are good starting points, but you should not be afraid to adjust them to see if you can get better models. This model was not as good as the previously built Holt-Winters exponentially smoothing model on the testing dataset, but again, this is not always the case.
+
+## Multiplicative vs. Additive
+
+To look at the mathematical difference between multiplicative and additive models we need to first need to define the backshift operator, $B$. The backshift operator on a variable shifts the variable back in time. For example, $B(Y_t) = Y_{t-1}$. This can be extended to any number of lags. For example, a two lagged backshift is $B^2(Y_t) = B(Y_{t-1}) = Y_{t-2}$.
+
+For additive seasonal terms the model is structured as the following:
+
+$$
+(1 - \phi_1 B - \phi_2B^{12})Y_t = e_t
+$$
+
+This can be factored out in the following way:
+
+$$
+Y_t -\phi_1 B(Y_t) - \phi_2 B^{12}(Y_t) = e_t
+$$
+
+$$
+Y_t - \phi_1 Y_{t-1} - \phi_2 Y_{t-12} = e_t
+$$
+
+$$
+Y_t = \phi_1 Y_{t-1} + \phi_2 Y_{t-12} + e_t
+$$
+
+However, the multiplicative seasonal terms the model is structured differently:
+
+$$
+(1 - \phi_1B)(1 - \phi_2 B^{12})Y_t = e_t
+$$
+
+This can be factored out in the following way:
+
+$$
+(1 - \phi_1 B - \phi_2 B^{12} - \phi_1 \phi_2 B^{13})Y_t = e_t
+$$
+
+$$
+Y_t -\phi_1 B(Y_t) - \phi_2 B^{12}(Y_t) - \phi_1 \phi_2 B^{13}(Y_t) = e_t
+$$
+
+$$
+Y_t - \phi_1 Y_{t-1} - \phi_2 Y_{t-12} - \phi_1 \phi_2 Y_{t-13}= e_t
+$$
+
+$$
+Y_t = \phi_1 Y_{t-1} + \phi_2 Y_{t-12} + \phi_1 \phi_2 Y_{t-13} + e_t
+$$
+
+This effect on the $13^{th}$ lag is the multiplied impact from the first and twelfth lag. In fact, we can see this effect when we plot the ACF and PACF plots. In a dataset with an additive seasonal effect we only see the spike on the lag. However, with a multiplicative seasonal effect we typically see what we call "counter spikes" on one or both sides of the seasonal spike as the plot shows below.
+
+![SAS output](Q:\\My Drive\\Fall 2017 - Time Series\\Lessons\\Lessons 2022\\TimeSeries\\AddvsMult.png)
+
+
+This multiplicative seasonal effect is the default for R and Python, but must be specified in SAS to get.
