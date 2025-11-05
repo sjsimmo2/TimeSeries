@@ -49,3 +49,16 @@ r-4
 python-4
 sas-4
 multiplicative-vs.-additive
+dynamic-regression
+external-variables
+intervention-variables
+point-intervention
+step-intervention
+ramp-intervention
+r-5
+python-5
+sas-5
+predictor-variables
+r-6
+python-6
+sas-6
