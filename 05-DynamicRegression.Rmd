@@ -139,14 +139,19 @@ Let's see how to do this in each of our softwares!
 For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. By using the formula structure in the ARIMA function in the model function, we can add this intervention to our model as well as build out an automatic seasonal ARIMA. We use the report and gg_tsresiduals() functions to evaluate our model.
 
 ```{r}
-train$Sep11 <- rep(0, 207)
-train$Sep11[141] <- 1
+train<-train %>% mutate(Sep11 = if_else(date >= yearmonth("2000 Sep"),1,0))
+new_model<-train %>% model(ARIMA(Passengers ~ fourier(K=6)+trend()+Sep11))
+future_val <- tibble(
+     date = yearmonth("2007 Apr") + 0:11,    # forecast 6 months ahead
+     Sep11 = rep(1, 12)                # assumed future ad spend
+ ) %>%
+     as_tsibble(index = date)
 
-model_ARIMAX <- train %>%
-  model(ARIMA(Passengers ~ Sep11))
-report(model_ARIMAX)
+for_newmodel<-fabletools::forecast(new_model, new_data = future_val)
+for_newmodel %>% autoplot(USAirlines_ts)+ geom_line(aes(y=.fitted),col="#D55E00",data=augment(new_model))
+report(new_model)
 
-model_ARIMAX %>%
+new_model %>%
   gg_tsresiduals()
 
 ```
@@ -154,7 +159,7 @@ model_ARIMAX %>%
 We can also check if the model produces white noise residuals using the augment and features functions with the ljung_box option.
 
 ```{r}
-augment(model_ARIMAX) %>%
+augment(new_model) %>%
   features(.innov, ljung_box, lag = 36, dof = 3)
 ```
 
@@ -163,23 +168,11 @@ We can see from the output above that our model now accounts for the outlier tha
 To forecast these values going forward, we need future values of our predictor variable. For this dataset, we have our Sep11 variable that we forecast to have values of 0 for each of the 12 observations we are forecasting for airline passengers. To do this we create another variable (of the same name) that has future values in our test dataset. We then use the forecast function with both the model and the test dataset as inputs. The forecast function will be expecting a test dataset that contains the Sep11 variable in it.
 
 ```{r}
-test$Sep11 <- rep(0, 12)
+test$Sep11 <- rep(1, 12)
 
-model_ARIMAX_for <- fabletools::forecast(model_ARIMAX, test)
+model_ARIMAX_for <- fabletools::forecast(new_model, test)
 ```
 
-
-We can plot our forecasts just as we have done previously.
-
-```{r,message=FALSE}
-
-
-model_ARIMAX_for %>%
-  autoplot(train) + 
-  autolayer(fitted(model_ARIMAX), col = "blue", linetype = "dashed") + 
-  ylab("Airlines Passengers") + 
-  geom_vline(xintercept = as_date("2007-03-15"), color="orange", linetype="longdash")
-```
 
 
 ### Python
