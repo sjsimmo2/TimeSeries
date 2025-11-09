@@ -136,11 +136,13 @@ Let's see how to do this in each of our softwares!
 
 ### R
 
-For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. By using the formula structure in the ARIMA function in the model function, we can add this intervention to our model as well as build out an automatic seasonal ARIMA. We use the report and gg_tsresiduals() functions to evaluate our model.
+For our dataset we have a step intervention at September, 2001. We can easily create a binary variable that takes a value of 1 after that month and 0 before. By using the formula structure in the ARIMA function in the model function, we can add this intervention to our model as well as build out an automatic seasonal ARIMA. We use the report and gg_tsresiduals() functions to evaluate our model.
 
 ```{r}
 train<-train %>% mutate(Sep11 = if_else(date >= yearmonth("2000 Sep"),1,0))
 new_model<-train %>% model(ARIMA(Passengers ~ fourier(K=6)+trend()+Sep11))
+report(new_model)
+
 future_val <- tibble(
      date = yearmonth("2007 Apr") + 0:11,    # forecast 6 months ahead
      Sep11 = rep(1, 12)                # assumed future ad spend
