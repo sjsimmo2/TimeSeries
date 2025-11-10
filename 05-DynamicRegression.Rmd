@@ -179,7 +179,7 @@ model_ARIMAX_for <- fabletools::forecast(new_model, test)
 
 ### Python
 
-For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. By using the merge function on our training dataset we can add this new variable to our training data. Now, in the AutoARIMA function, we can add this intervention to our model as well as build out a seasonal ARIMA by just putting the training dataset with this new column in the .fit function. This means we have to be careful about which datasets we use since Python automatically assumes any additional column (beyond unique_id, ds, and y) are predictor variables. We use the .fitted_[0][0].model_.get() and function to evaluate our model by asking for the order of the ARIMA model (arma), the coefficients in the ARIMA model (coef) and the AIC (aic).
+(Note: this is treating the September 11 as a point intervention).  For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. By using the merge function on our training dataset we can add this new variable to our training data. Now, in the AutoARIMA function, we can add this intervention to our model as well as build out a seasonal ARIMA by just putting the training dataset with this new column in the .fit function. This means we have to be careful about which datasets we use since Python automatically assumes any additional column (beyond unique_id, ds, and y) are predictor variables. We use the .fitted_[0][0].model_.get() and function to evaluate our model by asking for the order of the ARIMA model (arma), the coefficients in the ARIMA model (coef) and the AIC (aic).
 
 ```{python}
 from statsforecast.models import AutoARIMA, ARIMA
@@ -237,7 +237,8 @@ model_ARIMAX.plot(train_sf, model_ARIMAX_for).savefig('plot_for_ARIMAX.png')
 
 ### SAS
 
-For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. We also need to create a dataset that blanks out all the values of the Passenger variable past in our test window. SAS needs a dataset with the training data as well as future values of the predictor variables to forecast with dynamic regression.
+
+(Note: this is treating the September 11 as a point intervention)For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. We also need to create a dataset that blanks out all the values of the Passenger variable past in our test window. SAS needs a dataset with the training data as well as future values of the predictor variables to forecast with dynamic regression.
 
 From there we use the PROC ARIMA procedure with this newly created dataset. With the IDENTIFY statement we give our target variable with the VAR option. Remember, the (12) after the target variable signals that we want to take the seasonal difference. We also include the CROSSCORR option with our predictor variable Sep11. We include the MINIC option as well to help with order selection of the ARIMA model. We then use the ESTIMATE statement to define our model, here an ARIMA(1,0,0)(1,1,1) model. The INPUT option is where we put our Sep11 variable into the actual model. We finish with the FORECAST statement with the LEAD option set to 12 to forecast the next 12 observations.
 
@@ -287,73 +288,70 @@ Let's see how to do this in each of our softwares!
 
 ### R
 
-We will take the same approach as above to building a dynamic regression in R. We will still use the formula approach to put in our model in the ARIMA function of the model function on our training data. R has a built in lag function that we can apply to predictor variables to lag them. We will put in the original Sep11 variable and lag variables for lags 1, 2, 3, and 12. Essentially, we believe that the effects of the attacks on September 11 were felt for 3 months as well as on the one year anniversary 12 months later. From there we will build two ARIMA models. The first is a specific model using the model we developed by hand in the previous section on seasonal ARIMA models. This is the ARIMA (1,0,0)(1,1,1) model. We input this model using the pdq and PDQ functions for regular and seasonal orders respectively. Next, we will leave out the pdq and PDQ functions so R will automatically search for the "best" ARIMA model. Lastly, we use the glance function to take a look at the performance of these models on training data.
+We will take the same approach as above to building a dynamic regression in R. We will still use the formula approach to put in our model in the ARIMA function of the model function on our training data. R has a built in lag function that we can apply to predictor variables to lag them. We will be using a data set from the Hyndman book.  It is the insurance data set (will load when you load the fpp3 package).  This data set includes monthly quotations and monthly television advertising expenditure for a US insurance company from January 2002 to April 2005.
 
 ```{r}
-model_ARIMAX <- train %>%
-  model(
-    hand = ARIMA(Passengers ~ 1 + Sep11 + lag(Sep11) + lag(Sep11, 2) + 
-                lag(Sep11, 3) + lag(Sep11, 12) + pdq(1,0,0) + PDQ(1,1,1)),
-    auto = ARIMA(Passengers ~ Sep11 + lag(Sep11) + lag(Sep11, 2) + 
-                lag(Sep11, 3) + lag(Sep11, 12))
-    )
 
-glance(model_ARIMAX)
+fit <- insurance |>
+  # Restrict data so models use same fitting period
+  mutate(Quotes = c(NA, NA, NA, Quotes[4:40])) |>
+  # Estimate models
+  model(
+    lag0 = ARIMA(Quotes ~ pdq(d = 0) + TVadverts),
+    lag1 = ARIMA(Quotes ~ pdq(d = 0) +
+                 TVadverts + lag(TVadverts)),
+    lag2 = ARIMA(Quotes ~ pdq(d = 0) +
+                 TVadverts + lag(TVadverts) +
+                 lag(TVadverts, 2)),
+    lag3 = ARIMA(Quotes ~ pdq(d = 0) +
+                 TVadverts + lag(TVadverts) +
+                 lag(TVadverts, 2) + lag(TVadverts, 3))
+  )
+
+glance(fit)
+
 ```
 
-Based on the likelihood-based metrics above like AIC and BIC, the automatically selected ARIMA model beats out the by hand model, but all the metrics are rather close. Let's also evaluate the residuals from these models using the gg_tsresiduals() function as well as the features function with the ljung_box option for white noise testing. Since we have multiple models in the model function above, we will need to isolate the models with the select function and filter function respectively for the analysis below.
+ Based on the information above, it looks like up to one lag of advertising is needed (current month and the previous month).
 
 ```{r,message=FALSE,error=FALSE,warning=FALSE}
 
+fit_best <- insurance |>
+  model(ARIMA(Quotes ~ pdq(d = 0) +
+              TVadverts + lag(TVadverts)))
+report(fit_best)
 
-model_ARIMAX %>%
-  select(hand) %>%
-  gg_tsresiduals()
+fit_best %>% gg_tsresiduals()
 
-augment(model_ARIMAX) %>%
-  filter(.model == "hand") %>%
-  features(.innov, ljung_box, lag = 36, dof = 5)
+augment(fit_best) %>%
+  features(.innov, ljung_box, lag = 36, dof = 3)
 
-model_ARIMAX %>%
-  select(auto) %>%
-  gg_tsresiduals()
 
-augment(model_ARIMAX) %>%
-  filter(.model == "auto") %>%
-  features(.innov, ljung_box, lag = 36, dof = 5)
 ```
 
 
-The by hand model has a higher p-value for the Ljung-Box white noise test, but both models result, statistically, in white noise residuals.
 
-Let's forecast both of these models to compare the results with the test dataset. To forecast these values going forward, we need future values of our predictor variable. For this dataset, we have our Sep11 variable that we forecast to have values of 0 for each of the 12 observations we are forecasting for airline passengers. To do this we create another variable (of the same name) that has future values in our test dataset. We then use the forecast function with both the model and the test dataset as inputs. The forecast function will be expecting a test dataset that contains the Sep11 variable in it. We also plot the two forecasts together on the same plot.
+Now let's forecast the quotes for 3 months, assuming the TVadverts is 8:
 
 ```{r,message=FALSE,warning=FALSE}
+insurance_future <- new_data(insurance, 3) |>
+  mutate(TVadverts = 8)
+fit_best |>
+  fabletools::forecast(insurance_future) |>
+  autoplot(insurance) +
+  labs(
+    y = "Quotes",
+    title = "Forecast quotes with future advertising set to 8"
+  )
 
 
-test$Sep11 <- rep(0, 12)
-
-model_ARIMAX_for <- fabletools::forecast(model_ARIMAX, test)
-
-model_ARIMAX_for %>%
-  autoplot(train) + 
-  autolayer(fitted(model_ARIMAX), col = "blue", linetype = "dashed") + 
-  ylab("Airlines Passengers") + 
-  geom_vline(xintercept = as_date("2007-03-15"), color="orange", linetype="longdash")
 ```
 
 
-We can use the accuracy function from the fabletools package to evaluate these forecasts. The only inputs for this function are the model object and the test dataset.
-
-```{r}
-fabletools::accuracy(model_ARIMAX_for, test)
-```
-
-Although the automatically selected ARIMA model barely beat the hand selected model in the training dataset metrics, it appears as if the ARIMA models selected by hand has both a better mean absolute error (MAE) and mean absolute percentage error (MAPE) on the test dataset.
 
 ### Python
 
-We will take the same approach as above to building a dynamic regression in Python. For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. However, we also have to create some lag variables to be added to the model as well. We will put in the original Sep11 variable and lag variables for lags 1, 2, 3, and 12. Essentially, we believe that the effects of the attacks on September 11 were felt for 3 months as well as on the one year anniversary 12 months later. By using the merge function on our training dataset we can add these new variables to our training data.
+[NOTE: the below code is using the Airlines passenger data with a point intervention and lags of that variable]. We will take the same approach as above to building a dynamic regression in Python. For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. However, we also have to create some lag variables to be added to the model as well. We will put in the original Sep11 variable and lag variables for lags 1, 2, 3, and 12. Essentially, we believe that the effects of the attacks on September 11 were felt for 3 months as well as on the one year anniversary 12 months later. By using the merge function on our training dataset we can add these new variables to our training data.
 
 ```{python}
 Sep11 = np.full(shape = 207, fill_value = 0)
@@ -436,7 +434,7 @@ Although the automatically selected ARIMA model barely beat the hand selected mo
 
 ### SAS
 
-For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. We also need to create a dataset that blanks out all the values of the Passenger variable past in our test window. SAS needs a dataset with the training data as well as future values of the predictor variables to forecast with dynamic regression.
+[NOTE: the below code is using the Airlines passenger data with a point intervention and lags of that variable] For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. We also need to create a dataset that blanks out all the values of the Passenger variable past in our test window. SAS needs a dataset with the training data as well as future values of the predictor variables to forecast with dynamic regression.
 
 From there we use the PROC ARIMA procedure with this newly created dataset. With the IDENTIFY statement we give our target variable with the VAR option. Remember, the (12) after the target variable signals that we want to take the seasonal difference. We also include the CROSSCORR option with our predictor variable Sep11. We include the MINIC option as well to help with order selection of the ARIMA model. We then use the ESTIMATE statement to define our model, here an ARIMA(1,0,0)(1,1,1) model. The INPUT option is where we put our Sep11 variable into the actual model. The (1,2,3,12) in front of the Sep11 variable creates what is formally called a transfer function. It creates a lag structure on the variable (essentially adding lags of that variable) at the lags of 1,2,3, and 12. We finish with the FORECAST statement with the LEAD option set to 12 to forecast the next 12 observations.
 
