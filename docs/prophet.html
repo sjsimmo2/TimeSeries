@@ -345,7 +345,7 @@ X_W = \cos(\frac{2\pi t}{7}) + \sin(2 \times \frac{2\pi t}{7}) + \cos(3 \times \
 <pre><code>## # A tibble: 1 × 10
 ##   .model                .type     ME  RMSE   MAE   MPE  MAPE  MASE RMSSE    ACF1
 ##   &lt;chr&gt;                 &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
-## 1 &quot;prophet(Passengers … Test  -1159. 1608. 1235. -1.79  1.91   NaN   NaN -0.0583</code></pre>
+## 1 &quot;prophet(Passengers … Test  -1131. 1588. 1218. -1.75  1.88   NaN   NaN -0.0473</code></pre>
 <p>It appears as if the Prophet model was not as accurate as some of the other approaches that we have used to model our data. The possible reasoning for this is discussed in the forecasting section below.</p>
 </div>
 <div id="python-7" class="section level3 hasAnchor" number="7.1.2">
@@ -356,7 +356,7 @@ X_W = \cos(\frac{2\pi t}{7}) + \sin(2 \times \frac{2\pi t}{7}) + \cos(3 \times \
 <span id="cb12-2"><a href="prophet.html#cb12-2" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="prophet.html#cb12-3" tabindex="-1"></a>m <span class="op">=</span> Prophet(seasonality_mode<span class="op">=</span><span class="st">&#39;multiplicative&#39;</span>)</span>
 <span id="cb12-4"><a href="prophet.html#cb12-4" tabindex="-1"></a>m.fit(train_sf)</span></code></pre></div>
-<pre><code>## &lt;prophet.forecaster.Prophet object at 0x000002439454F050&gt;</code></pre>
+<pre><code>## &lt;prophet.forecaster.Prophet object at 0x0000020A9ECD50A0&gt;</code></pre>
 <p>Let’s also evaluate the residuals from this model using the acorr_ljungbox from the statsmodels package on the residuals from our model to test for white noise. First we need to calculate the residuals. To do this we need the predict function on our model to give us the predicted values of our training data. From there we calculate the residuals by taking these predicted values and subtracting them from the true values of our target variable y.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="prophet.html#cb14-1" tabindex="-1"></a>fitted <span class="op">=</span> m.predict()</span>
 <span id="cb14-2"><a href="prophet.html#cb14-2" tabindex="-1"></a>train_sf <span class="op">=</span> train_sf.merge(fitted, on <span class="op">=</span> <span class="st">&#39;ds&#39;</span>)</span>
