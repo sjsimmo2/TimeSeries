@@ -215,21 +215,11 @@ First, we need the Prophet function from the prophet package. Then all we need t
 
 ```{python,message=FALSE}
 
-Sep11 = np.full(shape = 207, fill_value = 0)
-
-d_X = {'unique_id': 1, 'ds': train.index, 'Sep11': Sep11}
-X_sf = pd.DataFrame(data = d_X)
-
-X_sf.loc[140, 'Sep11'] = 1
-
-train_sf_X = train_sf.merge(X_sf, how = 'left', on = ['unique_id', 'ds']) 
 
 from prophet import Prophet
 
 m = Prophet(seasonality_mode='multiplicative')
-m.add_regressor('Sep11')
-m.fit(train_sf_X)
-
+m.fit(train_sf)
 ```
 
 Let's also evaluate the residuals from this model using the acorr_ljungbox from the statsmodels package on the residuals from our model to test for white noise. First we need to calculate the residuals. To do this we need the predict function on our model to give us the predicted values of our training data. From there we calculate the residuals by taking these predicted values and subtracting them from the true values of our target variable y.
@@ -238,8 +228,8 @@ Let's also evaluate the residuals from this model using the acorr_ljungbox from 
 
 
 fitted = m.predict()
-train_sf_X = train_sf_X.merge(fitted, on = 'ds')
-residuals = train_sf_X['y'] - train_sf_X['yhat']
+train_sf = train_sf.merge(fitted, on = 'ds')
+residuals = train_sf['y'] - train_sf['yhat']
 
 sm.stats.acorr_ljungbox(residuals, lags = [12], model_df = 5)
 
@@ -250,14 +240,9 @@ Looks like our residuals still have some autocorrelation in them so further patt
 To forecast these values going forward, we need future values of our predictor variable. For this dataset, we have our Sep11 variable that we forecast to have values of 0 for each of the 12 observations we are forecasting for airline passengers. To do this we create another variable (of the same name) that has future values. This new variable is then put into the test dataset which gets passed inside of the .predict function on our model that we built. The function is expecting a variable in the test dataset called Sep11 in it. From there we plot the forecast with the .plot function.
 
 ```{python, message=FALSE}
-Sep11 = np.full(shape = 12, fill_value = 0)
 
-d_X = {'unique_id': 1, 'ds': test.index, 'Sep11': Sep11}
-X_sf = pd.DataFrame(data = d_X)
 
-test_sf_X = test_sf.merge(X_sf, how = 'left', on = ['unique_id', 'ds']) 
-
-fcst = m.predict(test_sf_X)
+fcst = m.predict(test_sf)
 fig = m.plot(fcst)
 
 plt.show();
