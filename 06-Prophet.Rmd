@@ -155,17 +155,12 @@ The fable.prophet package contains all the functions needed for the Prophet algo
 
 ```{r,message=FALSE}
 
-#| message: false
+
 
 library(fable.prophet)
 
-train$Sep11 <- rep(0, 207)
-train$Sep11[141] <- 1
-
 model_prophet <- train %>%
-  model(prophet(Passengers ~ Sep11 +
-                  growth("linear") + 
-                  season(period = "year", order = 6, type = "multiplicative")))
+  model(prophet(Passengers ~  season(period = "year", order = 6, type = "multiplicative")))
 
 ```
 
@@ -193,7 +188,7 @@ Looks like our residuals still have some autocorrelation in them so further patt
 Now let's forecast the Prophet model for our data. To forecast these values going forward, we need future values of our predictor variable. For this dataset, we have our Sep11 variable that we forecast to have values of 0 for each of the 12 observations we are forecasting for airline passengers. To do this we create another variable (of the same name) that has future values in our test dataset. We then use the forecast function with both the model and the test dataset as inputs. The forecast function will be expecting a test dataset that contains the Sep11 variable in it. We also plot the forecast.
 
 ```{r}
-test$Sep11 <- rep(0, 12)
+
 
 model_prophet_for <- fabletools::forecast(model_prophet, test)
 

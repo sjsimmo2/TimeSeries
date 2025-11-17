@@ -310,17 +310,10 @@ X_W = \cos(\frac{2\pi t}{7}) + \sin(2 \times \frac{2\pi t}{7}) + \cos(3 \times \
 <div id="r-7" class="section level3 hasAnchor" number="7.1.1">
 <h3><span class="header-section-number">7.1.1</span> R<a href="prophet.html#r-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The fable.prophet package contains all the functions needed for the Prophet algorithm. For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. By using the formula structure in the prophet function in the model function, we can add this intervention to our model as well as build out the other components of the Prophet model. Next, we will add the growth component (growth function) where we specify the trend to be linear (“linear”). Lastly, we use the season function to add our own monthly seasonality. We have period = “year” to define the annual season in our data and the order = 6 to define the fourier terms. We will use 6 as we did back in the dynamic regression section. From there we will decide whether we want this seasonal effect to be additive or multiplicative. We choose multiplicative based on the other seasonal models we have built being this structure. Of course, you can always try both to see which works better.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="prophet.html#cb1-1" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb1-2"><a href="prophet.html#cb1-2" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="prophet.html#cb1-3" tabindex="-1"></a><span class="fu">library</span>(fable.prophet)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="prophet.html#cb1-1" tabindex="-1"></a><span class="fu">library</span>(fable.prophet)</span></code></pre></div>
 <pre><code>## Warning: package &#39;fable.prophet&#39; was built under R version 4.5.2</code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="prophet.html#cb3-1" tabindex="-1"></a>train<span class="sc">$</span>Sep11 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">207</span>)</span>
-<span id="cb3-2"><a href="prophet.html#cb3-2" tabindex="-1"></a>train<span class="sc">$</span>Sep11[<span class="dv">141</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb3-3"><a href="prophet.html#cb3-3" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="prophet.html#cb3-4" tabindex="-1"></a>model_prophet <span class="ot">&lt;-</span> train <span class="sc">%&gt;%</span></span>
-<span id="cb3-5"><a href="prophet.html#cb3-5" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">prophet</span>(Passengers <span class="sc">~</span> Sep11 <span class="sc">+</span></span>
-<span id="cb3-6"><a href="prophet.html#cb3-6" tabindex="-1"></a>                  <span class="fu">growth</span>(<span class="st">&quot;linear&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb3-7"><a href="prophet.html#cb3-7" tabindex="-1"></a>                  <span class="fu">season</span>(<span class="at">period =</span> <span class="st">&quot;year&quot;</span>, <span class="at">order =</span> <span class="dv">6</span>, <span class="at">type =</span> <span class="st">&quot;multiplicative&quot;</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="prophet.html#cb3-1" tabindex="-1"></a>model_prophet <span class="ot">&lt;-</span> train <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="prophet.html#cb3-2" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">prophet</span>(Passengers <span class="sc">~</span>  <span class="fu">season</span>(<span class="at">period =</span> <span class="st">&quot;year&quot;</span>, <span class="at">order =</span> <span class="dv">6</span>, <span class="at">type =</span> <span class="st">&quot;multiplicative&quot;</span>)))</span></code></pre></div>
 <p>Once the model is built, we can plot the components function with the autoplot function to view the components of the Prophet model that were calculated from our data.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="prophet.html#cb4-1" tabindex="-1"></a>model_prophet <span class="sc">%&gt;%</span> </span>
 <span id="cb4-2"><a href="prophet.html#cb4-2" tabindex="-1"></a>  <span class="fu">components</span>() <span class="sc">%&gt;%</span></span>
@@ -335,18 +328,16 @@ X_W = \cos(\frac{2\pi t}{7}) + \sin(2 \times \frac{2\pi t}{7}) + \cos(3 \times \
 <pre><code>## # A tibble: 1 × 3
 ##   .model                                                       lb_stat lb_pvalue
 ##   &lt;chr&gt;                                                          &lt;dbl&gt;     &lt;dbl&gt;
-## 1 &quot;prophet(Passengers ~ Sep11 + growth(\&quot;linear\&quot;) + season(p…    431.         0</code></pre>
+## 1 &quot;prophet(Passengers ~ season(period = \&quot;year\&quot;, order = 6, …    366.         0</code></pre>
 <p>Looks like our residuals still have some autocorrelation in them so further pattern exists. This isn’t surprising as the Prophet algorithm was never designed to be a statistical algorithm that removes all the autocorrelation from the data like an ARIMA model.</p>
 <p>Now let’s forecast the Prophet model for our data. To forecast these values going forward, we need future values of our predictor variable. For this dataset, we have our Sep11 variable that we forecast to have values of 0 for each of the 12 observations we are forecasting for airline passengers. To do this we create another variable (of the same name) that has future values in our test dataset. We then use the forecast function with both the model and the test dataset as inputs. The forecast function will be expecting a test dataset that contains the Sep11 variable in it. We also plot the forecast.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="prophet.html#cb8-1" tabindex="-1"></a>test<span class="sc">$</span>Sep11 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">12</span>)</span>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="prophet.html#cb8-1" tabindex="-1"></a>model_prophet_for <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(model_prophet, test)</span>
 <span id="cb8-2"><a href="prophet.html#cb8-2" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="prophet.html#cb8-3" tabindex="-1"></a>model_prophet_for <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(model_prophet, test)</span>
-<span id="cb8-4"><a href="prophet.html#cb8-4" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="prophet.html#cb8-5" tabindex="-1"></a>model_prophet_for <span class="sc">%&gt;%</span></span>
-<span id="cb8-6"><a href="prophet.html#cb8-6" tabindex="-1"></a>  <span class="fu">autoplot</span>(train) <span class="sc">+</span> </span>
-<span id="cb8-7"><a href="prophet.html#cb8-7" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">fitted</span>(model_prophet), <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb8-8"><a href="prophet.html#cb8-8" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Airlines Passengers&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb8-9"><a href="prophet.html#cb8-9" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as_date</span>(<span class="st">&quot;2007-03-15&quot;</span>), <span class="at">color=</span><span class="st">&quot;orange&quot;</span>, <span class="at">linetype=</span><span class="st">&quot;longdash&quot;</span>)</span></code></pre></div>
+<span id="cb8-3"><a href="prophet.html#cb8-3" tabindex="-1"></a>model_prophet_for <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="prophet.html#cb8-4" tabindex="-1"></a>  <span class="fu">autoplot</span>(train) <span class="sc">+</span> </span>
+<span id="cb8-5"><a href="prophet.html#cb8-5" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">fitted</span>(model_prophet), <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb8-6"><a href="prophet.html#cb8-6" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Airlines Passengers&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb8-7"><a href="prophet.html#cb8-7" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as_date</span>(<span class="st">&quot;2007-03-15&quot;</span>), <span class="at">color=</span><span class="st">&quot;orange&quot;</span>, <span class="at">linetype=</span><span class="st">&quot;longdash&quot;</span>)</span></code></pre></div>
 <pre><code>## Plot variable not specified, automatically selected `.vars = .fitted`</code></pre>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>We can use the accuracy function from the fabletools package to evaluate these forecasts. The only inputs for this function are the model object and the test dataset.</p>
@@ -354,7 +345,7 @@ X_W = \cos(\frac{2\pi t}{7}) + \sin(2 \times \frac{2\pi t}{7}) + \cos(3 \times \
 <pre><code>## # A tibble: 1 × 10
 ##   .model                .type     ME  RMSE   MAE   MPE  MAPE  MASE RMSSE    ACF1
 ##   &lt;chr&gt;                 &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
-## 1 &quot;prophet(Passengers … Test  -1378. 1772. 1458. -2.15  2.27   NaN   NaN -0.0158</code></pre>
+## 1 &quot;prophet(Passengers … Test  -1160. 1598. 1229. -1.79  1.90   NaN   NaN -0.0561</code></pre>
 <p>It appears as if the Prophet model was not as accurate as some of the other approaches that we have used to model our data. The possible reasoning for this is discussed in the forecasting section below.</p>
 </div>
 <div id="python-7" class="section level3 hasAnchor" number="7.1.2">
@@ -374,9 +365,9 @@ X_W = \cos(\frac{2\pi t}{7}) + \sin(2 \times \frac{2\pi t}{7}) + \cos(3 \times \
 <span id="cb12-11"><a href="prophet.html#cb12-11" tabindex="-1"></a></span>
 <span id="cb12-12"><a href="prophet.html#cb12-12" tabindex="-1"></a>m <span class="op">=</span> Prophet(seasonality_mode<span class="op">=</span><span class="st">&#39;multiplicative&#39;</span>)</span>
 <span id="cb12-13"><a href="prophet.html#cb12-13" tabindex="-1"></a>m.add_regressor(<span class="st">&#39;Sep11&#39;</span>)</span></code></pre></div>
-<pre><code>## &lt;prophet.forecaster.Prophet object at 0x0000012A95746630&gt;</code></pre>
+<pre><code>## &lt;prophet.forecaster.Prophet object at 0x00000285FE8FAA50&gt;</code></pre>
 <div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="prophet.html#cb14-1" tabindex="-1"></a>m.fit(train_sf_X)</span></code></pre></div>
-<pre><code>## &lt;prophet.forecaster.Prophet object at 0x0000012A95746630&gt;</code></pre>
+<pre><code>## &lt;prophet.forecaster.Prophet object at 0x00000285FE8FAA50&gt;</code></pre>
 <p>Let’s also evaluate the residuals from this model using the acorr_ljungbox from the statsmodels package on the residuals from our model to test for white noise. First we need to calculate the residuals. To do this we need the predict function on our model to give us the predicted values of our training data. From there we calculate the residuals by taking these predicted values and subtracting them from the true values of our target variable y.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="prophet.html#cb16-1" tabindex="-1"></a>fitted <span class="op">=</span> m.predict()</span>
 <span id="cb16-2"><a href="prophet.html#cb16-2" tabindex="-1"></a>train_sf_X <span class="op">=</span> train_sf_X.merge(fitted, on <span class="op">=</span> <span class="st">&#39;ds&#39;</span>)</span>
