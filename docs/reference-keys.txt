@@ -62,3 +62,9 @@ predictor-variables
 r-6
 python-6
 sas-6
+prophet
+components
+r-7
+python-7
+sas-7
+forecasting-1
