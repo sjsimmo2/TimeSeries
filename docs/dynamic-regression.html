@@ -23,7 +23,7 @@
 <meta name="author" content="by Dr. Susan Simmons" />
 
 
-<meta name="date" content="2025-11-09" />
+<meta name="date" content="2025-11-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="seasonal-arima.html"/>
-
+<link rel="next" href="prophet.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -228,6 +228,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.6.3" data-path="dynamic-regression.html"><a href="dynamic-regression.html#sas-6"><i class="fa fa-check"></i><b>6.6.3</b> SAS</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="7" data-path="prophet.html"><a href="prophet.html"><i class="fa fa-check"></i><b>7</b> Prophet</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="prophet.html"><a href="prophet.html#components"><i class="fa fa-check"></i><b>7.1</b> Components</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="prophet.html"><a href="prophet.html#r-7"><i class="fa fa-check"></i><b>7.1.1</b> R</a></li>
+<li class="chapter" data-level="7.1.2" data-path="prophet.html"><a href="prophet.html#python-7"><i class="fa fa-check"></i><b>7.1.2</b> Python</a></li>
+<li class="chapter" data-level="7.1.3" data-path="prophet.html"><a href="prophet.html#sas-7"><i class="fa fa-check"></i><b>7.1.3</b> SAS</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="prophet.html"><a href="prophet.html#forecasting-1"><i class="fa fa-check"></i><b>7.2</b> Forecasting</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -296,120 +306,132 @@ Y_t = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + Z_t
 <div id="r-5" class="section level3 hasAnchor" number="6.5.1">
 <h3><span class="header-section-number">6.5.1</span> R<a href="dynamic-regression.html#r-5" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>For our dataset we have a step intervention at September, 2001. We can easily create a binary variable that takes a value of 1 after that month and 0 before. By using the formula structure in the ARIMA function in the model function, we can add this intervention to our model as well as build out an automatic seasonal ARIMA. We use the report and gg_tsresiduals() functions to evaluate our model.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="dynamic-regression.html#cb1-1" tabindex="-1"></a>train<span class="ot">&lt;-</span>train <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Sep11 =</span> <span class="fu">if_else</span>(date <span class="sc">&gt;=</span> <span class="fu">yearmonth</span>(<span class="st">&quot;2000 Sep&quot;</span>),<span class="dv">1</span>,<span class="dv">0</span>))</span>
-<span id="cb1-2"><a href="dynamic-regression.html#cb1-2" tabindex="-1"></a>new_model<span class="ot">&lt;-</span>train <span class="sc">%&gt;%</span> <span class="fu">model</span>(<span class="fu">ARIMA</span>(Passengers <span class="sc">~</span> <span class="fu">fourier</span>(<span class="at">K=</span><span class="dv">6</span>)<span class="sc">+</span><span class="fu">trend</span>()<span class="sc">+</span>Sep11))</span>
-<span id="cb1-3"><a href="dynamic-regression.html#cb1-3" tabindex="-1"></a><span class="fu">report</span>(new_model)</span></code></pre></div>
+<div class="sourceCode" id="cb496"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb496-1"><a href="dynamic-regression.html#cb496-1" tabindex="-1"></a>train<span class="ot">&lt;-</span>train <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Sep11 =</span> <span class="fu">if_else</span>(date <span class="sc">&gt;=</span> <span class="fu">yearmonth</span>(<span class="st">&quot;2000 Sep&quot;</span>),<span class="dv">1</span>,<span class="dv">0</span>))</span>
+<span id="cb496-2"><a href="dynamic-regression.html#cb496-2" tabindex="-1"></a>new_model<span class="ot">&lt;-</span>train <span class="sc">%&gt;%</span> <span class="fu">model</span>(<span class="fu">ARIMA</span>(Passengers <span class="sc">~</span> <span class="fu">fourier</span>(<span class="at">K=</span><span class="dv">6</span>)<span class="sc">+</span><span class="fu">trend</span>()<span class="sc">+</span>Sep11))</span>
+<span id="cb496-3"><a href="dynamic-regression.html#cb496-3" tabindex="-1"></a><span class="fu">report</span>(new_model)</span></code></pre></div>
 <pre><code>## Series: Passengers 
 ## Model: LM w/ ARIMA(3,0,0)(1,0,0)[12] errors 
 ## 
 ## Coefficients:
-##          ar1     ar2     ar3    sar1  fourier(K = 6)C1_12  fourier(K = 6)S1_12
-##       0.6409  0.1090  0.0866  0.3491            -4398.041            1131.4722
-## s.e.  0.0714  0.0829  0.0695  0.0744              407.575             406.8423
-##       fourier(K = 6)C2_12  fourier(K = 6)S2_12  fourier(K = 6)C3_12
-##                  623.1931            -439.0598           -2578.0661
-## s.e.             247.1645             247.2930             208.2801
-##       fourier(K = 6)S3_12  fourier(K = 6)C4_12  fourier(K = 6)S4_12
-##                -1306.9302             252.5545            -374.3603
-## s.e.             208.8032             188.8733             188.8001
-##       fourier(K = 6)C5_12  fourier(K = 6)S5_12  fourier(K = 6)C6_12  trend()
-##                  947.0734           -2140.5655            -340.8753  99.9567
-## s.e.             168.4445             169.0065             112.9862  20.8172
+##          ar1     ar2     ar3    sar1  fourier(K = 6)C1_12
+##       0.6409  0.1090  0.0866  0.3491            -4398.041
+## s.e.  0.0714  0.0829  0.0695  0.0744              407.575
+##       fourier(K = 6)S1_12  fourier(K = 6)C2_12
+##                 1131.4722             623.1931
+## s.e.             406.8423             247.1645
+##       fourier(K = 6)S2_12  fourier(K = 6)C3_12
+##                 -439.0598           -2578.0661
+## s.e.             247.2930             208.2801
+##       fourier(K = 6)S3_12  fourier(K = 6)C4_12
+##                -1306.9302             252.5545
+## s.e.             208.8032             188.8733
+##       fourier(K = 6)S4_12  fourier(K = 6)C5_12
+##                 -374.3603             947.0734
+## s.e.             188.8001             168.4445
+##       fourier(K = 6)S5_12  fourier(K = 6)C6_12  trend()
+##                -2140.5655            -340.8753  99.9567
+## s.e.             169.0065             112.9862  20.8172
 ##          Sep11  intercept
 ##       3698.924  38175.713
 ## s.e.  2071.972   2077.692
 ## 
 ## sigma^2 estimated as 3391371:  log likelihood=-1841.98
 ## AIC=3721.96   AICc=3726.03   BIC=3785.29</code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="dynamic-regression.html#cb3-1" tabindex="-1"></a>future_val <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb3-2"><a href="dynamic-regression.html#cb3-2" tabindex="-1"></a>     <span class="at">date =</span> <span class="fu">yearmonth</span>(<span class="st">&quot;2007 Apr&quot;</span>) <span class="sc">+</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">11</span>,    <span class="co"># forecast 6 months ahead</span></span>
-<span id="cb3-3"><a href="dynamic-regression.html#cb3-3" tabindex="-1"></a>     <span class="at">Sep11 =</span> <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">12</span>)                <span class="co"># assumed future ad spend</span></span>
-<span id="cb3-4"><a href="dynamic-regression.html#cb3-4" tabindex="-1"></a> ) <span class="sc">%&gt;%</span></span>
-<span id="cb3-5"><a href="dynamic-regression.html#cb3-5" tabindex="-1"></a>     <span class="fu">as_tsibble</span>(<span class="at">index =</span> date)</span>
-<span id="cb3-6"><a href="dynamic-regression.html#cb3-6" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="dynamic-regression.html#cb3-7" tabindex="-1"></a>for_newmodel<span class="ot">&lt;-</span>fabletools<span class="sc">::</span><span class="fu">forecast</span>(new_model, <span class="at">new_data =</span> future_val)</span>
-<span id="cb3-8"><a href="dynamic-regression.html#cb3-8" tabindex="-1"></a>for_newmodel <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(USAirlines_ts)<span class="sc">+</span> <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>.fitted),<span class="at">col=</span><span class="st">&quot;#D55E00&quot;</span>,<span class="at">data=</span><span class="fu">augment</span>(new_model))</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="dynamic-regression.html#cb4-1" tabindex="-1"></a><span class="fu">report</span>(new_model)</span></code></pre></div>
+<div class="sourceCode" id="cb498"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb498-1"><a href="dynamic-regression.html#cb498-1" tabindex="-1"></a>future_val <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb498-2"><a href="dynamic-regression.html#cb498-2" tabindex="-1"></a>     <span class="at">date =</span> <span class="fu">yearmonth</span>(<span class="st">&quot;2007 Apr&quot;</span>) <span class="sc">+</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">11</span>,    <span class="co"># forecast 6 months ahead</span></span>
+<span id="cb498-3"><a href="dynamic-regression.html#cb498-3" tabindex="-1"></a>     <span class="at">Sep11 =</span> <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">12</span>)                <span class="co"># assumed future ad spend</span></span>
+<span id="cb498-4"><a href="dynamic-regression.html#cb498-4" tabindex="-1"></a> ) <span class="sc">%&gt;%</span></span>
+<span id="cb498-5"><a href="dynamic-regression.html#cb498-5" tabindex="-1"></a>     <span class="fu">as_tsibble</span>(<span class="at">index =</span> date)</span>
+<span id="cb498-6"><a href="dynamic-regression.html#cb498-6" tabindex="-1"></a></span>
+<span id="cb498-7"><a href="dynamic-regression.html#cb498-7" tabindex="-1"></a>for_newmodel<span class="ot">&lt;-</span>fabletools<span class="sc">::</span><span class="fu">forecast</span>(new_model, <span class="at">new_data =</span> future_val)</span>
+<span id="cb498-8"><a href="dynamic-regression.html#cb498-8" tabindex="-1"></a>for_newmodel <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(USAirlines_ts)<span class="sc">+</span> <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>.fitted),<span class="at">col=</span><span class="st">&quot;#D55E00&quot;</span>,<span class="at">data=</span><span class="fu">augment</span>(new_model))</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-79-1.png" width="672" /></p>
+<div class="sourceCode" id="cb499"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb499-1"><a href="dynamic-regression.html#cb499-1" tabindex="-1"></a><span class="fu">report</span>(new_model)</span></code></pre></div>
 <pre><code>## Series: Passengers 
 ## Model: LM w/ ARIMA(3,0,0)(1,0,0)[12] errors 
 ## 
 ## Coefficients:
-##          ar1     ar2     ar3    sar1  fourier(K = 6)C1_12  fourier(K = 6)S1_12
-##       0.6409  0.1090  0.0866  0.3491            -4398.041            1131.4722
-## s.e.  0.0714  0.0829  0.0695  0.0744              407.575             406.8423
-##       fourier(K = 6)C2_12  fourier(K = 6)S2_12  fourier(K = 6)C3_12
-##                  623.1931            -439.0598           -2578.0661
-## s.e.             247.1645             247.2930             208.2801
-##       fourier(K = 6)S3_12  fourier(K = 6)C4_12  fourier(K = 6)S4_12
-##                -1306.9302             252.5545            -374.3603
-## s.e.             208.8032             188.8733             188.8001
-##       fourier(K = 6)C5_12  fourier(K = 6)S5_12  fourier(K = 6)C6_12  trend()
-##                  947.0734           -2140.5655            -340.8753  99.9567
-## s.e.             168.4445             169.0065             112.9862  20.8172
+##          ar1     ar2     ar3    sar1  fourier(K = 6)C1_12
+##       0.6409  0.1090  0.0866  0.3491            -4398.041
+## s.e.  0.0714  0.0829  0.0695  0.0744              407.575
+##       fourier(K = 6)S1_12  fourier(K = 6)C2_12
+##                 1131.4722             623.1931
+## s.e.             406.8423             247.1645
+##       fourier(K = 6)S2_12  fourier(K = 6)C3_12
+##                 -439.0598           -2578.0661
+## s.e.             247.2930             208.2801
+##       fourier(K = 6)S3_12  fourier(K = 6)C4_12
+##                -1306.9302             252.5545
+## s.e.             208.8032             188.8733
+##       fourier(K = 6)S4_12  fourier(K = 6)C5_12
+##                 -374.3603             947.0734
+## s.e.             188.8001             168.4445
+##       fourier(K = 6)S5_12  fourier(K = 6)C6_12  trend()
+##                -2140.5655            -340.8753  99.9567
+## s.e.             169.0065             112.9862  20.8172
 ##          Sep11  intercept
 ##       3698.924  38175.713
 ## s.e.  2071.972   2077.692
 ## 
 ## sigma^2 estimated as 3391371:  log likelihood=-1841.98
 ## AIC=3721.96   AICc=3726.03   BIC=3785.29</code></pre>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="dynamic-regression.html#cb6-1" tabindex="-1"></a>new_model <span class="sc">%&gt;%</span></span>
-<span id="cb6-2"><a href="dynamic-regression.html#cb6-2" tabindex="-1"></a>  <span class="fu">gg_tsresiduals</span>()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+<div class="sourceCode" id="cb501"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb501-1"><a href="dynamic-regression.html#cb501-1" tabindex="-1"></a>new_model <span class="sc">%&gt;%</span></span>
+<span id="cb501-2"><a href="dynamic-regression.html#cb501-2" tabindex="-1"></a>  <span class="fu">gg_tsresiduals</span>()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-79-2.png" width="672" /></p>
 <p>We can also check if the model produces white noise residuals using the augment and features functions with the ljung_box option.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="dynamic-regression.html#cb7-1" tabindex="-1"></a><span class="fu">augment</span>(new_model) <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="dynamic-regression.html#cb7-2" tabindex="-1"></a>  <span class="fu">features</span>(.innov, ljung_box, <span class="at">lag =</span> <span class="dv">36</span>, <span class="at">dof =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb502"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb502-1"><a href="dynamic-regression.html#cb502-1" tabindex="-1"></a><span class="fu">augment</span>(new_model) <span class="sc">%&gt;%</span></span>
+<span id="cb502-2"><a href="dynamic-regression.html#cb502-2" tabindex="-1"></a>  <span class="fu">features</span>(.innov, ljung_box, <span class="at">lag =</span> <span class="dv">36</span>, <span class="at">dof =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 3
-##   .model                                               lb_stat lb_pvalue
-##   &lt;chr&gt;                                                  &lt;dbl&gt;     &lt;dbl&gt;
-## 1 ARIMA(Passengers ~ fourier(K = 6) + trend() + Sep11)    25.2     0.831</code></pre>
+##   .model                                        lb_stat lb_pvalue
+##   &lt;chr&gt;                                           &lt;dbl&gt;     &lt;dbl&gt;
+## 1 ARIMA(Passengers ~ fourier(K = 6) + trend() …    25.2     0.831</code></pre>
 <p>We can see from the output above that our model now accounts for the outlier that we previously saw in our data. Notice how our model has changed slightly after accounting for this outlier. This will improve the forecasts going forward, even though we do not have any outliers in our test dataset.</p>
 <p>To forecast these values going forward, we need future values of our predictor variable. For this dataset, we have our Sep11 variable that we forecast to have values of 0 for each of the 12 observations we are forecasting for airline passengers. To do this we create another variable (of the same name) that has future values in our test dataset. We then use the forecast function with both the model and the test dataset as inputs. The forecast function will be expecting a test dataset that contains the Sep11 variable in it.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="dynamic-regression.html#cb9-1" tabindex="-1"></a>test<span class="sc">$</span>Sep11 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">12</span>)</span>
-<span id="cb9-2"><a href="dynamic-regression.html#cb9-2" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="dynamic-regression.html#cb9-3" tabindex="-1"></a>model_ARIMAX_for <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(new_model, test)</span></code></pre></div>
+<div class="sourceCode" id="cb504"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb504-1"><a href="dynamic-regression.html#cb504-1" tabindex="-1"></a>test<span class="sc">$</span>Sep11 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">12</span>)</span>
+<span id="cb504-2"><a href="dynamic-regression.html#cb504-2" tabindex="-1"></a></span>
+<span id="cb504-3"><a href="dynamic-regression.html#cb504-3" tabindex="-1"></a>model_ARIMAX_for <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(new_model, test)</span></code></pre></div>
 </div>
 <div id="python-5" class="section level3 hasAnchor" number="6.5.2">
 <h3><span class="header-section-number">6.5.2</span> Python<a href="dynamic-regression.html#python-5" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>(Note: this is treating the September 11 as a point intervention). For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. By using the merge function on our training dataset we can add this new variable to our training data. Now, in the AutoARIMA function, we can add this intervention to our model as well as build out a seasonal ARIMA by just putting the training dataset with this new column in the .fit function. This means we have to be careful about which datasets we use since Python automatically assumes any additional column (beyond unique_id, ds, and y) are predictor variables. We use the .fitted_[0][0].model_.get() and function to evaluate our model by asking for the order of the ARIMA model (arma), the coefficients in the ARIMA model (coef) and the AIC (aic).</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="dynamic-regression.html#cb10-1" tabindex="-1"></a><span class="im">from</span> statsforecast.models <span class="im">import</span> AutoARIMA, ARIMA</span>
-<span id="cb10-2"><a href="dynamic-regression.html#cb10-2" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="dynamic-regression.html#cb10-3" tabindex="-1"></a>Sep11 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">207</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
-<span id="cb10-4"><a href="dynamic-regression.html#cb10-4" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="dynamic-regression.html#cb10-5" tabindex="-1"></a>d_X <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: train.index, <span class="st">&#39;Sep11&#39;</span>: Sep11}</span>
-<span id="cb10-6"><a href="dynamic-regression.html#cb10-6" tabindex="-1"></a>X_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d_X)</span>
-<span id="cb10-7"><a href="dynamic-regression.html#cb10-7" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="dynamic-regression.html#cb10-8" tabindex="-1"></a>X_sf.loc[<span class="dv">140</span>, <span class="st">&#39;Sep11&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb10-9"><a href="dynamic-regression.html#cb10-9" tabindex="-1"></a></span>
-<span id="cb10-10"><a href="dynamic-regression.html#cb10-10" tabindex="-1"></a>train_sf_X <span class="op">=</span> train_sf.merge(X_sf, how <span class="op">=</span> <span class="st">&#39;left&#39;</span>, on <span class="op">=</span> [<span class="st">&#39;unique_id&#39;</span>, <span class="st">&#39;ds&#39;</span>]) </span>
-<span id="cb10-11"><a href="dynamic-regression.html#cb10-11" tabindex="-1"></a></span>
-<span id="cb10-12"><a href="dynamic-regression.html#cb10-12" tabindex="-1"></a>model_ARIMAX <span class="op">=</span> StatsForecast(models <span class="op">=</span> [AutoARIMA(season_length <span class="op">=</span> <span class="dv">12</span>, allowdrift <span class="op">=</span> <span class="va">True</span>)], freq <span class="op">=</span> <span class="st">&#39;ME&#39;</span>)</span>
-<span id="cb10-13"><a href="dynamic-regression.html#cb10-13" tabindex="-1"></a>model_ARIMAX.fit(df <span class="op">=</span> train_sf_X)</span></code></pre></div>
+<div class="sourceCode" id="cb505"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb505-1"><a href="dynamic-regression.html#cb505-1" tabindex="-1"></a><span class="im">from</span> statsforecast.models <span class="im">import</span> AutoARIMA, ARIMA</span>
+<span id="cb505-2"><a href="dynamic-regression.html#cb505-2" tabindex="-1"></a></span>
+<span id="cb505-3"><a href="dynamic-regression.html#cb505-3" tabindex="-1"></a>Sep11 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">207</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb505-4"><a href="dynamic-regression.html#cb505-4" tabindex="-1"></a></span>
+<span id="cb505-5"><a href="dynamic-regression.html#cb505-5" tabindex="-1"></a>d_X <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: train.index, <span class="st">&#39;Sep11&#39;</span>: Sep11}</span>
+<span id="cb505-6"><a href="dynamic-regression.html#cb505-6" tabindex="-1"></a>X_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d_X)</span>
+<span id="cb505-7"><a href="dynamic-regression.html#cb505-7" tabindex="-1"></a></span>
+<span id="cb505-8"><a href="dynamic-regression.html#cb505-8" tabindex="-1"></a>X_sf.loc[<span class="dv">140</span>, <span class="st">&#39;Sep11&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb505-9"><a href="dynamic-regression.html#cb505-9" tabindex="-1"></a></span>
+<span id="cb505-10"><a href="dynamic-regression.html#cb505-10" tabindex="-1"></a>train_sf_X <span class="op">=</span> train_sf.merge(X_sf, how <span class="op">=</span> <span class="st">&#39;left&#39;</span>, on <span class="op">=</span> [<span class="st">&#39;unique_id&#39;</span>, <span class="st">&#39;ds&#39;</span>]) </span>
+<span id="cb505-11"><a href="dynamic-regression.html#cb505-11" tabindex="-1"></a></span>
+<span id="cb505-12"><a href="dynamic-regression.html#cb505-12" tabindex="-1"></a>model_ARIMAX <span class="op">=</span> StatsForecast(models <span class="op">=</span> [AutoARIMA(season_length <span class="op">=</span> <span class="dv">12</span>, allowdrift <span class="op">=</span> <span class="va">True</span>)], freq <span class="op">=</span> <span class="st">&#39;ME&#39;</span>)</span>
+<span id="cb505-13"><a href="dynamic-regression.html#cb505-13" tabindex="-1"></a>model_ARIMAX.fit(df <span class="op">=</span> train_sf_X)</span></code></pre></div>
 <pre><code>## StatsForecast(models=[AutoARIMA])</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="dynamic-regression.html#cb12-1" tabindex="-1"></a>model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;arma&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb507"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb507-1"><a href="dynamic-regression.html#cb507-1" tabindex="-1"></a>model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;arma&quot;</span>)</span></code></pre></div>
 <pre><code>## (2, 1, 1, 2, 12, 0, 1)</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="dynamic-regression.html#cb14-1" tabindex="-1"></a>model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;coef&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb509"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb509-1"><a href="dynamic-regression.html#cb509-1" tabindex="-1"></a>model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;coef&quot;</span>)</span></code></pre></div>
 <pre><code>## {&#39;ar1&#39;: 0.13134602931994888, &#39;ar2&#39;: 0.5552223660064508, &#39;ma1&#39;: 0.48357739638505537, &#39;sar1&#39;: -0.5813428814692551, &#39;sma1&#39;: -0.018930442731758503, &#39;sma2&#39;: -0.390927638995888, &#39;ex_1&#39;: -14131.99804734699}</code></pre>
-<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="dynamic-regression.html#cb16-1" tabindex="-1"></a>model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;aic&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb511"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb511-1"><a href="dynamic-regression.html#cb511-1" tabindex="-1"></a>model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;aic&quot;</span>)</span></code></pre></div>
 <pre><code>## 3491.097241911011</code></pre>
 <p>We can also check if the model produces white noise residuals using the acorr_ljungbox from the statsmodels package on the residuals from our model.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="dynamic-regression.html#cb18-1" tabindex="-1"></a>sm.stats.acorr_ljungbox(model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;residuals&quot;</span>), lags <span class="op">=</span> [<span class="dv">12</span>], model_df <span class="op">=</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb513"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb513-1"><a href="dynamic-regression.html#cb513-1" tabindex="-1"></a>sm.stats.acorr_ljungbox(model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;residuals&quot;</span>), lags <span class="op">=</span> [<span class="dv">12</span>], model_df <span class="op">=</span> <span class="dv">5</span>)</span></code></pre></div>
 <pre><code>##       lb_stat  lb_pvalue
 ## 12  18.351359   0.010481</code></pre>
 <p>We can see from the output above that our model now accounts for the outlier that we previously saw in our data. Notice how our model has changed slightly after accounting for this outlier. This will improve the forecasts going forward, even though we do not have any outliers in our validation dataset.</p>
 <p>To forecast these values going forward, we need future values of our predictor variable. For this dataset, we have our Sep11 variable that we forecast to have values of 0 for each of the 12 observations we are forecasting for airline passengers. To do this we create another variable (of the same name) that has future values. This new variable is then put into the test dataset which gets passed inside of the .forecast function. The function is expecting a variable in the test dataset called Sep11 in it.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="dynamic-regression.html#cb20-1" tabindex="-1"></a></span>
-<span id="cb20-2"><a href="dynamic-regression.html#cb20-2" tabindex="-1"></a></span>
-<span id="cb20-3"><a href="dynamic-regression.html#cb20-3" tabindex="-1"></a>Sep11 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">12</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
-<span id="cb20-4"><a href="dynamic-regression.html#cb20-4" tabindex="-1"></a></span>
-<span id="cb20-5"><a href="dynamic-regression.html#cb20-5" tabindex="-1"></a>d_X <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: test.index, <span class="st">&#39;Sep11&#39;</span>: Sep11}</span>
-<span id="cb20-6"><a href="dynamic-regression.html#cb20-6" tabindex="-1"></a>X_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d_X)</span>
-<span id="cb20-7"><a href="dynamic-regression.html#cb20-7" tabindex="-1"></a></span>
-<span id="cb20-8"><a href="dynamic-regression.html#cb20-8" tabindex="-1"></a>test_sf_X <span class="op">=</span> test_sf.merge(X_sf, how <span class="op">=</span> <span class="st">&#39;left&#39;</span>, on <span class="op">=</span> [<span class="st">&#39;unique_id&#39;</span>, <span class="st">&#39;ds&#39;</span>]) </span>
-<span id="cb20-9"><a href="dynamic-regression.html#cb20-9" tabindex="-1"></a></span>
-<span id="cb20-10"><a href="dynamic-regression.html#cb20-10" tabindex="-1"></a>model_ARIMAX_for <span class="op">=</span> model_ARIMAX.forecast(df <span class="op">=</span> train_sf_X, h <span class="op">=</span> <span class="dv">12</span>, X_df <span class="op">=</span> X_sf, level <span class="op">=</span> [<span class="dv">95</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb515"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb515-1"><a href="dynamic-regression.html#cb515-1" tabindex="-1"></a></span>
+<span id="cb515-2"><a href="dynamic-regression.html#cb515-2" tabindex="-1"></a></span>
+<span id="cb515-3"><a href="dynamic-regression.html#cb515-3" tabindex="-1"></a>Sep11 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">12</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb515-4"><a href="dynamic-regression.html#cb515-4" tabindex="-1"></a></span>
+<span id="cb515-5"><a href="dynamic-regression.html#cb515-5" tabindex="-1"></a>d_X <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: test.index, <span class="st">&#39;Sep11&#39;</span>: Sep11}</span>
+<span id="cb515-6"><a href="dynamic-regression.html#cb515-6" tabindex="-1"></a>X_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d_X)</span>
+<span id="cb515-7"><a href="dynamic-regression.html#cb515-7" tabindex="-1"></a></span>
+<span id="cb515-8"><a href="dynamic-regression.html#cb515-8" tabindex="-1"></a>test_sf_X <span class="op">=</span> test_sf.merge(X_sf, how <span class="op">=</span> <span class="st">&#39;left&#39;</span>, on <span class="op">=</span> [<span class="st">&#39;unique_id&#39;</span>, <span class="st">&#39;ds&#39;</span>]) </span>
+<span id="cb515-9"><a href="dynamic-regression.html#cb515-9" tabindex="-1"></a></span>
+<span id="cb515-10"><a href="dynamic-regression.html#cb515-10" tabindex="-1"></a>model_ARIMAX_for <span class="op">=</span> model_ARIMAX.forecast(df <span class="op">=</span> train_sf_X, h <span class="op">=</span> <span class="dv">12</span>, X_df <span class="op">=</span> X_sf, level <span class="op">=</span> [<span class="dv">95</span>])</span></code></pre></div>
 <p>We can plot our forecasts just as we have done previously.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="dynamic-regression.html#cb21-1" tabindex="-1"></a>model_ARIMAX.plot(train_sf, model_ARIMAX_for).savefig(<span class="st">&#39;plot_for_ARIMAX.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb516"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb516-1"><a href="dynamic-regression.html#cb516-1" tabindex="-1"></a>model_ARIMAX.plot(train_sf, model_ARIMAX_for).savefig(<span class="st">&#39;plot_for_ARIMAX.png&#39;</span>)</span></code></pre></div>
 <pre><code>## C:\PROGRA~3\ANACON~1\Lib\site-packages\statsforecast\core.py:1447: FutureWarning: Passing the ids as the index is deprecated. Please provide them as a column instead.
 ##   warnings.warn(</code></pre>
 </div>
@@ -417,18 +439,18 @@ Y_t = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + Z_t
 <h3><span class="header-section-number">6.5.3</span> SAS<a href="dynamic-regression.html#sas-5" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>(Note: this is treating the September 11 as a point intervention)For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. We also need to create a dataset that blanks out all the values of the Passenger variable past in our test window. SAS needs a dataset with the training data as well as future values of the predictor variables to forecast with dynamic regression.</p>
 <p>From there we use the PROC ARIMA procedure with this newly created dataset. With the IDENTIFY statement we give our target variable with the VAR option. Remember, the (12) after the target variable signals that we want to take the seasonal difference. We also include the CROSSCORR option with our predictor variable Sep11. We include the MINIC option as well to help with order selection of the ARIMA model. We then use the ESTIMATE statement to define our model, here an ARIMA(1,0,0)(1,1,1) model. The INPUT option is where we put our Sep11 variable into the actual model. We finish with the FORECAST statement with the LEAD option set to 12 to forecast the next 12 observations.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="dynamic-regression.html#cb23-1" tabindex="-1"></a>data usair_pred;</span>
-<span id="cb23-2"><a href="dynamic-regression.html#cb23-2" tabindex="-1"></a>    set usair;</span>
-<span id="cb23-3"><a href="dynamic-regression.html#cb23-3" tabindex="-1"></a>    Sep11 <span class="ot">=</span> <span class="dv">0</span>;</span>
-<span id="cb23-4"><a href="dynamic-regression.html#cb23-4" tabindex="-1"></a>    <span class="cf">if</span> date <span class="ot">=</span> <span class="st">&#39;1sep2001&#39;</span>d then Sep11 <span class="ot">=</span> <span class="dv">1</span>;</span>
-<span id="cb23-5"><a href="dynamic-regression.html#cb23-5" tabindex="-1"></a>    <span class="cf">if</span> date <span class="sc">&gt;</span> <span class="st">&#39;1mar2007&#39;</span>d then Passengers <span class="ot">=</span> .;</span>
-<span id="cb23-6"><a href="dynamic-regression.html#cb23-6" tabindex="-1"></a>run;</span>
-<span id="cb23-7"><a href="dynamic-regression.html#cb23-7" tabindex="-1"></a>    </span>
-<span id="cb23-8"><a href="dynamic-regression.html#cb23-8" tabindex="-1"></a>proc arima data <span class="ot">=</span> work.usair_pred plots <span class="ot">=</span> all;</span>
-<span id="cb23-9"><a href="dynamic-regression.html#cb23-9" tabindex="-1"></a>    identify var <span class="ot">=</span> <span class="fu">Passengers</span>(<span class="dv">12</span>) nlag <span class="ot">=</span> <span class="dv">24</span> crosscorr <span class="ot">=</span> (Sep11) minic P<span class="ot">=</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">15</span>) Q<span class="ot">=</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">15</span>);</span>
-<span id="cb23-10"><a href="dynamic-regression.html#cb23-10" tabindex="-1"></a>    estimate p <span class="ot">=</span> (<span class="dv">1</span>)(<span class="dv">12</span>) q <span class="ot">=</span> (<span class="dv">12</span>) input <span class="ot">=</span> (Sep11);</span>
-<span id="cb23-11"><a href="dynamic-regression.html#cb23-11" tabindex="-1"></a>    forecast lead <span class="ot">=</span> <span class="dv">12</span> id <span class="ot">=</span> date interval <span class="ot">=</span> month;</span>
-<span id="cb23-12"><a href="dynamic-regression.html#cb23-12" tabindex="-1"></a>run;</span></code></pre></div>
+<div class="sourceCode" id="cb518"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb518-1"><a href="dynamic-regression.html#cb518-1" tabindex="-1"></a>data usair_pred;</span>
+<span id="cb518-2"><a href="dynamic-regression.html#cb518-2" tabindex="-1"></a>    set usair;</span>
+<span id="cb518-3"><a href="dynamic-regression.html#cb518-3" tabindex="-1"></a>    Sep11 <span class="ot">=</span> <span class="dv">0</span>;</span>
+<span id="cb518-4"><a href="dynamic-regression.html#cb518-4" tabindex="-1"></a>    <span class="cf">if</span> date <span class="ot">=</span> <span class="st">&#39;1sep2001&#39;</span>d then Sep11 <span class="ot">=</span> <span class="dv">1</span>;</span>
+<span id="cb518-5"><a href="dynamic-regression.html#cb518-5" tabindex="-1"></a>    <span class="cf">if</span> date <span class="sc">&gt;</span> <span class="st">&#39;1mar2007&#39;</span>d then Passengers <span class="ot">=</span> .;</span>
+<span id="cb518-6"><a href="dynamic-regression.html#cb518-6" tabindex="-1"></a>run;</span>
+<span id="cb518-7"><a href="dynamic-regression.html#cb518-7" tabindex="-1"></a>    </span>
+<span id="cb518-8"><a href="dynamic-regression.html#cb518-8" tabindex="-1"></a>proc arima data <span class="ot">=</span> work.usair_pred plots <span class="ot">=</span> all;</span>
+<span id="cb518-9"><a href="dynamic-regression.html#cb518-9" tabindex="-1"></a>    identify var <span class="ot">=</span> <span class="fu">Passengers</span>(<span class="dv">12</span>) nlag <span class="ot">=</span> <span class="dv">24</span> crosscorr <span class="ot">=</span> (Sep11) minic P<span class="ot">=</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">15</span>) Q<span class="ot">=</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">15</span>);</span>
+<span id="cb518-10"><a href="dynamic-regression.html#cb518-10" tabindex="-1"></a>    estimate p <span class="ot">=</span> (<span class="dv">1</span>)(<span class="dv">12</span>) q <span class="ot">=</span> (<span class="dv">12</span>) input <span class="ot">=</span> (Sep11);</span>
+<span id="cb518-11"><a href="dynamic-regression.html#cb518-11" tabindex="-1"></a>    forecast lead <span class="ot">=</span> <span class="dv">12</span> id <span class="ot">=</span> date interval <span class="ot">=</span> month;</span>
+<span id="cb518-12"><a href="dynamic-regression.html#cb518-12" tabindex="-1"></a>run;</span></code></pre></div>
 <div class="float">
 <img src="10_a_SAS.png" alt="SASOutput" />
 <div class="figcaption">SASOutput</div>
@@ -460,23 +482,23 @@ Y_t = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + Z_t
 <div id="r-6" class="section level3 hasAnchor" number="6.6.1">
 <h3><span class="header-section-number">6.6.1</span> R<a href="dynamic-regression.html#r-6" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>We will take the same approach as above to building a dynamic regression in R. We will still use the formula approach to put in our model in the ARIMA function of the model function on our training data. R has a built in lag function that we can apply to predictor variables to lag them. We will be using a data set from the Hyndman book. It is the insurance data set (will load when you load the fpp3 package). This data set includes monthly quotations and monthly television advertising expenditure for a US insurance company from January 2002 to April 2005.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="dynamic-regression.html#cb24-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> insurance <span class="sc">|&gt;</span></span>
-<span id="cb24-2"><a href="dynamic-regression.html#cb24-2" tabindex="-1"></a>  <span class="co"># Restrict data so models use same fitting period</span></span>
-<span id="cb24-3"><a href="dynamic-regression.html#cb24-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Quotes =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, Quotes[<span class="dv">4</span><span class="sc">:</span><span class="dv">40</span>])) <span class="sc">|&gt;</span></span>
-<span id="cb24-4"><a href="dynamic-regression.html#cb24-4" tabindex="-1"></a>  <span class="co"># Estimate models</span></span>
-<span id="cb24-5"><a href="dynamic-regression.html#cb24-5" tabindex="-1"></a>  <span class="fu">model</span>(</span>
-<span id="cb24-6"><a href="dynamic-regression.html#cb24-6" tabindex="-1"></a>    <span class="at">lag0 =</span> <span class="fu">ARIMA</span>(Quotes <span class="sc">~</span> <span class="fu">pdq</span>(<span class="at">d =</span> <span class="dv">0</span>) <span class="sc">+</span> TVadverts),</span>
-<span id="cb24-7"><a href="dynamic-regression.html#cb24-7" tabindex="-1"></a>    <span class="at">lag1 =</span> <span class="fu">ARIMA</span>(Quotes <span class="sc">~</span> <span class="fu">pdq</span>(<span class="at">d =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
-<span id="cb24-8"><a href="dynamic-regression.html#cb24-8" tabindex="-1"></a>                 TVadverts <span class="sc">+</span> <span class="fu">lag</span>(TVadverts)),</span>
-<span id="cb24-9"><a href="dynamic-regression.html#cb24-9" tabindex="-1"></a>    <span class="at">lag2 =</span> <span class="fu">ARIMA</span>(Quotes <span class="sc">~</span> <span class="fu">pdq</span>(<span class="at">d =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
-<span id="cb24-10"><a href="dynamic-regression.html#cb24-10" tabindex="-1"></a>                 TVadverts <span class="sc">+</span> <span class="fu">lag</span>(TVadverts) <span class="sc">+</span></span>
-<span id="cb24-11"><a href="dynamic-regression.html#cb24-11" tabindex="-1"></a>                 <span class="fu">lag</span>(TVadverts, <span class="dv">2</span>)),</span>
-<span id="cb24-12"><a href="dynamic-regression.html#cb24-12" tabindex="-1"></a>    <span class="at">lag3 =</span> <span class="fu">ARIMA</span>(Quotes <span class="sc">~</span> <span class="fu">pdq</span>(<span class="at">d =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
-<span id="cb24-13"><a href="dynamic-regression.html#cb24-13" tabindex="-1"></a>                 TVadverts <span class="sc">+</span> <span class="fu">lag</span>(TVadverts) <span class="sc">+</span></span>
-<span id="cb24-14"><a href="dynamic-regression.html#cb24-14" tabindex="-1"></a>                 <span class="fu">lag</span>(TVadverts, <span class="dv">2</span>) <span class="sc">+</span> <span class="fu">lag</span>(TVadverts, <span class="dv">3</span>))</span>
-<span id="cb24-15"><a href="dynamic-regression.html#cb24-15" tabindex="-1"></a>  )</span>
-<span id="cb24-16"><a href="dynamic-regression.html#cb24-16" tabindex="-1"></a></span>
-<span id="cb24-17"><a href="dynamic-regression.html#cb24-17" tabindex="-1"></a><span class="fu">glance</span>(fit)</span></code></pre></div>
+<div class="sourceCode" id="cb519"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb519-1"><a href="dynamic-regression.html#cb519-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> insurance <span class="sc">|&gt;</span></span>
+<span id="cb519-2"><a href="dynamic-regression.html#cb519-2" tabindex="-1"></a>  <span class="co"># Restrict data so models use same fitting period</span></span>
+<span id="cb519-3"><a href="dynamic-regression.html#cb519-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Quotes =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, Quotes[<span class="dv">4</span><span class="sc">:</span><span class="dv">40</span>])) <span class="sc">|&gt;</span></span>
+<span id="cb519-4"><a href="dynamic-regression.html#cb519-4" tabindex="-1"></a>  <span class="co"># Estimate models</span></span>
+<span id="cb519-5"><a href="dynamic-regression.html#cb519-5" tabindex="-1"></a>  <span class="fu">model</span>(</span>
+<span id="cb519-6"><a href="dynamic-regression.html#cb519-6" tabindex="-1"></a>    <span class="at">lag0 =</span> <span class="fu">ARIMA</span>(Quotes <span class="sc">~</span> <span class="fu">pdq</span>(<span class="at">d =</span> <span class="dv">0</span>) <span class="sc">+</span> TVadverts),</span>
+<span id="cb519-7"><a href="dynamic-regression.html#cb519-7" tabindex="-1"></a>    <span class="at">lag1 =</span> <span class="fu">ARIMA</span>(Quotes <span class="sc">~</span> <span class="fu">pdq</span>(<span class="at">d =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb519-8"><a href="dynamic-regression.html#cb519-8" tabindex="-1"></a>                 TVadverts <span class="sc">+</span> <span class="fu">lag</span>(TVadverts)),</span>
+<span id="cb519-9"><a href="dynamic-regression.html#cb519-9" tabindex="-1"></a>    <span class="at">lag2 =</span> <span class="fu">ARIMA</span>(Quotes <span class="sc">~</span> <span class="fu">pdq</span>(<span class="at">d =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb519-10"><a href="dynamic-regression.html#cb519-10" tabindex="-1"></a>                 TVadverts <span class="sc">+</span> <span class="fu">lag</span>(TVadverts) <span class="sc">+</span></span>
+<span id="cb519-11"><a href="dynamic-regression.html#cb519-11" tabindex="-1"></a>                 <span class="fu">lag</span>(TVadverts, <span class="dv">2</span>)),</span>
+<span id="cb519-12"><a href="dynamic-regression.html#cb519-12" tabindex="-1"></a>    <span class="at">lag3 =</span> <span class="fu">ARIMA</span>(Quotes <span class="sc">~</span> <span class="fu">pdq</span>(<span class="at">d =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb519-13"><a href="dynamic-regression.html#cb519-13" tabindex="-1"></a>                 TVadverts <span class="sc">+</span> <span class="fu">lag</span>(TVadverts) <span class="sc">+</span></span>
+<span id="cb519-14"><a href="dynamic-regression.html#cb519-14" tabindex="-1"></a>                 <span class="fu">lag</span>(TVadverts, <span class="dv">2</span>) <span class="sc">+</span> <span class="fu">lag</span>(TVadverts, <span class="dv">3</span>))</span>
+<span id="cb519-15"><a href="dynamic-regression.html#cb519-15" tabindex="-1"></a>  )</span>
+<span id="cb519-16"><a href="dynamic-regression.html#cb519-16" tabindex="-1"></a></span>
+<span id="cb519-17"><a href="dynamic-regression.html#cb519-17" tabindex="-1"></a><span class="fu">glance</span>(fit)</span></code></pre></div>
 <pre><code>## # A tibble: 4 × 8
 ##   .model sigma2 log_lik   AIC  AICc   BIC ar_roots  ma_roots 
 ##   &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;    &lt;list&gt;   
@@ -485,113 +507,116 @@ Y_t = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + Z_t
 ## 3 lag2    0.215   -24.0  60.0  62.6  70.2 &lt;cpl [1]&gt; &lt;cpl [1]&gt;
 ## 4 lag3    0.206   -22.2  60.3  65.0  73.8 &lt;cpl [1]&gt; &lt;cpl [1]&gt;</code></pre>
 <p>Based on the information above, it looks like up to one lag of advertising is needed (current month and the previous month).</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="dynamic-regression.html#cb26-1" tabindex="-1"></a>fit_best <span class="ot">&lt;-</span> insurance <span class="sc">|&gt;</span></span>
-<span id="cb26-2"><a href="dynamic-regression.html#cb26-2" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">ARIMA</span>(Quotes <span class="sc">~</span> <span class="fu">pdq</span>(<span class="at">d =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
-<span id="cb26-3"><a href="dynamic-regression.html#cb26-3" tabindex="-1"></a>              TVadverts <span class="sc">+</span> <span class="fu">lag</span>(TVadverts)))</span>
-<span id="cb26-4"><a href="dynamic-regression.html#cb26-4" tabindex="-1"></a><span class="fu">report</span>(fit_best)</span></code></pre></div>
+<div class="sourceCode" id="cb521"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb521-1"><a href="dynamic-regression.html#cb521-1" tabindex="-1"></a>fit_best <span class="ot">&lt;-</span> insurance <span class="sc">|&gt;</span></span>
+<span id="cb521-2"><a href="dynamic-regression.html#cb521-2" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">ARIMA</span>(Quotes <span class="sc">~</span> <span class="fu">pdq</span>(<span class="at">d =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb521-3"><a href="dynamic-regression.html#cb521-3" tabindex="-1"></a>              TVadverts <span class="sc">+</span> <span class="fu">lag</span>(TVadverts)))</span>
+<span id="cb521-4"><a href="dynamic-regression.html#cb521-4" tabindex="-1"></a><span class="fu">report</span>(fit_best)</span></code></pre></div>
 <pre><code>## Series: Quotes 
 ## Model: LM w/ ARIMA(1,0,2) errors 
 ## 
 ## Coefficients:
-##          ar1     ma1     ma2  TVadverts  lag(TVadverts)  intercept
-##       0.5123  0.9169  0.4591     1.2527          0.1464     2.1554
-## s.e.  0.1849  0.2051  0.1895     0.0588          0.0531     0.8595
+##          ar1     ma1     ma2  TVadverts  lag(TVadverts)
+##       0.5123  0.9169  0.4591     1.2527          0.1464
+## s.e.  0.1849  0.2051  0.1895     0.0588          0.0531
+##       intercept
+##          2.1554
+## s.e.     0.8595
 ## 
 ## sigma^2 estimated as 0.2166:  log likelihood=-23.94
 ## AIC=61.88   AICc=65.38   BIC=73.7</code></pre>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="dynamic-regression.html#cb28-1" tabindex="-1"></a>fit_best <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="dynamic-regression.html#cb29-1" tabindex="-1"></a><span class="fu">augment</span>(fit_best) <span class="sc">%&gt;%</span></span>
-<span id="cb29-2"><a href="dynamic-regression.html#cb29-2" tabindex="-1"></a>  <span class="fu">features</span>(.innov, ljung_box, <span class="at">lag =</span> <span class="dv">36</span>, <span class="at">dof =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb523"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb523-1"><a href="dynamic-regression.html#cb523-1" tabindex="-1"></a>fit_best <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-88-1.png" width="672" /></p>
+<div class="sourceCode" id="cb524"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb524-1"><a href="dynamic-regression.html#cb524-1" tabindex="-1"></a><span class="fu">augment</span>(fit_best) <span class="sc">%&gt;%</span></span>
+<span id="cb524-2"><a href="dynamic-regression.html#cb524-2" tabindex="-1"></a>  <span class="fu">features</span>(.innov, ljung_box, <span class="at">lag =</span> <span class="dv">36</span>, <span class="at">dof =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 3
-##   .model                                                  lb_stat lb_pvalue
-##   &lt;chr&gt;                                                     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 ARIMA(Quotes ~ pdq(d = 0) + TVadverts + lag(TVadverts))    13.7     0.999</code></pre>
+##   .model                                        lb_stat lb_pvalue
+##   &lt;chr&gt;                                           &lt;dbl&gt;     &lt;dbl&gt;
+## 1 ARIMA(Quotes ~ pdq(d = 0) + TVadverts + lag(…    13.7     0.999</code></pre>
 <p>Now let’s forecast the quotes for 3 months, assuming the TVadverts is 8:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="dynamic-regression.html#cb31-1" tabindex="-1"></a>insurance_future <span class="ot">&lt;-</span> <span class="fu">new_data</span>(insurance, <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
-<span id="cb31-2"><a href="dynamic-regression.html#cb31-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">TVadverts =</span> <span class="dv">8</span>)</span>
-<span id="cb31-3"><a href="dynamic-regression.html#cb31-3" tabindex="-1"></a>fit_best <span class="sc">|&gt;</span></span>
-<span id="cb31-4"><a href="dynamic-regression.html#cb31-4" tabindex="-1"></a>  fabletools<span class="sc">::</span><span class="fu">forecast</span>(insurance_future) <span class="sc">|&gt;</span></span>
-<span id="cb31-5"><a href="dynamic-regression.html#cb31-5" tabindex="-1"></a>  <span class="fu">autoplot</span>(insurance) <span class="sc">+</span></span>
-<span id="cb31-6"><a href="dynamic-regression.html#cb31-6" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb31-7"><a href="dynamic-regression.html#cb31-7" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Quotes&quot;</span>,</span>
-<span id="cb31-8"><a href="dynamic-regression.html#cb31-8" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Forecast quotes with future advertising set to 8&quot;</span></span>
-<span id="cb31-9"><a href="dynamic-regression.html#cb31-9" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<div class="sourceCode" id="cb526"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb526-1"><a href="dynamic-regression.html#cb526-1" tabindex="-1"></a>insurance_future <span class="ot">&lt;-</span> <span class="fu">new_data</span>(insurance, <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb526-2"><a href="dynamic-regression.html#cb526-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">TVadverts =</span> <span class="dv">8</span>)</span>
+<span id="cb526-3"><a href="dynamic-regression.html#cb526-3" tabindex="-1"></a>fit_best <span class="sc">|&gt;</span></span>
+<span id="cb526-4"><a href="dynamic-regression.html#cb526-4" tabindex="-1"></a>  fabletools<span class="sc">::</span><span class="fu">forecast</span>(insurance_future) <span class="sc">|&gt;</span></span>
+<span id="cb526-5"><a href="dynamic-regression.html#cb526-5" tabindex="-1"></a>  <span class="fu">autoplot</span>(insurance) <span class="sc">+</span></span>
+<span id="cb526-6"><a href="dynamic-regression.html#cb526-6" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb526-7"><a href="dynamic-regression.html#cb526-7" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Quotes&quot;</span>,</span>
+<span id="cb526-8"><a href="dynamic-regression.html#cb526-8" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Forecast quotes with future advertising set to 8&quot;</span></span>
+<span id="cb526-9"><a href="dynamic-regression.html#cb526-9" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-89-1.png" width="672" /></p>
 </div>
 <div id="python-6" class="section level3 hasAnchor" number="6.6.2">
 <h3><span class="header-section-number">6.6.2</span> Python<a href="dynamic-regression.html#python-6" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>[NOTE: the below code is using the Airlines passenger data with a point intervention and lags of that variable]. We will take the same approach as above to building a dynamic regression in Python. For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. However, we also have to create some lag variables to be added to the model as well. We will put in the original Sep11 variable and lag variables for lags 1, 2, 3, and 12. Essentially, we believe that the effects of the attacks on September 11 were felt for 3 months as well as on the one year anniversary 12 months later. By using the merge function on our training dataset we can add these new variables to our training data.</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="dynamic-regression.html#cb32-1" tabindex="-1"></a>Sep11 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">207</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
-<span id="cb32-2"><a href="dynamic-regression.html#cb32-2" tabindex="-1"></a>Sep11_L1 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">207</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
-<span id="cb32-3"><a href="dynamic-regression.html#cb32-3" tabindex="-1"></a>Sep11_L2 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">207</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
-<span id="cb32-4"><a href="dynamic-regression.html#cb32-4" tabindex="-1"></a>Sep11_L3 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">207</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
-<span id="cb32-5"><a href="dynamic-regression.html#cb32-5" tabindex="-1"></a>Sep11_L12 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">207</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
-<span id="cb32-6"><a href="dynamic-regression.html#cb32-6" tabindex="-1"></a></span>
-<span id="cb32-7"><a href="dynamic-regression.html#cb32-7" tabindex="-1"></a>d_X <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: train.index, <span class="st">&#39;Sep11&#39;</span>: Sep11, <span class="st">&#39;Sep11_L1&#39;</span>: Sep11_L1, <span class="st">&#39;Sep11_L2&#39;</span>: Sep11_L2, <span class="st">&#39;Sep11_L3&#39;</span>: Sep11_L3, <span class="st">&#39;Sep11_L12&#39;</span>: Sep11_L12}</span>
-<span id="cb32-8"><a href="dynamic-regression.html#cb32-8" tabindex="-1"></a>X_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d_X)</span>
-<span id="cb32-9"><a href="dynamic-regression.html#cb32-9" tabindex="-1"></a></span>
-<span id="cb32-10"><a href="dynamic-regression.html#cb32-10" tabindex="-1"></a>X_sf.loc[<span class="dv">140</span>, <span class="st">&#39;Sep11&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb32-11"><a href="dynamic-regression.html#cb32-11" tabindex="-1"></a>X_sf.loc[<span class="dv">141</span>, <span class="st">&#39;Sep11_L1&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb32-12"><a href="dynamic-regression.html#cb32-12" tabindex="-1"></a>X_sf.loc[<span class="dv">142</span>, <span class="st">&#39;Sep11_L2&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb32-13"><a href="dynamic-regression.html#cb32-13" tabindex="-1"></a>X_sf.loc[<span class="dv">143</span>, <span class="st">&#39;Sep11_L3&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb32-14"><a href="dynamic-regression.html#cb32-14" tabindex="-1"></a>X_sf.loc[<span class="dv">152</span>, <span class="st">&#39;Sep11_L12&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb32-15"><a href="dynamic-regression.html#cb32-15" tabindex="-1"></a></span>
-<span id="cb32-16"><a href="dynamic-regression.html#cb32-16" tabindex="-1"></a>train_sf_X <span class="op">=</span> train_sf.merge(X_sf, how <span class="op">=</span> <span class="st">&#39;left&#39;</span>, on <span class="op">=</span> [<span class="st">&#39;unique_id&#39;</span>, <span class="st">&#39;ds&#39;</span>]) </span></code></pre></div>
+<div class="sourceCode" id="cb527"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb527-1"><a href="dynamic-regression.html#cb527-1" tabindex="-1"></a>Sep11 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">207</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb527-2"><a href="dynamic-regression.html#cb527-2" tabindex="-1"></a>Sep11_L1 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">207</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb527-3"><a href="dynamic-regression.html#cb527-3" tabindex="-1"></a>Sep11_L2 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">207</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb527-4"><a href="dynamic-regression.html#cb527-4" tabindex="-1"></a>Sep11_L3 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">207</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb527-5"><a href="dynamic-regression.html#cb527-5" tabindex="-1"></a>Sep11_L12 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">207</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb527-6"><a href="dynamic-regression.html#cb527-6" tabindex="-1"></a></span>
+<span id="cb527-7"><a href="dynamic-regression.html#cb527-7" tabindex="-1"></a>d_X <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: train.index, <span class="st">&#39;Sep11&#39;</span>: Sep11, <span class="st">&#39;Sep11_L1&#39;</span>: Sep11_L1, <span class="st">&#39;Sep11_L2&#39;</span>: Sep11_L2, <span class="st">&#39;Sep11_L3&#39;</span>: Sep11_L3, <span class="st">&#39;Sep11_L12&#39;</span>: Sep11_L12}</span>
+<span id="cb527-8"><a href="dynamic-regression.html#cb527-8" tabindex="-1"></a>X_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d_X)</span>
+<span id="cb527-9"><a href="dynamic-regression.html#cb527-9" tabindex="-1"></a></span>
+<span id="cb527-10"><a href="dynamic-regression.html#cb527-10" tabindex="-1"></a>X_sf.loc[<span class="dv">140</span>, <span class="st">&#39;Sep11&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb527-11"><a href="dynamic-regression.html#cb527-11" tabindex="-1"></a>X_sf.loc[<span class="dv">141</span>, <span class="st">&#39;Sep11_L1&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb527-12"><a href="dynamic-regression.html#cb527-12" tabindex="-1"></a>X_sf.loc[<span class="dv">142</span>, <span class="st">&#39;Sep11_L2&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb527-13"><a href="dynamic-regression.html#cb527-13" tabindex="-1"></a>X_sf.loc[<span class="dv">143</span>, <span class="st">&#39;Sep11_L3&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb527-14"><a href="dynamic-regression.html#cb527-14" tabindex="-1"></a>X_sf.loc[<span class="dv">152</span>, <span class="st">&#39;Sep11_L12&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb527-15"><a href="dynamic-regression.html#cb527-15" tabindex="-1"></a></span>
+<span id="cb527-16"><a href="dynamic-regression.html#cb527-16" tabindex="-1"></a>train_sf_X <span class="op">=</span> train_sf.merge(X_sf, how <span class="op">=</span> <span class="st">&#39;left&#39;</span>, on <span class="op">=</span> [<span class="st">&#39;unique_id&#39;</span>, <span class="st">&#39;ds&#39;</span>]) </span></code></pre></div>
 <p>From there we will build two ARIMA models. The first is a specific model using the model we developed by hand in the previous section on seasonal ARIMA models. This is the ARIMA (1,0,0)(1,1,1) model. We input this model using the order and seasonal_order functions for regular and seasonal orders respectively. Next, in the AutoARIMA function we will let Python automatically select the best ARIMA model. ,We can add the intervention variables to our model by just putting the training dataset with these new columns in the .fit function. This means we have to be careful about which datasets we use since Python automatically assumes any additional column (beyond unique_id, ds, and y) are predictor variables. We use the .fitted_[0][0].model_.get() and function to evaluate our automatically selected ARIMA model by asking for the order of the ARIMA model (arma), the coefficients in the ARIMA model (coef) and the AIC (aic). If we change the function to .fitted_[0][1].model_.get() then we can get the second model we built in the StatsForecast function, the ARIMA we selected by hand.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="dynamic-regression.html#cb33-1" tabindex="-1"></a>model_ARIMAX <span class="op">=</span> StatsForecast(models <span class="op">=</span> [AutoARIMA(season_length <span class="op">=</span> <span class="dv">12</span>, allowdrift <span class="op">=</span> <span class="va">True</span>), ARIMA(order <span class="op">=</span> (<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>), season_length <span class="op">=</span> <span class="dv">12</span>, seasonal_order <span class="op">=</span> (<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), include_drift <span class="op">=</span> <span class="va">True</span>)], freq <span class="op">=</span> <span class="st">&#39;ME&#39;</span>)</span>
-<span id="cb33-2"><a href="dynamic-regression.html#cb33-2" tabindex="-1"></a>model_ARIMAX.fit(df <span class="op">=</span> train_sf_X)</span></code></pre></div>
+<div class="sourceCode" id="cb528"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb528-1"><a href="dynamic-regression.html#cb528-1" tabindex="-1"></a>model_ARIMAX <span class="op">=</span> StatsForecast(models <span class="op">=</span> [AutoARIMA(season_length <span class="op">=</span> <span class="dv">12</span>, allowdrift <span class="op">=</span> <span class="va">True</span>), ARIMA(order <span class="op">=</span> (<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>), season_length <span class="op">=</span> <span class="dv">12</span>, seasonal_order <span class="op">=</span> (<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), include_drift <span class="op">=</span> <span class="va">True</span>)], freq <span class="op">=</span> <span class="st">&#39;ME&#39;</span>)</span>
+<span id="cb528-2"><a href="dynamic-regression.html#cb528-2" tabindex="-1"></a>model_ARIMAX.fit(df <span class="op">=</span> train_sf_X)</span></code></pre></div>
 <pre><code>## StatsForecast(models=[AutoARIMA,ARIMA])</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="dynamic-regression.html#cb35-1" tabindex="-1"></a>model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;arma&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb530"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb530-1"><a href="dynamic-regression.html#cb530-1" tabindex="-1"></a>model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;arma&quot;</span>)</span></code></pre></div>
 <pre><code>## (1, 0, 0, 2, 12, 0, 1)</code></pre>
-<div class="sourceCode" id="cb37"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="dynamic-regression.html#cb37-1" tabindex="-1"></a>model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;coef&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb532"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb532-1"><a href="dynamic-regression.html#cb532-1" tabindex="-1"></a>model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;coef&quot;</span>)</span></code></pre></div>
 <pre><code>## {&#39;ar1&#39;: 0.7375177578972858, &#39;sma1&#39;: -0.5870603509062613, &#39;sma2&#39;: -0.039390189139568606, &#39;ex_1&#39;: -16737.0, &#39;ex_2&#39;: -10928.4990234375, &#39;ex_3&#39;: -7799.9990234375, &#39;ex_4&#39;: -8401.4990234375, &#39;ex_5&#39;: -5209.9990234375}</code></pre>
-<div class="sourceCode" id="cb39"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb39-1"><a href="dynamic-regression.html#cb39-1" tabindex="-1"></a>model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;aic&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb534"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb534-1"><a href="dynamic-regression.html#cb534-1" tabindex="-1"></a>model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;aic&quot;</span>)</span></code></pre></div>
 <pre><code>## 3481.4703680965195</code></pre>
-<div class="sourceCode" id="cb41"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb41-1"><a href="dynamic-regression.html#cb41-1" tabindex="-1"></a>model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">1</span>].model_.get(<span class="st">&quot;arma&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb536"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb536-1"><a href="dynamic-regression.html#cb536-1" tabindex="-1"></a>model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">1</span>].model_.get(<span class="st">&quot;arma&quot;</span>)</span></code></pre></div>
 <pre><code>## (1, 0, 1, 1, 12, 0, 1)</code></pre>
-<div class="sourceCode" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="dynamic-regression.html#cb43-1" tabindex="-1"></a>model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">1</span>].model_.get(<span class="st">&quot;coef&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb538"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb538-1"><a href="dynamic-regression.html#cb538-1" tabindex="-1"></a>model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">1</span>].model_.get(<span class="st">&quot;coef&quot;</span>)</span></code></pre></div>
 <pre><code>## {&#39;ar1&#39;: 0.6651175398360181, &#39;sar1&#39;: -0.0486860850742297, &#39;sma1&#39;: -0.5537376546510462, &#39;drift&#39;: 123.6717948717949, &#39;ex_1&#39;: -16737.000000000113, &#39;ex_2&#39;: -10928.499999999995, &#39;ex_3&#39;: -7799.999999999993, &#39;ex_4&#39;: -8401.5, &#39;ex_5&#39;: -5210.000000000056}</code></pre>
-<div class="sourceCode" id="cb45"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb45-1"><a href="dynamic-regression.html#cb45-1" tabindex="-1"></a>model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">1</span>].model_.get(<span class="st">&quot;aic&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb540"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb540-1"><a href="dynamic-regression.html#cb540-1" tabindex="-1"></a>model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">1</span>].model_.get(<span class="st">&quot;aic&quot;</span>)</span></code></pre></div>
 <pre><code>## 3419.635116900134</code></pre>
 <p>Based on the likelihood-based metrics above like AIC, the automatically selected ARIMA model beats out the by hand model, but all the metrics are rather close. Let’s also evaluate the residuals from these models using the acorr_ljungbox from the statsmodels package on the residuals from our model.</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb47-1"><a href="dynamic-regression.html#cb47-1" tabindex="-1"></a>sm.stats.acorr_ljungbox(model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;residuals&quot;</span>), lags <span class="op">=</span> [<span class="dv">12</span>], model_df <span class="op">=</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb542"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb542-1"><a href="dynamic-regression.html#cb542-1" tabindex="-1"></a>sm.stats.acorr_ljungbox(model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;residuals&quot;</span>), lags <span class="op">=</span> [<span class="dv">12</span>], model_df <span class="op">=</span> <span class="dv">5</span>)</span></code></pre></div>
 <pre><code>##       lb_stat  lb_pvalue
 ## 12  37.068832   0.000005</code></pre>
-<div class="sourceCode" id="cb49"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb49-1"><a href="dynamic-regression.html#cb49-1" tabindex="-1"></a>sm.stats.acorr_ljungbox(model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">1</span>].model_.get(<span class="st">&quot;residuals&quot;</span>), lags <span class="op">=</span> [<span class="dv">12</span>], model_df <span class="op">=</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb544"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb544-1"><a href="dynamic-regression.html#cb544-1" tabindex="-1"></a>sm.stats.acorr_ljungbox(model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">1</span>].model_.get(<span class="st">&quot;residuals&quot;</span>), lags <span class="op">=</span> [<span class="dv">12</span>], model_df <span class="op">=</span> <span class="dv">5</span>)</span></code></pre></div>
 <pre><code>##       lb_stat     lb_pvalue
 ## 12  47.669309  4.131861e-08</code></pre>
 <p>The by hand model has a higher p-value for the Ljung-Box white noise test, but both models result, statistically, in not being white noise residuals.</p>
 <p>Let’s forecast both of these models to compare the results with the test dataset. To forecast these values going forward, we need future values of our predictor variables. For this dataset, we have our Sep11 variable and all the lags of it we created that we forecast to have values of 0 for each of the 12 observations we are forecasting for airline passengers. To do this we create other variables (of the same name) that have future values in our test dataset. We then use the forecast function with both the model and the test dataset as inputs. We also plot the two forecasts together on the same plot.</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb51-1"><a href="dynamic-regression.html#cb51-1" tabindex="-1"></a>Sep11 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">12</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
-<span id="cb51-2"><a href="dynamic-regression.html#cb51-2" tabindex="-1"></a>Sep11_L1 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">12</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
-<span id="cb51-3"><a href="dynamic-regression.html#cb51-3" tabindex="-1"></a>Sep11_L2 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">12</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
-<span id="cb51-4"><a href="dynamic-regression.html#cb51-4" tabindex="-1"></a>Sep11_L3 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">12</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
-<span id="cb51-5"><a href="dynamic-regression.html#cb51-5" tabindex="-1"></a>Sep11_L12 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">12</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
-<span id="cb51-6"><a href="dynamic-regression.html#cb51-6" tabindex="-1"></a></span>
-<span id="cb51-7"><a href="dynamic-regression.html#cb51-7" tabindex="-1"></a>d_X <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: test.index, <span class="st">&#39;Sep11&#39;</span>: Sep11, <span class="st">&#39;Sep11_L1&#39;</span>: Sep11_L1, <span class="st">&#39;Sep11_L2&#39;</span>: Sep11_L2, <span class="st">&#39;Sep11_L3&#39;</span>: Sep11_L3, <span class="st">&#39;Sep11_L12&#39;</span>: Sep11_L12}</span>
-<span id="cb51-8"><a href="dynamic-regression.html#cb51-8" tabindex="-1"></a>X_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d_X)</span>
-<span id="cb51-9"><a href="dynamic-regression.html#cb51-9" tabindex="-1"></a></span>
-<span id="cb51-10"><a href="dynamic-regression.html#cb51-10" tabindex="-1"></a>test_sf_X <span class="op">=</span> test_sf.merge(X_sf, how <span class="op">=</span> <span class="st">&#39;left&#39;</span>, on <span class="op">=</span> [<span class="st">&#39;unique_id&#39;</span>, <span class="st">&#39;ds&#39;</span>]) </span>
-<span id="cb51-11"><a href="dynamic-regression.html#cb51-11" tabindex="-1"></a></span>
-<span id="cb51-12"><a href="dynamic-regression.html#cb51-12" tabindex="-1"></a>model_ARIMAX_for <span class="op">=</span> model_ARIMAX.forecast(df <span class="op">=</span> train_sf_X, h <span class="op">=</span> <span class="dv">12</span>, X_df <span class="op">=</span> X_sf, level <span class="op">=</span> [<span class="dv">95</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb546"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb546-1"><a href="dynamic-regression.html#cb546-1" tabindex="-1"></a>Sep11 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">12</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb546-2"><a href="dynamic-regression.html#cb546-2" tabindex="-1"></a>Sep11_L1 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">12</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb546-3"><a href="dynamic-regression.html#cb546-3" tabindex="-1"></a>Sep11_L2 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">12</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb546-4"><a href="dynamic-regression.html#cb546-4" tabindex="-1"></a>Sep11_L3 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">12</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb546-5"><a href="dynamic-regression.html#cb546-5" tabindex="-1"></a>Sep11_L12 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">12</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb546-6"><a href="dynamic-regression.html#cb546-6" tabindex="-1"></a></span>
+<span id="cb546-7"><a href="dynamic-regression.html#cb546-7" tabindex="-1"></a>d_X <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: test.index, <span class="st">&#39;Sep11&#39;</span>: Sep11, <span class="st">&#39;Sep11_L1&#39;</span>: Sep11_L1, <span class="st">&#39;Sep11_L2&#39;</span>: Sep11_L2, <span class="st">&#39;Sep11_L3&#39;</span>: Sep11_L3, <span class="st">&#39;Sep11_L12&#39;</span>: Sep11_L12}</span>
+<span id="cb546-8"><a href="dynamic-regression.html#cb546-8" tabindex="-1"></a>X_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d_X)</span>
+<span id="cb546-9"><a href="dynamic-regression.html#cb546-9" tabindex="-1"></a></span>
+<span id="cb546-10"><a href="dynamic-regression.html#cb546-10" tabindex="-1"></a>test_sf_X <span class="op">=</span> test_sf.merge(X_sf, how <span class="op">=</span> <span class="st">&#39;left&#39;</span>, on <span class="op">=</span> [<span class="st">&#39;unique_id&#39;</span>, <span class="st">&#39;ds&#39;</span>]) </span>
+<span id="cb546-11"><a href="dynamic-regression.html#cb546-11" tabindex="-1"></a></span>
+<span id="cb546-12"><a href="dynamic-regression.html#cb546-12" tabindex="-1"></a>model_ARIMAX_for <span class="op">=</span> model_ARIMAX.forecast(df <span class="op">=</span> train_sf_X, h <span class="op">=</span> <span class="dv">12</span>, X_df <span class="op">=</span> X_sf, level <span class="op">=</span> [<span class="dv">95</span>])</span></code></pre></div>
 <pre><code>## C:\PROGRA~3\ANACON~1\Lib\site-packages\statsforecast\core.py:492: FutureWarning: In a future version the predictions will have the id as a column. You can set the `NIXTLA_ID_AS_COL` environment variable to adopt the new behavior and to suppress this warning.
 ##   warnings.warn(</code></pre>
-<div class="sourceCode" id="cb53"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb53-1"><a href="dynamic-regression.html#cb53-1" tabindex="-1"></a></span>
-<span id="cb53-2"><a href="dynamic-regression.html#cb53-2" tabindex="-1"></a>model_ARIMAX.plot(train_sf, model_ARIMAX_for)</span></code></pre></div>
+<div class="sourceCode" id="cb548"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb548-1"><a href="dynamic-regression.html#cb548-1" tabindex="-1"></a></span>
+<span id="cb548-2"><a href="dynamic-regression.html#cb548-2" tabindex="-1"></a>model_ARIMAX.plot(train_sf, model_ARIMAX_for)</span></code></pre></div>
 <div class="float">
 <img src="plot_for_ARIMAX2.png" alt="Plot" />
 <div class="figcaption">Plot</div>
 </div>
 <p>We can use the forecasted values from the above code to evaluate these forecasts by comparing them to the test dataset.</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb54-1"><a href="dynamic-regression.html#cb54-1" tabindex="-1"></a>error <span class="op">=</span> np.array(test[<span class="st">&#39;Passengers&#39;</span>]) <span class="op">-</span> np.array(model_ARIMAX_for[<span class="st">&#39;AutoARIMA&#39;</span>])</span>
-<span id="cb54-2"><a href="dynamic-regression.html#cb54-2" tabindex="-1"></a>MAPE <span class="op">=</span> np.mean(<span class="bu">abs</span>(error)<span class="op">/</span>test[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
-<span id="cb54-3"><a href="dynamic-regression.html#cb54-3" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Auto. MAE =&quot;</span>, np.mean(<span class="bu">abs</span>(error)), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">Auto. MAPE =&quot;</span>, MAPE)</span></code></pre></div>
+<div class="sourceCode" id="cb549"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb549-1"><a href="dynamic-regression.html#cb549-1" tabindex="-1"></a>error <span class="op">=</span> np.array(test[<span class="st">&#39;Passengers&#39;</span>]) <span class="op">-</span> np.array(model_ARIMAX_for[<span class="st">&#39;AutoARIMA&#39;</span>])</span>
+<span id="cb549-2"><a href="dynamic-regression.html#cb549-2" tabindex="-1"></a>MAPE <span class="op">=</span> np.mean(<span class="bu">abs</span>(error)<span class="op">/</span>test[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb549-3"><a href="dynamic-regression.html#cb549-3" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Auto. MAE =&quot;</span>, np.mean(<span class="bu">abs</span>(error)), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">Auto. MAPE =&quot;</span>, MAPE)</span></code></pre></div>
 <pre><code>## Auto. MAE = 3705.2900390625 
 ## Auto. MAPE = 5.759043319108617</code></pre>
-<div class="sourceCode" id="cb56"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb56-1"><a href="dynamic-regression.html#cb56-1" tabindex="-1"></a>error <span class="op">=</span> np.array(test[<span class="st">&#39;Passengers&#39;</span>]) <span class="op">-</span> np.array(model_ARIMAX_for[<span class="st">&#39;ARIMA&#39;</span>])</span>
-<span id="cb56-2"><a href="dynamic-regression.html#cb56-2" tabindex="-1"></a>MAPE <span class="op">=</span> np.mean(<span class="bu">abs</span>(error)<span class="op">/</span>test[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
-<span id="cb56-3"><a href="dynamic-regression.html#cb56-3" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Hand MAE =&quot;</span>, np.mean(<span class="bu">abs</span>(error)), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">Hand MAPE =&quot;</span>, MAPE)</span></code></pre></div>
+<div class="sourceCode" id="cb551"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb551-1"><a href="dynamic-regression.html#cb551-1" tabindex="-1"></a>error <span class="op">=</span> np.array(test[<span class="st">&#39;Passengers&#39;</span>]) <span class="op">-</span> np.array(model_ARIMAX_for[<span class="st">&#39;ARIMA&#39;</span>])</span>
+<span id="cb551-2"><a href="dynamic-regression.html#cb551-2" tabindex="-1"></a>MAPE <span class="op">=</span> np.mean(<span class="bu">abs</span>(error)<span class="op">/</span>test[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb551-3"><a href="dynamic-regression.html#cb551-3" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Hand MAE =&quot;</span>, np.mean(<span class="bu">abs</span>(error)), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">Hand MAPE =&quot;</span>, MAPE)</span></code></pre></div>
 <pre><code>## Hand MAE = 1123.05859375 
 ## Hand MAPE = 1.7172460911949101</code></pre>
 <p>Although the automatically selected ARIMA model barely beat the hand selected model in the training dataset metrics, it appears as if the ARIMA models selected by hand has both a better mean absolute error (MAE) and mean absolute percentage error (MAPE) on the test dataset.</p>
@@ -600,18 +625,18 @@ Y_t = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + Z_t
 <h3><span class="header-section-number">6.6.3</span> SAS<a href="dynamic-regression.html#sas-6" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>[NOTE: the below code is using the Airlines passenger data with a point intervention and lags of that variable] For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. We also need to create a dataset that blanks out all the values of the Passenger variable past in our test window. SAS needs a dataset with the training data as well as future values of the predictor variables to forecast with dynamic regression.</p>
 <p>From there we use the PROC ARIMA procedure with this newly created dataset. With the IDENTIFY statement we give our target variable with the VAR option. Remember, the (12) after the target variable signals that we want to take the seasonal difference. We also include the CROSSCORR option with our predictor variable Sep11. We include the MINIC option as well to help with order selection of the ARIMA model. We then use the ESTIMATE statement to define our model, here an ARIMA(1,0,0)(1,1,1) model. The INPUT option is where we put our Sep11 variable into the actual model. The (1,2,3,12) in front of the Sep11 variable creates what is formally called a transfer function. It creates a lag structure on the variable (essentially adding lags of that variable) at the lags of 1,2,3, and 12. We finish with the FORECAST statement with the LEAD option set to 12 to forecast the next 12 observations.</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="dynamic-regression.html#cb58-1" tabindex="-1"></a>data usair_pred;</span>
-<span id="cb58-2"><a href="dynamic-regression.html#cb58-2" tabindex="-1"></a>    set usair;</span>
-<span id="cb58-3"><a href="dynamic-regression.html#cb58-3" tabindex="-1"></a>    Sep11 <span class="ot">=</span> <span class="dv">0</span>;</span>
-<span id="cb58-4"><a href="dynamic-regression.html#cb58-4" tabindex="-1"></a>    <span class="cf">if</span> date <span class="ot">=</span> <span class="st">&#39;1sep2001&#39;</span>d then Sep11 <span class="ot">=</span> <span class="dv">1</span>;</span>
-<span id="cb58-5"><a href="dynamic-regression.html#cb58-5" tabindex="-1"></a>    <span class="cf">if</span> date <span class="sc">&gt;</span> <span class="st">&#39;1mar2007&#39;</span>d then Passengers <span class="ot">=</span> .;</span>
-<span id="cb58-6"><a href="dynamic-regression.html#cb58-6" tabindex="-1"></a>run;</span>
-<span id="cb58-7"><a href="dynamic-regression.html#cb58-7" tabindex="-1"></a></span>
-<span id="cb58-8"><a href="dynamic-regression.html#cb58-8" tabindex="-1"></a>proc arima data <span class="ot">=</span> work.usair_pred plots <span class="ot">=</span> all;</span>
-<span id="cb58-9"><a href="dynamic-regression.html#cb58-9" tabindex="-1"></a>    identify var <span class="ot">=</span> <span class="fu">Passengers</span>(<span class="dv">12</span>) nlag <span class="ot">=</span> <span class="dv">24</span> crosscorr <span class="ot">=</span> (Sep11) minic P<span class="ot">=</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">15</span>) Q<span class="ot">=</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">15</span>);</span>
-<span id="cb58-10"><a href="dynamic-regression.html#cb58-10" tabindex="-1"></a>    estimate p <span class="ot">=</span> (<span class="dv">1</span>)(<span class="dv">12</span>) q <span class="ot">=</span> (<span class="dv">12</span>) input <span class="ot">=</span> ((<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">12</span>)Sep11);</span>
-<span id="cb58-11"><a href="dynamic-regression.html#cb58-11" tabindex="-1"></a>    forecast lead <span class="ot">=</span> <span class="dv">12</span> id <span class="ot">=</span> date interval <span class="ot">=</span> month out <span class="ot">=</span> work.ARIMAX_f;</span>
-<span id="cb58-12"><a href="dynamic-regression.html#cb58-12" tabindex="-1"></a>run;</span></code></pre></div>
+<div class="sourceCode" id="cb553"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb553-1"><a href="dynamic-regression.html#cb553-1" tabindex="-1"></a>data usair_pred;</span>
+<span id="cb553-2"><a href="dynamic-regression.html#cb553-2" tabindex="-1"></a>    set usair;</span>
+<span id="cb553-3"><a href="dynamic-regression.html#cb553-3" tabindex="-1"></a>    Sep11 <span class="ot">=</span> <span class="dv">0</span>;</span>
+<span id="cb553-4"><a href="dynamic-regression.html#cb553-4" tabindex="-1"></a>    <span class="cf">if</span> date <span class="ot">=</span> <span class="st">&#39;1sep2001&#39;</span>d then Sep11 <span class="ot">=</span> <span class="dv">1</span>;</span>
+<span id="cb553-5"><a href="dynamic-regression.html#cb553-5" tabindex="-1"></a>    <span class="cf">if</span> date <span class="sc">&gt;</span> <span class="st">&#39;1mar2007&#39;</span>d then Passengers <span class="ot">=</span> .;</span>
+<span id="cb553-6"><a href="dynamic-regression.html#cb553-6" tabindex="-1"></a>run;</span>
+<span id="cb553-7"><a href="dynamic-regression.html#cb553-7" tabindex="-1"></a></span>
+<span id="cb553-8"><a href="dynamic-regression.html#cb553-8" tabindex="-1"></a>proc arima data <span class="ot">=</span> work.usair_pred plots <span class="ot">=</span> all;</span>
+<span id="cb553-9"><a href="dynamic-regression.html#cb553-9" tabindex="-1"></a>    identify var <span class="ot">=</span> <span class="fu">Passengers</span>(<span class="dv">12</span>) nlag <span class="ot">=</span> <span class="dv">24</span> crosscorr <span class="ot">=</span> (Sep11) minic P<span class="ot">=</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">15</span>) Q<span class="ot">=</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">15</span>);</span>
+<span id="cb553-10"><a href="dynamic-regression.html#cb553-10" tabindex="-1"></a>    estimate p <span class="ot">=</span> (<span class="dv">1</span>)(<span class="dv">12</span>) q <span class="ot">=</span> (<span class="dv">12</span>) input <span class="ot">=</span> ((<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">12</span>)Sep11);</span>
+<span id="cb553-11"><a href="dynamic-regression.html#cb553-11" tabindex="-1"></a>    forecast lead <span class="ot">=</span> <span class="dv">12</span> id <span class="ot">=</span> date interval <span class="ot">=</span> month out <span class="ot">=</span> work.ARIMAX_f;</span>
+<span id="cb553-12"><a href="dynamic-regression.html#cb553-12" tabindex="-1"></a>run;</span></code></pre></div>
 <div class="float">
 <img src="10_e_SAS.png" alt="SASOutput" />
 <div class="figcaption">SASOutput</div>
@@ -632,26 +657,26 @@ Y_t = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + Z_t
 <div class="figcaption">SASOutput</div>
 </div>
 <p>We need to isolate just the forecasted observations from the output above. For that we use the DATA STEP to just look at the predicted values from the two previous models beyond the March, 2007 training observations with the WHERE statement. Next, we use the MERGE statement in another DATA STEP to merge the original test dataset with the predicted values from the above model. Lastly, we calculate the absolute error and absolute percentage error for each observation with our last DATA STEP. To get the average of these calculations, we throw our test dataset into the PROC MEANS procedure where we specify these variables with the VAR statement.</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="dynamic-regression.html#cb59-1" tabindex="-1"></a>data ARIMAX_f;</span>
-<span id="cb59-2"><a href="dynamic-regression.html#cb59-2" tabindex="-1"></a>    set ARIMAX_f;</span>
-<span id="cb59-3"><a href="dynamic-regression.html#cb59-3" tabindex="-1"></a>    where date <span class="sc">&gt;</span> <span class="st">&#39;1mar2007&#39;</span>d;</span>
-<span id="cb59-4"><a href="dynamic-regression.html#cb59-4" tabindex="-1"></a>    Predict_ARIMAX <span class="ot">=</span> Forecast;</span>
-<span id="cb59-5"><a href="dynamic-regression.html#cb59-5" tabindex="-1"></a>    keep Predict_ARIMAX;</span>
-<span id="cb59-6"><a href="dynamic-regression.html#cb59-6" tabindex="-1"></a>run;</span>
-<span id="cb59-7"><a href="dynamic-regression.html#cb59-7" tabindex="-1"></a></span>
-<span id="cb59-8"><a href="dynamic-regression.html#cb59-8" tabindex="-1"></a>data test;</span>
-<span id="cb59-9"><a href="dynamic-regression.html#cb59-9" tabindex="-1"></a>    merge test ARIMAX_f;</span>
-<span id="cb59-10"><a href="dynamic-regression.html#cb59-10" tabindex="-1"></a>run;</span>
-<span id="cb59-11"><a href="dynamic-regression.html#cb59-11" tabindex="-1"></a></span>
-<span id="cb59-12"><a href="dynamic-regression.html#cb59-12" tabindex="-1"></a>data test;</span>
-<span id="cb59-13"><a href="dynamic-regression.html#cb59-13" tabindex="-1"></a>    set test;</span>
-<span id="cb59-14"><a href="dynamic-regression.html#cb59-14" tabindex="-1"></a>    AE_ARIMAX <span class="ot">=</span> <span class="fu">abs</span>(Passengers <span class="sc">-</span> Predict_ARIMAX);</span>
-<span id="cb59-15"><a href="dynamic-regression.html#cb59-15" tabindex="-1"></a>    APE_ARIMAX <span class="ot">=</span> <span class="fu">abs</span>(Passengers <span class="sc">-</span> Predict_ARIMAX)<span class="sc">/</span>Passengers<span class="sc">*</span><span class="dv">100</span>;</span>
-<span id="cb59-16"><a href="dynamic-regression.html#cb59-16" tabindex="-1"></a>run;</span>
-<span id="cb59-17"><a href="dynamic-regression.html#cb59-17" tabindex="-1"></a></span>
-<span id="cb59-18"><a href="dynamic-regression.html#cb59-18" tabindex="-1"></a>proc means data <span class="ot">=</span> test;</span>
-<span id="cb59-19"><a href="dynamic-regression.html#cb59-19" tabindex="-1"></a>    var AE_ARIMAX APE_ARIMAX;</span>
-<span id="cb59-20"><a href="dynamic-regression.html#cb59-20" tabindex="-1"></a>run;</span></code></pre></div>
+<div class="sourceCode" id="cb554"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb554-1"><a href="dynamic-regression.html#cb554-1" tabindex="-1"></a>data ARIMAX_f;</span>
+<span id="cb554-2"><a href="dynamic-regression.html#cb554-2" tabindex="-1"></a>    set ARIMAX_f;</span>
+<span id="cb554-3"><a href="dynamic-regression.html#cb554-3" tabindex="-1"></a>    where date <span class="sc">&gt;</span> <span class="st">&#39;1mar2007&#39;</span>d;</span>
+<span id="cb554-4"><a href="dynamic-regression.html#cb554-4" tabindex="-1"></a>    Predict_ARIMAX <span class="ot">=</span> Forecast;</span>
+<span id="cb554-5"><a href="dynamic-regression.html#cb554-5" tabindex="-1"></a>    keep Predict_ARIMAX;</span>
+<span id="cb554-6"><a href="dynamic-regression.html#cb554-6" tabindex="-1"></a>run;</span>
+<span id="cb554-7"><a href="dynamic-regression.html#cb554-7" tabindex="-1"></a></span>
+<span id="cb554-8"><a href="dynamic-regression.html#cb554-8" tabindex="-1"></a>data test;</span>
+<span id="cb554-9"><a href="dynamic-regression.html#cb554-9" tabindex="-1"></a>    merge test ARIMAX_f;</span>
+<span id="cb554-10"><a href="dynamic-regression.html#cb554-10" tabindex="-1"></a>run;</span>
+<span id="cb554-11"><a href="dynamic-regression.html#cb554-11" tabindex="-1"></a></span>
+<span id="cb554-12"><a href="dynamic-regression.html#cb554-12" tabindex="-1"></a>data test;</span>
+<span id="cb554-13"><a href="dynamic-regression.html#cb554-13" tabindex="-1"></a>    set test;</span>
+<span id="cb554-14"><a href="dynamic-regression.html#cb554-14" tabindex="-1"></a>    AE_ARIMAX <span class="ot">=</span> <span class="fu">abs</span>(Passengers <span class="sc">-</span> Predict_ARIMAX);</span>
+<span id="cb554-15"><a href="dynamic-regression.html#cb554-15" tabindex="-1"></a>    APE_ARIMAX <span class="ot">=</span> <span class="fu">abs</span>(Passengers <span class="sc">-</span> Predict_ARIMAX)<span class="sc">/</span>Passengers<span class="sc">*</span><span class="dv">100</span>;</span>
+<span id="cb554-16"><a href="dynamic-regression.html#cb554-16" tabindex="-1"></a>run;</span>
+<span id="cb554-17"><a href="dynamic-regression.html#cb554-17" tabindex="-1"></a></span>
+<span id="cb554-18"><a href="dynamic-regression.html#cb554-18" tabindex="-1"></a>proc means data <span class="ot">=</span> test;</span>
+<span id="cb554-19"><a href="dynamic-regression.html#cb554-19" tabindex="-1"></a>    var AE_ARIMAX APE_ARIMAX;</span>
+<span id="cb554-20"><a href="dynamic-regression.html#cb554-20" tabindex="-1"></a>run;</span></code></pre></div>
 <div class="float">
 <img src="10_i_SAS.png" alt="SASOutput" />
 <div class="figcaption">SASOutput</div>
@@ -666,8 +691,8 @@ Y_t = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + Z_t
           </div>
         </div>
       </div>
-<a href="seasonal-arima.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="seasonal-arima.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="prophet.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -310,74 +310,75 @@ X_W = \cos(\frac{2\pi t}{7}) + \sin(2 \times \frac{2\pi t}{7}) + \cos(3 \times \
 <div id="r-7" class="section level3 hasAnchor" number="7.1.1">
 <h3><span class="header-section-number">7.1.1</span> R<a href="prophet.html#r-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The fable.prophet package contains all the functions needed for the Prophet algorithm. For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. By using the formula structure in the prophet function in the model function, we can add this intervention to our model as well as build out the other components of the Prophet model. Next, we will add the growth component (growth function) where we specify the trend to be linear (“linear”). Lastly, we use the season function to add our own monthly seasonality. We have period = “year” to define the annual season in our data and the order = 6 to define the fourier terms. We will use 6 as we did back in the dynamic regression section. From there we will decide whether we want this seasonal effect to be additive or multiplicative. We choose multiplicative based on the other seasonal models we have built being this structure. Of course, you can always try both to see which works better.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="prophet.html#cb1-1" tabindex="-1"></a><span class="fu">library</span>(fable.prophet)</span></code></pre></div>
+<div class="sourceCode" id="cb555"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb555-1"><a href="prophet.html#cb555-1" tabindex="-1"></a><span class="fu">library</span>(fable.prophet)</span></code></pre></div>
 <pre><code>## Warning: package &#39;fable.prophet&#39; was built under R version 4.5.2</code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="prophet.html#cb3-1" tabindex="-1"></a>model_prophet <span class="ot">&lt;-</span> train <span class="sc">%&gt;%</span></span>
-<span id="cb3-2"><a href="prophet.html#cb3-2" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">prophet</span>(Passengers <span class="sc">~</span>  <span class="fu">season</span>(<span class="at">period =</span> <span class="st">&quot;year&quot;</span>, <span class="at">order =</span> <span class="dv">6</span>, <span class="at">type =</span> <span class="st">&quot;multiplicative&quot;</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb557"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb557-1"><a href="prophet.html#cb557-1" tabindex="-1"></a>model_prophet <span class="ot">&lt;-</span> train <span class="sc">%&gt;%</span></span>
+<span id="cb557-2"><a href="prophet.html#cb557-2" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">prophet</span>(Passengers <span class="sc">~</span>  <span class="fu">season</span>(<span class="at">period =</span> <span class="st">&quot;year&quot;</span>, <span class="at">order =</span> <span class="dv">6</span>, <span class="at">type =</span> <span class="st">&quot;multiplicative&quot;</span>)))</span></code></pre></div>
 <p>Once the model is built, we can plot the components function with the autoplot function to view the components of the Prophet model that were calculated from our data.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="prophet.html#cb4-1" tabindex="-1"></a>model_prophet <span class="sc">%&gt;%</span> </span>
-<span id="cb4-2"><a href="prophet.html#cb4-2" tabindex="-1"></a>  <span class="fu">components</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb4-3"><a href="prophet.html#cb4-3" tabindex="-1"></a>  <span class="fu">autoplot</span>()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<div class="sourceCode" id="cb558"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb558-1"><a href="prophet.html#cb558-1" tabindex="-1"></a>model_prophet <span class="sc">%&gt;%</span> </span>
+<span id="cb558-2"><a href="prophet.html#cb558-2" tabindex="-1"></a>  <span class="fu">components</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb558-3"><a href="prophet.html#cb558-3" tabindex="-1"></a>  <span class="fu">autoplot</span>()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-100-1.png" width="672" /></p>
 <p>The above output looks similar to what we would expect. After the original data is plotted at the top we have our growth / trend component. The piecewise trend line seems to follow the general pattern of the data. Next, we have our seasonal component comprised of Fourier variables to mimic the season in our data. Lastly, we have the additive terms (here our “holiday”) to represent the September 11 point intervention. At the bottom of the plot above we have our residuals, but let’s examine those further with the gg_tsresiduals function and the augment and feastures function with the ljung_box option to test for white noise.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="prophet.html#cb5-1" tabindex="-1"></a>model_prophet <span class="sc">%&gt;%</span></span>
-<span id="cb5-2"><a href="prophet.html#cb5-2" tabindex="-1"></a>  <span class="fu">gg_tsresiduals</span>()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="prophet.html#cb6-1" tabindex="-1"></a><span class="fu">augment</span>(model_prophet) <span class="sc">%&gt;%</span></span>
-<span id="cb6-2"><a href="prophet.html#cb6-2" tabindex="-1"></a>  <span class="fu">features</span>(.innov, ljung_box, <span class="at">lag =</span> <span class="dv">36</span>, <span class="at">dof =</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb559"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb559-1"><a href="prophet.html#cb559-1" tabindex="-1"></a>model_prophet <span class="sc">%&gt;%</span></span>
+<span id="cb559-2"><a href="prophet.html#cb559-2" tabindex="-1"></a>  <span class="fu">gg_tsresiduals</span>()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-101-1.png" width="672" /></p>
+<div class="sourceCode" id="cb560"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb560-1"><a href="prophet.html#cb560-1" tabindex="-1"></a><span class="fu">augment</span>(model_prophet) <span class="sc">%&gt;%</span></span>
+<span id="cb560-2"><a href="prophet.html#cb560-2" tabindex="-1"></a>  <span class="fu">features</span>(.innov, ljung_box, <span class="at">lag =</span> <span class="dv">36</span>, <span class="at">dof =</span> <span class="dv">5</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 3
-##   .model                                                       lb_stat lb_pvalue
-##   &lt;chr&gt;                                                          &lt;dbl&gt;     &lt;dbl&gt;
-## 1 &quot;prophet(Passengers ~ season(period = \&quot;year\&quot;, order = 6, …    366.         0</code></pre>
+##   .model                                        lb_stat lb_pvalue
+##   &lt;chr&gt;                                           &lt;dbl&gt;     &lt;dbl&gt;
+## 1 &quot;prophet(Passengers ~ season(period = \&quot;year…    366.         0</code></pre>
 <p>Looks like our residuals still have some autocorrelation in them so further pattern exists. This isn’t surprising as the Prophet algorithm was never designed to be a statistical algorithm that removes all the autocorrelation from the data like an ARIMA model.</p>
 <p>Now let’s forecast the Prophet model for our data. To forecast these values going forward, we need future values of our predictor variable. For this dataset, we have our Sep11 variable that we forecast to have values of 0 for each of the 12 observations we are forecasting for airline passengers. To do this we create another variable (of the same name) that has future values in our test dataset. We then use the forecast function with both the model and the test dataset as inputs. The forecast function will be expecting a test dataset that contains the Sep11 variable in it. We also plot the forecast.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="prophet.html#cb8-1" tabindex="-1"></a>model_prophet_for <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(model_prophet, test)</span>
-<span id="cb8-2"><a href="prophet.html#cb8-2" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="prophet.html#cb8-3" tabindex="-1"></a>model_prophet_for <span class="sc">%&gt;%</span></span>
-<span id="cb8-4"><a href="prophet.html#cb8-4" tabindex="-1"></a>  <span class="fu">autoplot</span>(train) <span class="sc">+</span> </span>
-<span id="cb8-5"><a href="prophet.html#cb8-5" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">fitted</span>(model_prophet), <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb8-6"><a href="prophet.html#cb8-6" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Airlines Passengers&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb8-7"><a href="prophet.html#cb8-7" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as_date</span>(<span class="st">&quot;2007-03-15&quot;</span>), <span class="at">color=</span><span class="st">&quot;orange&quot;</span>, <span class="at">linetype=</span><span class="st">&quot;longdash&quot;</span>)</span></code></pre></div>
-<pre><code>## Plot variable not specified, automatically selected `.vars = .fitted`</code></pre>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<div class="sourceCode" id="cb562"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb562-1"><a href="prophet.html#cb562-1" tabindex="-1"></a>model_prophet_for <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(model_prophet, test)</span>
+<span id="cb562-2"><a href="prophet.html#cb562-2" tabindex="-1"></a></span>
+<span id="cb562-3"><a href="prophet.html#cb562-3" tabindex="-1"></a>model_prophet_for <span class="sc">%&gt;%</span></span>
+<span id="cb562-4"><a href="prophet.html#cb562-4" tabindex="-1"></a>  <span class="fu">autoplot</span>(train) <span class="sc">+</span> </span>
+<span id="cb562-5"><a href="prophet.html#cb562-5" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">fitted</span>(model_prophet), <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb562-6"><a href="prophet.html#cb562-6" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Airlines Passengers&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb562-7"><a href="prophet.html#cb562-7" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as_date</span>(<span class="st">&quot;2007-03-15&quot;</span>), <span class="at">color=</span><span class="st">&quot;orange&quot;</span>, <span class="at">linetype=</span><span class="st">&quot;longdash&quot;</span>)</span></code></pre></div>
+<pre><code>## Plot variable not specified, automatically selected `.vars =
+## .fitted`</code></pre>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-102-1.png" width="672" /></p>
 <p>We can use the accuracy function from the fabletools package to evaluate these forecasts. The only inputs for this function are the model object and the test dataset.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="prophet.html#cb10-1" tabindex="-1"></a>fabletools<span class="sc">::</span><span class="fu">accuracy</span>(model_prophet_for, test)</span></code></pre></div>
+<div class="sourceCode" id="cb564"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb564-1"><a href="prophet.html#cb564-1" tabindex="-1"></a>fabletools<span class="sc">::</span><span class="fu">accuracy</span>(model_prophet_for, test)</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 10
-##   .model                .type     ME  RMSE   MAE   MPE  MAPE  MASE RMSSE    ACF1
-##   &lt;chr&gt;                 &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
-## 1 &quot;prophet(Passengers … Test  -1131. 1588. 1218. -1.75  1.88   NaN   NaN -0.0473</code></pre>
+##   .model .type     ME  RMSE   MAE   MPE  MAPE  MASE RMSSE    ACF1
+##   &lt;chr&gt;  &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+## 1 &quot;prop… Test  -1171. 1606. 1247. -1.81  1.92   NaN   NaN -0.0696</code></pre>
 <p>It appears as if the Prophet model was not as accurate as some of the other approaches that we have used to model our data. The possible reasoning for this is discussed in the forecasting section below.</p>
 </div>
 <div id="python-7" class="section level3 hasAnchor" number="7.1.2">
 <h3><span class="header-section-number">7.1.2</span> Python<a href="prophet.html#python-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Although the Prophet model is in another package in Python (the prophet package), the data structure in the StatsForecast package that we have used so far is the exact same. This makes the implementation of the Prophet algorithm in Python much easier. For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. By using the merge function on our training dataset we can add this new variable to our training data.</p>
 <p>First, we need the Prophet function from the prophet package. Then all we need to do it define the structure of the model that we want. By default, the Prophet function will include a linear growth term for us. The seasonality_mode = “multiplicative” option adds a multiplicative seasonal effect for our Fourier variables. We choose multiplicative based on the other seasonal models we have built being this structure. Of course, you can always try both additive and multiplicative to see which works better. Too add in our Sep11 variable we use the add_regressor function to our model. Lastly, we use the .fit function with our training dataset to build the model.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="prophet.html#cb12-1" tabindex="-1"></a><span class="im">from</span> prophet <span class="im">import</span> Prophet</span>
-<span id="cb12-2"><a href="prophet.html#cb12-2" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="prophet.html#cb12-3" tabindex="-1"></a>m <span class="op">=</span> Prophet(seasonality_mode<span class="op">=</span><span class="st">&#39;multiplicative&#39;</span>)</span>
-<span id="cb12-4"><a href="prophet.html#cb12-4" tabindex="-1"></a>m.fit(train_sf)</span></code></pre></div>
-<pre><code>## &lt;prophet.forecaster.Prophet object at 0x0000020A9ECD50A0&gt;</code></pre>
+<div class="sourceCode" id="cb566"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb566-1"><a href="prophet.html#cb566-1" tabindex="-1"></a><span class="im">from</span> prophet <span class="im">import</span> Prophet</span>
+<span id="cb566-2"><a href="prophet.html#cb566-2" tabindex="-1"></a></span>
+<span id="cb566-3"><a href="prophet.html#cb566-3" tabindex="-1"></a>m <span class="op">=</span> Prophet(seasonality_mode<span class="op">=</span><span class="st">&#39;multiplicative&#39;</span>)</span>
+<span id="cb566-4"><a href="prophet.html#cb566-4" tabindex="-1"></a>m.fit(train_sf)</span></code></pre></div>
+<pre><code>## &lt;prophet.forecaster.Prophet object at 0x000002A2CBA557F0&gt;</code></pre>
 <p>Let’s also evaluate the residuals from this model using the acorr_ljungbox from the statsmodels package on the residuals from our model to test for white noise. First we need to calculate the residuals. To do this we need the predict function on our model to give us the predicted values of our training data. From there we calculate the residuals by taking these predicted values and subtracting them from the true values of our target variable y.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="prophet.html#cb14-1" tabindex="-1"></a>fitted <span class="op">=</span> m.predict()</span>
-<span id="cb14-2"><a href="prophet.html#cb14-2" tabindex="-1"></a>train_sf <span class="op">=</span> train_sf.merge(fitted, on <span class="op">=</span> <span class="st">&#39;ds&#39;</span>)</span>
-<span id="cb14-3"><a href="prophet.html#cb14-3" tabindex="-1"></a>residuals <span class="op">=</span> train_sf[<span class="st">&#39;y&#39;</span>] <span class="op">-</span> train_sf[<span class="st">&#39;yhat&#39;</span>]</span>
-<span id="cb14-4"><a href="prophet.html#cb14-4" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="prophet.html#cb14-5" tabindex="-1"></a>sm.stats.acorr_ljungbox(residuals, lags <span class="op">=</span> [<span class="dv">12</span>], model_df <span class="op">=</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb568"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb568-1"><a href="prophet.html#cb568-1" tabindex="-1"></a>fitted <span class="op">=</span> m.predict()</span>
+<span id="cb568-2"><a href="prophet.html#cb568-2" tabindex="-1"></a>train_sf <span class="op">=</span> train_sf.merge(fitted, on <span class="op">=</span> <span class="st">&#39;ds&#39;</span>)</span>
+<span id="cb568-3"><a href="prophet.html#cb568-3" tabindex="-1"></a>residuals <span class="op">=</span> train_sf[<span class="st">&#39;y&#39;</span>] <span class="op">-</span> train_sf[<span class="st">&#39;yhat&#39;</span>]</span>
+<span id="cb568-4"><a href="prophet.html#cb568-4" tabindex="-1"></a></span>
+<span id="cb568-5"><a href="prophet.html#cb568-5" tabindex="-1"></a>sm.stats.acorr_ljungbox(residuals, lags <span class="op">=</span> [<span class="dv">12</span>], model_df <span class="op">=</span> <span class="dv">5</span>)</span></code></pre></div>
 <pre><code>##        lb_stat     lb_pvalue
 ## 12  197.137224  4.634554e-39</code></pre>
 <p>Looks like our residuals still have some autocorrelation in them so further pattern exists. This isn’t surprising as the Prophet algorithm was never designed to be a statistical algorithm that removes all the autocorrelation from the data like an ARIMA model.</p>
 <p>To forecast these values going forward, we need future values of our predictor variable. For this dataset, we have our Sep11 variable that we forecast to have values of 0 for each of the 12 observations we are forecasting for airline passengers. To do this we create another variable (of the same name) that has future values. This new variable is then put into the test dataset which gets passed inside of the .predict function on our model that we built. The function is expecting a variable in the test dataset called Sep11 in it. From there we plot the forecast with the .plot function.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="prophet.html#cb16-1" tabindex="-1"></a>fcst <span class="op">=</span> m.predict(test_sf)</span>
-<span id="cb16-2"><a href="prophet.html#cb16-2" tabindex="-1"></a>fig <span class="op">=</span> m.plot(fcst)</span>
-<span id="cb16-3"><a href="prophet.html#cb16-3" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="prophet.html#cb16-4" tabindex="-1"></a>plt.show()<span class="op">;</span></span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-10-1.png" width="960" /></p>
+<div class="sourceCode" id="cb570"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb570-1"><a href="prophet.html#cb570-1" tabindex="-1"></a>fcst <span class="op">=</span> m.predict(test_sf)</span>
+<span id="cb570-2"><a href="prophet.html#cb570-2" tabindex="-1"></a>fig <span class="op">=</span> m.plot(fcst)</span>
+<span id="cb570-3"><a href="prophet.html#cb570-3" tabindex="-1"></a></span>
+<span id="cb570-4"><a href="prophet.html#cb570-4" tabindex="-1"></a>plt.show()<span class="op">;</span></span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-106-1.png" width="960" /></p>
 <p>We can use the forecasted values from the above code to evaluate these forecasts by comparing them to the test dataset.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="prophet.html#cb17-1" tabindex="-1"></a>fcst.index <span class="op">=</span> fcst[<span class="st">&#39;ds&#39;</span>]</span>
-<span id="cb17-2"><a href="prophet.html#cb17-2" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="prophet.html#cb17-3" tabindex="-1"></a>error <span class="op">=</span> test[<span class="st">&#39;Passengers&#39;</span>] <span class="op">-</span> fcst[<span class="st">&#39;yhat&#39;</span>].tail(<span class="dv">12</span>)</span>
-<span id="cb17-4"><a href="prophet.html#cb17-4" tabindex="-1"></a>MAPE <span class="op">=</span> np.mean(<span class="bu">abs</span>(error)<span class="op">/</span>test[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
-<span id="cb17-5"><a href="prophet.html#cb17-5" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Prophet MAE =&quot;</span>, np.mean(<span class="bu">abs</span>(error)), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">Prophet MAPE =&quot;</span>, MAPE)</span></code></pre></div>
+<div class="sourceCode" id="cb571"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb571-1"><a href="prophet.html#cb571-1" tabindex="-1"></a>fcst.index <span class="op">=</span> fcst[<span class="st">&#39;ds&#39;</span>]</span>
+<span id="cb571-2"><a href="prophet.html#cb571-2" tabindex="-1"></a></span>
+<span id="cb571-3"><a href="prophet.html#cb571-3" tabindex="-1"></a>error <span class="op">=</span> test[<span class="st">&#39;Passengers&#39;</span>] <span class="op">-</span> fcst[<span class="st">&#39;yhat&#39;</span>].tail(<span class="dv">12</span>)</span>
+<span id="cb571-4"><a href="prophet.html#cb571-4" tabindex="-1"></a>MAPE <span class="op">=</span> np.mean(<span class="bu">abs</span>(error)<span class="op">/</span>test[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb571-5"><a href="prophet.html#cb571-5" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Prophet MAE =&quot;</span>, np.mean(<span class="bu">abs</span>(error)), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">Prophet MAPE =&quot;</span>, MAPE)</span></code></pre></div>
 <pre><code>## Prophet MAE = 1332.0143682216083 
 ## Prophet MAPE = 2.072441313401043</code></pre>
 <p>It appears as if the Prophet model was not as accurate as some of the other approaches that we have used to model our data. The possible reasoning for this is discussed in the forecasting section below.</p>
@@ -385,41 +386,41 @@ X_W = \cos(\frac{2\pi t}{7}) + \sin(2 \times \frac{2\pi t}{7}) + \cos(3 \times \
 <div id="sas-7" class="section level3 hasAnchor" number="7.1.3">
 <h3><span class="header-section-number">7.1.3</span> SAS<a href="prophet.html#sas-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>At the time of creating this website, SAS did not have any way of directly implementing the Prophet algorithm in any of the procedures. However, since the Prophet algorithm is just a combination of a series of known variables, we can create those ourselves. For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. We will also need a trend variable for the growth component. The time_trend variable will be our trend which we create with the +1 functionality of SAS to get a variable going 1, 2, 3, ., t. We also need to create a dataset that blanks out all the values of the Passenger variable past in our test window. SAS needs a dataset with the training data as well as future values of the predictor variables to forecast with a regression-based approach. Lastly, we need to use the trend variable to create our Fourier variables as defined above.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="prophet.html#cb19-1" tabindex="-1"></a>data usair_pred;</span>
-<span id="cb19-2"><a href="prophet.html#cb19-2" tabindex="-1"></a>    set usair;</span>
-<span id="cb19-3"><a href="prophet.html#cb19-3" tabindex="-1"></a>    Sep11 <span class="ot">=</span> <span class="dv">0</span>;</span>
-<span id="cb19-4"><a href="prophet.html#cb19-4" tabindex="-1"></a>    <span class="cf">if</span> date <span class="ot">=</span> <span class="st">&#39;1sep2001&#39;</span>d then Sep11 <span class="ot">=</span> <span class="dv">1</span>;</span>
-<span id="cb19-5"><a href="prophet.html#cb19-5" tabindex="-1"></a>    <span class="cf">if</span> date <span class="sc">&gt;</span> <span class="st">&#39;1mar2007&#39;</span>d then Passengers <span class="ot">=</span> .;</span>
-<span id="cb19-6"><a href="prophet.html#cb19-6" tabindex="-1"></a>    time_trend <span class="sc">+</span> <span class="dv">1</span>;</span>
-<span id="cb19-7"><a href="prophet.html#cb19-7" tabindex="-1"></a>run;</span>
-<span id="cb19-8"><a href="prophet.html#cb19-8" tabindex="-1"></a></span>
-<span id="cb19-9"><a href="prophet.html#cb19-9" tabindex="-1"></a>data usair_pred;</span>
-<span id="cb19-10"><a href="prophet.html#cb19-10" tabindex="-1"></a>    set usair_pred;</span>
-<span id="cb19-11"><a href="prophet.html#cb19-11" tabindex="-1"></a>    f1 <span class="ot">=</span> <span class="fu">sin</span>(<span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
-<span id="cb19-12"><a href="prophet.html#cb19-12" tabindex="-1"></a>    f2 <span class="ot">=</span> <span class="fu">cos</span>(<span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
-<span id="cb19-13"><a href="prophet.html#cb19-13" tabindex="-1"></a>    f3 <span class="ot">=</span> <span class="fu">sin</span>(<span class="dv">2</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
-<span id="cb19-14"><a href="prophet.html#cb19-14" tabindex="-1"></a>    f4 <span class="ot">=</span> <span class="fu">cos</span>(<span class="dv">2</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
-<span id="cb19-15"><a href="prophet.html#cb19-15" tabindex="-1"></a>    f5 <span class="ot">=</span> <span class="fu">sin</span>(<span class="dv">3</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
-<span id="cb19-16"><a href="prophet.html#cb19-16" tabindex="-1"></a>    f6 <span class="ot">=</span> <span class="fu">cos</span>(<span class="dv">3</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
-<span id="cb19-17"><a href="prophet.html#cb19-17" tabindex="-1"></a>    f7 <span class="ot">=</span> <span class="fu">sin</span>(<span class="dv">4</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
-<span id="cb19-18"><a href="prophet.html#cb19-18" tabindex="-1"></a>    f8 <span class="ot">=</span> <span class="fu">cos</span>(<span class="dv">4</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
-<span id="cb19-19"><a href="prophet.html#cb19-19" tabindex="-1"></a>    f9 <span class="ot">=</span> <span class="fu">sin</span>(<span class="dv">5</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
-<span id="cb19-20"><a href="prophet.html#cb19-20" tabindex="-1"></a>    f10 <span class="ot">=</span> <span class="fu">cos</span>(<span class="dv">5</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
-<span id="cb19-21"><a href="prophet.html#cb19-21" tabindex="-1"></a>    f11 <span class="ot">=</span> <span class="fu">sin</span>(<span class="dv">6</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
-<span id="cb19-22"><a href="prophet.html#cb19-22" tabindex="-1"></a>    f12 <span class="ot">=</span> <span class="fu">cos</span>(<span class="dv">6</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
-<span id="cb19-23"><a href="prophet.html#cb19-23" tabindex="-1"></a>run;</span></code></pre></div>
+<div class="sourceCode" id="cb573"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb573-1"><a href="prophet.html#cb573-1" tabindex="-1"></a>data usair_pred;</span>
+<span id="cb573-2"><a href="prophet.html#cb573-2" tabindex="-1"></a>    set usair;</span>
+<span id="cb573-3"><a href="prophet.html#cb573-3" tabindex="-1"></a>    Sep11 <span class="ot">=</span> <span class="dv">0</span>;</span>
+<span id="cb573-4"><a href="prophet.html#cb573-4" tabindex="-1"></a>    <span class="cf">if</span> date <span class="ot">=</span> <span class="st">&#39;1sep2001&#39;</span>d then Sep11 <span class="ot">=</span> <span class="dv">1</span>;</span>
+<span id="cb573-5"><a href="prophet.html#cb573-5" tabindex="-1"></a>    <span class="cf">if</span> date <span class="sc">&gt;</span> <span class="st">&#39;1mar2007&#39;</span>d then Passengers <span class="ot">=</span> .;</span>
+<span id="cb573-6"><a href="prophet.html#cb573-6" tabindex="-1"></a>    time_trend <span class="sc">+</span> <span class="dv">1</span>;</span>
+<span id="cb573-7"><a href="prophet.html#cb573-7" tabindex="-1"></a>run;</span>
+<span id="cb573-8"><a href="prophet.html#cb573-8" tabindex="-1"></a></span>
+<span id="cb573-9"><a href="prophet.html#cb573-9" tabindex="-1"></a>data usair_pred;</span>
+<span id="cb573-10"><a href="prophet.html#cb573-10" tabindex="-1"></a>    set usair_pred;</span>
+<span id="cb573-11"><a href="prophet.html#cb573-11" tabindex="-1"></a>    f1 <span class="ot">=</span> <span class="fu">sin</span>(<span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
+<span id="cb573-12"><a href="prophet.html#cb573-12" tabindex="-1"></a>    f2 <span class="ot">=</span> <span class="fu">cos</span>(<span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
+<span id="cb573-13"><a href="prophet.html#cb573-13" tabindex="-1"></a>    f3 <span class="ot">=</span> <span class="fu">sin</span>(<span class="dv">2</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
+<span id="cb573-14"><a href="prophet.html#cb573-14" tabindex="-1"></a>    f4 <span class="ot">=</span> <span class="fu">cos</span>(<span class="dv">2</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
+<span id="cb573-15"><a href="prophet.html#cb573-15" tabindex="-1"></a>    f5 <span class="ot">=</span> <span class="fu">sin</span>(<span class="dv">3</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
+<span id="cb573-16"><a href="prophet.html#cb573-16" tabindex="-1"></a>    f6 <span class="ot">=</span> <span class="fu">cos</span>(<span class="dv">3</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
+<span id="cb573-17"><a href="prophet.html#cb573-17" tabindex="-1"></a>    f7 <span class="ot">=</span> <span class="fu">sin</span>(<span class="dv">4</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
+<span id="cb573-18"><a href="prophet.html#cb573-18" tabindex="-1"></a>    f8 <span class="ot">=</span> <span class="fu">cos</span>(<span class="dv">4</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
+<span id="cb573-19"><a href="prophet.html#cb573-19" tabindex="-1"></a>    f9 <span class="ot">=</span> <span class="fu">sin</span>(<span class="dv">5</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
+<span id="cb573-20"><a href="prophet.html#cb573-20" tabindex="-1"></a>    f10 <span class="ot">=</span> <span class="fu">cos</span>(<span class="dv">5</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
+<span id="cb573-21"><a href="prophet.html#cb573-21" tabindex="-1"></a>    f11 <span class="ot">=</span> <span class="fu">sin</span>(<span class="dv">6</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
+<span id="cb573-22"><a href="prophet.html#cb573-22" tabindex="-1"></a>    f12 <span class="ot">=</span> <span class="fu">cos</span>(<span class="dv">6</span><span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="fu">constant</span>(<span class="st">&quot;pi&quot;</span>)<span class="sc">*</span>time_trend<span class="sc">/</span><span class="dv">12</span>);</span>
+<span id="cb573-23"><a href="prophet.html#cb573-23" tabindex="-1"></a>run;</span></code></pre></div>
 <p>Now that the data has the needed variables we can build our model. The only complication comes from the piecewise linear regression part of the Prophet algorithm. For that we can use PROC GLIMMIX. The EFFECT statement allows us to create a piecewise variable using the spline function on the time_trend variable. The degree = 1 option makes the piecewise function linear and knotmethod = option allows us to specify a list of values where we want knots to occur. The list must also include the first and last points of the variable. From there we can use the MODEL statement to define our models using our newly created growth variable, our Sep11 variable, and the Fourier variables f1 through f11. Lastly, we put the solution option in the MODEL statement to get the procedure to estimate the coefficients. The OUTPUT statement allows us to save the predictions (predicted =) as a variable in a dataset (out =).</p>
 <p>We can plot the predicted values from this model with PROC SGPLOT.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="prophet.html#cb20-1" tabindex="-1"></a>proc glimmix data <span class="ot">=</span> usair_pred;</span>
-<span id="cb20-2"><a href="prophet.html#cb20-2" tabindex="-1"></a>   effect growth <span class="ot">=</span> <span class="fu">spline</span>(time_trend <span class="sc">/</span> <span class="at">degree =</span> <span class="dv">1</span> <span class="at">knotmethod =</span> <span class="fu">list</span>(<span class="dv">1</span> <span class="dv">30</span> <span class="dv">120</span> <span class="dv">141</span> <span class="dv">145</span> <span class="dv">156</span> <span class="dv">219</span>));</span>
-<span id="cb20-3"><a href="prophet.html#cb20-3" tabindex="-1"></a>   model Passengers <span class="ot">=</span> growth Sep11 f1<span class="sc">-</span>f11 <span class="sc">/</span> solution;  </span>
-<span id="cb20-4"><a href="prophet.html#cb20-4" tabindex="-1"></a>   output out <span class="ot">=</span> Proph_f predicted <span class="ot">=</span> Pred;</span>
-<span id="cb20-5"><a href="prophet.html#cb20-5" tabindex="-1"></a>quit;</span>
-<span id="cb20-6"><a href="prophet.html#cb20-6" tabindex="-1"></a></span>
-<span id="cb20-7"><a href="prophet.html#cb20-7" tabindex="-1"></a>proc sgplot data <span class="ot">=</span> Proph_f;</span>
-<span id="cb20-8"><a href="prophet.html#cb20-8" tabindex="-1"></a>    series x <span class="ot">=</span> date y <span class="ot">=</span> Passengers;</span>
-<span id="cb20-9"><a href="prophet.html#cb20-9" tabindex="-1"></a>    series x <span class="ot">=</span> date y <span class="ot">=</span> Pred <span class="sc">/</span> lineattrs<span class="ot">=</span>(<span class="at">color=</span>red <span class="at">pattern=</span>dash <span class="at">thickness=</span><span class="dv">1</span>);</span>
-<span id="cb20-10"><a href="prophet.html#cb20-10" tabindex="-1"></a>run;</span></code></pre></div>
+<div class="sourceCode" id="cb574"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb574-1"><a href="prophet.html#cb574-1" tabindex="-1"></a>proc glimmix data <span class="ot">=</span> usair_pred;</span>
+<span id="cb574-2"><a href="prophet.html#cb574-2" tabindex="-1"></a>   effect growth <span class="ot">=</span> <span class="fu">spline</span>(time_trend <span class="sc">/</span> <span class="at">degree =</span> <span class="dv">1</span> <span class="at">knotmethod =</span> <span class="fu">list</span>(<span class="dv">1</span> <span class="dv">30</span> <span class="dv">120</span> <span class="dv">141</span> <span class="dv">145</span> <span class="dv">156</span> <span class="dv">219</span>));</span>
+<span id="cb574-3"><a href="prophet.html#cb574-3" tabindex="-1"></a>   model Passengers <span class="ot">=</span> growth Sep11 f1<span class="sc">-</span>f11 <span class="sc">/</span> solution;  </span>
+<span id="cb574-4"><a href="prophet.html#cb574-4" tabindex="-1"></a>   output out <span class="ot">=</span> Proph_f predicted <span class="ot">=</span> Pred;</span>
+<span id="cb574-5"><a href="prophet.html#cb574-5" tabindex="-1"></a>quit;</span>
+<span id="cb574-6"><a href="prophet.html#cb574-6" tabindex="-1"></a></span>
+<span id="cb574-7"><a href="prophet.html#cb574-7" tabindex="-1"></a>proc sgplot data <span class="ot">=</span> Proph_f;</span>
+<span id="cb574-8"><a href="prophet.html#cb574-8" tabindex="-1"></a>    series x <span class="ot">=</span> date y <span class="ot">=</span> Passengers;</span>
+<span id="cb574-9"><a href="prophet.html#cb574-9" tabindex="-1"></a>    series x <span class="ot">=</span> date y <span class="ot">=</span> Pred <span class="sc">/</span> lineattrs<span class="ot">=</span>(<span class="at">color=</span>red <span class="at">pattern=</span>dash <span class="at">thickness=</span><span class="dv">1</span>);</span>
+<span id="cb574-10"><a href="prophet.html#cb574-10" tabindex="-1"></a>run;</span></code></pre></div>
 <div class="float">
 <img src="11_a_SAS.png" alt="SASOutput" />
 <div class="figcaption">SASOutput</div>
@@ -429,26 +430,26 @@ X_W = \cos(\frac{2\pi t}{7}) + \sin(2 \times \frac{2\pi t}{7}) + \cos(3 \times \
 <div class="figcaption">SASOutput</div>
 </div>
 <p>We need to isolate just the forecasted observations from the output above. For that we use the DATA STEP to just look at the predicted values from the two previous models beyond the March, 2007 training observations with the WHERE statement. Next, we use the MERGE statement in another DATA STEP to merge the original test dataset with the predicted values from the above model. Lastly, we calculate the absolute error and absolute percentage error for each observation with our last DATA STEP. To get the average of these calculations, we throw our test dataset into the PROC MEANS procedure where we specify these variables with the VAR statement.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="prophet.html#cb21-1" tabindex="-1"></a>data Proph_f;</span>
-<span id="cb21-2"><a href="prophet.html#cb21-2" tabindex="-1"></a>    set Proph_f;</span>
-<span id="cb21-3"><a href="prophet.html#cb21-3" tabindex="-1"></a>    where date <span class="sc">&gt;</span> <span class="st">&#39;1mar2007&#39;</span>d;</span>
-<span id="cb21-4"><a href="prophet.html#cb21-4" tabindex="-1"></a>    Predict_Proph <span class="ot">=</span> Pred;</span>
-<span id="cb21-5"><a href="prophet.html#cb21-5" tabindex="-1"></a>    keep Predict_Proph;</span>
-<span id="cb21-6"><a href="prophet.html#cb21-6" tabindex="-1"></a>run;</span>
-<span id="cb21-7"><a href="prophet.html#cb21-7" tabindex="-1"></a></span>
-<span id="cb21-8"><a href="prophet.html#cb21-8" tabindex="-1"></a>data test;</span>
-<span id="cb21-9"><a href="prophet.html#cb21-9" tabindex="-1"></a>    merge test Proph_f;</span>
-<span id="cb21-10"><a href="prophet.html#cb21-10" tabindex="-1"></a>run;</span>
-<span id="cb21-11"><a href="prophet.html#cb21-11" tabindex="-1"></a></span>
-<span id="cb21-12"><a href="prophet.html#cb21-12" tabindex="-1"></a>data test;</span>
-<span id="cb21-13"><a href="prophet.html#cb21-13" tabindex="-1"></a>    set test;</span>
-<span id="cb21-14"><a href="prophet.html#cb21-14" tabindex="-1"></a>    AE_Proph <span class="ot">=</span> <span class="fu">abs</span>(Passengers <span class="sc">-</span> Predict_Proph);</span>
-<span id="cb21-15"><a href="prophet.html#cb21-15" tabindex="-1"></a>    APE_Proph <span class="ot">=</span> <span class="fu">abs</span>(Passengers <span class="sc">-</span> Predict_Proph)<span class="sc">/</span>Passengers<span class="sc">*</span><span class="dv">100</span>;</span>
-<span id="cb21-16"><a href="prophet.html#cb21-16" tabindex="-1"></a>run;</span>
-<span id="cb21-17"><a href="prophet.html#cb21-17" tabindex="-1"></a></span>
-<span id="cb21-18"><a href="prophet.html#cb21-18" tabindex="-1"></a>proc means data <span class="ot">=</span> test;</span>
-<span id="cb21-19"><a href="prophet.html#cb21-19" tabindex="-1"></a>    var AE_Proph APE_Proph;</span>
-<span id="cb21-20"><a href="prophet.html#cb21-20" tabindex="-1"></a>run;</span></code></pre></div>
+<div class="sourceCode" id="cb575"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb575-1"><a href="prophet.html#cb575-1" tabindex="-1"></a>data Proph_f;</span>
+<span id="cb575-2"><a href="prophet.html#cb575-2" tabindex="-1"></a>    set Proph_f;</span>
+<span id="cb575-3"><a href="prophet.html#cb575-3" tabindex="-1"></a>    where date <span class="sc">&gt;</span> <span class="st">&#39;1mar2007&#39;</span>d;</span>
+<span id="cb575-4"><a href="prophet.html#cb575-4" tabindex="-1"></a>    Predict_Proph <span class="ot">=</span> Pred;</span>
+<span id="cb575-5"><a href="prophet.html#cb575-5" tabindex="-1"></a>    keep Predict_Proph;</span>
+<span id="cb575-6"><a href="prophet.html#cb575-6" tabindex="-1"></a>run;</span>
+<span id="cb575-7"><a href="prophet.html#cb575-7" tabindex="-1"></a></span>
+<span id="cb575-8"><a href="prophet.html#cb575-8" tabindex="-1"></a>data test;</span>
+<span id="cb575-9"><a href="prophet.html#cb575-9" tabindex="-1"></a>    merge test Proph_f;</span>
+<span id="cb575-10"><a href="prophet.html#cb575-10" tabindex="-1"></a>run;</span>
+<span id="cb575-11"><a href="prophet.html#cb575-11" tabindex="-1"></a></span>
+<span id="cb575-12"><a href="prophet.html#cb575-12" tabindex="-1"></a>data test;</span>
+<span id="cb575-13"><a href="prophet.html#cb575-13" tabindex="-1"></a>    set test;</span>
+<span id="cb575-14"><a href="prophet.html#cb575-14" tabindex="-1"></a>    AE_Proph <span class="ot">=</span> <span class="fu">abs</span>(Passengers <span class="sc">-</span> Predict_Proph);</span>
+<span id="cb575-15"><a href="prophet.html#cb575-15" tabindex="-1"></a>    APE_Proph <span class="ot">=</span> <span class="fu">abs</span>(Passengers <span class="sc">-</span> Predict_Proph)<span class="sc">/</span>Passengers<span class="sc">*</span><span class="dv">100</span>;</span>
+<span id="cb575-16"><a href="prophet.html#cb575-16" tabindex="-1"></a>run;</span>
+<span id="cb575-17"><a href="prophet.html#cb575-17" tabindex="-1"></a></span>
+<span id="cb575-18"><a href="prophet.html#cb575-18" tabindex="-1"></a>proc means data <span class="ot">=</span> test;</span>
+<span id="cb575-19"><a href="prophet.html#cb575-19" tabindex="-1"></a>    var AE_Proph APE_Proph;</span>
+<span id="cb575-20"><a href="prophet.html#cb575-20" tabindex="-1"></a>run;</span></code></pre></div>
 <div class="float">
 <img src="11_c_SAS.png" alt="SASOutput" />
 <div class="figcaption">SASOutput</div>
