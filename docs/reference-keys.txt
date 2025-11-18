@@ -68,3 +68,10 @@ r-7
 python-7
 sas-7
 forecasting-1
+neural-networks-for-time-series
+structure
+single-hidden-layer-neural-network
+time-series-neural-networks
+r-8
+python-8
+sas-8
