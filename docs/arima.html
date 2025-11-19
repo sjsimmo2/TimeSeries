@@ -23,7 +23,7 @@
 <meta name="author" content="by Dr. Susan Simmons" />
 
 
-<meta name="date" content="2025-11-17" />
+<meta name="date" content="2025-11-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -238,6 +238,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7.2" data-path="prophet.html"><a href="prophet.html#forecasting-1"><i class="fa fa-check"></i><b>7.2</b> Forecasting</a></li>
 </ul></li>
+<li class="chapter" data-level="8" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html"><i class="fa fa-check"></i><b>8</b> Neural Networks for Time Series</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#structure"><i class="fa fa-check"></i><b>8.1</b> Structure</a></li>
+<li class="chapter" data-level="8.2" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#single-hidden-layer-neural-network"><i class="fa fa-check"></i><b>8.2</b> Single Hidden Layer Neural Network</a></li>
+<li class="chapter" data-level="8.3" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#time-series-neural-networks"><i class="fa fa-check"></i><b>8.3</b> Time Series Neural Networks</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#r-8"><i class="fa fa-check"></i><b>8.3.1</b> R</a></li>
+<li class="chapter" data-level="8.3.2" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#python-8"><i class="fa fa-check"></i><b>8.3.2</b> Python</a></li>
+<li class="chapter" data-level="8.3.3" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#sas-8"><i class="fa fa-check"></i><b>8.3.3</b> SAS</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html"><i class="fa fa-check"></i><b>9</b> Weighted and combined forecasts</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#simple-average"><i class="fa fa-check"></i><b>9.1</b> Simple Average</a>
+<ul>
+<li class="chapter" data-level="9.1.1" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#r-9"><i class="fa fa-check"></i><b>9.1.1</b> R</a></li>
+<li class="chapter" data-level="9.1.2" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#python-9"><i class="fa fa-check"></i><b>9.1.2</b> Python</a></li>
+<li class="chapter" data-level="9.1.3" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#sas-9"><i class="fa fa-check"></i><b>9.1.3</b> SAS</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#weighted-methods"><i class="fa fa-check"></i><b>9.2</b> Weighted Methods</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#r-10"><i class="fa fa-check"></i><b>9.2.1</b> R</a></li>
+<li class="chapter" data-level="9.2.2" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#python-10"><i class="fa fa-check"></i><b>9.2.2</b> Python</a></li>
+<li class="chapter" data-level="9.2.3" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#sas-10"><i class="fa fa-check"></i><b>9.2.3</b> SAS</a></li>
+</ul></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -311,8 +337,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##    &lt;int&gt;
 ## 1      0</code></pre>
 <div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="arima.html#cb115-1" tabindex="-1"></a><span class="fu">autoplot</span>(Hurricane_train,mean_diff)<span class="sc">+</span><span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Differenced Mean Max Velocity&quot;</span>, <span class="at">x=</span><span class="st">&quot;Time&quot;</span>, <span class="at">y=</span><span class="st">&quot;Difference&quot;</span>)</span></code></pre></div>
-<pre><code>## Warning: Removed 1 row containing missing values or values outside the
-## scale range (`geom_line()`).</code></pre>
+<pre><code>## Warning: Removed 1 row containing missing values or values outside the scale range (`geom_line()`).</code></pre>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
 </div>
 <div id="autoregressive-models-ar" class="section level2 hasAnchor" number="4.3">
@@ -467,10 +492,9 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 <div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="arima.html#cb150-1" tabindex="-1"></a>Hurricane_train <span class="ot">&lt;-</span> Hurricane_train <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">mean_diff=</span><span class="fu">difference</span>(MeanVMax))</span>
 <span id="cb150-2"><a href="arima.html#cb150-2" tabindex="-1"></a></span>
 <span id="cb150-3"><a href="arima.html#cb150-3" tabindex="-1"></a>Hurricane_train <span class="sc">%&gt;%</span> <span class="fu">gg_tsdisplay</span>(mean_diff,<span class="at">plot_type =</span> <span class="st">&#39;partial&#39;</span>)</span></code></pre></div>
-<pre><code>## Warning: Removed 1 row containing missing values or values outside the
-## scale range (`geom_line()`).</code></pre>
-<pre><code>## Warning: Removed 5 rows containing missing values or values outside the
-## scale range (`geom_point()`).</code></pre>
+<pre><code>## Warning: Removed 1 row containing missing values or values outside the scale range (`geom_line()`).</code></pre>
+<pre><code>## Warning: Removed 5 rows containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="arima.html#cb153-1" tabindex="-1"></a>hurr_model <span class="ot">&lt;-</span>Hurricane_train <span class="sc">%&gt;%</span></span>
 <span id="cb153-2"><a href="arima.html#cb153-2" tabindex="-1"></a>  <span class="fu">model</span>(<span class="at">ar3 =</span> <span class="fu">ARIMA</span>(MeanVMax <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">0</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)),</span>
@@ -502,10 +526,9 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 <div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="arima.html#cb158-1" tabindex="-1"></a>hurr_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(ma2) <span class="sc">%&gt;%</span> <span class="fu">residuals</span>() <span class="sc">%&gt;%</span> <span class="fu">ggPacf</span>()</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-16-2.png" width="672" /></p>
 <div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="arima.html#cb159-1" tabindex="-1"></a>hurr_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(ma2) <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>()</span></code></pre></div>
-<pre><code>## Warning: Removed 2 rows containing missing values or values outside the
-## scale range (`geom_point()`).</code></pre>
-<pre><code>## Warning: Removed 2 rows containing non-finite outside the scale range
-## (`stat_bin()`).</code></pre>
+<pre><code>## Warning: Removed 2 rows containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
+<pre><code>## Warning: Removed 2 rows containing non-finite outside the scale range (`stat_bin()`).</code></pre>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-16-3.png" width="672" /></p>
 <p>Looking at the ACF and PACF on the ARIMA(3,1,2) model and Ljung-Box test.</p>
 <div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="arima.html#cb162-1" tabindex="-1"></a>hurr_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(arima32) <span class="sc">%&gt;%</span> <span class="fu">residuals</span>() <span class="sc">%&gt;%</span> <span class="fu">ggAcf</span>()</span></code></pre></div>
@@ -513,10 +536,9 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 <div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="arima.html#cb163-1" tabindex="-1"></a>hurr_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(arima32) <span class="sc">%&gt;%</span> <span class="fu">residuals</span>() <span class="sc">%&gt;%</span> <span class="fu">ggPacf</span>()</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-17-2.png" width="672" /></p>
 <div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="arima.html#cb164-1" tabindex="-1"></a>hurr_model <span class="sc">%&gt;%</span> <span class="fu">select</span>(arima32) <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>()</span></code></pre></div>
-<pre><code>## Warning: Removed 2 rows containing missing values or values outside the
-## scale range (`geom_point()`).</code></pre>
-<pre><code>## Warning: Removed 2 rows containing non-finite outside the scale range
-## (`stat_bin()`).</code></pre>
+<pre><code>## Warning: Removed 2 rows containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
+<pre><code>## Warning: Removed 2 rows containing non-finite outside the scale range (`stat_bin()`).</code></pre>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-17-3.png" width="672" /></p>
 <div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="arima.html#cb167-1" tabindex="-1"></a><span class="fu">augment</span>(hurr_model) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(.model<span class="sc">==</span><span class="st">&#39;arima32&#39;</span>) <span class="sc">%&gt;%</span> <span class="fu">features</span>(.innov,ljung_box, <span class="at">lag=</span><span class="dv">10</span>, <span class="at">dof =</span> <span class="dv">5</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 3
@@ -566,14 +588,11 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 <span id="cb182-2"><a href="arima.html#cb182-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">income_diff =</span> <span class="fu">difference</span>(Disposable_income))</span>
 <span id="cb182-3"><a href="arima.html#cb182-3" tabindex="-1"></a></span>
 <span id="cb182-4"><a href="arima.html#cb182-4" tabindex="-1"></a><span class="fu">autoplot</span>(consume_train,income_diff)<span class="sc">+</span><span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Time Series of Differenced Monthly Disposable Income&quot;</span>, <span class="at">x=</span><span class="st">&quot;Time&quot;</span>, <span class="at">y=</span><span class="st">&quot;Differences&quot;</span>)</span></code></pre></div>
-<pre><code>## Warning: Removed 1 row containing missing values or values outside the
-## scale range (`geom_line()`).</code></pre>
+<pre><code>## Warning: Removed 1 row containing missing values or values outside the scale range (`geom_line()`).</code></pre>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-20-2.png" width="672" /></p>
 <div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="arima.html#cb184-1" tabindex="-1"></a>consume_train <span class="sc">%&gt;%</span> <span class="fu">gg_tsdisplay</span>(income_diff,<span class="at">plot_type =</span> <span class="st">&#39;partial&#39;</span>)</span></code></pre></div>
-<pre><code>## Warning: Removed 1 row containing missing values or values outside the
-## scale range (`geom_line()`).</code></pre>
-<pre><code>## Warning: Removed 1 row containing missing values or values outside the
-## scale range (`geom_point()`).</code></pre>
+<pre><code>## Warning: Removed 1 row containing missing values or values outside the scale range (`geom_line()`).</code></pre>
+<pre><code>## Warning: Removed 1 row containing missing values or values outside the scale range (`geom_point()`).</code></pre>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-20-3.png" width="672" /></p>
 <p>Looking at the ACF and PACF, we will try a few models and also use an automatic search.</p>
 <div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="arima.html#cb187-1" tabindex="-1"></a>consume_model <span class="ot">&lt;-</span>consume_train <span class="sc">%&gt;%</span></span>
@@ -648,10 +667,9 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 <div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="arima.html#cb201-1" tabindex="-1"></a>Raleigh_train <span class="ot">&lt;-</span> Raleigh_train <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">diff_price=</span><span class="fu">difference</span>(<span class="fu">difference</span>(price_index)))</span>
 <span id="cb201-2"><a href="arima.html#cb201-2" tabindex="-1"></a></span>
 <span id="cb201-3"><a href="arima.html#cb201-3" tabindex="-1"></a>Raleigh_train <span class="sc">%&gt;%</span> <span class="fu">gg_tsdisplay</span>(diff_price,<span class="at">plot_type =</span> <span class="st">&#39;partial&#39;</span>)</span></code></pre></div>
-<pre><code>## Warning: Removed 2 rows containing missing values or values outside the
-## scale range (`geom_line()`).</code></pre>
-<pre><code>## Warning: Removed 2 rows containing missing values or values outside the
-## scale range (`geom_point()`).</code></pre>
+<pre><code>## Warning: Removed 2 rows containing missing values or values outside the scale range (`geom_line()`).</code></pre>
+<pre><code>## Warning: Removed 2 rows containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-23-2.png" width="672" /></p>
 <p>Now we will try a few models:</p>
 <div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="arima.html#cb204-1" tabindex="-1"></a>Raleigh_model <span class="ot">&lt;-</span>Raleigh_train <span class="sc">%&gt;%</span></span>
@@ -1021,8 +1039,8 @@ H_{A}:Significant\qquad autocorrletion \]</span></p>
 ## ==============================================================================
 ## Dep. Variable:                      Y   No. Observations:                  731
 ## Model:                 ARIMA(2, 0, 0)   Log Likelihood               -2696.123
-## Date:                Mon, 17 Nov 2025   AIC                           5400.247
-## Time:                        18:29:32   BIC                           5418.625
+## Date:                Wed, 19 Nov 2025   AIC                           5400.247
+## Time:                        12:49:54   BIC                           5418.625
 ## Sample:                             0   HQIC                          5407.337
 ##                                 - 731                                         
 ## Covariance Type:                  opg                                         
@@ -1098,8 +1116,8 @@ The first value in the Ljung-Box test is the test statistic and the second value
 ## ==============================================================================
 ## Dep. Variable:                      Y   No. Observations:                  731
 ## Model:                 ARIMA(2, 0, 0)   Log Likelihood               -2696.123
-## Date:                Mon, 17 Nov 2025   AIC                           5400.247
-## Time:                        18:29:33   BIC                           5418.625
+## Date:                Wed, 19 Nov 2025   AIC                           5400.247
+## Time:                        12:49:57   BIC                           5418.625
 ## Sample:                             0   HQIC                          5407.337
 ##                                 - 731                                         
 ## Covariance Type:                  opg                                         

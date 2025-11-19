@@ -23,7 +23,7 @@
 <meta name="author" content="by Dr. Susan Simmons" />
 
 
-<meta name="date" content="2025-11-18" />
+<meta name="date" content="2025-11-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="prophet.html"/>
-
+<link rel="next" href="weighted-and-combined-forecasts.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -249,6 +249,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.3.3" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#sas-8"><i class="fa fa-check"></i><b>8.3.3</b> SAS</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="9" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html"><i class="fa fa-check"></i><b>9</b> Weighted and combined forecasts</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#simple-average"><i class="fa fa-check"></i><b>9.1</b> Simple Average</a>
+<ul>
+<li class="chapter" data-level="9.1.1" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#r-9"><i class="fa fa-check"></i><b>9.1.1</b> R</a></li>
+<li class="chapter" data-level="9.1.2" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#python-9"><i class="fa fa-check"></i><b>9.1.2</b> Python</a></li>
+<li class="chapter" data-level="9.1.3" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#sas-9"><i class="fa fa-check"></i><b>9.1.3</b> SAS</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#weighted-methods"><i class="fa fa-check"></i><b>9.2</b> Weighted Methods</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#r-10"><i class="fa fa-check"></i><b>9.2.1</b> R</a></li>
+<li class="chapter" data-level="9.2.2" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#python-10"><i class="fa fa-check"></i><b>9.2.2</b> Python</a></li>
+<li class="chapter" data-level="9.2.3" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#sas-10"><i class="fa fa-check"></i><b>9.2.3</b> SAS</a></li>
+</ul></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -309,20 +324,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">8.3.1</span> R<a href="neural-networks-for-time-series.html#r-8" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise.</p>
 <p>To build an autoregressive neural network in R, we use the NNETAR function inside of the model function. This function cannot take differences of your data so we need to input our differenced target variable instead. We use the mutate function to calculate this new differenced target variable. Similar to previous sections, we will build two versions of the neural network model - one we specify ourselves, and one we let the computer optimize through automatic selection. By using the formula structure in the NNETAR function in the model function, we can add this intervention to our model. The p = and P = options in the AR function piece of the formula allows us to specify the number of normal and seasonal autoregressive lags respectively. If we do not specify these options, R will try to optimize them for us. Lastly, we can use the report function on the automatically selected neural network to find out what model R went with.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="neural-networks-for-time-series.html#cb1-1" tabindex="-1"></a>train<span class="ot">&lt;-</span>train <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Sep11 =</span> <span class="fu">if_else</span>(date <span class="sc">&gt;=</span> <span class="fu">yearmonth</span>(<span class="st">&quot;2000 Sep&quot;</span>),<span class="dv">1</span>,<span class="dv">0</span>))</span>
-<span id="cb1-2"><a href="neural-networks-for-time-series.html#cb1-2" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="neural-networks-for-time-series.html#cb1-3" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
-<span id="cb1-4"><a href="neural-networks-for-time-series.html#cb1-4" tabindex="-1"></a>model_nnet <span class="ot">&lt;-</span> train <span class="sc">%&gt;%</span></span>
-<span id="cb1-5"><a href="neural-networks-for-time-series.html#cb1-5" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff_Pass =</span> <span class="fu">difference</span>(Passengers, <span class="dv">12</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-6"><a href="neural-networks-for-time-series.html#cb1-6" tabindex="-1"></a>  <span class="fu">model</span>(</span>
-<span id="cb1-7"><a href="neural-networks-for-time-series.html#cb1-7" tabindex="-1"></a>    <span class="at">hand =</span> <span class="fu">NNETAR</span>(diff_Pass <span class="sc">~</span> Sep11 <span class="sc">+</span> <span class="fu">AR</span>(<span class="at">p =</span> <span class="dv">1</span>, <span class="at">P =</span> <span class="dv">3</span>)),</span>
-<span id="cb1-8"><a href="neural-networks-for-time-series.html#cb1-8" tabindex="-1"></a>  </span>
-<span id="cb1-9"><a href="neural-networks-for-time-series.html#cb1-9" tabindex="-1"></a>    <span class="at">auto =</span> <span class="fu">NNETAR</span>(diff_Pass <span class="sc">~</span> Sep11)  </span>
-<span id="cb1-10"><a href="neural-networks-for-time-series.html#cb1-10" tabindex="-1"></a>  )</span>
-<span id="cb1-11"><a href="neural-networks-for-time-series.html#cb1-11" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="neural-networks-for-time-series.html#cb1-12" tabindex="-1"></a>model_nnet <span class="sc">%&gt;%</span></span>
-<span id="cb1-13"><a href="neural-networks-for-time-series.html#cb1-13" tabindex="-1"></a>  <span class="fu">select</span>(auto) <span class="sc">%&gt;%</span></span>
-<span id="cb1-14"><a href="neural-networks-for-time-series.html#cb1-14" tabindex="-1"></a>  <span class="fu">report</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb576"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb576-1"><a href="neural-networks-for-time-series.html#cb576-1" tabindex="-1"></a>train<span class="ot">&lt;-</span>train <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Sep11 =</span> <span class="fu">if_else</span>(date <span class="sc">&gt;=</span> <span class="fu">yearmonth</span>(<span class="st">&quot;2000 Sep&quot;</span>),<span class="dv">1</span>,<span class="dv">0</span>))</span>
+<span id="cb576-2"><a href="neural-networks-for-time-series.html#cb576-2" tabindex="-1"></a></span>
+<span id="cb576-3"><a href="neural-networks-for-time-series.html#cb576-3" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
+<span id="cb576-4"><a href="neural-networks-for-time-series.html#cb576-4" tabindex="-1"></a>model_nnet <span class="ot">&lt;-</span> train <span class="sc">%&gt;%</span></span>
+<span id="cb576-5"><a href="neural-networks-for-time-series.html#cb576-5" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff_Pass =</span> <span class="fu">difference</span>(Passengers, <span class="dv">12</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb576-6"><a href="neural-networks-for-time-series.html#cb576-6" tabindex="-1"></a>  <span class="fu">model</span>(</span>
+<span id="cb576-7"><a href="neural-networks-for-time-series.html#cb576-7" tabindex="-1"></a>    <span class="at">hand =</span> <span class="fu">NNETAR</span>(diff_Pass <span class="sc">~</span> Sep11 <span class="sc">+</span> <span class="fu">AR</span>(<span class="at">p =</span> <span class="dv">1</span>, <span class="at">P =</span> <span class="dv">3</span>)),</span>
+<span id="cb576-8"><a href="neural-networks-for-time-series.html#cb576-8" tabindex="-1"></a>  </span>
+<span id="cb576-9"><a href="neural-networks-for-time-series.html#cb576-9" tabindex="-1"></a>    <span class="at">auto =</span> <span class="fu">NNETAR</span>(diff_Pass <span class="sc">~</span> Sep11)  </span>
+<span id="cb576-10"><a href="neural-networks-for-time-series.html#cb576-10" tabindex="-1"></a>  )</span>
+<span id="cb576-11"><a href="neural-networks-for-time-series.html#cb576-11" tabindex="-1"></a></span>
+<span id="cb576-12"><a href="neural-networks-for-time-series.html#cb576-12" tabindex="-1"></a>model_nnet <span class="sc">%&gt;%</span></span>
+<span id="cb576-13"><a href="neural-networks-for-time-series.html#cb576-13" tabindex="-1"></a>  <span class="fu">select</span>(auto) <span class="sc">%&gt;%</span></span>
+<span id="cb576-14"><a href="neural-networks-for-time-series.html#cb576-14" tabindex="-1"></a>  <span class="fu">report</span>()</span></code></pre></div>
 <pre><code>## Series: diff_Pass 
 ## Model: NNAR(15,1,8)[12] 
 ## 
@@ -332,14 +347,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 
 ## sigma^2 estimated as 68898</code></pre>
 <p>We can also examine the residuals from each of the models we created above using the gg_tsresiduals() function that we have used for our other models we have built.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="neural-networks-for-time-series.html#cb3-1" tabindex="-1"></a>model_nnet <span class="sc">%&gt;%</span></span>
-<span id="cb3-2"><a href="neural-networks-for-time-series.html#cb3-2" tabindex="-1"></a>  <span class="fu">select</span>(hand) <span class="sc">%&gt;%</span></span>
-<span id="cb3-3"><a href="neural-networks-for-time-series.html#cb3-3" tabindex="-1"></a>  <span class="fu">gg_tsresiduals</span>()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="neural-networks-for-time-series.html#cb4-1" tabindex="-1"></a>model_nnet <span class="sc">%&gt;%</span></span>
-<span id="cb4-2"><a href="neural-networks-for-time-series.html#cb4-2" tabindex="-1"></a>  <span class="fu">select</span>(auto) <span class="sc">%&gt;%</span></span>
-<span id="cb4-3"><a href="neural-networks-for-time-series.html#cb4-3" tabindex="-1"></a>  <span class="fu">gg_tsresiduals</span>()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<div class="sourceCode" id="cb578"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb578-1"><a href="neural-networks-for-time-series.html#cb578-1" tabindex="-1"></a>model_nnet <span class="sc">%&gt;%</span></span>
+<span id="cb578-2"><a href="neural-networks-for-time-series.html#cb578-2" tabindex="-1"></a>  <span class="fu">select</span>(hand) <span class="sc">%&gt;%</span></span>
+<span id="cb578-3"><a href="neural-networks-for-time-series.html#cb578-3" tabindex="-1"></a>  <span class="fu">gg_tsresiduals</span>()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-114-1.png" width="672" /></p>
+<div class="sourceCode" id="cb579"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb579-1"><a href="neural-networks-for-time-series.html#cb579-1" tabindex="-1"></a>model_nnet <span class="sc">%&gt;%</span></span>
+<span id="cb579-2"><a href="neural-networks-for-time-series.html#cb579-2" tabindex="-1"></a>  <span class="fu">select</span>(auto) <span class="sc">%&gt;%</span></span>
+<span id="cb579-3"><a href="neural-networks-for-time-series.html#cb579-3" tabindex="-1"></a>  <span class="fu">gg_tsresiduals</span>()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-114-2.png" width="672" /></p>
 <p>The only downside of the functionality of building an autoregressive neural network in R is that if we need to take differences for stationarity, the functions will not return the data back to its original scale like they do with ARIMA models. That means that the neural network forecasts would provide the following plot:</p>
 <div class="float">
 <img src="Diff_for.png" alt="NN" />
@@ -347,49 +362,49 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>These are forecasts on the differences and not the original scale of the data. We will need to put our data back on its original scale to see how well it forecasts our Passengers variable. First, to get the forecasts of the differences we still use the forecast function. For this dataset, we have our Sep11 variable that we forecast to have values of 0 for each of the 12 observations we are forecasting for airline passengers. To do this we create another variable (of the same name) that has future values in our test dataset. We then use the forecast function with both the model and the test dataset as inputs. The forecast function will be expecting a test dataset that contains the Sep11 variable in it.</p>
 <p>The two for loops below tansform the forecasted differences back into the original scale of the data. The .mean variable from the forecast object should just be added to the real observation 12 time periods before because it is the forecasted difference between the current point in time and the point 12 months before.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="neural-networks-for-time-series.html#cb5-1" tabindex="-1"></a>test<span class="sc">$</span>Sep11 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">12</span>)</span>
-<span id="cb5-2"><a href="neural-networks-for-time-series.html#cb5-2" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="neural-networks-for-time-series.html#cb5-3" tabindex="-1"></a>model_nnet_for <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(model_nnet, test)</span>
-<span id="cb5-4"><a href="neural-networks-for-time-series.html#cb5-4" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="neural-networks-for-time-series.html#cb5-5" tabindex="-1"></a>nnet_for_hand <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">12</span>)</span>
-<span id="cb5-6"><a href="neural-networks-for-time-series.html#cb5-6" tabindex="-1"></a>nnet_for_auto <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">12</span>)</span>
-<span id="cb5-7"><a href="neural-networks-for-time-series.html#cb5-7" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="neural-networks-for-time-series.html#cb5-8" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>){</span>
-<span id="cb5-9"><a href="neural-networks-for-time-series.html#cb5-9" tabindex="-1"></a>  nnet_for_hand[i] <span class="ot">&lt;-</span> train<span class="sc">$</span>Passengers[<span class="fu">length</span>(train<span class="sc">$</span>Passengers) <span class="sc">-</span> <span class="dv">12</span> <span class="sc">+</span> i] <span class="sc">+</span> model_nnet_for<span class="sc">$</span>.mean[i]</span>
-<span id="cb5-10"><a href="neural-networks-for-time-series.html#cb5-10" tabindex="-1"></a>}</span>
-<span id="cb5-11"><a href="neural-networks-for-time-series.html#cb5-11" tabindex="-1"></a></span>
-<span id="cb5-12"><a href="neural-networks-for-time-series.html#cb5-12" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>){</span>
-<span id="cb5-13"><a href="neural-networks-for-time-series.html#cb5-13" tabindex="-1"></a>  nnet_for_auto[i] <span class="ot">&lt;-</span> train<span class="sc">$</span>Passengers[<span class="fu">length</span>(train<span class="sc">$</span>Passengers) <span class="sc">-</span> <span class="dv">12</span> <span class="sc">+</span> i] <span class="sc">+</span> model_nnet_for<span class="sc">$</span>.mean[i<span class="sc">+</span><span class="dv">12</span>]</span>
-<span id="cb5-14"><a href="neural-networks-for-time-series.html#cb5-14" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb580"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb580-1"><a href="neural-networks-for-time-series.html#cb580-1" tabindex="-1"></a>test<span class="sc">$</span>Sep11 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">12</span>)</span>
+<span id="cb580-2"><a href="neural-networks-for-time-series.html#cb580-2" tabindex="-1"></a></span>
+<span id="cb580-3"><a href="neural-networks-for-time-series.html#cb580-3" tabindex="-1"></a>model_nnet_for <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(model_nnet, test)</span>
+<span id="cb580-4"><a href="neural-networks-for-time-series.html#cb580-4" tabindex="-1"></a></span>
+<span id="cb580-5"><a href="neural-networks-for-time-series.html#cb580-5" tabindex="-1"></a>nnet_for_hand <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">12</span>)</span>
+<span id="cb580-6"><a href="neural-networks-for-time-series.html#cb580-6" tabindex="-1"></a>nnet_for_auto <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">12</span>)</span>
+<span id="cb580-7"><a href="neural-networks-for-time-series.html#cb580-7" tabindex="-1"></a></span>
+<span id="cb580-8"><a href="neural-networks-for-time-series.html#cb580-8" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>){</span>
+<span id="cb580-9"><a href="neural-networks-for-time-series.html#cb580-9" tabindex="-1"></a>  nnet_for_hand[i] <span class="ot">&lt;-</span> train<span class="sc">$</span>Passengers[<span class="fu">length</span>(train<span class="sc">$</span>Passengers) <span class="sc">-</span> <span class="dv">12</span> <span class="sc">+</span> i] <span class="sc">+</span> model_nnet_for<span class="sc">$</span>.mean[i]</span>
+<span id="cb580-10"><a href="neural-networks-for-time-series.html#cb580-10" tabindex="-1"></a>}</span>
+<span id="cb580-11"><a href="neural-networks-for-time-series.html#cb580-11" tabindex="-1"></a></span>
+<span id="cb580-12"><a href="neural-networks-for-time-series.html#cb580-12" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>){</span>
+<span id="cb580-13"><a href="neural-networks-for-time-series.html#cb580-13" tabindex="-1"></a>  nnet_for_auto[i] <span class="ot">&lt;-</span> train<span class="sc">$</span>Passengers[<span class="fu">length</span>(train<span class="sc">$</span>Passengers) <span class="sc">-</span> <span class="dv">12</span> <span class="sc">+</span> i] <span class="sc">+</span> model_nnet_for<span class="sc">$</span>.mean[i<span class="sc">+</span><span class="dv">12</span>]</span>
+<span id="cb580-14"><a href="neural-networks-for-time-series.html#cb580-14" tabindex="-1"></a>}</span></code></pre></div>
 <p>We can then take these forecasted observations and plot them. To make the plotting easier, we use the ts and subset functions from the forecast package.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="neural-networks-for-time-series.html#cb6-1" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
-<span id="cb6-2"><a href="neural-networks-for-time-series.html#cb6-2" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="neural-networks-for-time-series.html#cb6-3" tabindex="-1"></a>Passenger <span class="ot">&lt;-</span> <span class="fu">ts</span>(USAirlines<span class="sc">$</span>Passengers, <span class="at">start =</span> <span class="dv">1990</span>, <span class="at">frequency =</span> <span class="dv">12</span>)</span>
-<span id="cb6-4"><a href="neural-networks-for-time-series.html#cb6-4" tabindex="-1"></a>plot_pass <span class="ot">&lt;-</span> <span class="fu">subset</span>(Passenger, <span class="at">end =</span> <span class="fu">length</span>(Passenger) <span class="sc">-</span> <span class="dv">12</span>)</span>
-<span id="cb6-5"><a href="neural-networks-for-time-series.html#cb6-5" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="neural-networks-for-time-series.html#cb6-6" tabindex="-1"></a><span class="fu">plot</span>(plot_pass, <span class="at">main =</span> <span class="st">&quot;US Airline Passengers Forecasts&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;Date&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Passengers (Thousands)&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">30000</span>,<span class="dv">80000</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1990</span>, <span class="dv">2009</span>))</span>
-<span id="cb6-7"><a href="neural-networks-for-time-series.html#cb6-7" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">ts</span>(nnet_for_auto, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2007</span>, <span class="dv">4</span>), <span class="at">frequency =</span> <span class="dv">12</span>), <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
-<span id="cb6-8"><a href="neural-networks-for-time-series.html#cb6-8" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">ts</span>(nnet_for_hand, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2007</span>, <span class="dv">4</span>), <span class="at">frequency =</span> <span class="dv">12</span>), <span class="at">col =</span> <span class="st">&quot;orange&quot;</span>)</span>
-<span id="cb6-9"><a href="neural-networks-for-time-series.html#cb6-9" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">2007.25</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<div class="sourceCode" id="cb581"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb581-1"><a href="neural-networks-for-time-series.html#cb581-1" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
+<span id="cb581-2"><a href="neural-networks-for-time-series.html#cb581-2" tabindex="-1"></a></span>
+<span id="cb581-3"><a href="neural-networks-for-time-series.html#cb581-3" tabindex="-1"></a>Passenger <span class="ot">&lt;-</span> <span class="fu">ts</span>(USAirlines<span class="sc">$</span>Passengers, <span class="at">start =</span> <span class="dv">1990</span>, <span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb581-4"><a href="neural-networks-for-time-series.html#cb581-4" tabindex="-1"></a>plot_pass <span class="ot">&lt;-</span> <span class="fu">subset</span>(Passenger, <span class="at">end =</span> <span class="fu">length</span>(Passenger) <span class="sc">-</span> <span class="dv">12</span>)</span>
+<span id="cb581-5"><a href="neural-networks-for-time-series.html#cb581-5" tabindex="-1"></a></span>
+<span id="cb581-6"><a href="neural-networks-for-time-series.html#cb581-6" tabindex="-1"></a><span class="fu">plot</span>(plot_pass, <span class="at">main =</span> <span class="st">&quot;US Airline Passengers Forecasts&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;Date&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Passengers (Thousands)&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">30000</span>,<span class="dv">80000</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1990</span>, <span class="dv">2009</span>))</span>
+<span id="cb581-7"><a href="neural-networks-for-time-series.html#cb581-7" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">ts</span>(nnet_for_auto, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2007</span>, <span class="dv">4</span>), <span class="at">frequency =</span> <span class="dv">12</span>), <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb581-8"><a href="neural-networks-for-time-series.html#cb581-8" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">ts</span>(nnet_for_hand, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2007</span>, <span class="dv">4</span>), <span class="at">frequency =</span> <span class="dv">12</span>), <span class="at">col =</span> <span class="st">&quot;orange&quot;</span>)</span>
+<span id="cb581-9"><a href="neural-networks-for-time-series.html#cb581-9" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">2007.25</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-116-1.png" width="672" /></p>
 <p>Since we created the forecasted values in the original scale ourselves, we will need to calculate the mean absolute error (MAE) and mean absolute percentage error (MAPE) ourselves.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="neural-networks-for-time-series.html#cb7-1" tabindex="-1"></a>NN_error_auto <span class="ot">&lt;-</span> test<span class="sc">$</span>Passengers <span class="sc">-</span> nnet_for_auto</span>
-<span id="cb7-2"><a href="neural-networks-for-time-series.html#cb7-2" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="neural-networks-for-time-series.html#cb7-3" tabindex="-1"></a>NN_MAE_auto <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(NN_error_auto))</span>
-<span id="cb7-4"><a href="neural-networks-for-time-series.html#cb7-4" tabindex="-1"></a>NN_MAPE_auto <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(NN_error_auto)<span class="sc">/</span><span class="fu">abs</span>(test<span class="sc">$</span>Passengers))<span class="sc">*</span><span class="dv">100</span></span>
-<span id="cb7-5"><a href="neural-networks-for-time-series.html#cb7-5" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="neural-networks-for-time-series.html#cb7-6" tabindex="-1"></a>NN_error_hand <span class="ot">&lt;-</span> test<span class="sc">$</span>Passengers <span class="sc">-</span> nnet_for_hand</span>
-<span id="cb7-7"><a href="neural-networks-for-time-series.html#cb7-7" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="neural-networks-for-time-series.html#cb7-8" tabindex="-1"></a>NN_MAE_hand <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(NN_error_hand))</span>
-<span id="cb7-9"><a href="neural-networks-for-time-series.html#cb7-9" tabindex="-1"></a>NN_MAPE_hand <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(NN_error_hand)<span class="sc">/</span><span class="fu">abs</span>(test<span class="sc">$</span>Passengers))<span class="sc">*</span><span class="dv">100</span></span>
-<span id="cb7-10"><a href="neural-networks-for-time-series.html#cb7-10" tabindex="-1"></a></span>
-<span id="cb7-11"><a href="neural-networks-for-time-series.html#cb7-11" tabindex="-1"></a>NN_MAE_auto</span></code></pre></div>
+<div class="sourceCode" id="cb582"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb582-1"><a href="neural-networks-for-time-series.html#cb582-1" tabindex="-1"></a>NN_error_auto <span class="ot">&lt;-</span> test<span class="sc">$</span>Passengers <span class="sc">-</span> nnet_for_auto</span>
+<span id="cb582-2"><a href="neural-networks-for-time-series.html#cb582-2" tabindex="-1"></a></span>
+<span id="cb582-3"><a href="neural-networks-for-time-series.html#cb582-3" tabindex="-1"></a>NN_MAE_auto <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(NN_error_auto))</span>
+<span id="cb582-4"><a href="neural-networks-for-time-series.html#cb582-4" tabindex="-1"></a>NN_MAPE_auto <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(NN_error_auto)<span class="sc">/</span><span class="fu">abs</span>(test<span class="sc">$</span>Passengers))<span class="sc">*</span><span class="dv">100</span></span>
+<span id="cb582-5"><a href="neural-networks-for-time-series.html#cb582-5" tabindex="-1"></a></span>
+<span id="cb582-6"><a href="neural-networks-for-time-series.html#cb582-6" tabindex="-1"></a>NN_error_hand <span class="ot">&lt;-</span> test<span class="sc">$</span>Passengers <span class="sc">-</span> nnet_for_hand</span>
+<span id="cb582-7"><a href="neural-networks-for-time-series.html#cb582-7" tabindex="-1"></a></span>
+<span id="cb582-8"><a href="neural-networks-for-time-series.html#cb582-8" tabindex="-1"></a>NN_MAE_hand <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(NN_error_hand))</span>
+<span id="cb582-9"><a href="neural-networks-for-time-series.html#cb582-9" tabindex="-1"></a>NN_MAPE_hand <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(NN_error_hand)<span class="sc">/</span><span class="fu">abs</span>(test<span class="sc">$</span>Passengers))<span class="sc">*</span><span class="dv">100</span></span>
+<span id="cb582-10"><a href="neural-networks-for-time-series.html#cb582-10" tabindex="-1"></a></span>
+<span id="cb582-11"><a href="neural-networks-for-time-series.html#cb582-11" tabindex="-1"></a>NN_MAE_auto</span></code></pre></div>
 <pre><code>## [1] 1268.752</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="neural-networks-for-time-series.html#cb9-1" tabindex="-1"></a>NN_MAPE_auto</span></code></pre></div>
+<div class="sourceCode" id="cb584"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb584-1"><a href="neural-networks-for-time-series.html#cb584-1" tabindex="-1"></a>NN_MAPE_auto</span></code></pre></div>
 <pre><code>## [1] 1.977935</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="neural-networks-for-time-series.html#cb11-1" tabindex="-1"></a>NN_MAE_hand</span></code></pre></div>
+<div class="sourceCode" id="cb586"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb586-1"><a href="neural-networks-for-time-series.html#cb586-1" tabindex="-1"></a>NN_MAE_hand</span></code></pre></div>
 <pre><code>## [1] 2022.353</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="neural-networks-for-time-series.html#cb13-1" tabindex="-1"></a>NN_MAPE_hand</span></code></pre></div>
+<div class="sourceCode" id="cb588"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb588-1"><a href="neural-networks-for-time-series.html#cb588-1" tabindex="-1"></a>NN_MAPE_hand</span></code></pre></div>
 <pre><code>## [1] 3.110601</code></pre>
 <p>It appears that the automatically selected neural network far out performed the model we selected by hand. Out of all of the models we have built on the data so far, this has the best MAE and MAPE.</p>
 </div>
@@ -397,34 +412,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">8.3.2</span> Python<a href="neural-networks-for-time-series.html#python-8" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>There are a variety of ways of building neural network models in Python. Below we will work with the MLPRegressor function to help specify exactly what we want in our time series neural network. Other options that exist are in the neuralforecast package, but have less control over the model.</p>
 <p>Let’s take a look at the method that is most closely related to the approach described above and the approach used in R. If we want to build a neural network with autoregressive terms and only one hidden layer, we can use the MLPRegressor function in Python. The downside of this function is that it doesn’t create the differences or the lagged variables for us. First, we will make a copy of the original dataset and save it for our data manipulations. Next, we have to calculate the seasonal difference of our Passengers variable using the shift function. From our new diff variable we need to calculate lagged terms again using this shift function. Here we calculate the first lag and the first three seasonal lags. For our dataset we also have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. We then split off our training and testing split like we have done previously and plot the resulting diff variable.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="neural-networks-for-time-series.html#cb15-1" tabindex="-1"></a>usair_nn <span class="op">=</span> usair</span>
-<span id="cb15-2"><a href="neural-networks-for-time-series.html#cb15-2" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="neural-networks-for-time-series.html#cb15-3" tabindex="-1"></a>usair_nn[<span class="st">&#39;diff&#39;</span>] <span class="op">=</span> usair_nn[<span class="st">&#39;Passengers&#39;</span>] <span class="op">-</span> usair_nn[<span class="st">&#39;Passengers&#39;</span>].shift(<span class="dv">12</span>)</span>
-<span id="cb15-4"><a href="neural-networks-for-time-series.html#cb15-4" tabindex="-1"></a>usair_nn[<span class="st">&#39;L1&#39;</span>] <span class="op">=</span> usair_nn[<span class="st">&#39;diff&#39;</span>].shift()</span>
-<span id="cb15-5"><a href="neural-networks-for-time-series.html#cb15-5" tabindex="-1"></a>usair_nn[<span class="st">&#39;L12&#39;</span>] <span class="op">=</span> usair_nn[<span class="st">&#39;diff&#39;</span>].shift(<span class="dv">12</span>)</span>
-<span id="cb15-6"><a href="neural-networks-for-time-series.html#cb15-6" tabindex="-1"></a>usair_nn[<span class="st">&#39;L24&#39;</span>] <span class="op">=</span> usair_nn[<span class="st">&#39;diff&#39;</span>].shift(<span class="dv">24</span>)</span>
-<span id="cb15-7"><a href="neural-networks-for-time-series.html#cb15-7" tabindex="-1"></a>usair_nn[<span class="st">&#39;L36&#39;</span>] <span class="op">=</span> usair_nn[<span class="st">&#39;diff&#39;</span>].shift(<span class="dv">36</span>)</span>
-<span id="cb15-8"><a href="neural-networks-for-time-series.html#cb15-8" tabindex="-1"></a></span>
-<span id="cb15-9"><a href="neural-networks-for-time-series.html#cb15-9" tabindex="-1"></a>usair_nn[<span class="st">&#39;Sep11&#39;</span>] <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb15-10"><a href="neural-networks-for-time-series.html#cb15-10" tabindex="-1"></a>usair_nn[<span class="st">&#39;Sep11&#39;</span>][<span class="dv">140</span>] <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb15-11"><a href="neural-networks-for-time-series.html#cb15-11" tabindex="-1"></a></span>
-<span id="cb15-12"><a href="neural-networks-for-time-series.html#cb15-12" tabindex="-1"></a>train_nn <span class="op">=</span> usair_nn.head(<span class="dv">207</span>)</span>
-<span id="cb15-13"><a href="neural-networks-for-time-series.html#cb15-13" tabindex="-1"></a>test_nn <span class="op">=</span> usair_nn.tail(<span class="dv">12</span>)</span>
-<span id="cb15-14"><a href="neural-networks-for-time-series.html#cb15-14" tabindex="-1"></a></span>
-<span id="cb15-15"><a href="neural-networks-for-time-series.html#cb15-15" tabindex="-1"></a>plt.cla()</span>
-<span id="cb15-16"><a href="neural-networks-for-time-series.html#cb15-16" tabindex="-1"></a>plt.plot(train_nn[<span class="st">&quot;diff&quot;</span>].dropna())</span>
-<span id="cb15-17"><a href="neural-networks-for-time-series.html#cb15-17" tabindex="-1"></a>plt.xlabel(<span class="st">&quot;Date&quot;</span>)</span>
-<span id="cb15-18"><a href="neural-networks-for-time-series.html#cb15-18" tabindex="-1"></a>plt.ylabel(<span class="st">&quot;Passengers&quot;</span>)</span>
-<span id="cb15-19"><a href="neural-networks-for-time-series.html#cb15-19" tabindex="-1"></a>plt.title(<span class="st">&quot;Seasonal Difference in Airline Passengers&quot;</span>)</span>
-<span id="cb15-20"><a href="neural-networks-for-time-series.html#cb15-20" tabindex="-1"></a>plt.show()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<div class="sourceCode" id="cb590"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb590-1"><a href="neural-networks-for-time-series.html#cb590-1" tabindex="-1"></a>usair_nn <span class="op">=</span> usair</span>
+<span id="cb590-2"><a href="neural-networks-for-time-series.html#cb590-2" tabindex="-1"></a></span>
+<span id="cb590-3"><a href="neural-networks-for-time-series.html#cb590-3" tabindex="-1"></a>usair_nn[<span class="st">&#39;diff&#39;</span>] <span class="op">=</span> usair_nn[<span class="st">&#39;Passengers&#39;</span>] <span class="op">-</span> usair_nn[<span class="st">&#39;Passengers&#39;</span>].shift(<span class="dv">12</span>)</span>
+<span id="cb590-4"><a href="neural-networks-for-time-series.html#cb590-4" tabindex="-1"></a>usair_nn[<span class="st">&#39;L1&#39;</span>] <span class="op">=</span> usair_nn[<span class="st">&#39;diff&#39;</span>].shift()</span>
+<span id="cb590-5"><a href="neural-networks-for-time-series.html#cb590-5" tabindex="-1"></a>usair_nn[<span class="st">&#39;L12&#39;</span>] <span class="op">=</span> usair_nn[<span class="st">&#39;diff&#39;</span>].shift(<span class="dv">12</span>)</span>
+<span id="cb590-6"><a href="neural-networks-for-time-series.html#cb590-6" tabindex="-1"></a>usair_nn[<span class="st">&#39;L24&#39;</span>] <span class="op">=</span> usair_nn[<span class="st">&#39;diff&#39;</span>].shift(<span class="dv">24</span>)</span>
+<span id="cb590-7"><a href="neural-networks-for-time-series.html#cb590-7" tabindex="-1"></a>usair_nn[<span class="st">&#39;L36&#39;</span>] <span class="op">=</span> usair_nn[<span class="st">&#39;diff&#39;</span>].shift(<span class="dv">36</span>)</span>
+<span id="cb590-8"><a href="neural-networks-for-time-series.html#cb590-8" tabindex="-1"></a></span>
+<span id="cb590-9"><a href="neural-networks-for-time-series.html#cb590-9" tabindex="-1"></a>usair_nn[<span class="st">&#39;Sep11&#39;</span>] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb590-10"><a href="neural-networks-for-time-series.html#cb590-10" tabindex="-1"></a>usair_nn[<span class="st">&#39;Sep11&#39;</span>][<span class="dv">140</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb590-11"><a href="neural-networks-for-time-series.html#cb590-11" tabindex="-1"></a></span>
+<span id="cb590-12"><a href="neural-networks-for-time-series.html#cb590-12" tabindex="-1"></a>train_nn <span class="op">=</span> usair_nn.head(<span class="dv">207</span>)</span>
+<span id="cb590-13"><a href="neural-networks-for-time-series.html#cb590-13" tabindex="-1"></a>test_nn <span class="op">=</span> usair_nn.tail(<span class="dv">12</span>)</span>
+<span id="cb590-14"><a href="neural-networks-for-time-series.html#cb590-14" tabindex="-1"></a></span>
+<span id="cb590-15"><a href="neural-networks-for-time-series.html#cb590-15" tabindex="-1"></a>plt.cla()</span>
+<span id="cb590-16"><a href="neural-networks-for-time-series.html#cb590-16" tabindex="-1"></a>plt.plot(train_nn[<span class="st">&quot;diff&quot;</span>].dropna())</span>
+<span id="cb590-17"><a href="neural-networks-for-time-series.html#cb590-17" tabindex="-1"></a>plt.xlabel(<span class="st">&quot;Date&quot;</span>)</span>
+<span id="cb590-18"><a href="neural-networks-for-time-series.html#cb590-18" tabindex="-1"></a>plt.ylabel(<span class="st">&quot;Passengers&quot;</span>)</span>
+<span id="cb590-19"><a href="neural-networks-for-time-series.html#cb590-19" tabindex="-1"></a>plt.title(<span class="st">&quot;Seasonal Difference in Airline Passengers&quot;</span>)</span>
+<span id="cb590-20"><a href="neural-networks-for-time-series.html#cb590-20" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-118-1.png" width="672" /></p>
 <p>Now that we have the data structured like we need it, we can build our neural network model. The inputs to the MLPRegressor function in Python are a data matrix for the predictor variables (X) and a target variable vector (y). For our predictor variable matrix we include all of the variables in our training dataset except the Month, Year, Passengers, and diff variables. Since the MLPRegressor function cannot handle missing values, we also remove the leading observations with missing values for the third seasonal lag leaving us with only 159 observations to build this model with. From there we use the MLPRegressor function with the .fit function on the end where we specify our predictor variable matrix and target variable vector. The hidden_layer_sizes = (3, ) option is telling the function to use one hidden layer with only 3 nodes within it. For more hidden layers, you just add the number of nodes you want in them after the 3 in the code.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="neural-networks-for-time-series.html#cb16-1" tabindex="-1"></a><span class="im">from</span> sklearn.neural_network <span class="im">import</span> MLPRegressor</span>
-<span id="cb16-2"><a href="neural-networks-for-time-series.html#cb16-2" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="neural-networks-for-time-series.html#cb16-3" tabindex="-1"></a>X <span class="op">=</span> train_nn.drop([<span class="st">&#39;Month&#39;</span>, <span class="st">&#39;Year&#39;</span>, <span class="st">&#39;Passengers&#39;</span>, <span class="st">&#39;diff&#39;</span>], axis <span class="op">=</span> <span class="dv">1</span>).tail(<span class="dv">159</span>)</span>
-<span id="cb16-4"><a href="neural-networks-for-time-series.html#cb16-4" tabindex="-1"></a>y <span class="op">=</span> train_nn[<span class="st">&#39;diff&#39;</span>].tail(<span class="dv">159</span>)</span>
-<span id="cb16-5"><a href="neural-networks-for-time-series.html#cb16-5" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="neural-networks-for-time-series.html#cb16-6" tabindex="-1"></a>model_nnet <span class="op">=</span> MLPRegressor(hidden_layer_sizes <span class="op">=</span> (<span class="dv">3</span>,), random_state<span class="op">=</span><span class="dv">123</span>, max_iter <span class="op">=</span> <span class="dv">100000</span>).fit(X, y)</span></code></pre></div>
+<div class="sourceCode" id="cb591"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb591-1"><a href="neural-networks-for-time-series.html#cb591-1" tabindex="-1"></a><span class="im">from</span> sklearn.neural_network <span class="im">import</span> MLPRegressor</span>
+<span id="cb591-2"><a href="neural-networks-for-time-series.html#cb591-2" tabindex="-1"></a></span>
+<span id="cb591-3"><a href="neural-networks-for-time-series.html#cb591-3" tabindex="-1"></a>X <span class="op">=</span> train_nn.drop([<span class="st">&#39;Month&#39;</span>, <span class="st">&#39;Year&#39;</span>, <span class="st">&#39;Passengers&#39;</span>, <span class="st">&#39;diff&#39;</span>], axis <span class="op">=</span> <span class="dv">1</span>).tail(<span class="dv">159</span>)</span>
+<span id="cb591-4"><a href="neural-networks-for-time-series.html#cb591-4" tabindex="-1"></a>y <span class="op">=</span> train_nn[<span class="st">&#39;diff&#39;</span>].tail(<span class="dv">159</span>)</span>
+<span id="cb591-5"><a href="neural-networks-for-time-series.html#cb591-5" tabindex="-1"></a></span>
+<span id="cb591-6"><a href="neural-networks-for-time-series.html#cb591-6" tabindex="-1"></a>model_nnet <span class="op">=</span> MLPRegressor(hidden_layer_sizes <span class="op">=</span> (<span class="dv">3</span>,), random_state<span class="op">=</span><span class="dv">123</span>, max_iter <span class="op">=</span> <span class="dv">100000</span>).fit(X, y)</span></code></pre></div>
 <p>The only downside of the functionality of building an autoregressive neural network in Python using the MLPRegressor function is that if we need to take differences for stationarity, the functions will not return the data back to its original scale like they do with StatsForecast models we used in previous sections. That means that the neural network forecasts would provide the following plot:</p>
 <div class="float">
 <img src="Diff_for.png" alt="NN" />
@@ -432,28 +447,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>These are forecasts on the differences and not the original scale of the data. We will need to put our data back on its original scale to see how well it forecasts our Passengers variable. First, to get the forecasts of the differences we use the predict function. For this dataset, we have our Sep11 variable that we forecast to have values of 0 for each of the 12 observations we are forecasting for airline passengers. We have already created this when we created our test dataset for our neural network.</p>
 <p>We then take the final 12 observations from our training dataset and add them to our forecasted differences. The predictions from the predict function should just be added to the real observation 12 time periods before because it is the forecasted difference between the current point in time and the point 12 months before. We can also plot these new forecasts now that we have them on the original scale of the data.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="neural-networks-for-time-series.html#cb17-1" tabindex="-1"></a>X_test <span class="op">=</span> test_nn.drop([<span class="st">&#39;Month&#39;</span>, <span class="st">&#39;Year&#39;</span>, <span class="st">&#39;Passengers&#39;</span>, <span class="st">&#39;diff&#39;</span>], axis <span class="op">=</span> <span class="dv">1</span>)</span>
-<span id="cb17-2"><a href="neural-networks-for-time-series.html#cb17-2" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="neural-networks-for-time-series.html#cb17-3" tabindex="-1"></a>training_tail <span class="op">=</span> train_nn.tail(<span class="dv">12</span>)</span>
-<span id="cb17-4"><a href="neural-networks-for-time-series.html#cb17-4" tabindex="-1"></a></span>
-<span id="cb17-5"><a href="neural-networks-for-time-series.html#cb17-5" tabindex="-1"></a>training_tail[<span class="st">&#39;NN_pred&#39;</span>] <span class="op">=</span> model_nnet.predict(X_test)</span>
-<span id="cb17-6"><a href="neural-networks-for-time-series.html#cb17-6" tabindex="-1"></a></span>
-<span id="cb17-7"><a href="neural-networks-for-time-series.html#cb17-7" tabindex="-1"></a>nn_pred <span class="op">=</span> training_tail[<span class="st">&#39;NN_pred&#39;</span>] <span class="op">+</span> training_tail[<span class="st">&#39;Passengers&#39;</span>]</span>
-<span id="cb17-8"><a href="neural-networks-for-time-series.html#cb17-8" tabindex="-1"></a></span>
-<span id="cb17-9"><a href="neural-networks-for-time-series.html#cb17-9" tabindex="-1"></a>nn_pred.index <span class="op">=</span> pd.to_datetime(pd.date_range(start<span class="op">=</span><span class="st">&#39;4/1/2007&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>))</span>
-<span id="cb17-10"><a href="neural-networks-for-time-series.html#cb17-10" tabindex="-1"></a></span>
-<span id="cb17-11"><a href="neural-networks-for-time-series.html#cb17-11" tabindex="-1"></a>test_nn[<span class="st">&#39;nn_pred&#39;</span>] <span class="op">=</span> nn_pred</span>
-<span id="cb17-12"><a href="neural-networks-for-time-series.html#cb17-12" tabindex="-1"></a></span>
-<span id="cb17-13"><a href="neural-networks-for-time-series.html#cb17-13" tabindex="-1"></a>plt.cla()</span>
-<span id="cb17-14"><a href="neural-networks-for-time-series.html#cb17-14" tabindex="-1"></a>fcast <span class="op">=</span> test_nn[<span class="st">&#39;nn_pred&#39;</span>]</span>
-<span id="cb17-15"><a href="neural-networks-for-time-series.html#cb17-15" tabindex="-1"></a>ax <span class="op">=</span> train_nn[<span class="st">&quot;Passengers&quot;</span>].plot(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
-<span id="cb17-16"><a href="neural-networks-for-time-series.html#cb17-16" tabindex="-1"></a>fcast.plot(ax <span class="op">=</span> ax,color <span class="op">=</span> <span class="st">&quot;orange&quot;</span>)</span>
-<span id="cb17-17"><a href="neural-networks-for-time-series.html#cb17-17" tabindex="-1"></a>plt.show()<span class="op">;</span></span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-10-3.png" width="1152" /></p>
+<div class="sourceCode" id="cb592"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb592-1"><a href="neural-networks-for-time-series.html#cb592-1" tabindex="-1"></a>X_test <span class="op">=</span> test_nn.drop([<span class="st">&#39;Month&#39;</span>, <span class="st">&#39;Year&#39;</span>, <span class="st">&#39;Passengers&#39;</span>, <span class="st">&#39;diff&#39;</span>], axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb592-2"><a href="neural-networks-for-time-series.html#cb592-2" tabindex="-1"></a></span>
+<span id="cb592-3"><a href="neural-networks-for-time-series.html#cb592-3" tabindex="-1"></a>training_tail <span class="op">=</span> train_nn.tail(<span class="dv">12</span>)</span>
+<span id="cb592-4"><a href="neural-networks-for-time-series.html#cb592-4" tabindex="-1"></a></span>
+<span id="cb592-5"><a href="neural-networks-for-time-series.html#cb592-5" tabindex="-1"></a>training_tail[<span class="st">&#39;NN_pred&#39;</span>] <span class="op">=</span> model_nnet.predict(X_test)</span>
+<span id="cb592-6"><a href="neural-networks-for-time-series.html#cb592-6" tabindex="-1"></a></span>
+<span id="cb592-7"><a href="neural-networks-for-time-series.html#cb592-7" tabindex="-1"></a>nn_pred <span class="op">=</span> training_tail[<span class="st">&#39;NN_pred&#39;</span>] <span class="op">+</span> training_tail[<span class="st">&#39;Passengers&#39;</span>]</span>
+<span id="cb592-8"><a href="neural-networks-for-time-series.html#cb592-8" tabindex="-1"></a></span>
+<span id="cb592-9"><a href="neural-networks-for-time-series.html#cb592-9" tabindex="-1"></a>nn_pred.index <span class="op">=</span> pd.to_datetime(pd.date_range(start<span class="op">=</span><span class="st">&#39;4/1/2007&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>))</span>
+<span id="cb592-10"><a href="neural-networks-for-time-series.html#cb592-10" tabindex="-1"></a></span>
+<span id="cb592-11"><a href="neural-networks-for-time-series.html#cb592-11" tabindex="-1"></a>test_nn[<span class="st">&#39;nn_pred&#39;</span>] <span class="op">=</span> nn_pred</span>
+<span id="cb592-12"><a href="neural-networks-for-time-series.html#cb592-12" tabindex="-1"></a></span>
+<span id="cb592-13"><a href="neural-networks-for-time-series.html#cb592-13" tabindex="-1"></a>plt.cla()</span>
+<span id="cb592-14"><a href="neural-networks-for-time-series.html#cb592-14" tabindex="-1"></a>fcast <span class="op">=</span> test_nn[<span class="st">&#39;nn_pred&#39;</span>]</span>
+<span id="cb592-15"><a href="neural-networks-for-time-series.html#cb592-15" tabindex="-1"></a>ax <span class="op">=</span> train_nn[<span class="st">&quot;Passengers&quot;</span>].plot(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
+<span id="cb592-16"><a href="neural-networks-for-time-series.html#cb592-16" tabindex="-1"></a>fcast.plot(ax <span class="op">=</span> ax,color <span class="op">=</span> <span class="st">&quot;orange&quot;</span>)</span>
+<span id="cb592-17"><a href="neural-networks-for-time-series.html#cb592-17" tabindex="-1"></a>plt.show()<span class="op">;</span></span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-120-3.png" width="1152" /></p>
 <p>We can use the forecasted values from the above code to evaluate these forecasts by comparing them to the test dataset.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="neural-networks-for-time-series.html#cb18-1" tabindex="-1"></a>error <span class="op">=</span> test_nn[<span class="st">&#39;Passengers&#39;</span>] <span class="op">-</span> test_nn[<span class="st">&#39;nn_pred&#39;</span>]</span>
-<span id="cb18-2"><a href="neural-networks-for-time-series.html#cb18-2" tabindex="-1"></a>MAPE <span class="op">=</span> np.mean(<span class="bu">abs</span>(error)<span class="op">/</span>test_nn[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
-<span id="cb18-3"><a href="neural-networks-for-time-series.html#cb18-3" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;NN MAE =&quot;</span>, np.mean(<span class="bu">abs</span>(error)), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">NN MAPE =&quot;</span>, MAPE)</span></code></pre></div>
+<div class="sourceCode" id="cb593"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb593-1"><a href="neural-networks-for-time-series.html#cb593-1" tabindex="-1"></a>error <span class="op">=</span> test_nn[<span class="st">&#39;Passengers&#39;</span>] <span class="op">-</span> test_nn[<span class="st">&#39;nn_pred&#39;</span>]</span>
+<span id="cb593-2"><a href="neural-networks-for-time-series.html#cb593-2" tabindex="-1"></a>MAPE <span class="op">=</span> np.mean(<span class="bu">abs</span>(error)<span class="op">/</span>test_nn[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb593-3"><a href="neural-networks-for-time-series.html#cb593-3" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;NN MAE =&quot;</span>, np.mean(<span class="bu">abs</span>(error)), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">NN MAPE =&quot;</span>, MAPE)</span></code></pre></div>
 <pre><code>## NN MAE = 1055.3752180711406 
 ## NN MAPE = 1.6430579092444202</code></pre>
 <p>These values look very comparable to the other models we have been building for our US airlines dataset.</p>
@@ -461,72 +476,72 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="sas-8" class="section level3 hasAnchor" number="8.3.3">
 <h3><span class="header-section-number">8.3.3</span> SAS<a href="neural-networks-for-time-series.html#sas-8" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>If we want to build a neural network with autoregressive terms, we can use the PROC HPNEURAL procedure in Python. The downside of this function is that it doesn’t create the differences or the lagged variables for us. First, we use the PROC EXPAND procedure to help create these variables for us. In PROC EXPAND we use the CONVERT statement to create a seasonal difference on our Passengers variable and call it diff. To calculate this we use the ( dif 12 ) option. From our new diff variable we need to use PROC EXPAND again to calculate lagged terms using this CONVERT statement along with the ( lag 1 ) option for the first lag and so on for other lags. Here we calculate the first lag and the first three seasonal lags. For our dataset we also have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise using the DATA step. We also need to create a dataset that blanks out all the values of the Passenger variable past in our test window. SAS needs a dataset with the training data as well as future values of the predictor variables to forecast.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="neural-networks-for-time-series.html#cb20-1" tabindex="-1"></a>proc expand data <span class="ot">=</span> usair out <span class="ot">=</span> usair_lag method <span class="ot">=</span> none;</span>
-<span id="cb20-2"><a href="neural-networks-for-time-series.html#cb20-2" tabindex="-1"></a>    id date;</span>
-<span id="cb20-3"><a href="neural-networks-for-time-series.html#cb20-3" tabindex="-1"></a>    convert Passengers <span class="ot">=</span> diff <span class="sc">/</span> transform <span class="ot">=</span> ( dif <span class="dv">12</span> );</span>
-<span id="cb20-4"><a href="neural-networks-for-time-series.html#cb20-4" tabindex="-1"></a>run;</span>
-<span id="cb20-5"><a href="neural-networks-for-time-series.html#cb20-5" tabindex="-1"></a></span>
-<span id="cb20-6"><a href="neural-networks-for-time-series.html#cb20-6" tabindex="-1"></a>proc expand data <span class="ot">=</span> usair_lag out <span class="ot">=</span> usair_lag method <span class="ot">=</span> none;</span>
-<span id="cb20-7"><a href="neural-networks-for-time-series.html#cb20-7" tabindex="-1"></a>    id date;</span>
-<span id="cb20-8"><a href="neural-networks-for-time-series.html#cb20-8" tabindex="-1"></a>    convert diff <span class="ot">=</span> L1 <span class="sc">/</span> transform <span class="ot">=</span> ( lag <span class="dv">1</span> );</span>
-<span id="cb20-9"><a href="neural-networks-for-time-series.html#cb20-9" tabindex="-1"></a>    convert diff <span class="ot">=</span> L12 <span class="sc">/</span> transform <span class="ot">=</span> ( lag <span class="dv">12</span> );</span>
-<span id="cb20-10"><a href="neural-networks-for-time-series.html#cb20-10" tabindex="-1"></a>    convert diff <span class="ot">=</span> L24 <span class="sc">/</span> transform <span class="ot">=</span> ( lag <span class="dv">24</span> );</span>
-<span id="cb20-11"><a href="neural-networks-for-time-series.html#cb20-11" tabindex="-1"></a>    convert diff <span class="ot">=</span> L36 <span class="sc">/</span> transform <span class="ot">=</span> ( lag <span class="dv">36</span> );</span>
-<span id="cb20-12"><a href="neural-networks-for-time-series.html#cb20-12" tabindex="-1"></a>run;</span>
-<span id="cb20-13"><a href="neural-networks-for-time-series.html#cb20-13" tabindex="-1"></a></span>
-<span id="cb20-14"><a href="neural-networks-for-time-series.html#cb20-14" tabindex="-1"></a>data usair_lag;</span>
-<span id="cb20-15"><a href="neural-networks-for-time-series.html#cb20-15" tabindex="-1"></a>    set usair_lag;</span>
-<span id="cb20-16"><a href="neural-networks-for-time-series.html#cb20-16" tabindex="-1"></a>    Sep11 <span class="ot">=</span> <span class="dv">0</span>;</span>
-<span id="cb20-17"><a href="neural-networks-for-time-series.html#cb20-17" tabindex="-1"></a>    <span class="cf">if</span> date <span class="ot">=</span> <span class="st">&#39;1sep2001&#39;</span>d then Sep11 <span class="ot">=</span> <span class="dv">1</span>;</span>
-<span id="cb20-18"><a href="neural-networks-for-time-series.html#cb20-18" tabindex="-1"></a>    <span class="cf">if</span> date <span class="sc">&gt;</span> <span class="st">&#39;1mar2007&#39;</span>d then Passengers <span class="ot">=</span> .;</span>
-<span id="cb20-19"><a href="neural-networks-for-time-series.html#cb20-19" tabindex="-1"></a>run;</span></code></pre></div>
+<div class="sourceCode" id="cb595"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb595-1"><a href="neural-networks-for-time-series.html#cb595-1" tabindex="-1"></a>proc expand data <span class="ot">=</span> usair out <span class="ot">=</span> usair_lag method <span class="ot">=</span> none;</span>
+<span id="cb595-2"><a href="neural-networks-for-time-series.html#cb595-2" tabindex="-1"></a>    id date;</span>
+<span id="cb595-3"><a href="neural-networks-for-time-series.html#cb595-3" tabindex="-1"></a>    convert Passengers <span class="ot">=</span> diff <span class="sc">/</span> transform <span class="ot">=</span> ( dif <span class="dv">12</span> );</span>
+<span id="cb595-4"><a href="neural-networks-for-time-series.html#cb595-4" tabindex="-1"></a>run;</span>
+<span id="cb595-5"><a href="neural-networks-for-time-series.html#cb595-5" tabindex="-1"></a></span>
+<span id="cb595-6"><a href="neural-networks-for-time-series.html#cb595-6" tabindex="-1"></a>proc expand data <span class="ot">=</span> usair_lag out <span class="ot">=</span> usair_lag method <span class="ot">=</span> none;</span>
+<span id="cb595-7"><a href="neural-networks-for-time-series.html#cb595-7" tabindex="-1"></a>    id date;</span>
+<span id="cb595-8"><a href="neural-networks-for-time-series.html#cb595-8" tabindex="-1"></a>    convert diff <span class="ot">=</span> L1 <span class="sc">/</span> transform <span class="ot">=</span> ( lag <span class="dv">1</span> );</span>
+<span id="cb595-9"><a href="neural-networks-for-time-series.html#cb595-9" tabindex="-1"></a>    convert diff <span class="ot">=</span> L12 <span class="sc">/</span> transform <span class="ot">=</span> ( lag <span class="dv">12</span> );</span>
+<span id="cb595-10"><a href="neural-networks-for-time-series.html#cb595-10" tabindex="-1"></a>    convert diff <span class="ot">=</span> L24 <span class="sc">/</span> transform <span class="ot">=</span> ( lag <span class="dv">24</span> );</span>
+<span id="cb595-11"><a href="neural-networks-for-time-series.html#cb595-11" tabindex="-1"></a>    convert diff <span class="ot">=</span> L36 <span class="sc">/</span> transform <span class="ot">=</span> ( lag <span class="dv">36</span> );</span>
+<span id="cb595-12"><a href="neural-networks-for-time-series.html#cb595-12" tabindex="-1"></a>run;</span>
+<span id="cb595-13"><a href="neural-networks-for-time-series.html#cb595-13" tabindex="-1"></a></span>
+<span id="cb595-14"><a href="neural-networks-for-time-series.html#cb595-14" tabindex="-1"></a>data usair_lag;</span>
+<span id="cb595-15"><a href="neural-networks-for-time-series.html#cb595-15" tabindex="-1"></a>    set usair_lag;</span>
+<span id="cb595-16"><a href="neural-networks-for-time-series.html#cb595-16" tabindex="-1"></a>    Sep11 <span class="ot">=</span> <span class="dv">0</span>;</span>
+<span id="cb595-17"><a href="neural-networks-for-time-series.html#cb595-17" tabindex="-1"></a>    <span class="cf">if</span> date <span class="ot">=</span> <span class="st">&#39;1sep2001&#39;</span>d then Sep11 <span class="ot">=</span> <span class="dv">1</span>;</span>
+<span id="cb595-18"><a href="neural-networks-for-time-series.html#cb595-18" tabindex="-1"></a>    <span class="cf">if</span> date <span class="sc">&gt;</span> <span class="st">&#39;1mar2007&#39;</span>d then Passengers <span class="ot">=</span> .;</span>
+<span id="cb595-19"><a href="neural-networks-for-time-series.html#cb595-19" tabindex="-1"></a>run;</span></code></pre></div>
 <p>Now that we have the data structured like we need it, we can build our neural network model. We use the PROC HPNEURAL procedure to build out the neural network. We put our dataset in that contains all of the lagged variables on the differences. The TARGET statement is used to define the target variable which is diff and not Passengers because of the need of stationarity. The level = int option defines the target variable as a continuous / interval variable and not a categorical one. The INPUT statement defines the predictor variables Sep11, L1, L12, L24, and L36. Again, we use the level = int option to show these are continuous and not categorical. With the HIDDEN statement we define the number of nodes we want in our one hidden layer. The TRAIN statement tells the procedure to train the model and the SCORE statement defines the dataset that saves out predictions.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="neural-networks-for-time-series.html#cb21-1" tabindex="-1"></a>proc hpneural data <span class="ot">=</span> usair_lag;</span>
-<span id="cb21-2"><a href="neural-networks-for-time-series.html#cb21-2" tabindex="-1"></a>    target diff <span class="sc">/</span> level<span class="ot">=</span>int;</span>
-<span id="cb21-3"><a href="neural-networks-for-time-series.html#cb21-3" tabindex="-1"></a>    input Sep11 L1 L12 L24 L36 <span class="sc">/</span> level<span class="ot">=</span>int;</span>
-<span id="cb21-4"><a href="neural-networks-for-time-series.html#cb21-4" tabindex="-1"></a>    hidden <span class="dv">3</span>;</span>
-<span id="cb21-5"><a href="neural-networks-for-time-series.html#cb21-5" tabindex="-1"></a>    train;</span>
-<span id="cb21-6"><a href="neural-networks-for-time-series.html#cb21-6" tabindex="-1"></a>    score out <span class="ot">=</span> pred_nn;</span>
-<span id="cb21-7"><a href="neural-networks-for-time-series.html#cb21-7" tabindex="-1"></a>run;</span></code></pre></div>
+<div class="sourceCode" id="cb596"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb596-1"><a href="neural-networks-for-time-series.html#cb596-1" tabindex="-1"></a>proc hpneural data <span class="ot">=</span> usair_lag;</span>
+<span id="cb596-2"><a href="neural-networks-for-time-series.html#cb596-2" tabindex="-1"></a>    target diff <span class="sc">/</span> level<span class="ot">=</span>int;</span>
+<span id="cb596-3"><a href="neural-networks-for-time-series.html#cb596-3" tabindex="-1"></a>    input Sep11 L1 L12 L24 L36 <span class="sc">/</span> level<span class="ot">=</span>int;</span>
+<span id="cb596-4"><a href="neural-networks-for-time-series.html#cb596-4" tabindex="-1"></a>    hidden <span class="dv">3</span>;</span>
+<span id="cb596-5"><a href="neural-networks-for-time-series.html#cb596-5" tabindex="-1"></a>    train;</span>
+<span id="cb596-6"><a href="neural-networks-for-time-series.html#cb596-6" tabindex="-1"></a>    score out <span class="ot">=</span> pred_nn;</span>
+<span id="cb596-7"><a href="neural-networks-for-time-series.html#cb596-7" tabindex="-1"></a>run;</span></code></pre></div>
 <p>The only downside of the functionality of building an autoregressive neural network in SAS using the HPNEURAL procedure is that if we need to take differences for stationarity, the functions will not return the data back to its original scale like they do with the ARIMA procedure we used in previous sections. That means that the neural network forecasts would provide the following plot:</p>
 <div class="float">
 <img src="Diff_for.png" alt="NN" />
 <div class="figcaption">NN</div>
 </div>
 <p>These are forecasts on the differences and not the original scale of the data. We will need to put our data back on its original scale to see how well it forecasts our Passengers variable. This will take some manipulation using DATA steps in SAS. First, we need to isolate out the 12 forecasted values in the dataset from the PROC HPNEURAL procedure. To do that we delete the first 207 observations with the IF and THEN functionality. These 12 forecasted differences correspond to the last 12 observations in our training dataset. These predictions should just be added to the real observation 12 time periods before because it is the forecasted difference between the current point in time and the point 12 months before. SO we use the same process and another DATA step to isolate the last 12 observations in the training dataset. Once we use a MERGE statement in another DATA step to get these columns together, we can add these variables together to get the forecasted values of the Passengers variable. Next, we use the MERGE statement in another DATA step to merge the original test dataset with the predicted values. Lastly, we calculate the absolute error and absolute percentage error for each observation with our last DATA step. To get the average of these calculations, we throw our test dataset into the PROC MEANS procedure where we specify these variables with the VAR statement.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="neural-networks-for-time-series.html#cb22-1" tabindex="-1"></a>data pred_nn;</span>
-<span id="cb22-2"><a href="neural-networks-for-time-series.html#cb22-2" tabindex="-1"></a>    set pred_nn;</span>
-<span id="cb22-3"><a href="neural-networks-for-time-series.html#cb22-3" tabindex="-1"></a>    <span class="cf">if</span> _n_ <span class="sc">&lt;</span> <span class="dv">208</span> then delete;</span>
-<span id="cb22-4"><a href="neural-networks-for-time-series.html#cb22-4" tabindex="-1"></a>run;</span>
-<span id="cb22-5"><a href="neural-networks-for-time-series.html#cb22-5" tabindex="-1"></a></span>
-<span id="cb22-6"><a href="neural-networks-for-time-series.html#cb22-6" tabindex="-1"></a>data train_tail;</span>
-<span id="cb22-7"><a href="neural-networks-for-time-series.html#cb22-7" tabindex="-1"></a>    set train;</span>
-<span id="cb22-8"><a href="neural-networks-for-time-series.html#cb22-8" tabindex="-1"></a>    <span class="cf">if</span> _n_ <span class="sc">&lt;</span> <span class="dv">196</span> then delete;</span>
-<span id="cb22-9"><a href="neural-networks-for-time-series.html#cb22-9" tabindex="-1"></a>run;</span>
-<span id="cb22-10"><a href="neural-networks-for-time-series.html#cb22-10" tabindex="-1"></a></span>
-<span id="cb22-11"><a href="neural-networks-for-time-series.html#cb22-11" tabindex="-1"></a>data nnet_f;</span>
-<span id="cb22-12"><a href="neural-networks-for-time-series.html#cb22-12" tabindex="-1"></a>    merge pred_nn train_tail;</span>
-<span id="cb22-13"><a href="neural-networks-for-time-series.html#cb22-13" tabindex="-1"></a>run;</span>
-<span id="cb22-14"><a href="neural-networks-for-time-series.html#cb22-14" tabindex="-1"></a></span>
-<span id="cb22-15"><a href="neural-networks-for-time-series.html#cb22-15" tabindex="-1"></a>data nnet_f;</span>
-<span id="cb22-16"><a href="neural-networks-for-time-series.html#cb22-16" tabindex="-1"></a>    set nnet_f;</span>
-<span id="cb22-17"><a href="neural-networks-for-time-series.html#cb22-17" tabindex="-1"></a>    Predict_NN <span class="ot">=</span> P_diff <span class="sc">+</span> Passengers;</span>
-<span id="cb22-18"><a href="neural-networks-for-time-series.html#cb22-18" tabindex="-1"></a>    keep Predict_NN;</span>
-<span id="cb22-19"><a href="neural-networks-for-time-series.html#cb22-19" tabindex="-1"></a>run;</span>
-<span id="cb22-20"><a href="neural-networks-for-time-series.html#cb22-20" tabindex="-1"></a></span>
-<span id="cb22-21"><a href="neural-networks-for-time-series.html#cb22-21" tabindex="-1"></a>data test;</span>
-<span id="cb22-22"><a href="neural-networks-for-time-series.html#cb22-22" tabindex="-1"></a>    merge test nnet_f;</span>
-<span id="cb22-23"><a href="neural-networks-for-time-series.html#cb22-23" tabindex="-1"></a>run;</span>
-<span id="cb22-24"><a href="neural-networks-for-time-series.html#cb22-24" tabindex="-1"></a></span>
-<span id="cb22-25"><a href="neural-networks-for-time-series.html#cb22-25" tabindex="-1"></a>data test;</span>
-<span id="cb22-26"><a href="neural-networks-for-time-series.html#cb22-26" tabindex="-1"></a>    set test;</span>
-<span id="cb22-27"><a href="neural-networks-for-time-series.html#cb22-27" tabindex="-1"></a>    AE_NN <span class="ot">=</span> <span class="fu">abs</span>(Passengers <span class="sc">-</span> Predict_NN);</span>
-<span id="cb22-28"><a href="neural-networks-for-time-series.html#cb22-28" tabindex="-1"></a>    APE_NN <span class="ot">=</span> <span class="fu">abs</span>(Passengers <span class="sc">-</span> Predict_NN)<span class="sc">/</span>Passengers<span class="sc">*</span><span class="dv">100</span>;</span>
-<span id="cb22-29"><a href="neural-networks-for-time-series.html#cb22-29" tabindex="-1"></a>run;</span>
-<span id="cb22-30"><a href="neural-networks-for-time-series.html#cb22-30" tabindex="-1"></a></span>
-<span id="cb22-31"><a href="neural-networks-for-time-series.html#cb22-31" tabindex="-1"></a>proc means data <span class="ot">=</span> test;</span>
-<span id="cb22-32"><a href="neural-networks-for-time-series.html#cb22-32" tabindex="-1"></a>    var AE_NN APE_NN;</span>
-<span id="cb22-33"><a href="neural-networks-for-time-series.html#cb22-33" tabindex="-1"></a>run;</span></code></pre></div>
+<div class="sourceCode" id="cb597"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb597-1"><a href="neural-networks-for-time-series.html#cb597-1" tabindex="-1"></a>data pred_nn;</span>
+<span id="cb597-2"><a href="neural-networks-for-time-series.html#cb597-2" tabindex="-1"></a>    set pred_nn;</span>
+<span id="cb597-3"><a href="neural-networks-for-time-series.html#cb597-3" tabindex="-1"></a>    <span class="cf">if</span> _n_ <span class="sc">&lt;</span> <span class="dv">208</span> then delete;</span>
+<span id="cb597-4"><a href="neural-networks-for-time-series.html#cb597-4" tabindex="-1"></a>run;</span>
+<span id="cb597-5"><a href="neural-networks-for-time-series.html#cb597-5" tabindex="-1"></a></span>
+<span id="cb597-6"><a href="neural-networks-for-time-series.html#cb597-6" tabindex="-1"></a>data train_tail;</span>
+<span id="cb597-7"><a href="neural-networks-for-time-series.html#cb597-7" tabindex="-1"></a>    set train;</span>
+<span id="cb597-8"><a href="neural-networks-for-time-series.html#cb597-8" tabindex="-1"></a>    <span class="cf">if</span> _n_ <span class="sc">&lt;</span> <span class="dv">196</span> then delete;</span>
+<span id="cb597-9"><a href="neural-networks-for-time-series.html#cb597-9" tabindex="-1"></a>run;</span>
+<span id="cb597-10"><a href="neural-networks-for-time-series.html#cb597-10" tabindex="-1"></a></span>
+<span id="cb597-11"><a href="neural-networks-for-time-series.html#cb597-11" tabindex="-1"></a>data nnet_f;</span>
+<span id="cb597-12"><a href="neural-networks-for-time-series.html#cb597-12" tabindex="-1"></a>    merge pred_nn train_tail;</span>
+<span id="cb597-13"><a href="neural-networks-for-time-series.html#cb597-13" tabindex="-1"></a>run;</span>
+<span id="cb597-14"><a href="neural-networks-for-time-series.html#cb597-14" tabindex="-1"></a></span>
+<span id="cb597-15"><a href="neural-networks-for-time-series.html#cb597-15" tabindex="-1"></a>data nnet_f;</span>
+<span id="cb597-16"><a href="neural-networks-for-time-series.html#cb597-16" tabindex="-1"></a>    set nnet_f;</span>
+<span id="cb597-17"><a href="neural-networks-for-time-series.html#cb597-17" tabindex="-1"></a>    Predict_NN <span class="ot">=</span> P_diff <span class="sc">+</span> Passengers;</span>
+<span id="cb597-18"><a href="neural-networks-for-time-series.html#cb597-18" tabindex="-1"></a>    keep Predict_NN;</span>
+<span id="cb597-19"><a href="neural-networks-for-time-series.html#cb597-19" tabindex="-1"></a>run;</span>
+<span id="cb597-20"><a href="neural-networks-for-time-series.html#cb597-20" tabindex="-1"></a></span>
+<span id="cb597-21"><a href="neural-networks-for-time-series.html#cb597-21" tabindex="-1"></a>data test;</span>
+<span id="cb597-22"><a href="neural-networks-for-time-series.html#cb597-22" tabindex="-1"></a>    merge test nnet_f;</span>
+<span id="cb597-23"><a href="neural-networks-for-time-series.html#cb597-23" tabindex="-1"></a>run;</span>
+<span id="cb597-24"><a href="neural-networks-for-time-series.html#cb597-24" tabindex="-1"></a></span>
+<span id="cb597-25"><a href="neural-networks-for-time-series.html#cb597-25" tabindex="-1"></a>data test;</span>
+<span id="cb597-26"><a href="neural-networks-for-time-series.html#cb597-26" tabindex="-1"></a>    set test;</span>
+<span id="cb597-27"><a href="neural-networks-for-time-series.html#cb597-27" tabindex="-1"></a>    AE_NN <span class="ot">=</span> <span class="fu">abs</span>(Passengers <span class="sc">-</span> Predict_NN);</span>
+<span id="cb597-28"><a href="neural-networks-for-time-series.html#cb597-28" tabindex="-1"></a>    APE_NN <span class="ot">=</span> <span class="fu">abs</span>(Passengers <span class="sc">-</span> Predict_NN)<span class="sc">/</span>Passengers<span class="sc">*</span><span class="dv">100</span>;</span>
+<span id="cb597-29"><a href="neural-networks-for-time-series.html#cb597-29" tabindex="-1"></a>run;</span>
+<span id="cb597-30"><a href="neural-networks-for-time-series.html#cb597-30" tabindex="-1"></a></span>
+<span id="cb597-31"><a href="neural-networks-for-time-series.html#cb597-31" tabindex="-1"></a>proc means data <span class="ot">=</span> test;</span>
+<span id="cb597-32"><a href="neural-networks-for-time-series.html#cb597-32" tabindex="-1"></a>    var AE_NN APE_NN;</span>
+<span id="cb597-33"><a href="neural-networks-for-time-series.html#cb597-33" tabindex="-1"></a>run;</span></code></pre></div>
 <div class="float">
 <img src="12_a_SAS.png" alt="NN" />
 <div class="figcaption">NN</div>
@@ -541,8 +556,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="prophet.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="prophet.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="weighted-and-combined-forecasts.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

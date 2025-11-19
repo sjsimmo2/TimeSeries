@@ -23,7 +23,7 @@
 <meta name="author" content="by Dr. Susan Simmons" />
 
 
-<meta name="date" content="2025-11-17" />
+<meta name="date" content="2025-11-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -238,6 +238,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7.2" data-path="prophet.html"><a href="prophet.html#forecasting-1"><i class="fa fa-check"></i><b>7.2</b> Forecasting</a></li>
 </ul></li>
+<li class="chapter" data-level="8" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html"><i class="fa fa-check"></i><b>8</b> Neural Networks for Time Series</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#structure"><i class="fa fa-check"></i><b>8.1</b> Structure</a></li>
+<li class="chapter" data-level="8.2" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#single-hidden-layer-neural-network"><i class="fa fa-check"></i><b>8.2</b> Single Hidden Layer Neural Network</a></li>
+<li class="chapter" data-level="8.3" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#time-series-neural-networks"><i class="fa fa-check"></i><b>8.3</b> Time Series Neural Networks</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#r-8"><i class="fa fa-check"></i><b>8.3.1</b> R</a></li>
+<li class="chapter" data-level="8.3.2" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#python-8"><i class="fa fa-check"></i><b>8.3.2</b> Python</a></li>
+<li class="chapter" data-level="8.3.3" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#sas-8"><i class="fa fa-check"></i><b>8.3.3</b> SAS</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html"><i class="fa fa-check"></i><b>9</b> Weighted and combined forecasts</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#simple-average"><i class="fa fa-check"></i><b>9.1</b> Simple Average</a>
+<ul>
+<li class="chapter" data-level="9.1.1" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#r-9"><i class="fa fa-check"></i><b>9.1.1</b> R</a></li>
+<li class="chapter" data-level="9.1.2" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#python-9"><i class="fa fa-check"></i><b>9.1.2</b> Python</a></li>
+<li class="chapter" data-level="9.1.3" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#sas-9"><i class="fa fa-check"></i><b>9.1.3</b> SAS</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#weighted-methods"><i class="fa fa-check"></i><b>9.2</b> Weighted Methods</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#r-10"><i class="fa fa-check"></i><b>9.2.1</b> R</a></li>
+<li class="chapter" data-level="9.2.2" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#python-10"><i class="fa fa-check"></i><b>9.2.2</b> Python</a></li>
+<li class="chapter" data-level="9.2.3" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#sas-10"><i class="fa fa-check"></i><b>9.2.3</b> SAS</a></li>
+</ul></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -309,9 +335,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb39-6"><a href="exponential-smoothing.html#cb39-6" tabindex="-1"></a><span class="co"># Computes accuracy statistics for SES model on steel data (test data)</span></span>
 <span id="cb39-7"><a href="exponential-smoothing.html#cb39-7" tabindex="-1"></a>fabletools<span class="sc">::</span><span class="fu">accuracy</span>(Steel.for, steel_ts)</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 10
-##   .model  .type    ME  RMSE   MAE   MPE  MAPE  MASE RMSSE    ACF1
-##   &lt;chr&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
-## 1 &quot;ETS(s… Test   468.  599.  486.  6.75  7.04  1.17  1.13 -0.0500</code></pre>
+##   .model                                      .type    ME  RMSE   MAE   MPE  MAPE  MASE RMSSE    ACF1
+##   &lt;chr&gt;                                       &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+## 1 &quot;ETS(steelshp ~ error(\&quot;A\&quot;) + trend(\&quot;N\&quot;… Test   468.  599.  486.  6.75  7.04  1.17  1.13 -0.0500</code></pre>
 </div>
 <div id="holt-esm" class="section level2 hasAnchor" number="3.2">
 <h2><span class="header-section-number">3.2</span> Holt ESM<a href="exponential-smoothing.html#holt-esm" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -416,12 +442,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##     gamma = 0.0001000455 
 ## 
 ##   Initial states:
-##   l[0]     b[0]      s[0]     s[-1]     s[-2]     s[-3]    s[-4]
-##  38409 159.5944 -1520.744 -2728.928 -117.3477 -4305.732 6420.735
-##     s[-5]    s[-6]    s[-7]    s[-8]    s[-9]    s[-10]
-##  6299.852 4002.381 1210.882 122.2352 2660.169 -6471.051
-##     s[-11]
-##  -5572.452
+##   l[0]     b[0]      s[0]     s[-1]     s[-2]     s[-3]    s[-4]    s[-5]    s[-6]    s[-7]    s[-8]
+##  38409 159.5944 -1520.744 -2728.928 -117.3477 -4305.732 6420.735 6299.852 4002.381 1210.882 122.2352
+##     s[-9]    s[-10]    s[-11]
+##  2660.169 -6471.051 -5572.452
 ## 
 ##   sigma^2:  4099578
 ## 
@@ -449,12 +473,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##     gamma = 0.0614166 
 ## 
 ##   Initial states:
-##      l[0]     b[0]      s[0]     s[-1]    s[-2]     s[-3]
-##  38328.12 132.2916 0.9879613 0.9516784 1.015964 0.9248462
-##     s[-4]    s[-5]    s[-6]    s[-7]     s[-8]    s[-9]
-##  1.127338 1.111153 1.063682 1.012367 0.9931891 1.041972
-##     s[-10]    s[-11]
-##  0.8832477 0.8866022
+##      l[0]     b[0]      s[0]     s[-1]    s[-2]     s[-3]    s[-4]    s[-5]    s[-6]    s[-7]
+##  38328.12 132.2916 0.9879613 0.9516784 1.015964 0.9248462 1.127338 1.111153 1.063682 1.012367
+##      s[-8]    s[-9]    s[-10]    s[-11]
+##  0.9931891 1.041972 0.8832477 0.8866022
 ## 
 ##   sigma^2:  0.0015
 ## 
@@ -487,13 +509,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb53-13"><a href="exponential-smoothing.html#cb53-13" tabindex="-1"></a></span>
 <span id="cb53-14"><a href="exponential-smoothing.html#cb53-14" tabindex="-1"></a>fabletools<span class="sc">::</span><span class="fu">accuracy</span>(air_fc, USAirlines_ts)</span></code></pre></div>
 <pre><code>## # A tibble: 5 × 10
-##   .model  .type     ME  RMSE   MAE    MPE  MAPE  MASE RMSSE  ACF1
-##   &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 Damped… Test  3351.  6251. 5238.  4.65   8.06 1.84  1.69  0.382
-## 2 HWAdd   Test  -175.  1462. 1259. -0.421  2.02 0.443 0.395 0.448
-## 3 HWMult  Test   467.  1319. 1110.  0.705  1.75 0.391 0.356 0.219
-## 4 Linear  Test   -67.3 5345. 4736. -0.789  7.62 1.67  1.44  0.436
-## 5 SES     Test  3346.  6248. 5236.  4.64   8.05 1.84  1.69  0.382</code></pre>
+##   .model        .type     ME  RMSE   MAE    MPE  MAPE  MASE RMSSE  ACF1
+##   &lt;chr&gt;         &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Damped Linear Test  3351.  6251. 5238.  4.65   8.06 1.84  1.69  0.382
+## 2 HWAdd         Test  -175.  1462. 1259. -0.421  2.02 0.443 0.395 0.448
+## 3 HWMult        Test   467.  1319. 1110.  0.705  1.75 0.391 0.356 0.219
+## 4 Linear        Test   -67.3 5345. 4736. -0.789  7.62 1.67  1.44  0.436
+## 5 SES           Test  3346.  6248. 5236.  4.64   8.05 1.84  1.69  0.382</code></pre>
 <p>Based upone this information, which model would you choose?</p>
 </div>
 <div id="ets" class="section level2 hasAnchor" number="3.5">
@@ -511,12 +533,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##     phi   = 0.979993 
 ## 
 ##   Initial states:
-##      l[0]     b[0]      s[0]     s[-1]     s[-2]     s[-3]
-##  38326.08 97.13345 0.9672127 0.9438917 0.9983376 0.9209977
-##     s[-4]    s[-5]    s[-6]    s[-7]    s[-8]    s[-9]    s[-10]
-##  1.132478 1.132414 1.079442 1.022098 1.000804 1.051137 0.8657376
-##     s[-11]
-##  0.8854499
+##      l[0]     b[0]      s[0]     s[-1]     s[-2]     s[-3]    s[-4]    s[-5]    s[-6]    s[-7]
+##  38326.08 97.13345 0.9672127 0.9438917 0.9983376 0.9209977 1.132478 1.132414 1.079442 1.022098
+##     s[-8]    s[-9]    s[-10]    s[-11]
+##  1.000804 1.051137 0.8657376 0.8854499
 ## 
 ##   sigma^2:  0.0014
 ## 
@@ -553,12 +573,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##     gamma = 0.001388497 
 ## 
 ##   Initial states:
-##      l[0]      s[0]     s[-1]     s[-2]     s[-3]    s[-4]
-##  41491.07 0.9705455 0.9480705 0.9988812 0.9158342 1.119004
-##     s[-5]    s[-6]    s[-7]    s[-8]    s[-9]    s[-10]
-##  1.126052 1.073332 1.022722 1.003232 1.057297 0.8713743
-##     s[-11]
-##  0.8936557
+##      l[0]      s[0]     s[-1]     s[-2]     s[-3]    s[-4]    s[-5]    s[-6]    s[-7]    s[-8]
+##  41491.07 0.9705455 0.9480705 0.9988812 0.9158342 1.119004 1.126052 1.073332 1.022722 1.003232
+##     s[-9]    s[-10]    s[-11]
+##  1.057297 0.8713743 0.8936557
 ## 
 ##   sigma^2:  0.0015
 ## 

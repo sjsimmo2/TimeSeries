@@ -23,7 +23,7 @@
 <meta name="author" content="by Dr. Susan Simmons" />
 
 
-<meta name="date" content="2025-11-17" />
+<meta name="date" content="2025-11-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -238,6 +238,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7.2" data-path="prophet.html"><a href="prophet.html#forecasting-1"><i class="fa fa-check"></i><b>7.2</b> Forecasting</a></li>
 </ul></li>
+<li class="chapter" data-level="8" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html"><i class="fa fa-check"></i><b>8</b> Neural Networks for Time Series</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#structure"><i class="fa fa-check"></i><b>8.1</b> Structure</a></li>
+<li class="chapter" data-level="8.2" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#single-hidden-layer-neural-network"><i class="fa fa-check"></i><b>8.2</b> Single Hidden Layer Neural Network</a></li>
+<li class="chapter" data-level="8.3" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#time-series-neural-networks"><i class="fa fa-check"></i><b>8.3</b> Time Series Neural Networks</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#r-8"><i class="fa fa-check"></i><b>8.3.1</b> R</a></li>
+<li class="chapter" data-level="8.3.2" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#python-8"><i class="fa fa-check"></i><b>8.3.2</b> Python</a></li>
+<li class="chapter" data-level="8.3.3" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#sas-8"><i class="fa fa-check"></i><b>8.3.3</b> SAS</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html"><i class="fa fa-check"></i><b>9</b> Weighted and combined forecasts</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#simple-average"><i class="fa fa-check"></i><b>9.1</b> Simple Average</a>
+<ul>
+<li class="chapter" data-level="9.1.1" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#r-9"><i class="fa fa-check"></i><b>9.1.1</b> R</a></li>
+<li class="chapter" data-level="9.1.2" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#python-9"><i class="fa fa-check"></i><b>9.1.2</b> Python</a></li>
+<li class="chapter" data-level="9.1.3" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#sas-9"><i class="fa fa-check"></i><b>9.1.3</b> SAS</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#weighted-methods"><i class="fa fa-check"></i><b>9.2</b> Weighted Methods</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#r-10"><i class="fa fa-check"></i><b>9.2.1</b> R</a></li>
+<li class="chapter" data-level="9.2.2" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#python-10"><i class="fa fa-check"></i><b>9.2.2</b> Python</a></li>
+<li class="chapter" data-level="9.2.3" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#sas-10"><i class="fa fa-check"></i><b>9.2.3</b> SAS</a></li>
+</ul></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -313,24 +339,15 @@ Y_t = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + Z_t
 ## Model: LM w/ ARIMA(3,0,0)(1,0,0)[12] errors 
 ## 
 ## Coefficients:
-##          ar1     ar2     ar3    sar1  fourier(K = 6)C1_12
-##       0.6409  0.1090  0.0866  0.3491            -4398.041
-## s.e.  0.0714  0.0829  0.0695  0.0744              407.575
-##       fourier(K = 6)S1_12  fourier(K = 6)C2_12
-##                 1131.4722             623.1931
-## s.e.             406.8423             247.1645
-##       fourier(K = 6)S2_12  fourier(K = 6)C3_12
-##                 -439.0598           -2578.0661
-## s.e.             247.2930             208.2801
-##       fourier(K = 6)S3_12  fourier(K = 6)C4_12
-##                -1306.9302             252.5545
-## s.e.             208.8032             188.8733
-##       fourier(K = 6)S4_12  fourier(K = 6)C5_12
-##                 -374.3603             947.0734
-## s.e.             188.8001             168.4445
-##       fourier(K = 6)S5_12  fourier(K = 6)C6_12  trend()
-##                -2140.5655            -340.8753  99.9567
-## s.e.             169.0065             112.9862  20.8172
+##          ar1     ar2     ar3    sar1  fourier(K = 6)C1_12  fourier(K = 6)S1_12  fourier(K = 6)C2_12
+##       0.6409  0.1090  0.0866  0.3491            -4398.041            1131.4722             623.1931
+## s.e.  0.0714  0.0829  0.0695  0.0744              407.575             406.8423             247.1645
+##       fourier(K = 6)S2_12  fourier(K = 6)C3_12  fourier(K = 6)S3_12  fourier(K = 6)C4_12
+##                 -439.0598           -2578.0661           -1306.9302             252.5545
+## s.e.             247.2930             208.2801             208.8032             188.8733
+##       fourier(K = 6)S4_12  fourier(K = 6)C5_12  fourier(K = 6)S5_12  fourier(K = 6)C6_12  trend()
+##                 -374.3603             947.0734           -2140.5655            -340.8753  99.9567
+## s.e.             188.8001             168.4445             169.0065             112.9862  20.8172
 ##          Sep11  intercept
 ##       3698.924  38175.713
 ## s.e.  2071.972   2077.692
@@ -351,24 +368,15 @@ Y_t = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + Z_t
 ## Model: LM w/ ARIMA(3,0,0)(1,0,0)[12] errors 
 ## 
 ## Coefficients:
-##          ar1     ar2     ar3    sar1  fourier(K = 6)C1_12
-##       0.6409  0.1090  0.0866  0.3491            -4398.041
-## s.e.  0.0714  0.0829  0.0695  0.0744              407.575
-##       fourier(K = 6)S1_12  fourier(K = 6)C2_12
-##                 1131.4722             623.1931
-## s.e.             406.8423             247.1645
-##       fourier(K = 6)S2_12  fourier(K = 6)C3_12
-##                 -439.0598           -2578.0661
-## s.e.             247.2930             208.2801
-##       fourier(K = 6)S3_12  fourier(K = 6)C4_12
-##                -1306.9302             252.5545
-## s.e.             208.8032             188.8733
-##       fourier(K = 6)S4_12  fourier(K = 6)C5_12
-##                 -374.3603             947.0734
-## s.e.             188.8001             168.4445
-##       fourier(K = 6)S5_12  fourier(K = 6)C6_12  trend()
-##                -2140.5655            -340.8753  99.9567
-## s.e.             169.0065             112.9862  20.8172
+##          ar1     ar2     ar3    sar1  fourier(K = 6)C1_12  fourier(K = 6)S1_12  fourier(K = 6)C2_12
+##       0.6409  0.1090  0.0866  0.3491            -4398.041            1131.4722             623.1931
+## s.e.  0.0714  0.0829  0.0695  0.0744              407.575             406.8423             247.1645
+##       fourier(K = 6)S2_12  fourier(K = 6)C3_12  fourier(K = 6)S3_12  fourier(K = 6)C4_12
+##                 -439.0598           -2578.0661           -1306.9302             252.5545
+## s.e.             247.2930             208.2801             208.8032             188.8733
+##       fourier(K = 6)S4_12  fourier(K = 6)C5_12  fourier(K = 6)S5_12  fourier(K = 6)C6_12  trend()
+##                 -374.3603             947.0734           -2140.5655            -340.8753  99.9567
+## s.e.             188.8001             168.4445             169.0065             112.9862  20.8172
 ##          Sep11  intercept
 ##       3698.924  38175.713
 ## s.e.  2071.972   2077.692
@@ -382,9 +390,9 @@ Y_t = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + Z_t
 <div class="sourceCode" id="cb502"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb502-1"><a href="dynamic-regression.html#cb502-1" tabindex="-1"></a><span class="fu">augment</span>(new_model) <span class="sc">%&gt;%</span></span>
 <span id="cb502-2"><a href="dynamic-regression.html#cb502-2" tabindex="-1"></a>  <span class="fu">features</span>(.innov, ljung_box, <span class="at">lag =</span> <span class="dv">36</span>, <span class="at">dof =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 3
-##   .model                                        lb_stat lb_pvalue
-##   &lt;chr&gt;                                           &lt;dbl&gt;     &lt;dbl&gt;
-## 1 ARIMA(Passengers ~ fourier(K = 6) + trend() …    25.2     0.831</code></pre>
+##   .model                                               lb_stat lb_pvalue
+##   &lt;chr&gt;                                                  &lt;dbl&gt;     &lt;dbl&gt;
+## 1 ARIMA(Passengers ~ fourier(K = 6) + trend() + Sep11)    25.2     0.831</code></pre>
 <p>We can see from the output above that our model now accounts for the outlier that we previously saw in our data. Notice how our model has changed slightly after accounting for this outlier. This will improve the forecasts going forward, even though we do not have any outliers in our test dataset.</p>
 <p>To forecast these values going forward, we need future values of our predictor variable. For this dataset, we have our Sep11 variable that we forecast to have values of 0 for each of the 12 observations we are forecasting for airline passengers. To do this we create another variable (of the same name) that has future values in our test dataset. We then use the forecast function with both the model and the test dataset as inputs. The forecast function will be expecting a test dataset that contains the Sep11 variable in it.</p>
 <div class="sourceCode" id="cb504"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb504-1"><a href="dynamic-regression.html#cb504-1" tabindex="-1"></a>test<span class="sc">$</span>Sep11 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">12</span>)</span>
@@ -515,12 +523,9 @@ Y_t = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + Z_t
 ## Model: LM w/ ARIMA(1,0,2) errors 
 ## 
 ## Coefficients:
-##          ar1     ma1     ma2  TVadverts  lag(TVadverts)
-##       0.5123  0.9169  0.4591     1.2527          0.1464
-## s.e.  0.1849  0.2051  0.1895     0.0588          0.0531
-##       intercept
-##          2.1554
-## s.e.     0.8595
+##          ar1     ma1     ma2  TVadverts  lag(TVadverts)  intercept
+##       0.5123  0.9169  0.4591     1.2527          0.1464     2.1554
+## s.e.  0.1849  0.2051  0.1895     0.0588          0.0531     0.8595
 ## 
 ## sigma^2 estimated as 0.2166:  log likelihood=-23.94
 ## AIC=61.88   AICc=65.38   BIC=73.7</code></pre>
@@ -529,9 +534,9 @@ Y_t = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + Z_t
 <div class="sourceCode" id="cb524"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb524-1"><a href="dynamic-regression.html#cb524-1" tabindex="-1"></a><span class="fu">augment</span>(fit_best) <span class="sc">%&gt;%</span></span>
 <span id="cb524-2"><a href="dynamic-regression.html#cb524-2" tabindex="-1"></a>  <span class="fu">features</span>(.innov, ljung_box, <span class="at">lag =</span> <span class="dv">36</span>, <span class="at">dof =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 3
-##   .model                                        lb_stat lb_pvalue
-##   &lt;chr&gt;                                           &lt;dbl&gt;     &lt;dbl&gt;
-## 1 ARIMA(Quotes ~ pdq(d = 0) + TVadverts + lag(…    13.7     0.999</code></pre>
+##   .model                                                  lb_stat lb_pvalue
+##   &lt;chr&gt;                                                     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 ARIMA(Quotes ~ pdq(d = 0) + TVadverts + lag(TVadverts))    13.7     0.999</code></pre>
 <p>Now let’s forecast the quotes for 3 months, assuming the TVadverts is 8:</p>
 <div class="sourceCode" id="cb526"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb526-1"><a href="dynamic-regression.html#cb526-1" tabindex="-1"></a>insurance_future <span class="ot">&lt;-</span> <span class="fu">new_data</span>(insurance, <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
 <span id="cb526-2"><a href="dynamic-regression.html#cb526-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">TVadverts =</span> <span class="dv">8</span>)</span>
