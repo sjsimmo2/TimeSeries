@@ -75,3 +75,12 @@ time-series-neural-networks
 r-8
 python-8
 sas-8
+weighted-and-combined-forecasts
+simple-average
+r-9
+python-9
+sas-9
+weighted-methods
+r-10
+python-10
+sas-10

@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 9 Weighted and combined forecasts | Time Series 1</title>
+  <meta name="description" content="Chapter 9 Weighted and combined forecasts | Time Series 1" />
+  <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 9 Weighted and combined forecasts | Time Series 1" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 9 Weighted and combined forecasts | Time Series 1" />
+  
+  
+  
+
+<meta name="author" content="by Dr. Susan Simmons" />
+
+
+<meta name="date" content="2025-11-19" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="neural-networks-for-time-series.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">TimeSeries</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Time series</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#other-plots"><i class="fa fa-check"></i><b>2.1</b> Other plots</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#time-series-decomposition"><i class="fa fa-check"></i><b>2.2</b> Time series decomposition</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction.html"><a href="introduction.html#stl-features"><i class="fa fa-check"></i><b>2.3</b> STL features</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction.html"><a href="introduction.html#missing-values"><i class="fa fa-check"></i><b>2.4</b> Missing values</a></li>
+<li class="chapter" data-level="2.5" data-path="introduction.html"><a href="introduction.html#python-code-and-results-for-time-series-plot"><i class="fa fa-check"></i><b>2.5</b> Python code and results for Time Series plot</a></li>
+<li class="chapter" data-level="2.6" data-path="introduction.html"><a href="introduction.html#sas-code-for-time-series-plot-and-decomposition"><i class="fa fa-check"></i><b>2.6</b> SAS code for time series plot and decomposition</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html"><i class="fa fa-check"></i><b>3</b> Exponential Smoothing</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#simple-exponential-smoothing"><i class="fa fa-check"></i><b>3.1</b> Simple Exponential Smoothing</a></li>
+<li class="chapter" data-level="3.2" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#holt-esm"><i class="fa fa-check"></i><b>3.2</b> Holt ESM</a></li>
+<li class="chapter" data-level="3.3" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#holt-winters"><i class="fa fa-check"></i><b>3.3</b> Holt-Winters</a></li>
+<li class="chapter" data-level="3.4" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#comparing-forecasts"><i class="fa fa-check"></i><b>3.4</b> Comparing forecasts</a></li>
+<li class="chapter" data-level="3.5" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#ets"><i class="fa fa-check"></i><b>3.5</b> ETS</a></li>
+<li class="chapter" data-level="3.6" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#python-code-for-exponential-smoothing"><i class="fa fa-check"></i><b>3.6</b> Python Code for Exponential Smoothing</a></li>
+<li class="chapter" data-level="3.7" data-path="exponential-smoothing.html"><a href="exponential-smoothing.html#sas-code-for-exponential-smoothing-models"><i class="fa fa-check"></i><b>3.7</b> SAS Code for Exponential Smoothing Models</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="arima.html"><a href="arima.html"><i class="fa fa-check"></i><b>4</b> ARIMA</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="arima.html"><a href="arima.html#stationarity"><i class="fa fa-check"></i><b>4.1</b> Stationarity</a></li>
+<li class="chapter" data-level="4.2" data-path="arima.html"><a href="arima.html#correlation-functions"><i class="fa fa-check"></i><b>4.2</b> Correlation Functions</a></li>
+<li class="chapter" data-level="4.3" data-path="arima.html"><a href="arima.html#autoregressive-models-ar"><i class="fa fa-check"></i><b>4.3</b> AutoRegressive Models (AR)</a></li>
+<li class="chapter" data-level="4.4" data-path="arima.html"><a href="arima.html#moving-average-model-ma"><i class="fa fa-check"></i><b>4.4</b> Moving Average model (MA)</a></li>
+<li class="chapter" data-level="4.5" data-path="arima.html"><a href="arima.html#white-noise"><i class="fa fa-check"></i><b>4.5</b> White noise</a></li>
+<li class="chapter" data-level="4.6" data-path="arima.html"><a href="arima.html#examples"><i class="fa fa-check"></i><b>4.6</b> Examples</a></li>
+<li class="chapter" data-level="4.7" data-path="arima.html"><a href="arima.html#forecasting"><i class="fa fa-check"></i><b>4.7</b> Forecasting</a></li>
+<li class="chapter" data-level="4.8" data-path="arima.html"><a href="arima.html#trend"><i class="fa fa-check"></i><b>4.8</b> Trend</a></li>
+<li class="chapter" data-level="4.9" data-path="arima.html"><a href="arima.html#python-code-for-armaarima-models"><i class="fa fa-check"></i><b>4.9</b> Python Code for ARMA/ARIMA models</a></li>
+<li class="chapter" data-level="4.10" data-path="arima.html"><a href="arima.html#sas-code-for-armaarima"><i class="fa fa-check"></i><b>4.10</b> SAS Code for ARMA/ARIMA</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="seasonal-arima.html"><a href="seasonal-arima.html"><i class="fa fa-check"></i><b>5</b> Seasonal ARIMA</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="seasonal-arima.html"><a href="seasonal-arima.html#seasonality"><i class="fa fa-check"></i><b>5.1</b> Seasonality</a></li>
+<li class="chapter" data-level="5.2" data-path="seasonal-arima.html"><a href="seasonal-arima.html#seasonal-unit-root-testing"><i class="fa fa-check"></i><b>5.2</b> Seasonal “Unit-Root” Testing</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="seasonal-arima.html"><a href="seasonal-arima.html#r"><i class="fa fa-check"></i><b>5.2.1</b> R</a></li>
+<li class="chapter" data-level="5.2.2" data-path="seasonal-arima.html"><a href="seasonal-arima.html#python"><i class="fa fa-check"></i><b>5.2.2</b> Python</a></li>
+<li class="chapter" data-level="5.2.3" data-path="seasonal-arima.html"><a href="seasonal-arima.html#sas"><i class="fa fa-check"></i><b>5.2.3</b> SAS</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="seasonal-arima.html"><a href="seasonal-arima.html#deterministic-solution"><i class="fa fa-check"></i><b>5.3</b> Deterministic Solution</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="seasonal-arima.html"><a href="seasonal-arima.html#r-1"><i class="fa fa-check"></i><b>5.3.1</b> R</a></li>
+<li class="chapter" data-level="5.3.2" data-path="seasonal-arima.html"><a href="seasonal-arima.html#python-1"><i class="fa fa-check"></i><b>5.3.2</b> Python</a></li>
+<li class="chapter" data-level="5.3.3" data-path="seasonal-arima.html"><a href="seasonal-arima.html#sas-1"><i class="fa fa-check"></i><b>5.3.3</b> SAS</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="seasonal-arima.html"><a href="seasonal-arima.html#fourier-transformations"><i class="fa fa-check"></i><b>5.4</b> Fourier Transformations</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="seasonal-arima.html"><a href="seasonal-arima.html#r-2"><i class="fa fa-check"></i><b>5.4.1</b> R</a></li>
+<li class="chapter" data-level="5.4.2" data-path="seasonal-arima.html"><a href="seasonal-arima.html#python-2"><i class="fa fa-check"></i><b>5.4.2</b> Python</a></li>
+<li class="chapter" data-level="5.4.3" data-path="seasonal-arima.html"><a href="seasonal-arima.html#sas-2"><i class="fa fa-check"></i><b>5.4.3</b> SAS</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="seasonal-arima.html"><a href="seasonal-arima.html#other-predictor-variables"><i class="fa fa-check"></i><b>5.5</b> Other Predictor Variables</a></li>
+<li class="chapter" data-level="5.6" data-path="seasonal-arima.html"><a href="seasonal-arima.html#stochastic-solution"><i class="fa fa-check"></i><b>5.6</b> Stochastic Solution</a>
+<ul>
+<li class="chapter" data-level="5.6.1" data-path="seasonal-arima.html"><a href="seasonal-arima.html#r-3"><i class="fa fa-check"></i><b>5.6.1</b> R</a></li>
+<li class="chapter" data-level="5.6.2" data-path="seasonal-arima.html"><a href="seasonal-arima.html#python-3"><i class="fa fa-check"></i><b>5.6.2</b> Python</a></li>
+<li class="chapter" data-level="5.6.3" data-path="seasonal-arima.html"><a href="seasonal-arima.html#sas-3"><i class="fa fa-check"></i><b>5.6.3</b> SAS</a></li>
+</ul></li>
+<li class="chapter" data-level="5.7" data-path="seasonal-arima.html"><a href="seasonal-arima.html#seasonal-arima-modeling"><i class="fa fa-check"></i><b>5.7</b> Seasonal ARIMA Modeling</a>
+<ul>
+<li class="chapter" data-level="5.7.1" data-path="seasonal-arima.html"><a href="seasonal-arima.html#r-4"><i class="fa fa-check"></i><b>5.7.1</b> R</a></li>
+<li class="chapter" data-level="5.7.2" data-path="seasonal-arima.html"><a href="seasonal-arima.html#python-4"><i class="fa fa-check"></i><b>5.7.2</b> Python</a></li>
+<li class="chapter" data-level="5.7.3" data-path="seasonal-arima.html"><a href="seasonal-arima.html#sas-4"><i class="fa fa-check"></i><b>5.7.3</b> SAS</a></li>
+</ul></li>
+<li class="chapter" data-level="5.8" data-path="seasonal-arima.html"><a href="seasonal-arima.html#multiplicative-vs.-additive"><i class="fa fa-check"></i><b>5.8</b> Multiplicative vs. Additive</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="dynamic-regression.html"><a href="dynamic-regression.html"><i class="fa fa-check"></i><b>6</b> Dynamic Regression</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="dynamic-regression.html"><a href="dynamic-regression.html#external-variables"><i class="fa fa-check"></i><b>6.1</b> External Variables</a></li>
+<li class="chapter" data-level="6.2" data-path="dynamic-regression.html"><a href="dynamic-regression.html#intervention-variables"><i class="fa fa-check"></i><b>6.2</b> Intervention Variables</a></li>
+<li class="chapter" data-level="6.3" data-path="dynamic-regression.html"><a href="dynamic-regression.html#point-intervention"><i class="fa fa-check"></i><b>6.3</b> Point Intervention</a></li>
+<li class="chapter" data-level="6.4" data-path="dynamic-regression.html"><a href="dynamic-regression.html#step-intervention"><i class="fa fa-check"></i><b>6.4</b> Step Intervention</a></li>
+<li class="chapter" data-level="6.5" data-path="dynamic-regression.html"><a href="dynamic-regression.html#ramp-intervention"><i class="fa fa-check"></i><b>6.5</b> Ramp Intervention</a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="dynamic-regression.html"><a href="dynamic-regression.html#r-5"><i class="fa fa-check"></i><b>6.5.1</b> R</a></li>
+<li class="chapter" data-level="6.5.2" data-path="dynamic-regression.html"><a href="dynamic-regression.html#python-5"><i class="fa fa-check"></i><b>6.5.2</b> Python</a></li>
+<li class="chapter" data-level="6.5.3" data-path="dynamic-regression.html"><a href="dynamic-regression.html#sas-5"><i class="fa fa-check"></i><b>6.5.3</b> SAS</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="dynamic-regression.html"><a href="dynamic-regression.html#predictor-variables"><i class="fa fa-check"></i><b>6.6</b> Predictor Variables</a>
+<ul>
+<li class="chapter" data-level="6.6.1" data-path="dynamic-regression.html"><a href="dynamic-regression.html#r-6"><i class="fa fa-check"></i><b>6.6.1</b> R</a></li>
+<li class="chapter" data-level="6.6.2" data-path="dynamic-regression.html"><a href="dynamic-regression.html#python-6"><i class="fa fa-check"></i><b>6.6.2</b> Python</a></li>
+<li class="chapter" data-level="6.6.3" data-path="dynamic-regression.html"><a href="dynamic-regression.html#sas-6"><i class="fa fa-check"></i><b>6.6.3</b> SAS</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="prophet.html"><a href="prophet.html"><i class="fa fa-check"></i><b>7</b> Prophet</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="prophet.html"><a href="prophet.html#components"><i class="fa fa-check"></i><b>7.1</b> Components</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="prophet.html"><a href="prophet.html#r-7"><i class="fa fa-check"></i><b>7.1.1</b> R</a></li>
+<li class="chapter" data-level="7.1.2" data-path="prophet.html"><a href="prophet.html#python-7"><i class="fa fa-check"></i><b>7.1.2</b> Python</a></li>
+<li class="chapter" data-level="7.1.3" data-path="prophet.html"><a href="prophet.html#sas-7"><i class="fa fa-check"></i><b>7.1.3</b> SAS</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="prophet.html"><a href="prophet.html#forecasting-1"><i class="fa fa-check"></i><b>7.2</b> Forecasting</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html"><i class="fa fa-check"></i><b>8</b> Neural Networks for Time Series</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#structure"><i class="fa fa-check"></i><b>8.1</b> Structure</a></li>
+<li class="chapter" data-level="8.2" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#single-hidden-layer-neural-network"><i class="fa fa-check"></i><b>8.2</b> Single Hidden Layer Neural Network</a></li>
+<li class="chapter" data-level="8.3" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#time-series-neural-networks"><i class="fa fa-check"></i><b>8.3</b> Time Series Neural Networks</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#r-8"><i class="fa fa-check"></i><b>8.3.1</b> R</a></li>
+<li class="chapter" data-level="8.3.2" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#python-8"><i class="fa fa-check"></i><b>8.3.2</b> Python</a></li>
+<li class="chapter" data-level="8.3.3" data-path="neural-networks-for-time-series.html"><a href="neural-networks-for-time-series.html#sas-8"><i class="fa fa-check"></i><b>8.3.3</b> SAS</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html"><i class="fa fa-check"></i><b>9</b> Weighted and combined forecasts</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#simple-average"><i class="fa fa-check"></i><b>9.1</b> Simple Average</a>
+<ul>
+<li class="chapter" data-level="9.1.1" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#r-9"><i class="fa fa-check"></i><b>9.1.1</b> R</a></li>
+<li class="chapter" data-level="9.1.2" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#python-9"><i class="fa fa-check"></i><b>9.1.2</b> Python</a></li>
+<li class="chapter" data-level="9.1.3" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#sas-9"><i class="fa fa-check"></i><b>9.1.3</b> SAS</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#weighted-methods"><i class="fa fa-check"></i><b>9.2</b> Weighted Methods</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#r-10"><i class="fa fa-check"></i><b>9.2.1</b> R</a></li>
+<li class="chapter" data-level="9.2.2" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#python-10"><i class="fa fa-check"></i><b>9.2.2</b> Python</a></li>
+<li class="chapter" data-level="9.2.3" data-path="weighted-and-combined-forecasts.html"><a href="weighted-and-combined-forecasts.html#sas-10"><i class="fa fa-check"></i><b>9.2.3</b> SAS</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series 1</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="weighted-and-combined-forecasts" class="section level1 hasAnchor" number="9">
+<h1><span class="header-section-number">Chapter 9</span> Weighted and combined forecasts<a href="weighted-and-combined-forecasts.html#weighted-and-combined-forecasts" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The thought process around weighted and combined forecasting (also called composite forecasting) is not new. The topic has been studied for years, and empirical evidence indicates that the combination of forecast methods tends to outperform most single forecast methods.</p>
+<p>It is better to average forecasts in hope that by so doing, the biases among the methods and/or forecasters will compensate for one another. As a result, forecasts developed using different methods are expected to be more useful in cases of high uncertainty. The method is especially relevant for long-range forecasting, where uncertainty is extremely high. Many different studies have been done to show the value of combining forecasts.</p>
+<p>There are two basic weighting methods:</p>
+<ul>
+<li><p>Simple Averaging of Forecasts</p></li>
+<li><p>Weighted Methods Based on some metric (for example, error)</p></li>
+</ul>
+<div id="simple-average" class="section level2 hasAnchor" number="9.1">
+<h2><span class="header-section-number">9.1</span> Simple Average<a href="weighted-and-combined-forecasts.html#simple-average" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The simple averaging approach is just as easy as it sounds. It takes the average of the forecasted values from each of the models being combined:</p>
+<p><span class="math display">\[
+Combined = \frac{1}{m} \sum_{i=1}^m FM_i
+\]</span></p>
+<p>where m is the number of forecasting methods and FM is an individual method used to forecast. Although this method is rather simple, it is still hard to beat in terms of ensemble methods.</p>
+<p>Let’s see how to do this in each of our softwares!</p>
+<div id="r-9" class="section level3 hasAnchor" number="9.1.1">
+<h3><span class="header-section-number">9.1.1</span> R<a href="weighted-and-combined-forecasts.html#r-9" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The model function framework in R makes composite forecasting rather easy. For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. This variable can be added to the formula structure of the models that allow external variables. Let’s build our best Holt-Winters exponential smoothing model, best seasonal ARIMAX model, and best Prophet model to combine together. In the model function we can put all three of these models in with the ETS, ARIMA, and prophet functions respectively. We name each of these models for easy viewing in the output. The options we used for each of these models are discussed in the previous sections where we introduced the models.</p>
+<p>Once the models are complete, we just use the mutate function to blend the results into a new forecast called combo which is just the simple average of the three models in the model function.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="weighted-and-combined-forecasts.html#cb1-1" tabindex="-1"></a><span class="fu">library</span>(fable.prophet)</span></code></pre></div>
+<pre><code>## Warning: package &#39;fable.prophet&#39; was built under R version 4.5.2</code></pre>
+<pre><code>## Loading required package: Rcpp</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="weighted-and-combined-forecasts.html#cb4-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb4-2"><a href="weighted-and-combined-forecasts.html#cb4-2" tabindex="-1"></a>train<span class="ot">&lt;-</span>train <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Sep11 =</span> <span class="fu">if_else</span>(date <span class="sc">&gt;=</span> <span class="fu">yearmonth</span>(<span class="st">&quot;2000 Sep&quot;</span>),<span class="dv">1</span>,<span class="dv">0</span>))</span>
+<span id="cb4-3"><a href="weighted-and-combined-forecasts.html#cb4-3" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="weighted-and-combined-forecasts.html#cb4-4" tabindex="-1"></a>model_all <span class="ot">&lt;-</span> train <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="weighted-and-combined-forecasts.html#cb4-5" tabindex="-1"></a>  <span class="fu">model</span>(</span>
+<span id="cb4-6"><a href="weighted-and-combined-forecasts.html#cb4-6" tabindex="-1"></a>    <span class="at">esm =</span> <span class="fu">ETS</span>(Passengers <span class="sc">~</span> <span class="fu">error</span>(<span class="st">&quot;M&quot;</span>) <span class="sc">+</span> <span class="fu">trend</span>(<span class="st">&quot;A&quot;</span>) <span class="sc">+</span> <span class="fu">season</span>(<span class="st">&quot;M&quot;</span>)),</span>
+<span id="cb4-7"><a href="weighted-and-combined-forecasts.html#cb4-7" tabindex="-1"></a>    <span class="at">arimax =</span> <span class="fu">ARIMA</span>(Passengers <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> Sep11 <span class="sc">+</span> <span class="fu">lag</span>(Sep11) <span class="sc">+</span> <span class="fu">lag</span>(Sep11, <span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb4-8"><a href="weighted-and-combined-forecasts.html#cb4-8" tabindex="-1"></a>                <span class="fu">lag</span>(Sep11, <span class="dv">3</span>) <span class="sc">+</span> <span class="fu">lag</span>(Sep11, <span class="dv">12</span>) <span class="sc">+</span> <span class="fu">pdq</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>)),</span>
+<span id="cb4-9"><a href="weighted-and-combined-forecasts.html#cb4-9" tabindex="-1"></a>    <span class="at">prophet =</span> <span class="fu">prophet</span>(Passengers <span class="sc">~</span> Sep11 <span class="sc">+</span></span>
+<span id="cb4-10"><a href="weighted-and-combined-forecasts.html#cb4-10" tabindex="-1"></a>                  <span class="fu">growth</span>(<span class="st">&quot;linear&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb4-11"><a href="weighted-and-combined-forecasts.html#cb4-11" tabindex="-1"></a>                  <span class="fu">season</span>(<span class="at">period =</span> <span class="st">&quot;year&quot;</span>, <span class="at">order =</span> <span class="dv">6</span>, <span class="at">type =</span> <span class="st">&quot;multiplicative&quot;</span>))</span>
+<span id="cb4-12"><a href="weighted-and-combined-forecasts.html#cb4-12" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb4-13"><a href="weighted-and-combined-forecasts.html#cb4-13" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">combo =</span> (esm <span class="sc">+</span> arimax <span class="sc">+</span> prophet) <span class="sc">/</span> <span class="dv">3</span>)</span></code></pre></div>
+<p>That is all we need to do to combine our forecasts together. To evaluate these forecasts we need to take them to the test dataset. To forecast these values going forward, we need future values of our predictor variable. For this dataset, we have our Sep11 variable that we forecast to have values of 0 for each of the 12 observations we are forecasting for airline passengers. To do this we create another variable (of the same name) that has future values in our test dataset. We then use the forecast function with both the model and the test dataset as inputs. The forecast function will be expecting a test dataset that contains the Sep11 variable in it. Lastly, we plot the forecasts using the autoplot functionality.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="weighted-and-combined-forecasts.html#cb5-1" tabindex="-1"></a>test<span class="sc">$</span>Sep11 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">12</span>)</span>
+<span id="cb5-2"><a href="weighted-and-combined-forecasts.html#cb5-2" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="weighted-and-combined-forecasts.html#cb5-3" tabindex="-1"></a>model_all_for <span class="ot">&lt;-</span> model_all <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="weighted-and-combined-forecasts.html#cb5-4" tabindex="-1"></a>  fabletools<span class="sc">::</span><span class="fu">forecast</span>(test)</span>
+<span id="cb5-5"><a href="weighted-and-combined-forecasts.html#cb5-5" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="weighted-and-combined-forecasts.html#cb5-6" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb5-7"><a href="weighted-and-combined-forecasts.html#cb5-7" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="weighted-and-combined-forecasts.html#cb5-8" tabindex="-1"></a>okabe_ito <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb5-9"><a href="weighted-and-combined-forecasts.html#cb5-9" tabindex="-1"></a>  <span class="st">&quot;#E69F00&quot;</span>, <span class="co"># orange</span></span>
+<span id="cb5-10"><a href="weighted-and-combined-forecasts.html#cb5-10" tabindex="-1"></a>  <span class="st">&quot;#56B4E9&quot;</span>, <span class="co"># sky blue</span></span>
+<span id="cb5-11"><a href="weighted-and-combined-forecasts.html#cb5-11" tabindex="-1"></a>  <span class="st">&quot;#009E73&quot;</span>, <span class="co"># bluish green</span></span>
+<span id="cb5-12"><a href="weighted-and-combined-forecasts.html#cb5-12" tabindex="-1"></a>  <span class="st">&quot;#CC79A7&quot;</span>  <span class="co"># reddish purple</span></span>
+<span id="cb5-13"><a href="weighted-and-combined-forecasts.html#cb5-13" tabindex="-1"></a>)</span>
+<span id="cb5-14"><a href="weighted-and-combined-forecasts.html#cb5-14" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="weighted-and-combined-forecasts.html#cb5-15" tabindex="-1"></a><span class="fu">scale_colour_manual</span>(<span class="at">values =</span> okabe_ito)</span></code></pre></div>
+<pre><code>## &lt;ggproto object: Class ScaleDiscrete, Scale, gg&gt;
+##     aesthetics: colour
+##     axis_order: function
+##     break_info: function
+##     break_positions: function
+##     breaks: waiver
+##     call: call
+##     clone: function
+##     dimension: function
+##     drop: TRUE
+##     expand: waiver
+##     get_breaks: function
+##     get_breaks_minor: function
+##     get_labels: function
+##     get_limits: function
+##     get_transformation: function
+##     guide: legend
+##     is_discrete: function
+##     is_empty: function
+##     labels: waiver
+##     limits: NULL
+##     make_sec_title: function
+##     make_title: function
+##     map: function
+##     map_df: function
+##     n.breaks.cache: NULL
+##     na.translate: TRUE
+##     na.value: grey50
+##     name: waiver
+##     palette: function
+##     palette.cache: NULL
+##     position: left
+##     range: environment
+##     rescale: function
+##     reset: function
+##     train: function
+##     train_df: function
+##     transform: function
+##     transform_df: function
+##     super:  &lt;ggproto object: Class ScaleDiscrete, Scale, gg&gt;</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="weighted-and-combined-forecasts.html#cb7-1" tabindex="-1"></a>model_all_for <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="weighted-and-combined-forecasts.html#cb7-2" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="weighted-and-combined-forecasts.html#cb7-3" tabindex="-1"></a>  <span class="fu">select</span>(date, .model, .mean) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-4"><a href="weighted-and-combined-forecasts.html#cb7-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> .mean, <span class="at">colour =</span> .model)) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="weighted-and-combined-forecasts.html#cb7-5" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb7-6"><a href="weighted-and-combined-forecasts.html#cb7-6" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> okabe_ito) <span class="sc">+</span></span>
+<span id="cb7-7"><a href="weighted-and-combined-forecasts.html#cb7-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;Airline Passengers&quot;</span>, </span>
+<span id="cb7-8"><a href="weighted-and-combined-forecasts.html#cb7-8" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Comparison of Forecasts&quot;</span>) <span class="sc">+</span></span>
+<span id="cb7-9"><a href="weighted-and-combined-forecasts.html#cb7-9" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as_date</span>(<span class="st">&quot;2007-03-15&quot;</span>), </span>
+<span id="cb7-10"><a href="weighted-and-combined-forecasts.html#cb7-10" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">&quot;orange&quot;</span>, </span>
+<span id="cb7-11"><a href="weighted-and-combined-forecasts.html#cb7-11" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">&quot;longdash&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>We can see above that the forecasts are all relatively similar to each other. However, the Prophet forecast seems a little higher than the rest. The combination forecast is in between that higher Prophet model and the ESM and seasonal ARIMAX models. Let’s use the accuracy function ranked by mean absolute percentage error (MAPE) using the arrange function to see if this average helps.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="weighted-and-combined-forecasts.html#cb8-1" tabindex="-1"></a>model_all_for <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="weighted-and-combined-forecasts.html#cb8-2" tabindex="-1"></a>  <span class="fu">accuracy</span>(test) <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="weighted-and-combined-forecasts.html#cb8-3" tabindex="-1"></a>  <span class="fu">arrange</span>(MAPE)</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 10
+##   .model  .type    ME  RMSE   MAE    MPE  MAPE  MASE RMSSE    ACF1
+##   &lt;chr&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+## 1 combo   Test  -207. 1130.  787. -0.350  1.23   NaN   NaN  0.269 
+## 2 prophet Test  -673. 1287.  921. -1.03   1.41   NaN   NaN -0.0997
+## 3 esm     Test   581. 1209. 1100.  0.897  1.71   NaN   NaN  0.156 
+## 4 arimax  Test  -512. 1594. 1239. -0.895  1.94   NaN   NaN  0.558</code></pre>
+<p>As we can see, the combined forecast far outperforms the other individual models in both mean absolute error (MAE) and MAPE. The only downside of the model function implementation is that the we cannot easily combine the autoregressive neural network forecast. This is only because our data was not stationary and we needed to take a difference before building the neural network. If our data was stationary, it would have been no problem to combine the neural network in the model function as well using the NNETAR function. However, taking an average ourselves is not too difficult.</p>
+<p>First, we take the individual forecasts from the 3 previous models that we built using the filter function for the specific model. Next, we need to build the autoregressive neural network. We do this in the same way we did when we introduced the neural network models in a previous section. We also calculate the forecasts similarly to what was done previously. Lastly, we just combine these now 4 forecasts together with a simple average and calculate the MAE and MAPE by hand for this new, second combined forecast.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="weighted-and-combined-forecasts.html#cb10-1" tabindex="-1"></a>esm_for <span class="ot">&lt;-</span> model_all_for <span class="sc">%&gt;%</span> <span class="fu">filter</span>(.model <span class="sc">==</span> <span class="st">&#39;esm&#39;</span>)</span>
+<span id="cb10-2"><a href="weighted-and-combined-forecasts.html#cb10-2" tabindex="-1"></a>arima_for <span class="ot">&lt;-</span> model_all_for <span class="sc">%&gt;%</span> <span class="fu">filter</span>(.model <span class="sc">==</span> <span class="st">&#39;arimax&#39;</span>)</span>
+<span id="cb10-3"><a href="weighted-and-combined-forecasts.html#cb10-3" tabindex="-1"></a>prophet_for <span class="ot">&lt;-</span> model_all_for <span class="sc">%&gt;%</span> <span class="fu">filter</span>(.model <span class="sc">==</span> <span class="st">&#39;prophet&#39;</span>)</span>
+<span id="cb10-4"><a href="weighted-and-combined-forecasts.html#cb10-4" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="weighted-and-combined-forecasts.html#cb10-5" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
+<span id="cb10-6"><a href="weighted-and-combined-forecasts.html#cb10-6" tabindex="-1"></a>model_nnet <span class="ot">&lt;-</span> train <span class="sc">%&gt;%</span></span>
+<span id="cb10-7"><a href="weighted-and-combined-forecasts.html#cb10-7" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff_Pass =</span> <span class="fu">difference</span>(Passengers, <span class="dv">12</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-8"><a href="weighted-and-combined-forecasts.html#cb10-8" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">NNETAR</span>(diff_Pass <span class="sc">~</span> Sep11))</span>
+<span id="cb10-9"><a href="weighted-and-combined-forecasts.html#cb10-9" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="weighted-and-combined-forecasts.html#cb10-10" tabindex="-1"></a>model_nnet_for <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(model_nnet, test)</span>
+<span id="cb10-11"><a href="weighted-and-combined-forecasts.html#cb10-11" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="weighted-and-combined-forecasts.html#cb10-12" tabindex="-1"></a>nnet_for <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">12</span>)</span>
+<span id="cb10-13"><a href="weighted-and-combined-forecasts.html#cb10-13" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="weighted-and-combined-forecasts.html#cb10-14" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>){</span>
+<span id="cb10-15"><a href="weighted-and-combined-forecasts.html#cb10-15" tabindex="-1"></a>  nnet_for[i] <span class="ot">&lt;-</span> train<span class="sc">$</span>Passengers[<span class="fu">length</span>(train<span class="sc">$</span>Passengers) <span class="sc">-</span> <span class="dv">12</span> <span class="sc">+</span> i] <span class="sc">+</span> model_nnet_for<span class="sc">$</span>.mean[i]</span>
+<span id="cb10-16"><a href="weighted-and-combined-forecasts.html#cb10-16" tabindex="-1"></a>}</span>
+<span id="cb10-17"><a href="weighted-and-combined-forecasts.html#cb10-17" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="weighted-and-combined-forecasts.html#cb10-18" tabindex="-1"></a>combo2_for <span class="ot">&lt;-</span> (esm_for<span class="sc">$</span>.mean <span class="sc">+</span> arima_for<span class="sc">$</span>.mean <span class="sc">+</span> prophet_for<span class="sc">$</span>.mean <span class="sc">+</span> nnet_for)<span class="sc">/</span><span class="dv">4</span></span>
+<span id="cb10-19"><a href="weighted-and-combined-forecasts.html#cb10-19" tabindex="-1"></a></span>
+<span id="cb10-20"><a href="weighted-and-combined-forecasts.html#cb10-20" tabindex="-1"></a>combo2_error <span class="ot">&lt;-</span> test<span class="sc">$</span>Passengers <span class="sc">-</span> combo2_for</span>
+<span id="cb10-21"><a href="weighted-and-combined-forecasts.html#cb10-21" tabindex="-1"></a></span>
+<span id="cb10-22"><a href="weighted-and-combined-forecasts.html#cb10-22" tabindex="-1"></a>combo2_MAE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(combo2_error))</span>
+<span id="cb10-23"><a href="weighted-and-combined-forecasts.html#cb10-23" tabindex="-1"></a>combo2_MAPE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(combo2_error)<span class="sc">/</span><span class="fu">abs</span>(test<span class="sc">$</span>Passengers))<span class="sc">*</span><span class="dv">100</span></span>
+<span id="cb10-24"><a href="weighted-and-combined-forecasts.html#cb10-24" tabindex="-1"></a></span>
+<span id="cb10-25"><a href="weighted-and-combined-forecasts.html#cb10-25" tabindex="-1"></a>combo2_MAE</span></code></pre></div>
+<pre><code>## [1] 880.1812</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="weighted-and-combined-forecasts.html#cb12-1" tabindex="-1"></a>combo2_MAPE</span></code></pre></div>
+<pre><code>## [1] 1.37332</code></pre>
+<p>Interestingly, as we see above, this combination of all 4 of the models is not as good in terms of MAE and MAPE as just the 3 models of the ESM, seasonal ARIMAX, and Prophet. Although the combination is better than any of the individual models, different combinations might be better than others.</p>
+</div>
+<div id="python-9" class="section level3 hasAnchor" number="9.1.2">
+<h3><span class="header-section-number">9.1.2</span> Python<a href="weighted-and-combined-forecasts.html#python-9" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The StatsForecast function in Python makes composite forecasting rather easy since we can build so many models so quickly. For our dataset we have a point intervention at September, 2001. We can easily create a binary variable that takes a value of 1 during that month and 0 otherwise. By using the merge function on our training dataset we can add this new variable to our training data for models that can use it. Let’s build our best Holt-Winters exponential smoothing model, best seasonal ARIMAX, best Prophet model, and best autoregressive neural network model for combining together. We create these models and their forecasts in the same way that we created them in each of the respective sections they were introduced. The options we used for each of these models are discussed in the previous sections where we introduced the models.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="weighted-and-combined-forecasts.html#cb14-1" tabindex="-1"></a><span class="im">from</span> statsforecast.models <span class="im">import</span> HoltWinters</span>
+<span id="cb14-2"><a href="weighted-and-combined-forecasts.html#cb14-2" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="weighted-and-combined-forecasts.html#cb14-3" tabindex="-1"></a>model_HW <span class="op">=</span> StatsForecast(models <span class="op">=</span> [HoltWinters(season_length <span class="op">=</span> <span class="dv">12</span>, error_type<span class="op">=</span><span class="st">&quot;M&quot;</span>)], freq <span class="op">=</span> <span class="st">&#39;ME&#39;</span>)</span>
+<span id="cb14-4"><a href="weighted-and-combined-forecasts.html#cb14-4" tabindex="-1"></a>model_HW.fit(df <span class="op">=</span> train_sf)</span></code></pre></div>
+<pre><code>## StatsForecast(models=[HoltWinters])</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="weighted-and-combined-forecasts.html#cb16-1" tabindex="-1"></a>model_HW_for <span class="op">=</span> model_HW.forecast(df <span class="op">=</span> train_sf, h <span class="op">=</span> <span class="dv">12</span>, level <span class="op">=</span> [<span class="dv">95</span>])</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\Lib\site-packages\statsforecast\core.py:492: FutureWarning: In a future version the predictions will have the id as a column. You can set the `NIXTLA_ID_AS_COL` environment variable to adopt the new behavior and to suppress this warning.
+##   warnings.warn(</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="weighted-and-combined-forecasts.html#cb18-1" tabindex="-1"></a><span class="im">from</span> prophet <span class="im">import</span> Prophet</span>
+<span id="cb18-2"><a href="weighted-and-combined-forecasts.html#cb18-2" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="weighted-and-combined-forecasts.html#cb18-3" tabindex="-1"></a>Sep11 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">207</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb18-4"><a href="weighted-and-combined-forecasts.html#cb18-4" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="weighted-and-combined-forecasts.html#cb18-5" tabindex="-1"></a>d_X <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: train.index, <span class="st">&#39;Sep11&#39;</span>: Sep11}</span>
+<span id="cb18-6"><a href="weighted-and-combined-forecasts.html#cb18-6" tabindex="-1"></a>X_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d_X)</span>
+<span id="cb18-7"><a href="weighted-and-combined-forecasts.html#cb18-7" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="weighted-and-combined-forecasts.html#cb18-8" tabindex="-1"></a>X_sf.loc[<span class="dv">140</span>, <span class="st">&#39;Sep11&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb18-9"><a href="weighted-and-combined-forecasts.html#cb18-9" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="weighted-and-combined-forecasts.html#cb18-10" tabindex="-1"></a>train_sf_X <span class="op">=</span> train_sf.merge(X_sf, how <span class="op">=</span> <span class="st">&#39;left&#39;</span>, on <span class="op">=</span> [<span class="st">&#39;unique_id&#39;</span>, <span class="st">&#39;ds&#39;</span>])</span>
+<span id="cb18-11"><a href="weighted-and-combined-forecasts.html#cb18-11" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="weighted-and-combined-forecasts.html#cb18-12" tabindex="-1"></a><span class="im">from</span> prophet <span class="im">import</span> Prophet</span>
+<span id="cb18-13"><a href="weighted-and-combined-forecasts.html#cb18-13" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="weighted-and-combined-forecasts.html#cb18-14" tabindex="-1"></a>m <span class="op">=</span> Prophet(seasonality_mode<span class="op">=</span><span class="st">&#39;multiplicative&#39;</span>)</span>
+<span id="cb18-15"><a href="weighted-and-combined-forecasts.html#cb18-15" tabindex="-1"></a>m.add_regressor(<span class="st">&#39;Sep11&#39;</span>)</span></code></pre></div>
+<pre><code>## &lt;prophet.forecaster.Prophet object at 0x0000022173BFB110&gt;</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="weighted-and-combined-forecasts.html#cb20-1" tabindex="-1"></a>m.fit(train_sf_X)</span></code></pre></div>
+<pre><code>## &lt;prophet.forecaster.Prophet object at 0x0000022173BFB110&gt;</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="weighted-and-combined-forecasts.html#cb22-1" tabindex="-1"></a>Sep11 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">12</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb22-2"><a href="weighted-and-combined-forecasts.html#cb22-2" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="weighted-and-combined-forecasts.html#cb22-3" tabindex="-1"></a>d_X <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: test.index, <span class="st">&#39;Sep11&#39;</span>: Sep11}</span>
+<span id="cb22-4"><a href="weighted-and-combined-forecasts.html#cb22-4" tabindex="-1"></a>X_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d_X)</span>
+<span id="cb22-5"><a href="weighted-and-combined-forecasts.html#cb22-5" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="weighted-and-combined-forecasts.html#cb22-6" tabindex="-1"></a>test_sf_X <span class="op">=</span> test_sf.merge(X_sf, how <span class="op">=</span> <span class="st">&#39;left&#39;</span>, on <span class="op">=</span> [<span class="st">&#39;unique_id&#39;</span>, <span class="st">&#39;ds&#39;</span>]) </span>
+<span id="cb22-7"><a href="weighted-and-combined-forecasts.html#cb22-7" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="weighted-and-combined-forecasts.html#cb22-8" tabindex="-1"></a>model_prophet_for <span class="op">=</span> m.predict(test_sf_X).tail(<span class="dv">12</span>)</span>
+<span id="cb22-9"><a href="weighted-and-combined-forecasts.html#cb22-9" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="weighted-and-combined-forecasts.html#cb22-10" tabindex="-1"></a><span class="im">from</span> statsforecast.models <span class="im">import</span> AutoARIMA, ARIMA</span>
+<span id="cb22-11"><a href="weighted-and-combined-forecasts.html#cb22-11" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="weighted-and-combined-forecasts.html#cb22-12" tabindex="-1"></a>Sep11 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">207</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb22-13"><a href="weighted-and-combined-forecasts.html#cb22-13" tabindex="-1"></a>Sep11_L1 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">207</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb22-14"><a href="weighted-and-combined-forecasts.html#cb22-14" tabindex="-1"></a>Sep11_L2 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">207</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb22-15"><a href="weighted-and-combined-forecasts.html#cb22-15" tabindex="-1"></a>Sep11_L3 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">207</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb22-16"><a href="weighted-and-combined-forecasts.html#cb22-16" tabindex="-1"></a>Sep11_L12 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">207</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb22-17"><a href="weighted-and-combined-forecasts.html#cb22-17" tabindex="-1"></a></span>
+<span id="cb22-18"><a href="weighted-and-combined-forecasts.html#cb22-18" tabindex="-1"></a>d_X <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: train.index, <span class="st">&#39;Sep11&#39;</span>: Sep11, <span class="st">&#39;Sep11_L1&#39;</span>: Sep11_L1, <span class="st">&#39;Sep11_L2&#39;</span>: Sep11_L2, <span class="st">&#39;Sep11_L3&#39;</span>: Sep11_L3, <span class="st">&#39;Sep11_L12&#39;</span>: Sep11_L12}</span>
+<span id="cb22-19"><a href="weighted-and-combined-forecasts.html#cb22-19" tabindex="-1"></a>X_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d_X)</span>
+<span id="cb22-20"><a href="weighted-and-combined-forecasts.html#cb22-20" tabindex="-1"></a></span>
+<span id="cb22-21"><a href="weighted-and-combined-forecasts.html#cb22-21" tabindex="-1"></a>X_sf.loc[<span class="dv">140</span>, <span class="st">&#39;Sep11&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb22-22"><a href="weighted-and-combined-forecasts.html#cb22-22" tabindex="-1"></a>X_sf.loc[<span class="dv">141</span>, <span class="st">&#39;Sep11_L1&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb22-23"><a href="weighted-and-combined-forecasts.html#cb22-23" tabindex="-1"></a>X_sf.loc[<span class="dv">142</span>, <span class="st">&#39;Sep11_L2&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb22-24"><a href="weighted-and-combined-forecasts.html#cb22-24" tabindex="-1"></a>X_sf.loc[<span class="dv">143</span>, <span class="st">&#39;Sep11_L3&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb22-25"><a href="weighted-and-combined-forecasts.html#cb22-25" tabindex="-1"></a>X_sf.loc[<span class="dv">152</span>, <span class="st">&#39;Sep11_L12&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb22-26"><a href="weighted-and-combined-forecasts.html#cb22-26" tabindex="-1"></a></span>
+<span id="cb22-27"><a href="weighted-and-combined-forecasts.html#cb22-27" tabindex="-1"></a>train_sf_X <span class="op">=</span> train_sf.merge(X_sf, how <span class="op">=</span> <span class="st">&#39;left&#39;</span>, on <span class="op">=</span> [<span class="st">&#39;unique_id&#39;</span>, <span class="st">&#39;ds&#39;</span>]) </span>
+<span id="cb22-28"><a href="weighted-and-combined-forecasts.html#cb22-28" tabindex="-1"></a></span>
+<span id="cb22-29"><a href="weighted-and-combined-forecasts.html#cb22-29" tabindex="-1"></a>model_ARIMAX <span class="op">=</span> StatsForecast(models <span class="op">=</span> [ARIMA(order <span class="op">=</span> (<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>), season_length <span class="op">=</span> <span class="dv">12</span>, seasonal_order <span class="op">=</span> (<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), include_drift <span class="op">=</span> <span class="va">True</span>)], freq <span class="op">=</span> <span class="st">&#39;ME&#39;</span>)</span>
+<span id="cb22-30"><a href="weighted-and-combined-forecasts.html#cb22-30" tabindex="-1"></a>model_ARIMAX.fit(df <span class="op">=</span> train_sf_X)</span></code></pre></div>
+<pre><code>## StatsForecast(models=[ARIMA])</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="weighted-and-combined-forecasts.html#cb24-1" tabindex="-1"></a>Sep11 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">12</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb24-2"><a href="weighted-and-combined-forecasts.html#cb24-2" tabindex="-1"></a>Sep11_L1 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">12</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb24-3"><a href="weighted-and-combined-forecasts.html#cb24-3" tabindex="-1"></a>Sep11_L2 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">12</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb24-4"><a href="weighted-and-combined-forecasts.html#cb24-4" tabindex="-1"></a>Sep11_L3 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">12</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb24-5"><a href="weighted-and-combined-forecasts.html#cb24-5" tabindex="-1"></a>Sep11_L12 <span class="op">=</span> np.full(shape <span class="op">=</span> <span class="dv">12</span>, fill_value <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb24-6"><a href="weighted-and-combined-forecasts.html#cb24-6" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="weighted-and-combined-forecasts.html#cb24-7" tabindex="-1"></a>d_X <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: test.index, <span class="st">&#39;Sep11&#39;</span>: Sep11, <span class="st">&#39;Sep11_L1&#39;</span>: Sep11_L1, <span class="st">&#39;Sep11_L2&#39;</span>: Sep11_L2, <span class="st">&#39;Sep11_L3&#39;</span>: Sep11_L3, <span class="st">&#39;Sep11_L12&#39;</span>: Sep11_L12}</span>
+<span id="cb24-8"><a href="weighted-and-combined-forecasts.html#cb24-8" tabindex="-1"></a>X_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d_X)</span>
+<span id="cb24-9"><a href="weighted-and-combined-forecasts.html#cb24-9" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="weighted-and-combined-forecasts.html#cb24-10" tabindex="-1"></a>test_sf_X <span class="op">=</span> test_sf.merge(X_sf, how <span class="op">=</span> <span class="st">&#39;left&#39;</span>, on <span class="op">=</span> [<span class="st">&#39;unique_id&#39;</span>, <span class="st">&#39;ds&#39;</span>]) </span>
+<span id="cb24-11"><a href="weighted-and-combined-forecasts.html#cb24-11" tabindex="-1"></a></span>
+<span id="cb24-12"><a href="weighted-and-combined-forecasts.html#cb24-12" tabindex="-1"></a>model_ARIMAX_for <span class="op">=</span> model_ARIMAX.forecast(df <span class="op">=</span> train_sf_X, h <span class="op">=</span> <span class="dv">12</span>, X_df <span class="op">=</span> X_sf, level <span class="op">=</span> [<span class="dv">95</span>])</span></code></pre></div>
+<pre><code>## C:\PROGRA~3\ANACON~1\Lib\site-packages\statsforecast\core.py:492: FutureWarning: In a future version the predictions will have the id as a column. You can set the `NIXTLA_ID_AS_COL` environment variable to adopt the new behavior and to suppress this warning.
+##   warnings.warn(</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="weighted-and-combined-forecasts.html#cb26-1" tabindex="-1"></a><span class="im">from</span> sklearn.neural_network <span class="im">import</span> MLPRegressor</span>
+<span id="cb26-2"><a href="weighted-and-combined-forecasts.html#cb26-2" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="weighted-and-combined-forecasts.html#cb26-3" tabindex="-1"></a>usair_nn <span class="op">=</span> usair</span>
+<span id="cb26-4"><a href="weighted-and-combined-forecasts.html#cb26-4" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="weighted-and-combined-forecasts.html#cb26-5" tabindex="-1"></a>usair_nn[<span class="st">&#39;diff&#39;</span>] <span class="op">=</span> usair_nn[<span class="st">&#39;Passengers&#39;</span>] <span class="op">-</span> usair_nn[<span class="st">&#39;Passengers&#39;</span>].shift(<span class="dv">12</span>)</span>
+<span id="cb26-6"><a href="weighted-and-combined-forecasts.html#cb26-6" tabindex="-1"></a>usair_nn[<span class="st">&#39;L1&#39;</span>] <span class="op">=</span> usair_nn[<span class="st">&#39;diff&#39;</span>].shift()</span>
+<span id="cb26-7"><a href="weighted-and-combined-forecasts.html#cb26-7" tabindex="-1"></a>usair_nn[<span class="st">&#39;L12&#39;</span>] <span class="op">=</span> usair_nn[<span class="st">&#39;diff&#39;</span>].shift(<span class="dv">12</span>)</span>
+<span id="cb26-8"><a href="weighted-and-combined-forecasts.html#cb26-8" tabindex="-1"></a>usair_nn[<span class="st">&#39;L24&#39;</span>] <span class="op">=</span> usair_nn[<span class="st">&#39;diff&#39;</span>].shift(<span class="dv">24</span>)</span>
+<span id="cb26-9"><a href="weighted-and-combined-forecasts.html#cb26-9" tabindex="-1"></a>usair_nn[<span class="st">&#39;L36&#39;</span>] <span class="op">=</span> usair_nn[<span class="st">&#39;diff&#39;</span>].shift(<span class="dv">36</span>)</span>
+<span id="cb26-10"><a href="weighted-and-combined-forecasts.html#cb26-10" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="weighted-and-combined-forecasts.html#cb26-11" tabindex="-1"></a>usair_nn[<span class="st">&#39;Sep11&#39;</span>] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb26-12"><a href="weighted-and-combined-forecasts.html#cb26-12" tabindex="-1"></a>usair_nn[<span class="st">&#39;Sep11&#39;</span>][<span class="dv">140</span>] <span class="op">=</span> <span class="dv">1</span></span></code></pre></div>
+<pre><code>## &lt;string&gt;:1: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+## You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+## A typical example is when you are setting values in a column of a DataFrame, like:
+## 
+## df[&quot;col&quot;][row_indexer] = value
+## 
+## Use `df.loc[row_indexer, &quot;col&quot;] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+## 
+## See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+## 
+## &lt;string&gt;:1: SettingWithCopyWarning: 
+## A value is trying to be set on a copy of a slice from a DataFrame
+## 
+## See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+## &lt;string&gt;:1: FutureWarning: Series.__setitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To set a value by position, use `ser.iloc[pos] = value`</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="weighted-and-combined-forecasts.html#cb28-1" tabindex="-1"></a>train_nn <span class="op">=</span> usair_nn.head(<span class="dv">207</span>)</span>
+<span id="cb28-2"><a href="weighted-and-combined-forecasts.html#cb28-2" tabindex="-1"></a>test_nn <span class="op">=</span> usair_nn.tail(<span class="dv">12</span>)</span>
+<span id="cb28-3"><a href="weighted-and-combined-forecasts.html#cb28-3" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="weighted-and-combined-forecasts.html#cb28-4" tabindex="-1"></a>X <span class="op">=</span> train_nn.drop([<span class="st">&#39;Month&#39;</span>, <span class="st">&#39;Year&#39;</span>, <span class="st">&#39;Passengers&#39;</span>, <span class="st">&#39;diff&#39;</span>], axis <span class="op">=</span> <span class="dv">1</span>).tail(<span class="dv">159</span>)</span>
+<span id="cb28-5"><a href="weighted-and-combined-forecasts.html#cb28-5" tabindex="-1"></a>y <span class="op">=</span> train_nn[<span class="st">&#39;diff&#39;</span>].tail(<span class="dv">159</span>)</span>
+<span id="cb28-6"><a href="weighted-and-combined-forecasts.html#cb28-6" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="weighted-and-combined-forecasts.html#cb28-7" tabindex="-1"></a>model_nnet <span class="op">=</span> MLPRegressor(hidden_layer_sizes <span class="op">=</span> (<span class="dv">3</span>,), random_state<span class="op">=</span><span class="dv">123</span>, max_iter <span class="op">=</span> <span class="dv">100000</span>).fit(X, y)</span>
+<span id="cb28-8"><a href="weighted-and-combined-forecasts.html#cb28-8" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="weighted-and-combined-forecasts.html#cb28-9" tabindex="-1"></a>X_test <span class="op">=</span> test_nn.drop([<span class="st">&#39;Month&#39;</span>, <span class="st">&#39;Year&#39;</span>, <span class="st">&#39;Passengers&#39;</span>, <span class="st">&#39;diff&#39;</span>], axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb28-10"><a href="weighted-and-combined-forecasts.html#cb28-10" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="weighted-and-combined-forecasts.html#cb28-11" tabindex="-1"></a>training_tail <span class="op">=</span> train_nn.tail(<span class="dv">12</span>)</span>
+<span id="cb28-12"><a href="weighted-and-combined-forecasts.html#cb28-12" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="weighted-and-combined-forecasts.html#cb28-13" tabindex="-1"></a>training_tail[<span class="st">&#39;NN_pred&#39;</span>] <span class="op">=</span> model_nnet.predict(X_test)</span></code></pre></div>
+<pre><code>## &lt;string&gt;:2: SettingWithCopyWarning: 
+## A value is trying to be set on a copy of a slice from a DataFrame.
+## Try using .loc[row_indexer,col_indexer] = value instead
+## 
+## See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="weighted-and-combined-forecasts.html#cb30-1" tabindex="-1"></a></span>
+<span id="cb30-2"><a href="weighted-and-combined-forecasts.html#cb30-2" tabindex="-1"></a>model_nnet_for <span class="op">=</span> training_tail[<span class="st">&#39;NN_pred&#39;</span>] <span class="op">+</span> training_tail[<span class="st">&#39;Passengers&#39;</span>]</span>
+<span id="cb30-3"><a href="weighted-and-combined-forecasts.html#cb30-3" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="weighted-and-combined-forecasts.html#cb30-4" tabindex="-1"></a>model_nnet_for.index <span class="op">=</span> pd.to_datetime(pd.date_range(start<span class="op">=</span><span class="st">&#39;4/1/2007&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>))</span></code></pre></div>
+<p>Now we have the forecasts from each of the models. Next, we just combine these now 4 forecasts together with a simple average and calculate the mean absolute error (MAE) and mean absolute percentage error (MAPE) by hand for this new, combined forecast.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="weighted-and-combined-forecasts.html#cb31-1" tabindex="-1"></a>model_combo_for <span class="op">=</span> (np.array(model_HW_for[<span class="st">&#39;HoltWinters&#39;</span>]) <span class="op">+</span> </span>
+<span id="cb31-2"><a href="weighted-and-combined-forecasts.html#cb31-2" tabindex="-1"></a>                   np.array(model_ARIMAX_for[<span class="st">&#39;ARIMA&#39;</span>]) <span class="op">+</span> </span>
+<span id="cb31-3"><a href="weighted-and-combined-forecasts.html#cb31-3" tabindex="-1"></a>                   np.array(model_prophet_for[<span class="st">&#39;yhat&#39;</span>]) <span class="op">+</span> </span>
+<span id="cb31-4"><a href="weighted-and-combined-forecasts.html#cb31-4" tabindex="-1"></a>                   np.array(model_nnet_for)) <span class="op">/</span> <span class="dv">4</span></span>
+<span id="cb31-5"><a href="weighted-and-combined-forecasts.html#cb31-5" tabindex="-1"></a>                   </span>
+<span id="cb31-6"><a href="weighted-and-combined-forecasts.html#cb31-6" tabindex="-1"></a>error <span class="op">=</span> np.array(test[<span class="st">&#39;Passengers&#39;</span>]) <span class="op">-</span> model_combo_for</span>
+<span id="cb31-7"><a href="weighted-and-combined-forecasts.html#cb31-7" tabindex="-1"></a>MAPE <span class="op">=</span> np.mean(<span class="bu">abs</span>(error)<span class="op">/</span>test_nn[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb31-8"><a href="weighted-and-combined-forecasts.html#cb31-8" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Combo MAE =&quot;</span>, np.mean(<span class="bu">abs</span>(error)), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">Combo MAPE =&quot;</span>, MAPE)</span></code></pre></div>
+<pre><code>## Combo MAE = 655.6995169751759 
+## Combo MAPE = 1.0157782910833884</code></pre>
+<p>As we can see, the combined forecast far outperforms the other individual models in both MAE and MAPE. Although the combination is better than any of the individual models, different combinations might be better than others and are worth trying out. Below we try excluding the neural network from our combined forecast.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="weighted-and-combined-forecasts.html#cb33-1" tabindex="-1"></a>model_combo_for <span class="op">=</span> (np.array(model_HW_for[<span class="st">&#39;HoltWinters&#39;</span>]) <span class="op">+</span> </span>
+<span id="cb33-2"><a href="weighted-and-combined-forecasts.html#cb33-2" tabindex="-1"></a>                   np.array(model_ARIMAX_for[<span class="st">&#39;ARIMA&#39;</span>]) <span class="op">+</span> </span>
+<span id="cb33-3"><a href="weighted-and-combined-forecasts.html#cb33-3" tabindex="-1"></a>                   np.array(model_prophet_for[<span class="st">&#39;yhat&#39;</span>])) <span class="op">/</span> <span class="dv">3</span></span>
+<span id="cb33-4"><a href="weighted-and-combined-forecasts.html#cb33-4" tabindex="-1"></a>                   </span>
+<span id="cb33-5"><a href="weighted-and-combined-forecasts.html#cb33-5" tabindex="-1"></a>error <span class="op">=</span> np.array(test[<span class="st">&#39;Passengers&#39;</span>]) <span class="op">-</span> model_combo_for</span>
+<span id="cb33-6"><a href="weighted-and-combined-forecasts.html#cb33-6" tabindex="-1"></a>MAPE <span class="op">=</span> np.mean(<span class="bu">abs</span>(error)<span class="op">/</span>test_nn[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb33-7"><a href="weighted-and-combined-forecasts.html#cb33-7" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Combo 2 MAE =&quot;</span>, np.mean(<span class="bu">abs</span>(error)), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">Combo 2 MAPE =&quot;</span>, MAPE)</span></code></pre></div>
+<pre><code>## Combo 2 MAE = 639.290604801452 
+## Combo 2 MAPE = 0.994906116316871</code></pre>
+<p>This combination seems to be even better than the combination with all four of the models we previously built.</p>
+</div>
+<div id="sas-9" class="section level3 hasAnchor" number="9.1.3">
+<h3><span class="header-section-number">9.1.3</span> SAS<a href="weighted-and-combined-forecasts.html#sas-9" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The way we have structured our SAS test dataset as. wehave been building the models will make it easy to calculate any combination forecast that we want. Due to large amount of code used to build each of these models, we will just use the code needed to combine the forecast below. We create these models and their forecasts in the same way that we created them in each of the respective sections they were introduced. The options we used for each of these models are discussed in the previous sections where we introduced the models.</p>
+<p>With the forecasts from each of the models we just combine these now 4 forecasts together with a simple average and calculate the mean absolute error (MAE) and mean absolute percentage error (MAPE) by hand for this new, combined forecast.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="weighted-and-combined-forecasts.html#cb35-1" tabindex="-1"></a>data test;</span>
+<span id="cb35-2"><a href="weighted-and-combined-forecasts.html#cb35-2" tabindex="-1"></a>    set test;</span>
+<span id="cb35-3"><a href="weighted-and-combined-forecasts.html#cb35-3" tabindex="-1"></a>    Predict_Combo <span class="ot">=</span> (Predict_HWM <span class="sc">+</span> Predict_ARIMAX <span class="sc">+</span> Predict_Proph <span class="sc">+</span> Predict_NN) <span class="sc">/</span> <span class="dv">4</span>;</span>
+<span id="cb35-4"><a href="weighted-and-combined-forecasts.html#cb35-4" tabindex="-1"></a>run;</span>
+<span id="cb35-5"><a href="weighted-and-combined-forecasts.html#cb35-5" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="weighted-and-combined-forecasts.html#cb35-6" tabindex="-1"></a>data test;</span>
+<span id="cb35-7"><a href="weighted-and-combined-forecasts.html#cb35-7" tabindex="-1"></a>    set test;</span>
+<span id="cb35-8"><a href="weighted-and-combined-forecasts.html#cb35-8" tabindex="-1"></a>    AE_Combo <span class="ot">=</span> <span class="fu">abs</span>(Passengers <span class="sc">-</span> Predict_Combo);</span>
+<span id="cb35-9"><a href="weighted-and-combined-forecasts.html#cb35-9" tabindex="-1"></a>    APE_Combo <span class="ot">=</span> <span class="fu">abs</span>(Passengers <span class="sc">-</span> Predict_Combo)<span class="sc">/</span>Passengers<span class="sc">*</span><span class="dv">100</span>;</span>
+<span id="cb35-10"><a href="weighted-and-combined-forecasts.html#cb35-10" tabindex="-1"></a>run;</span>
+<span id="cb35-11"><a href="weighted-and-combined-forecasts.html#cb35-11" tabindex="-1"></a></span>
+<span id="cb35-12"><a href="weighted-and-combined-forecasts.html#cb35-12" tabindex="-1"></a>proc means data <span class="ot">=</span> test;</span>
+<span id="cb35-13"><a href="weighted-and-combined-forecasts.html#cb35-13" tabindex="-1"></a>    var AE_HWM AE_ARIMAX  AE_Proph  AE_NN  AE_Combo APE_HWM APE_ARIMAX APE_Proph APE_NN APE_Combo;</span>
+<span id="cb35-14"><a href="weighted-and-combined-forecasts.html#cb35-14" tabindex="-1"></a>run;</span></code></pre></div>
+<div class="float">
+<img src="13_a_SAS.png" alt="SASOutput" />
+<div class="figcaption">SASOutput</div>
+</div>
+<p>As we can see, the combined forecast far outperforms the other individual models in both MAE and MAPE. Although the combination is better than any of the individual models, different combinations might be better than others and are worth trying out. Below we try excluding the neural network from our combined forecast.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="weighted-and-combined-forecasts.html#cb36-1" tabindex="-1"></a>data test;</span>
+<span id="cb36-2"><a href="weighted-and-combined-forecasts.html#cb36-2" tabindex="-1"></a>    set test;</span>
+<span id="cb36-3"><a href="weighted-and-combined-forecasts.html#cb36-3" tabindex="-1"></a>    Predict_Combo2 <span class="ot">=</span> (Predict_HWM <span class="sc">+</span> Predict_ARIMAX <span class="sc">+</span> Predict_Proph) <span class="sc">/</span> <span class="dv">3</span>;</span>
+<span id="cb36-4"><a href="weighted-and-combined-forecasts.html#cb36-4" tabindex="-1"></a>run;</span>
+<span id="cb36-5"><a href="weighted-and-combined-forecasts.html#cb36-5" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="weighted-and-combined-forecasts.html#cb36-6" tabindex="-1"></a>data test;</span>
+<span id="cb36-7"><a href="weighted-and-combined-forecasts.html#cb36-7" tabindex="-1"></a>    set test;</span>
+<span id="cb36-8"><a href="weighted-and-combined-forecasts.html#cb36-8" tabindex="-1"></a>    AE_Combo2 <span class="ot">=</span> <span class="fu">abs</span>(Passengers <span class="sc">-</span> Predict_Combo2);</span>
+<span id="cb36-9"><a href="weighted-and-combined-forecasts.html#cb36-9" tabindex="-1"></a>    APE_Combo2 <span class="ot">=</span> <span class="fu">abs</span>(Passengers <span class="sc">-</span> Predict_Combo2)<span class="sc">/</span>Passengers<span class="sc">*</span><span class="dv">100</span>;</span>
+<span id="cb36-10"><a href="weighted-and-combined-forecasts.html#cb36-10" tabindex="-1"></a>run;</span>
+<span id="cb36-11"><a href="weighted-and-combined-forecasts.html#cb36-11" tabindex="-1"></a></span>
+<span id="cb36-12"><a href="weighted-and-combined-forecasts.html#cb36-12" tabindex="-1"></a>proc means data <span class="ot">=</span> test;</span>
+<span id="cb36-13"><a href="weighted-and-combined-forecasts.html#cb36-13" tabindex="-1"></a>    var AE_HWM AE_ARIMAX  AE_Proph  AE_NN  AE_Combo AE_Combo2 APE_HWM APE_ARIMAX APE_Proph APE_NN APE_Combo APE_Combo2;</span>
+<span id="cb36-14"><a href="weighted-and-combined-forecasts.html#cb36-14" tabindex="-1"></a>run;</span></code></pre></div>
+<p>This combination didn’t perform as well as the combination of all 4 models, but still performed better than any single model.</p>
+<div class="float">
+<img src="13_b_SAS.png" alt="SASOutput" />
+<div class="figcaption">SASOutput</div>
+</div>
+</div>
+</div>
+<div id="weighted-methods" class="section level2 hasAnchor" number="9.2">
+<h2><span class="header-section-number">9.2</span> Weighted Methods<a href="weighted-and-combined-forecasts.html#weighted-methods" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The second method uses weighted averaging instead of simple averaging. In weighted averaging, the analysts select the weights to assign to the individual forecasts. Typically, we will assign weights that minimize the variance of the forecast errors over the training dataset. With only two forecasts, there is an easily derived mathematical solution to what these weights should be to minimize variance.</p>
+<p><span class="math display">\[
+Combined = w_1 FM_1 + w_2 FM_2
+\]</span></p>
+<p><span class="math display">\[
+w_1 = \frac{\sigma^2_2 - \rho \sigma_1 \sigma_2}{\sigma_1^2 + \sigma_2^2 - 2 \rho \sigma_1 \sigma_2}
+\]</span></p>
+<p><span class="math display">\[
+w_2 = 1 - w_1
+\]</span></p>
+<p>However, three or more forecasts being combined makes the mathematical equations much harder. In these scenarios we can use linear regression to help. We run a regression of the actual values of <span class="math inline">\(Y\)</span> against the forecasted values of <span class="math inline">\(Y\)</span> to let the regression choose the optimal weight for each:</p>
+<p><span class="math display">\[
+Y_t = w_1 FM_1 + w_2 FM_2 + w_3 FM_3
+\]</span></p>
+<p>where <span class="math inline">\(w_1 + w_2 + w_3 = 1\)</span>. To make sure that the weights sum to one, we can use some algebra. By setting the weight (coefficients) of one of the models to 1, we can then estimate the weights (coefficients) on the differences between the remaining models and the offset model.</p>
+<p><span class="math display">\[
+Y_t = FM_1 + w_2(FM_2 - FM_1) + w_3(FM_3 - FM_1)
+\]</span></p>
+<p>By working out the math algebraically, we can see that each forecast gets that weight, but the original forecast gets the weight of 1 minus the remaining weights.</p>
+<p><span class="math display">\[
+Y_t = (1 - w_2 - w_3)FM_1 + w_2 FM_2 + w_3 FM_3
+\]</span></p>
+<p>Let’s see how to do this in each of our softwares!</p>
+<div id="r-10" class="section level3 hasAnchor" number="9.2.1">
+<h3><span class="header-section-number">9.2.1</span> R<a href="weighted-and-combined-forecasts.html#r-10" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For our example we will use our three forecasts from our Holt-Winters exponential smoothing model, the seasonal ARIMAX model, and the Prophet model and the math we just worked out above. First, we need to gather the fitted values from each of our models over the training dataset. We can use the select function to isolate the model we want and the fitted function and .fitted element from the output. In R we can just use the lm function to get the linear regression with our training data Passenger variable as the target. To set the coefficient on the exponential smoothing model to 1 we use the offset function on the fitted values. We then use the I function to input the difference between the ARIMAX model and ESM model as well as the Prophet model and ESM model.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="weighted-and-combined-forecasts.html#cb37-1" tabindex="-1"></a>model_esm <span class="ot">&lt;-</span> model_all <span class="sc">%&gt;%</span> <span class="fu">select</span>(esm)</span>
+<span id="cb37-2"><a href="weighted-and-combined-forecasts.html#cb37-2" tabindex="-1"></a>esm_fit <span class="ot">&lt;-</span> <span class="fu">fitted</span>(model_esm)<span class="sc">$</span>.fitted</span>
+<span id="cb37-3"><a href="weighted-and-combined-forecasts.html#cb37-3" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="weighted-and-combined-forecasts.html#cb37-4" tabindex="-1"></a>model_arima <span class="ot">&lt;-</span> model_all <span class="sc">%&gt;%</span> <span class="fu">select</span>(arimax)</span>
+<span id="cb37-5"><a href="weighted-and-combined-forecasts.html#cb37-5" tabindex="-1"></a>arima_fit <span class="ot">&lt;-</span> <span class="fu">fitted</span>(model_arima)<span class="sc">$</span>.fitted</span>
+<span id="cb37-6"><a href="weighted-and-combined-forecasts.html#cb37-6" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="weighted-and-combined-forecasts.html#cb37-7" tabindex="-1"></a>model_prophet <span class="ot">&lt;-</span> model_all <span class="sc">%&gt;%</span> <span class="fu">select</span>(prophet)</span>
+<span id="cb37-8"><a href="weighted-and-combined-forecasts.html#cb37-8" tabindex="-1"></a>prophet_fit <span class="ot">&lt;-</span> <span class="fu">fitted</span>(model_prophet)<span class="sc">$</span>.fitted</span>
+<span id="cb37-9"><a href="weighted-and-combined-forecasts.html#cb37-9" tabindex="-1"></a></span>
+<span id="cb37-10"><a href="weighted-and-combined-forecasts.html#cb37-10" tabindex="-1"></a>model_wcombo <span class="ot">&lt;-</span> <span class="fu">lm</span>(train<span class="sc">$</span>Passengers <span class="sc">~</span> <span class="fu">offset</span>(esm_fit) <span class="sc">+</span> <span class="fu">I</span>(arima_fit <span class="sc">-</span> esm_fit) <span class="sc">+</span> <span class="fu">I</span>(prophet_fit <span class="sc">-</span> esm_fit) <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb37-11"><a href="weighted-and-combined-forecasts.html#cb37-11" tabindex="-1"></a></span>
+<span id="cb37-12"><a href="weighted-and-combined-forecasts.html#cb37-12" tabindex="-1"></a><span class="fu">summary</span>(model_wcombo)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = train$Passengers ~ offset(esm_fit) + I(arima_fit - 
+##     esm_fit) + I(prophet_fit - esm_fit) - 1)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -5039.1  -780.0   -93.5   665.6  4643.8 
+## 
+## Coefficients:
+##                          Estimate Std. Error t value Pr(&gt;|t|)    
+## I(arima_fit - esm_fit)    0.74876    0.04731  15.827  &lt; 2e-16 ***
+## I(prophet_fit - esm_fit)  0.22060    0.04331   5.094 8.31e-07 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1240 on 193 degrees of freedom
+##   (12 observations deleted due to missingness)
+## Multiple R-squared:  0.6261, Adjusted R-squared:  0.6222 
+## F-statistic: 161.6 on 2 and 193 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>From the summary above we can see the weighted coefficient on the seasonal ARIMAX model is 0.784, the weighted coefficient on the Prophet model is 0.154, and the ESM model would be 1 minus those two values. Let’s calculate the MAE and MAPE for this newly combined forecast against our test dataset.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="weighted-and-combined-forecasts.html#cb39-1" tabindex="-1"></a>coef_arima <span class="ot">&lt;-</span> <span class="fu">coef</span>(model_wcombo)[<span class="dv">1</span>]</span>
+<span id="cb39-2"><a href="weighted-and-combined-forecasts.html#cb39-2" tabindex="-1"></a>coef_prophet <span class="ot">&lt;-</span> <span class="fu">coef</span>(model_wcombo)[<span class="dv">2</span>]</span>
+<span id="cb39-3"><a href="weighted-and-combined-forecasts.html#cb39-3" tabindex="-1"></a>coef_esm <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> coef_arima <span class="sc">-</span> coef_prophet</span>
+<span id="cb39-4"><a href="weighted-and-combined-forecasts.html#cb39-4" tabindex="-1"></a></span>
+<span id="cb39-5"><a href="weighted-and-combined-forecasts.html#cb39-5" tabindex="-1"></a>combo3_for <span class="ot">&lt;-</span> (coef_esm<span class="sc">*</span>esm_for<span class="sc">$</span>.mean <span class="sc">+</span> </span>
+<span id="cb39-6"><a href="weighted-and-combined-forecasts.html#cb39-6" tabindex="-1"></a>               coef_arima<span class="sc">*</span>arima_for<span class="sc">$</span>.mean <span class="sc">+</span> </span>
+<span id="cb39-7"><a href="weighted-and-combined-forecasts.html#cb39-7" tabindex="-1"></a>               coef_prophet<span class="sc">*</span>prophet_for<span class="sc">$</span>.mean)</span>
+<span id="cb39-8"><a href="weighted-and-combined-forecasts.html#cb39-8" tabindex="-1"></a></span>
+<span id="cb39-9"><a href="weighted-and-combined-forecasts.html#cb39-9" tabindex="-1"></a>combo3_error <span class="ot">&lt;-</span> test<span class="sc">$</span>Passengers <span class="sc">-</span> combo3_for</span>
+<span id="cb39-10"><a href="weighted-and-combined-forecasts.html#cb39-10" tabindex="-1"></a></span>
+<span id="cb39-11"><a href="weighted-and-combined-forecasts.html#cb39-11" tabindex="-1"></a>combo3_MAE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(combo3_error))</span>
+<span id="cb39-12"><a href="weighted-and-combined-forecasts.html#cb39-12" tabindex="-1"></a>combo3_MAPE <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(combo3_error)<span class="sc">/</span><span class="fu">abs</span>(test<span class="sc">$</span>Passengers))<span class="sc">*</span><span class="dv">100</span></span>
+<span id="cb39-13"><a href="weighted-and-combined-forecasts.html#cb39-13" tabindex="-1"></a></span>
+<span id="cb39-14"><a href="weighted-and-combined-forecasts.html#cb39-14" tabindex="-1"></a>combo3_MAE</span></code></pre></div>
+<pre><code>## [1] 1051.427</code></pre>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="weighted-and-combined-forecasts.html#cb41-1" tabindex="-1"></a>combo3_MAPE</span></code></pre></div>
+<pre><code>## [1] 1.657882</code></pre>
+<p>Unfortunately, just because we have the minimum variance on the training data, doesn’t mean that we are good on the test dataset. In fact, in practice, the regular average of forecasts is very hard to beat.</p>
+</div>
+<div id="python-10" class="section level3 hasAnchor" number="9.2.2">
+<h3><span class="header-section-number">9.2.2</span> Python<a href="weighted-and-combined-forecasts.html#python-10" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For our example we will use our three forecasts from our Holt-Winters exponential smoothing model, the seasonal ARIMAX model, and the Prophet model and the math we just worked out above. First, we need to gather the fitted values from each of our models over the training dataset.</p>
+<p>We can use the .fitted_[0][0].model_get(“fitted”) function on the model object we want to obtain the predicted values on the training data for the Holt-Winters model. We can use the same function to get the residuals from the seasonal ARIMAX model, but need to subtract those from the original target variable to get the fitted values. For the Prophet model we use the .fitted function on our model object.</p>
+<p>In Python we can just use the glm function to get the linear regression with our training data Passenger variable as the target. To constrain the coefficients in the model we use the .fit_constrained function instead of just .fit. Inside that function we can define our constraint that all of the coefficients (written as the variable names) sum to 1. Then we just use the summary function to look at the results.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="weighted-and-combined-forecasts.html#cb43-1" tabindex="-1"></a>esm_fit <span class="op">=</span> model_HW.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;fitted&quot;</span>)</span>
+<span id="cb43-2"><a href="weighted-and-combined-forecasts.html#cb43-2" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="weighted-and-combined-forecasts.html#cb43-3" tabindex="-1"></a>arima_fit <span class="op">=</span> model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;x&quot;</span>) <span class="op">-</span> model_ARIMAX.fitted_[<span class="dv">0</span>][<span class="dv">0</span>].model_.get(<span class="st">&quot;residuals&quot;</span>)</span>
+<span id="cb43-4"><a href="weighted-and-combined-forecasts.html#cb43-4" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="weighted-and-combined-forecasts.html#cb43-5" tabindex="-1"></a>prophet_fit <span class="op">=</span> np.array(m.predict()[<span class="st">&#39;yhat&#39;</span>].head(<span class="dv">207</span>))</span>
+<span id="cb43-6"><a href="weighted-and-combined-forecasts.html#cb43-6" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="weighted-and-combined-forecasts.html#cb43-7" tabindex="-1"></a>d <span class="op">=</span> {<span class="st">&#39;Passengers&#39;</span>: train[<span class="st">&#39;Passengers&#39;</span>], <span class="st">&#39;esm_fit&#39;</span>: esm_fit, <span class="st">&quot;arima_fit&quot;</span>: arima_fit, <span class="st">&quot;prophet_fit&quot;</span>: prophet_fit}</span>
+<span id="cb43-8"><a href="weighted-and-combined-forecasts.html#cb43-8" tabindex="-1"></a>train_wcombo <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d)</span>
+<span id="cb43-9"><a href="weighted-and-combined-forecasts.html#cb43-9" tabindex="-1"></a></span>
+<span id="cb43-10"><a href="weighted-and-combined-forecasts.html#cb43-10" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb43-11"><a href="weighted-and-combined-forecasts.html#cb43-11" tabindex="-1"></a></span>
+<span id="cb43-12"><a href="weighted-and-combined-forecasts.html#cb43-12" tabindex="-1"></a>model_wcombo <span class="op">=</span> smf.glm(<span class="st">&quot;Passengers ~ esm_fit + arima_fit + prophet_fit - 1&quot;</span>, data <span class="op">=</span> train_wcombo).fit_constrained(<span class="st">&quot;esm_fit + arima_fit + prophet_fit = 1&quot;</span>)</span>
+<span id="cb43-13"><a href="weighted-and-combined-forecasts.html#cb43-13" tabindex="-1"></a></span>
+<span id="cb43-14"><a href="weighted-and-combined-forecasts.html#cb43-14" tabindex="-1"></a>model_wcombo.summary()</span></code></pre></div>
+<table class="simpletable">
+<caption>Generalized Linear Model Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>      <td>Passengers</td>    <th>  No. Observations:  </th>   <td>   207</td>  
+</tr>
+<tr>
+  <th>Model:</th>                  <td>GLM</td>       <th>  Df Residuals:      </th>   <td>   205</td>  
+</tr>
+<tr>
+  <th>Model Family:</th>        <td>Gaussian</td>     <th>  Df Model:          </th>   <td>     1</td>  
+</tr>
+<tr>
+  <th>Link Function:</th>       <td>Identity</td>     <th>  Scale:             </th> <td>1.8754e+06</td>
+</tr>
+<tr>
+  <th>Method:</th>                <td>IRLS</td>       <th>  Log-Likelihood:    </th>  <td> -1787.7</td> 
+</tr>
+<tr>
+  <th>Date:</th>            <td>Wed, 19 Nov 2025</td> <th>  Deviance:          </th> <td>3.8445e+08</td>
+</tr>
+<tr>
+  <th>Time:</th>                <td>11:57:41</td>     <th>  Pearson chi2:      </th>  <td>3.84e+08</td> 
+</tr>
+<tr>
+  <th>No. Iterations:</th>          <td>1</td>        <th>  Pseudo R-squ. (CS):</th>   <td> 1.000</td>  
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>                     </th>      <td> </td>    
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+       <td></td>          <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>esm_fit</th>     <td>    0.0550</td> <td>    0.052</td> <td>    1.057</td> <td> 0.290</td> <td>   -0.047</td> <td>    0.157</td>
+</tr>
+<tr>
+  <th>arima_fit</th>   <td>    0.7458</td> <td>    0.065</td> <td>   11.484</td> <td> 0.000</td> <td>    0.618</td> <td>    0.873</td>
+</tr>
+<tr>
+  <th>prophet_fit</th> <td>    0.1993</td> <td>    0.066</td> <td>    3.003</td> <td> 0.003</td> <td>    0.069</td> <td>    0.329</td>
+</tr>
+</table><br/><br/>Model has been estimated subject to linear equality constraints.
+<p>From the summary above we can see the weighted coefficient on the seasonal ARIMAX model is 0.7401, the weighted coefficient on the Prophet model is 0.2062, and the ESM model would be 1 minus those two values. Let’s calculate the MAE and MAPE for this newly combined forecast against our test dataset.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb44-1"><a href="weighted-and-combined-forecasts.html#cb44-1" tabindex="-1"></a>model_wcombo_for <span class="op">=</span> (model_wcombo.params[<span class="dv">0</span>]<span class="op">*</span>np.array(model_HW_for[<span class="st">&#39;HoltWinters&#39;</span>]) <span class="op">+</span> </span>
+<span id="cb44-2"><a href="weighted-and-combined-forecasts.html#cb44-2" tabindex="-1"></a>                    model_wcombo.params[<span class="dv">1</span>]<span class="op">*</span>np.array(model_ARIMAX_for[<span class="st">&#39;ARIMA&#39;</span>]) <span class="op">+</span> </span>
+<span id="cb44-3"><a href="weighted-and-combined-forecasts.html#cb44-3" tabindex="-1"></a>                    model_wcombo.params[<span class="dv">2</span>]<span class="op">*</span>np.array(model_prophet_for[<span class="st">&#39;yhat&#39;</span>]))</span></code></pre></div>
+<pre><code>## &lt;string&gt;:1: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+## &lt;string&gt;:2: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+## &lt;string&gt;:3: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb46-1"><a href="weighted-and-combined-forecasts.html#cb46-1" tabindex="-1"></a>                   </span>
+<span id="cb46-2"><a href="weighted-and-combined-forecasts.html#cb46-2" tabindex="-1"></a>error <span class="op">=</span> np.array(test[<span class="st">&#39;Passengers&#39;</span>]) <span class="op">-</span> model_wcombo_for</span>
+<span id="cb46-3"><a href="weighted-and-combined-forecasts.html#cb46-3" tabindex="-1"></a>MAPE <span class="op">=</span> np.mean(<span class="bu">abs</span>(error)<span class="op">/</span>test_nn[<span class="st">&#39;Passengers&#39;</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb46-4"><a href="weighted-and-combined-forecasts.html#cb46-4" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;W Combo MAE =&quot;</span>, np.mean(<span class="bu">abs</span>(error)), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">W Combo MAPE =&quot;</span>, MAPE)</span></code></pre></div>
+<pre><code>## W Combo MAE = 843.7469585159876 
+## W Combo MAPE = 1.2945973097545285</code></pre>
+<p>Unfortunately, just because we have the minimum variance on the training data, doesn’t mean that we are good on the test dataset. In fact, in practice, the regular average of forecasts is very hard to beat.</p>
+</div>
+<div id="sas-10" class="section level3 hasAnchor" number="9.2.3">
+<h3><span class="header-section-number">9.2.3</span> SAS<a href="weighted-and-combined-forecasts.html#sas-10" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For our example we will use our three forecasts from our Holt-Winters exponential smoothing model, the seasonal ARIMAX model, and the Prophet model and the math we just worked out above. First, we need to gather the fitted values from each of our models over the training dataset. From each of the procedures we used to build our models we can output our fitted values using different options in each (as shown below). From there we just need to isolate the training window on these predictions to combine in another DATA STEP with our original training dataset.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="weighted-and-combined-forecasts.html#cb48-1" tabindex="-1"></a>proc esm data <span class="ot">=</span> work.train print <span class="ot">=</span> statistics plot <span class="ot">=</span> forecasts seasonality <span class="ot">=</span> <span class="dv">12</span> lead <span class="ot">=</span> <span class="dv">12</span> outfor <span class="ot">=</span> work.HW_for;</span>
+<span id="cb48-2"><a href="weighted-and-combined-forecasts.html#cb48-2" tabindex="-1"></a>    forecast Passengers <span class="sc">/</span> model <span class="ot">=</span> winters;</span>
+<span id="cb48-3"><a href="weighted-and-combined-forecasts.html#cb48-3" tabindex="-1"></a>run;</span>
+<span id="cb48-4"><a href="weighted-and-combined-forecasts.html#cb48-4" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="weighted-and-combined-forecasts.html#cb48-5" tabindex="-1"></a>data HW_for;</span>
+<span id="cb48-6"><a href="weighted-and-combined-forecasts.html#cb48-6" tabindex="-1"></a>    set HW_for;</span>
+<span id="cb48-7"><a href="weighted-and-combined-forecasts.html#cb48-7" tabindex="-1"></a>    where _timeid_ <span class="sc">&lt;</span> <span class="dv">208</span>;</span>
+<span id="cb48-8"><a href="weighted-and-combined-forecasts.html#cb48-8" tabindex="-1"></a>    Fitted_HW <span class="ot">=</span> Predict;</span>
+<span id="cb48-9"><a href="weighted-and-combined-forecasts.html#cb48-9" tabindex="-1"></a>    keep Fitted_HW;</span>
+<span id="cb48-10"><a href="weighted-and-combined-forecasts.html#cb48-10" tabindex="-1"></a>run;</span>
+<span id="cb48-11"><a href="weighted-and-combined-forecasts.html#cb48-11" tabindex="-1"></a></span>
+<span id="cb48-12"><a href="weighted-and-combined-forecasts.html#cb48-12" tabindex="-1"></a>proc arima data <span class="ot">=</span> work.usair_pred plots <span class="ot">=</span> all;</span>
+<span id="cb48-13"><a href="weighted-and-combined-forecasts.html#cb48-13" tabindex="-1"></a>    identify var <span class="ot">=</span> <span class="fu">Passengers</span>(<span class="dv">12</span>) nlag <span class="ot">=</span> <span class="dv">24</span> crosscorr <span class="ot">=</span> (Sep11) minic P<span class="ot">=</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">15</span>) Q<span class="ot">=</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">15</span>);</span>
+<span id="cb48-14"><a href="weighted-and-combined-forecasts.html#cb48-14" tabindex="-1"></a>    estimate p <span class="ot">=</span> (<span class="dv">1</span>)(<span class="dv">12</span>) q <span class="ot">=</span> (<span class="dv">12</span>) input <span class="ot">=</span> ((<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">12</span>)Sep11);</span>
+<span id="cb48-15"><a href="weighted-and-combined-forecasts.html#cb48-15" tabindex="-1"></a>    forecast lead <span class="ot">=</span> <span class="dv">12</span> id <span class="ot">=</span> date interval <span class="ot">=</span> month out <span class="ot">=</span> work.ARIMAX_for;</span>
+<span id="cb48-16"><a href="weighted-and-combined-forecasts.html#cb48-16" tabindex="-1"></a>run;</span>
+<span id="cb48-17"><a href="weighted-and-combined-forecasts.html#cb48-17" tabindex="-1"></a></span>
+<span id="cb48-18"><a href="weighted-and-combined-forecasts.html#cb48-18" tabindex="-1"></a>data ARIMAX_for;</span>
+<span id="cb48-19"><a href="weighted-and-combined-forecasts.html#cb48-19" tabindex="-1"></a>    set ARIMAX_for;</span>
+<span id="cb48-20"><a href="weighted-and-combined-forecasts.html#cb48-20" tabindex="-1"></a>    where date <span class="sc">&lt;</span> <span class="st">&#39;1apr2007&#39;</span>d;</span>
+<span id="cb48-21"><a href="weighted-and-combined-forecasts.html#cb48-21" tabindex="-1"></a>    Fitted_ARIMAX <span class="ot">=</span> Forecast;</span>
+<span id="cb48-22"><a href="weighted-and-combined-forecasts.html#cb48-22" tabindex="-1"></a>    keep Fitted_ARIMAX;</span>
+<span id="cb48-23"><a href="weighted-and-combined-forecasts.html#cb48-23" tabindex="-1"></a>run;</span>
+<span id="cb48-24"><a href="weighted-and-combined-forecasts.html#cb48-24" tabindex="-1"></a></span>
+<span id="cb48-25"><a href="weighted-and-combined-forecasts.html#cb48-25" tabindex="-1"></a>proc glimmix data <span class="ot">=</span> usair_pred;</span>
+<span id="cb48-26"><a href="weighted-and-combined-forecasts.html#cb48-26" tabindex="-1"></a>   effect growth <span class="ot">=</span> <span class="fu">spline</span>(time_trend <span class="sc">/</span> <span class="at">degree =</span> <span class="dv">1</span> <span class="at">knotmethod =</span> <span class="fu">list</span>(<span class="dv">1</span> <span class="dv">30</span> <span class="dv">120</span> <span class="dv">141</span> <span class="dv">145</span> <span class="dv">156</span> <span class="dv">219</span>));</span>
+<span id="cb48-27"><a href="weighted-and-combined-forecasts.html#cb48-27" tabindex="-1"></a>   model Passengers <span class="ot">=</span> growth Sep11 f1<span class="sc">-</span>f11 <span class="sc">/</span> solution;  </span>
+<span id="cb48-28"><a href="weighted-and-combined-forecasts.html#cb48-28" tabindex="-1"></a>   output out <span class="ot">=</span> Proph_for predicted <span class="ot">=</span> Pred;</span>
+<span id="cb48-29"><a href="weighted-and-combined-forecasts.html#cb48-29" tabindex="-1"></a>quit;</span>
+<span id="cb48-30"><a href="weighted-and-combined-forecasts.html#cb48-30" tabindex="-1"></a></span>
+<span id="cb48-31"><a href="weighted-and-combined-forecasts.html#cb48-31" tabindex="-1"></a>data Proph_for;</span>
+<span id="cb48-32"><a href="weighted-and-combined-forecasts.html#cb48-32" tabindex="-1"></a>    set Proph_for;</span>
+<span id="cb48-33"><a href="weighted-and-combined-forecasts.html#cb48-33" tabindex="-1"></a>    where date <span class="sc">&lt;</span> <span class="st">&#39;1apr2007&#39;</span>d;</span>
+<span id="cb48-34"><a href="weighted-and-combined-forecasts.html#cb48-34" tabindex="-1"></a>    Fitted_Proph <span class="ot">=</span> Pred;</span>
+<span id="cb48-35"><a href="weighted-and-combined-forecasts.html#cb48-35" tabindex="-1"></a>    keep Fitted_Proph;</span>
+<span id="cb48-36"><a href="weighted-and-combined-forecasts.html#cb48-36" tabindex="-1"></a>run;</span>
+<span id="cb48-37"><a href="weighted-and-combined-forecasts.html#cb48-37" tabindex="-1"></a></span>
+<span id="cb48-38"><a href="weighted-and-combined-forecasts.html#cb48-38" tabindex="-1"></a>data train_fit;</span>
+<span id="cb48-39"><a href="weighted-and-combined-forecasts.html#cb48-39" tabindex="-1"></a>    merge train HWfor ARIMAX_for Proph_for;</span>
+<span id="cb48-40"><a href="weighted-and-combined-forecasts.html#cb48-40" tabindex="-1"></a>run;</span></code></pre></div>
+<p>With our fitted values collected we can use the PROC REG procedure to build our linear regression. In the MODEL statement we just define our Passengers target variable along with the fitted values for each of the 3 models we are looking at. The noint option makes sure there is no intercept in the model. From there we include the RESTRICT statement where we define our constraint that all of the coefficients (written as the variable names) sum to 1.</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="weighted-and-combined-forecasts.html#cb49-1" tabindex="-1"></a>proc reg data <span class="ot">=</span> train_fit;</span>
+<span id="cb49-2"><a href="weighted-and-combined-forecasts.html#cb49-2" tabindex="-1"></a>    model Passengers <span class="ot">=</span> Fitted_HW Fitted_ARIMAX Fitted_Proph <span class="sc">/</span> noint;</span>
+<span id="cb49-3"><a href="weighted-and-combined-forecasts.html#cb49-3" tabindex="-1"></a>    restrict <span class="dv">1</span> <span class="ot">=</span> Fitted_HW <span class="sc">+</span> Fitted_ARIMAX <span class="sc">+</span> Fitted_Proph;</span>
+<span id="cb49-4"><a href="weighted-and-combined-forecasts.html#cb49-4" tabindex="-1"></a>run;</span></code></pre></div>
+<div class="float">
+<img src="13_c_SAS.png" alt="SASOutput" />
+<div class="figcaption">SASOutput</div>
+</div>
+<p>From the summary above we can see the weighted coefficient on the seasonal ARIMAX model is 0.4963, the weighted coefficient on the Prophet model is 0.3742, and the ESM model would be 1 minus those two values. Let’s calculate the MAE and MAPE for this newly combined forecast against our test dataset.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="weighted-and-combined-forecasts.html#cb50-1" tabindex="-1"></a>data test;</span>
+<span id="cb50-2"><a href="weighted-and-combined-forecasts.html#cb50-2" tabindex="-1"></a>    set test;</span>
+<span id="cb50-3"><a href="weighted-and-combined-forecasts.html#cb50-3" tabindex="-1"></a>    Predict_WCombo <span class="ot">=</span> (<span class="fl">0.1295</span><span class="sc">*</span>Predict_HWM <span class="sc">+</span> <span class="fl">0.4963</span><span class="sc">*</span>Predict_ARIMAX <span class="sc">+</span> <span class="fl">0.3742</span><span class="sc">*</span>Predict_Proph);</span>
+<span id="cb50-4"><a href="weighted-and-combined-forecasts.html#cb50-4" tabindex="-1"></a>run;</span>
+<span id="cb50-5"><a href="weighted-and-combined-forecasts.html#cb50-5" tabindex="-1"></a></span>
+<span id="cb50-6"><a href="weighted-and-combined-forecasts.html#cb50-6" tabindex="-1"></a>data test;</span>
+<span id="cb50-7"><a href="weighted-and-combined-forecasts.html#cb50-7" tabindex="-1"></a>    set test;</span>
+<span id="cb50-8"><a href="weighted-and-combined-forecasts.html#cb50-8" tabindex="-1"></a>    AE_WCombo <span class="ot">=</span> <span class="fu">abs</span>(Passengers <span class="sc">-</span> Predict_WCombo);</span>
+<span id="cb50-9"><a href="weighted-and-combined-forecasts.html#cb50-9" tabindex="-1"></a>    APE_WCombo <span class="ot">=</span> <span class="fu">abs</span>(Passengers <span class="sc">-</span> Predict_WCombo)<span class="sc">/</span>Passengers<span class="sc">*</span><span class="dv">100</span>;</span>
+<span id="cb50-10"><a href="weighted-and-combined-forecasts.html#cb50-10" tabindex="-1"></a>run;</span>
+<span id="cb50-11"><a href="weighted-and-combined-forecasts.html#cb50-11" tabindex="-1"></a></span>
+<span id="cb50-12"><a href="weighted-and-combined-forecasts.html#cb50-12" tabindex="-1"></a>proc means data <span class="ot">=</span> test;</span>
+<span id="cb50-13"><a href="weighted-and-combined-forecasts.html#cb50-13" tabindex="-1"></a>    var AE_HWM AE_ARIMAX  AE_Proph  AE_NN  AE_Combo AE_Combo2 AE_WCombo APE_HWM APE_ARIMAX APE_Proph APE_NN APE_Combo APE_Combo2 APE_WCombo;</span>
+<span id="cb50-14"><a href="weighted-and-combined-forecasts.html#cb50-14" tabindex="-1"></a>run;</span></code></pre></div>
+<div class="float">
+<img src="13_d_SAS.png" alt="SASOutput" />
+<div class="figcaption">SASOutput</div>
+</div>
+<p>Unfortunately, just because we have the minimum variance on the training data, doesn’t mean that we are good on the test dataset. In fact, in practice, the regular average of forecasts is very hard to beat.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="neural-networks-for-time-series.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/sjsimmo2/TimeSeries/edit/master/08-Combined-Forecasts.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": "https://github.com/sjsimmo2/TimeSeries/blob/master/08-Combined-Forecasts.Rmd",
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
