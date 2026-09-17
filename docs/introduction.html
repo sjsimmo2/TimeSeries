@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 2 Introduction | Time Series 1</title>
   <meta name="description" content="Chapter 2 Introduction | Time Series 1" />
-  <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.48 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 2 Introduction | Time Series 1" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="by Dr. Susan Simmons" />
 
 
-<meta name="date" content="2025-11-19" />
+<meta name="date" content="2026-09-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -55,6 +55,7 @@
 
 
 <style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -332,16 +333,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-3"><a href="introduction.html#cb3-3" tabindex="-1"></a>steel_ts<span class="ot">&lt;-</span>Steel <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">Month=</span><span class="fu">yearmonth</span>(date)) <span class="sc">|&gt;</span> <span class="fu">as_tsibble</span>(<span class="at">index=</span>Month)</span>
 <span id="cb3-4"><a href="introduction.html#cb3-4" tabindex="-1"></a></span>
 <span id="cb3-5"><a href="introduction.html#cb3-5" tabindex="-1"></a><span class="fu">autoplot</span>(steel_ts,steelshp) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title=</span> <span class="st">&quot;Iron and Steel Exports&quot;</span>, <span class="at">subtitle =</span> <span class="st">&quot;Weight in tons&quot;</span>, <span class="at">y=</span> <span class="st">&quot;Export&quot;</span>) <span class="sc">+</span> <span class="fu">theme_classic</span>()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/Time%20Series%20object-1.png" width="672" /></p>
+<p><img src="bookdownproj_files/figure-html/Time%20Series%20object-1.png" alt="" width="672" /></p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="introduction.html#cb4-1" tabindex="-1"></a>temp_ts<span class="ot">&lt;-</span>temp <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">seq</span>(<span class="fu">ymd</span>(<span class="st">&#39;1900-01-01&#39;</span>),<span class="fu">ymd</span>(<span class="st">&#39;1966-03-01&#39;</span>),<span class="at">by=</span><span class="st">&#39;months&#39;</span>)) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">Month=</span><span class="fu">yearmonth</span>(date)) <span class="sc">|&gt;</span> <span class="fu">as_tsibble</span>(<span class="at">index=</span>Month)</span>
 <span id="cb4-2"><a href="introduction.html#cb4-2" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="introduction.html#cb4-3" tabindex="-1"></a><span class="fu">autoplot</span>(temp_ts,Temp) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Minneapolis temperature&quot;</span>, <span class="at">y=</span> <span class="st">&quot;Temperature&quot;</span>) <span class="sc">+</span> <span class="fu">theme_classic</span>()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/Time%20Series%20object-2.png" width="672" /></p>
+<p><img src="bookdownproj_files/figure-html/Time%20Series%20object-2.png" alt="" width="672" /></p>
 <p>Another example of creating a tsibble and time plot with the US Airlines data set:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="introduction.html#cb5-1" tabindex="-1"></a>USAirlines_ts <span class="ot">&lt;-</span> USAirlines <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">date=</span><span class="fu">myd</span>(<span class="fu">paste</span>(Month, Year, <span class="st">&quot;1&quot;</span>))) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">Month2=</span><span class="fu">yearmonth</span>(date)) <span class="sc">|&gt;</span> <span class="fu">as_tsibble</span>(<span class="at">index=</span>Month2)</span>
 <span id="cb5-2"><a href="introduction.html#cb5-2" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="introduction.html#cb5-3" tabindex="-1"></a><span class="fu">autoplot</span>(USAirlines_ts,Passengers)</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/ts2-1.png" width="672" /></p>
+<p><img src="bookdownproj_files/figure-html/ts2-1.png" alt="" width="672" /></p>
 <div id="other-plots" class="section level2 hasAnchor" number="2.1">
 <h2><span class="header-section-number">2.1</span> Other plots<a href="introduction.html#other-plots" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Some other interesting plots we can look at is the seasonal plot (only if our time series has a seasonal component….if you have yearly data, this is not possible since each line in the graph represents one year).</p>
@@ -349,7 +350,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-2"><a href="introduction.html#cb6-2" tabindex="-1"></a>  <span class="fu">gg_season</span>(Passengers, <span class="at">labels =</span> <span class="st">&quot;both&quot;</span>) <span class="sc">+</span></span>
 <span id="cb6-3"><a href="introduction.html#cb6-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;Passengers&quot;</span>,</span>
 <span id="cb6-4"><a href="introduction.html#cb6-4" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Seasonal plot: US Airline Passengers&quot;</span>)</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-1-1.png" alt="" width="672" /></p>
 <p>We can further explore seasonal patterns by a subseries plot (again ONLY if there is a seasonal component):</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="introduction.html#cb7-1" tabindex="-1"></a>USAirlines_ts <span class="sc">|&gt;</span></span>
 <span id="cb7-2"><a href="introduction.html#cb7-2" tabindex="-1"></a>  <span class="fu">gg_subseries</span>(Passengers) <span class="sc">+</span></span>
@@ -357,7 +358,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb7-4"><a href="introduction.html#cb7-4" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Passengers&quot;</span>,</span>
 <span id="cb7-5"><a href="introduction.html#cb7-5" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;US Airline Passengers&quot;</span></span>
 <span id="cb7-6"><a href="introduction.html#cb7-6" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-1.png" alt="" width="672" /></p>
 </div>
 <div id="time-series-decomposition" class="section level2 hasAnchor" number="2.2">
 <h2><span class="header-section-number">2.2</span> Time series decomposition<a href="introduction.html#time-series-decomposition" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -383,7 +384,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 10 stl    1990 Oct      38286 37812.        345.    129.          37941.
 ## # ℹ 209 more rows</code></pre>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="introduction.html#cb10-1" tabindex="-1"></a><span class="fu">components</span>(dcmp) <span class="sc">|&gt;</span> <span class="fu">autoplot</span>() <span class="sc">+</span> <span class="fu">theme_classic</span>()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/decomposition-1.png" width="672" /></p>
+<p><img src="bookdownproj_files/figure-html/decomposition-1.png" alt="" width="672" /></p>
 <p>We can visualize the time plot with the trend component overlaid with it:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="introduction.html#cb11-1" tabindex="-1"></a><span class="fu">components</span>(dcmp) <span class="sc">|&gt;</span></span>
 <span id="cb11-2"><a href="introduction.html#cb11-2" tabindex="-1"></a>  <span class="fu">as_tsibble</span>() <span class="sc">|&gt;</span></span>
@@ -393,7 +394,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb11-6"><a href="introduction.html#cb11-6" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Passengers&quot;</span>,</span>
 <span id="cb11-7"><a href="introduction.html#cb11-7" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;US Airline Passengers with trend overlaid&quot;</span></span>
 <span id="cb11-8"><a href="introduction.html#cb11-8" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/overlay%20trend-1.png" width="672" /></p>
+<p><img src="bookdownproj_files/figure-html/overlay%20trend-1.png" alt="" width="672" /></p>
 <p>We can also overlay plots with the seasonally adjusted values (plot below has both trend and seasonally adjusted overlaid):</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="introduction.html#cb12-1" tabindex="-1"></a><span class="fu">components</span>(dcmp) <span class="sc">|&gt;</span></span>
 <span id="cb12-2"><a href="introduction.html#cb12-2" tabindex="-1"></a>  <span class="fu">as_tsibble</span>() <span class="sc">|&gt;</span></span>
@@ -403,7 +404,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb12-6"><a href="introduction.html#cb12-6" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Passengers&quot;</span>,</span>
 <span id="cb12-7"><a href="introduction.html#cb12-7" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;US Airline Passengers with seasonally adjusted overlaid&quot;</span></span>
 <span id="cb12-8"><a href="introduction.html#cb12-8" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/seasonally%20adjusted-1.png" width="672" /></p>
+<p><img src="bookdownproj_files/figure-html/seasonally%20adjusted-1.png" alt="" width="672" /></p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="introduction.html#cb13-1" tabindex="-1"></a><span class="do">## Both</span></span>
 <span id="cb13-2"><a href="introduction.html#cb13-2" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="introduction.html#cb13-3" tabindex="-1"></a><span class="fu">components</span>(dcmp) <span class="sc">|&gt;</span></span>
@@ -415,7 +416,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb13-9"><a href="introduction.html#cb13-9" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Passengers&quot;</span>,</span>
 <span id="cb13-10"><a href="introduction.html#cb13-10" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;US Airline Passengers &quot;</span></span>
 <span id="cb13-11"><a href="introduction.html#cb13-11" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/seasonally%20adjusted-2.png" width="672" /></p>
+<p><img src="bookdownproj_files/figure-html/seasonally%20adjusted-2.png" alt="" width="672" /></p>
 <p>Notice that the trend component is VERY similar to the “seasonally adjusted” data! Do you know what the difference between the lines are?</p>
 <p>We can also do a classical decomposition (this can do an additive decomposition and a multiplicative decomposition…just change type = “multiplicative” to do a multiplicative decomposition).</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="introduction.html#cb14-1" tabindex="-1"></a>USAirlines_ts <span class="sc">|&gt;</span></span>
@@ -425,8 +426,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb14-5"><a href="introduction.html#cb14-5" tabindex="-1"></a>  <span class="fu">components</span>() <span class="sc">|&gt;</span></span>
 <span id="cb14-6"><a href="introduction.html#cb14-6" tabindex="-1"></a>  <span class="fu">autoplot</span>() <span class="sc">+</span></span>
 <span id="cb14-7"><a href="introduction.html#cb14-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Classical additive decomposition of US Airline Passengers&quot;</span>)</span></code></pre></div>
-<pre><code>## Warning: Removed 6 rows containing missing values or values outside the scale range (`geom_line()`).</code></pre>
-<p><img src="bookdownproj_files/figure-html/classical-1.png" width="672" /></p>
+<pre><code>## Warning: Removed 24 rows containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
+<p><img src="bookdownproj_files/figure-html/classical-1.png" alt="" width="672" /></p>
 <p>The last decomposition we will look at is the X11 decomposition (done by the government). This is a very complex algorithm that does the decomposition.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="introduction.html#cb16-1" tabindex="-1"></a>x11_dcmp <span class="ot">&lt;-</span> USAirlines_ts <span class="sc">|&gt;</span></span>
 <span id="cb16-2"><a href="introduction.html#cb16-2" tabindex="-1"></a>  <span class="fu">model</span>(<span class="at">x11 =</span> <span class="fu">X_13ARIMA_SEATS</span>(Passengers <span class="sc">~</span> <span class="fu">x11</span>())) <span class="sc">|&gt;</span></span>
@@ -434,7 +436,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb16-4"><a href="introduction.html#cb16-4" tabindex="-1"></a><span class="fu">autoplot</span>(x11_dcmp) <span class="sc">+</span></span>
 <span id="cb16-5"><a href="introduction.html#cb16-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span></span>
 <span id="cb16-6"><a href="introduction.html#cb16-6" tabindex="-1"></a>    <span class="st">&quot;Decomposition of US Airline Passengers using X-11.&quot;</span>)</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-3-1.png" alt="" width="672" /></p>
 </div>
 <div id="stl-features" class="section level2 hasAnchor" number="2.3">
 <h2><span class="header-section-number">2.3</span> STL features<a href="introduction.html#stl-features" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -442,10 +444,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="introduction.html#cb17-1" tabindex="-1"></a>USAirlines_ts <span class="sc">|&gt;</span></span>
 <span id="cb17-2"><a href="introduction.html#cb17-2" tabindex="-1"></a>  <span class="fu">features</span>(Passengers, feat_stl)</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 9
-##   trend_strength seasonal_strength_year seasonal_peak_year seasonal_trough_year  spikiness linearity
-##            &lt;dbl&gt;                  &lt;dbl&gt;              &lt;dbl&gt;                &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;
-## 1          0.976                  0.919                  7                    2 994798525.   118740.
-## # ℹ 3 more variables: curvature &lt;dbl&gt;, stl_e_acf1 &lt;dbl&gt;, stl_e_acf10 &lt;dbl&gt;</code></pre>
+##   trend_strength seasonal_strength_year seasonal_peak_year seasonal_trough_year
+##            &lt;dbl&gt;                  &lt;dbl&gt;              &lt;dbl&gt;                &lt;dbl&gt;
+## 1          0.976                  0.919                  7                    2
+## # ℹ 5 more variables: spikiness &lt;dbl&gt;, linearity &lt;dbl&gt;, curvature &lt;dbl&gt;,
+## #   stl_e_acf1 &lt;dbl&gt;, stl_e_acf10 &lt;dbl&gt;</code></pre>
 </div>
 <div id="missing-values" class="section level2 hasAnchor" number="2.4">
 <h2><span class="header-section-number">2.4</span> Missing values<a href="introduction.html#missing-values" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -463,80 +466,81 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb19-11"><a href="introduction.html#cb19-11" tabindex="-1"></a></span>
 <span id="cb19-12"><a href="introduction.html#cb19-12" tabindex="-1"></a><span class="do">### Create ts using the old way:</span></span>
 <span id="cb19-13"><a href="introduction.html#cb19-13" tabindex="-1"></a><span class="fu">library</span>(imputeTS)</span></code></pre></div>
+<pre><code>## Warning: package &#39;imputeTS&#39; was built under R version 4.6.1</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;imputeTS&#39;</code></pre>
 <pre><code>## The following object is masked from &#39;package:zoo&#39;:
 ## 
 ##     na.locf</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="introduction.html#cb22-1" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
-<span id="cb22-2"><a href="introduction.html#cb22-2" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="introduction.html#cb22-3" tabindex="-1"></a>Pass_miss<span class="ot">&lt;-</span><span class="fu">ts</span>(US_temp<span class="sc">$</span>Passengers,<span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1990</span>,<span class="dv">1</span>),<span class="at">frequency =</span> <span class="dv">12</span>)</span>
-<span id="cb22-4"><a href="introduction.html#cb22-4" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="introduction.html#cb22-5" tabindex="-1"></a><span class="fu">ggplot_na_distribution</span>(Pass_miss)<span class="sc">+</span><span class="fu">labs</span>(<span class="at">y=</span><span class="st">&quot;US Airline Passengers&quot;</span>)</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="introduction.html#cb23-1" tabindex="-1"></a><span class="co"># Interpolate the missing observations in this data set</span></span>
-<span id="cb23-2"><a href="introduction.html#cb23-2" tabindex="-1"></a>Pass_impute<span class="ot">&lt;-</span>Pass_miss <span class="sc">%&gt;%</span> <span class="fu">na_interpolation</span>(<span class="at">option =</span> <span class="st">&quot;spline&quot;</span>)</span>
-<span id="cb23-3"><a href="introduction.html#cb23-3" tabindex="-1"></a></span>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="introduction.html#cb23-1" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
+<span id="cb23-2"><a href="introduction.html#cb23-2" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="introduction.html#cb23-3" tabindex="-1"></a>Pass_miss<span class="ot">&lt;-</span><span class="fu">ts</span>(US_temp<span class="sc">$</span>Passengers,<span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1990</span>,<span class="dv">1</span>),<span class="at">frequency =</span> <span class="dv">12</span>)</span>
 <span id="cb23-4"><a href="introduction.html#cb23-4" tabindex="-1"></a></span>
-<span id="cb23-5"><a href="introduction.html#cb23-5" tabindex="-1"></a><span class="fu">autoplot</span>(Pass_impute,<span class="at">color=</span>col_vector) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">y=</span><span class="st">&quot;Airline Passengers&quot;</span>)</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-5-2.png" width="672" /></p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="introduction.html#cb24-1" tabindex="-1"></a>Pass_impute<span class="ot">&lt;-</span>Pass_miss <span class="sc">%&gt;%</span> <span class="fu">na_seadec</span>(<span class="at">algorithm =</span> <span class="st">&quot;interpolation&quot;</span>)</span>
-<span id="cb24-2"><a href="introduction.html#cb24-2" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="introduction.html#cb24-3" tabindex="-1"></a><span class="fu">autoplot</span>(Pass_impute,<span class="at">color=</span>col_vector) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">y=</span><span class="st">&quot;Airline Passengers&quot;</span>)</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-5-3.png" width="672" /></p>
+<span id="cb23-5"><a href="introduction.html#cb23-5" tabindex="-1"></a><span class="fu">ggplot_na_distribution</span>(Pass_miss)<span class="sc">+</span><span class="fu">labs</span>(<span class="at">y=</span><span class="st">&quot;US Airline Passengers&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-5-1.png" alt="" width="672" /></p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="introduction.html#cb24-1" tabindex="-1"></a><span class="co"># Interpolate the missing observations in this data set</span></span>
+<span id="cb24-2"><a href="introduction.html#cb24-2" tabindex="-1"></a>Pass_impute<span class="ot">&lt;-</span>Pass_miss <span class="sc">%&gt;%</span> <span class="fu">na_interpolation</span>(<span class="at">option =</span> <span class="st">&quot;spline&quot;</span>)</span>
+<span id="cb24-3"><a href="introduction.html#cb24-3" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="introduction.html#cb24-4" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="introduction.html#cb24-5" tabindex="-1"></a><span class="fu">autoplot</span>(Pass_impute,<span class="at">color=</span>col_vector) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">y=</span><span class="st">&quot;Airline Passengers&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-5-2.png" alt="" width="672" /></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="introduction.html#cb25-1" tabindex="-1"></a>Pass_impute<span class="ot">&lt;-</span>Pass_miss <span class="sc">%&gt;%</span> <span class="fu">na_seadec</span>(<span class="at">algorithm =</span> <span class="st">&quot;interpolation&quot;</span>)</span>
+<span id="cb25-2"><a href="introduction.html#cb25-2" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="introduction.html#cb25-3" tabindex="-1"></a><span class="fu">autoplot</span>(Pass_impute,<span class="at">color=</span>col_vector) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">y=</span><span class="st">&quot;Airline Passengers&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-5-3.png" alt="" width="672" /></p>
 </div>
 <div id="python-code-and-results-for-time-series-plot" class="section level2 hasAnchor" number="2.5">
 <h2><span class="header-section-number">2.5</span> Python code and results for Time Series plot<a href="introduction.html#python-code-and-results-for-time-series-plot" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The following code shows the time series plot and classical decomposition (using additive model).</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="introduction.html#cb25-1" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb25-2"><a href="introduction.html#cb25-2" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb25-3"><a href="introduction.html#cb25-3" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb25-4"><a href="introduction.html#cb25-4" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
-<span id="cb25-5"><a href="introduction.html#cb25-5" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
-<span id="cb25-6"><a href="introduction.html#cb25-6" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
-<span id="cb25-7"><a href="introduction.html#cb25-7" tabindex="-1"></a></span>
-<span id="cb25-8"><a href="introduction.html#cb25-8" tabindex="-1"></a><span class="im">from</span> statsforecast <span class="im">import</span> StatsForecast</span>
-<span id="cb25-9"><a href="introduction.html#cb25-9" tabindex="-1"></a></span>
-<span id="cb25-10"><a href="introduction.html#cb25-10" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
-<span id="cb25-11"><a href="introduction.html#cb25-11" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
-<span id="cb25-12"><a href="introduction.html#cb25-12" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
-<span id="cb25-13"><a href="introduction.html#cb25-13" tabindex="-1"></a></span>
-<span id="cb25-14"><a href="introduction.html#cb25-14" tabindex="-1"></a></span>
-<span id="cb25-15"><a href="introduction.html#cb25-15" tabindex="-1"></a></span>
-<span id="cb25-16"><a href="introduction.html#cb25-16" tabindex="-1"></a>plt.plot(usair_p[<span class="st">&quot;Passengers&quot;</span>])</span>
-<span id="cb25-17"><a href="introduction.html#cb25-17" tabindex="-1"></a>plt.xlabel(<span class="st">&quot;Date&quot;</span>)</span>
-<span id="cb25-18"><a href="introduction.html#cb25-18" tabindex="-1"></a>plt.ylabel(<span class="st">&quot;Passengers&quot;</span>)</span>
-<span id="cb25-19"><a href="introduction.html#cb25-19" tabindex="-1"></a>plt.title(<span class="st">&quot;Airline Passengers&quot;</span>)</span>
-<span id="cb25-20"><a href="introduction.html#cb25-20" tabindex="-1"></a>plt.show()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="introduction.html#cb26-1" tabindex="-1"></a><span class="co">## Classical Decomposition</span></span>
-<span id="cb26-2"><a href="introduction.html#cb26-2" tabindex="-1"></a>result <span class="op">=</span> seasonal_decompose(usair_p[<span class="st">&quot;Passengers&quot;</span>], model<span class="op">=</span><span class="st">&#39;additive&#39;</span>, period<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb26-3"><a href="introduction.html#cb26-3" tabindex="-1"></a>result.plot()</span>
-<span id="cb26-4"><a href="introduction.html#cb26-4" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-2.png" width="672" /></p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="introduction.html#cb26-1" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb26-2"><a href="introduction.html#cb26-2" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb26-3"><a href="introduction.html#cb26-3" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb26-4"><a href="introduction.html#cb26-4" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
+<span id="cb26-5"><a href="introduction.html#cb26-5" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
+<span id="cb26-6"><a href="introduction.html#cb26-6" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
+<span id="cb26-7"><a href="introduction.html#cb26-7" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="introduction.html#cb26-8" tabindex="-1"></a><span class="im">from</span> statsforecast <span class="im">import</span> StatsForecast</span>
+<span id="cb26-9"><a href="introduction.html#cb26-9" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="introduction.html#cb26-10" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
+<span id="cb26-11"><a href="introduction.html#cb26-11" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb26-12"><a href="introduction.html#cb26-12" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb26-13"><a href="introduction.html#cb26-13" tabindex="-1"></a></span>
+<span id="cb26-14"><a href="introduction.html#cb26-14" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="introduction.html#cb26-15" tabindex="-1"></a></span>
+<span id="cb26-16"><a href="introduction.html#cb26-16" tabindex="-1"></a>plt.plot(usair_p[<span class="st">&quot;Passengers&quot;</span>])</span>
+<span id="cb26-17"><a href="introduction.html#cb26-17" tabindex="-1"></a>plt.xlabel(<span class="st">&quot;Date&quot;</span>)</span>
+<span id="cb26-18"><a href="introduction.html#cb26-18" tabindex="-1"></a>plt.ylabel(<span class="st">&quot;Passengers&quot;</span>)</span>
+<span id="cb26-19"><a href="introduction.html#cb26-19" tabindex="-1"></a>plt.title(<span class="st">&quot;Airline Passengers&quot;</span>)</span>
+<span id="cb26-20"><a href="introduction.html#cb26-20" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-1.png" alt="" width="672" /></p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="introduction.html#cb27-1" tabindex="-1"></a><span class="co">## Classical Decomposition</span></span>
+<span id="cb27-2"><a href="introduction.html#cb27-2" tabindex="-1"></a>result <span class="op">=</span> seasonal_decompose(usair_p[<span class="st">&quot;Passengers&quot;</span>], model<span class="op">=</span><span class="st">&#39;additive&#39;</span>, period<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb27-3"><a href="introduction.html#cb27-3" tabindex="-1"></a>result.plot()</span>
+<span id="cb27-4"><a href="introduction.html#cb27-4" tabindex="-1"></a>pyplot.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-2.png" alt="" width="672" /></p>
 <p>You can also specify multiplicative by changing “additive” to “multiplicative” in the Python code. If you want to do the STL decomposition, then you can apply the following code:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="introduction.html#cb27-1" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb27-2"><a href="introduction.html#cb27-2" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb27-3"><a href="introduction.html#cb27-3" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
-<span id="cb27-4"><a href="introduction.html#cb27-4" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
-<span id="cb27-5"><a href="introduction.html#cb27-5" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
-<span id="cb27-6"><a href="introduction.html#cb27-6" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
-<span id="cb27-7"><a href="introduction.html#cb27-7" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
-<span id="cb27-8"><a href="introduction.html#cb27-8" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
-<span id="cb27-9"><a href="introduction.html#cb27-9" tabindex="-1"></a></span>
-<span id="cb27-10"><a href="introduction.html#cb27-10" tabindex="-1"></a></span>
-<span id="cb27-11"><a href="introduction.html#cb27-11" tabindex="-1"></a><span class="co">## STL Decomposition</span></span>
-<span id="cb27-12"><a href="introduction.html#cb27-12" tabindex="-1"></a></span>
-<span id="cb27-13"><a href="introduction.html#cb27-13" tabindex="-1"></a><span class="im">from</span> statsforecast.models <span class="im">import</span> MSTL</span>
-<span id="cb27-14"><a href="introduction.html#cb27-14" tabindex="-1"></a></span>
-<span id="cb27-15"><a href="introduction.html#cb27-15" tabindex="-1"></a>d <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: usair_p.index, <span class="st">&#39;y&#39;</span>: usair_p[<span class="st">&#39;Passengers&#39;</span>]}</span>
-<span id="cb27-16"><a href="introduction.html#cb27-16" tabindex="-1"></a>usair_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d)</span>
-<span id="cb27-17"><a href="introduction.html#cb27-17" tabindex="-1"></a></span>
-<span id="cb27-18"><a href="introduction.html#cb27-18" tabindex="-1"></a>dcmp <span class="op">=</span> StatsForecast(models <span class="op">=</span> [MSTL(season_length <span class="op">=</span> <span class="dv">12</span>)], freq <span class="op">=</span> <span class="st">&#39;M&#39;</span>)</span>
-<span id="cb27-19"><a href="introduction.html#cb27-19" tabindex="-1"></a>dcmp.fit(df <span class="op">=</span> usair_sf)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="introduction.html#cb28-1" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb28-2"><a href="introduction.html#cb28-2" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb28-3"><a href="introduction.html#cb28-3" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
+<span id="cb28-4"><a href="introduction.html#cb28-4" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
+<span id="cb28-5"><a href="introduction.html#cb28-5" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
+<span id="cb28-6"><a href="introduction.html#cb28-6" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
+<span id="cb28-7"><a href="introduction.html#cb28-7" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb28-8"><a href="introduction.html#cb28-8" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb28-9"><a href="introduction.html#cb28-9" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="introduction.html#cb28-10" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="introduction.html#cb28-11" tabindex="-1"></a><span class="co">## STL Decomposition</span></span>
+<span id="cb28-12"><a href="introduction.html#cb28-12" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="introduction.html#cb28-13" tabindex="-1"></a><span class="im">from</span> statsforecast.models <span class="im">import</span> MSTL</span>
+<span id="cb28-14"><a href="introduction.html#cb28-14" tabindex="-1"></a></span>
+<span id="cb28-15"><a href="introduction.html#cb28-15" tabindex="-1"></a>d <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: usair_p.index, <span class="st">&#39;y&#39;</span>: usair_p[<span class="st">&#39;Passengers&#39;</span>]}</span>
+<span id="cb28-16"><a href="introduction.html#cb28-16" tabindex="-1"></a>usair_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d)</span>
+<span id="cb28-17"><a href="introduction.html#cb28-17" tabindex="-1"></a></span>
+<span id="cb28-18"><a href="introduction.html#cb28-18" tabindex="-1"></a>dcmp <span class="op">=</span> StatsForecast(models <span class="op">=</span> [MSTL(season_length <span class="op">=</span> <span class="dv">12</span>)], freq <span class="op">=</span> <span class="st">&#39;M&#39;</span>)</span>
+<span id="cb28-19"><a href="introduction.html#cb28-19" tabindex="-1"></a>dcmp.fit(df <span class="op">=</span> usair_sf)</span></code></pre></div>
 <pre><code>## StatsForecast(models=[MSTL])</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="introduction.html#cb29-1" tabindex="-1"></a>result <span class="op">=</span> dcmp.fitted_[<span class="dv">0</span>,<span class="dv">0</span>].model_</span>
-<span id="cb29-2"><a href="introduction.html#cb29-2" tabindex="-1"></a>result</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="introduction.html#cb30-1" tabindex="-1"></a>result <span class="op">=</span> dcmp.fitted_[<span class="dv">0</span>,<span class="dv">0</span>].model_</span>
+<span id="cb30-2"><a href="introduction.html#cb30-2" tabindex="-1"></a>result</span></code></pre></div>
 <pre><code>##         data         trend     seasonal    remainder
 ## 0    34348.0  39019.259582 -4656.824185   -14.435397
 ## 1    33536.0  38883.032235 -5824.359162   477.326927
@@ -551,46 +555,46 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 218  67818.0  64650.268751  3776.567142  -608.835893
 ## 
 ## [219 rows x 4 columns]</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="introduction.html#cb31-1" tabindex="-1"></a>dcmp.fitted_[<span class="dv">0</span>, <span class="dv">0</span>].model_.plot(subplots<span class="op">=</span><span class="va">True</span>, grid<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="introduction.html#cb32-1" tabindex="-1"></a>dcmp.fitted_[<span class="dv">0</span>, <span class="dv">0</span>].model_.plot(subplots<span class="op">=</span><span class="va">True</span>, grid<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
 <pre><code>## array([&lt;Axes: &gt;, &lt;Axes: &gt;, &lt;Axes: &gt;, &lt;Axes: &gt;], dtype=object)</code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="introduction.html#cb33-1" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb33-2"><a href="introduction.html#cb33-2" tabindex="-1"></a>plt.show()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/STL%20decomposition-5.png" width="672" /></p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="introduction.html#cb34-1" tabindex="-1"></a><span class="co">## The following code calculates the Fs and Ft (many thanks to Fred!)</span></span>
-<span id="cb34-2"><a href="introduction.html#cb34-2" tabindex="-1"></a></span>
-<span id="cb34-3"><a href="introduction.html#cb34-3" tabindex="-1"></a>data <span class="op">=</span> usair_p[<span class="st">&quot;Passengers&quot;</span>]</span>
-<span id="cb34-4"><a href="introduction.html#cb34-4" tabindex="-1"></a><span class="co"># Perform STL decomposition</span></span>
-<span id="cb34-5"><a href="introduction.html#cb34-5" tabindex="-1"></a>stl <span class="op">=</span> STL(data, period<span class="op">=</span><span class="dv">12</span>)  <span class="co"># Adjust period as needed for your data</span></span>
-<span id="cb34-6"><a href="introduction.html#cb34-6" tabindex="-1"></a>result <span class="op">=</span> stl.fit()</span>
-<span id="cb34-7"><a href="introduction.html#cb34-7" tabindex="-1"></a><span class="co"># Extract components</span></span>
-<span id="cb34-8"><a href="introduction.html#cb34-8" tabindex="-1"></a>trend <span class="op">=</span> result.trend</span>
-<span id="cb34-9"><a href="introduction.html#cb34-9" tabindex="-1"></a>seasonal <span class="op">=</span> result.seasonal</span>
-<span id="cb34-10"><a href="introduction.html#cb34-10" tabindex="-1"></a>residual <span class="op">=</span> result.resid</span>
-<span id="cb34-11"><a href="introduction.html#cb34-11" tabindex="-1"></a>t_and_r <span class="op">=</span> trend <span class="op">+</span> residual</span>
-<span id="cb34-12"><a href="introduction.html#cb34-12" tabindex="-1"></a><span class="co"># Ensure all series are aligned</span></span>
-<span id="cb34-13"><a href="introduction.html#cb34-13" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> trend.empty <span class="kw">and</span> <span class="kw">not</span> residual.empty <span class="kw">and</span> <span class="kw">not</span> seasonal.empty:</span>
-<span id="cb34-14"><a href="introduction.html#cb34-14" tabindex="-1"></a>    <span class="co"># Calculate Trend Strength</span></span>
-<span id="cb34-15"><a href="introduction.html#cb34-15" tabindex="-1"></a>    var_residual <span class="op">=</span> residual.var()</span>
-<span id="cb34-16"><a href="introduction.html#cb34-16" tabindex="-1"></a>    var_t_plus_r <span class="op">=</span> t_and_r.var()</span>
-<span id="cb34-17"><a href="introduction.html#cb34-17" tabindex="-1"></a>    var_detrended <span class="op">=</span> (data <span class="op">-</span> trend).var()</span>
-<span id="cb34-18"><a href="introduction.html#cb34-18" tabindex="-1"></a>    <span class="cf">if</span> var_detrended <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb34-19"><a href="introduction.html#cb34-19" tabindex="-1"></a>        trend_strength <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb34-20"><a href="introduction.html#cb34-20" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;Trend Strength: 0 (Detrended variance is zero)&quot;</span>)</span>
-<span id="cb34-21"><a href="introduction.html#cb34-21" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb34-22"><a href="introduction.html#cb34-22" tabindex="-1"></a>        trend_strength <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> (var_residual <span class="op">/</span> var_t_plus_r)</span>
-<span id="cb34-23"><a href="introduction.html#cb34-23" tabindex="-1"></a>        trend_strength <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, trend_strength)  <span class="co"># Avoid negative strength</span></span>
-<span id="cb34-24"><a href="introduction.html#cb34-24" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;Trend Strength: </span><span class="sc">{</span>trend_strength<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span>
-<span id="cb34-25"><a href="introduction.html#cb34-25" tabindex="-1"></a>    <span class="co"># Calculate Seasonal Strength</span></span>
-<span id="cb34-26"><a href="introduction.html#cb34-26" tabindex="-1"></a>    var_seasonal <span class="op">=</span> seasonal.var()</span>
-<span id="cb34-27"><a href="introduction.html#cb34-27" tabindex="-1"></a>    <span class="cf">if</span> var_detrended <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb34-28"><a href="introduction.html#cb34-28" tabindex="-1"></a>        seasonal_strength <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb34-29"><a href="introduction.html#cb34-29" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;Seasonal Strength: 0 (Detrended variance is zero)&quot;</span>)</span>
-<span id="cb34-30"><a href="introduction.html#cb34-30" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb34-31"><a href="introduction.html#cb34-31" tabindex="-1"></a>        seasonal_strength <span class="op">=</span> var_seasonal <span class="op">/</span> var_detrended</span>
-<span id="cb34-32"><a href="introduction.html#cb34-32" tabindex="-1"></a>        seasonal_strength <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, seasonal_strength)  <span class="co"># Avoid negative strength</span></span>
-<span id="cb34-33"><a href="introduction.html#cb34-33" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;Seasonal Strength: </span><span class="sc">{</span>seasonal_strength<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span>
-<span id="cb34-34"><a href="introduction.html#cb34-34" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb34-35"><a href="introduction.html#cb34-35" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Trend, Seasonal, or Residual series is empty or misaligned.&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="introduction.html#cb34-1" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb34-2"><a href="introduction.html#cb34-2" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/STL%20decomposition-5.png" alt="" width="672" /></p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="introduction.html#cb35-1" tabindex="-1"></a><span class="co">## The following code calculates the Fs and Ft (many thanks to Fred!)</span></span>
+<span id="cb35-2"><a href="introduction.html#cb35-2" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="introduction.html#cb35-3" tabindex="-1"></a>data <span class="op">=</span> usair_p[<span class="st">&quot;Passengers&quot;</span>]</span>
+<span id="cb35-4"><a href="introduction.html#cb35-4" tabindex="-1"></a><span class="co"># Perform STL decomposition</span></span>
+<span id="cb35-5"><a href="introduction.html#cb35-5" tabindex="-1"></a>stl <span class="op">=</span> STL(data, period<span class="op">=</span><span class="dv">12</span>)  <span class="co"># Adjust period as needed for your data</span></span>
+<span id="cb35-6"><a href="introduction.html#cb35-6" tabindex="-1"></a>result <span class="op">=</span> stl.fit()</span>
+<span id="cb35-7"><a href="introduction.html#cb35-7" tabindex="-1"></a><span class="co"># Extract components</span></span>
+<span id="cb35-8"><a href="introduction.html#cb35-8" tabindex="-1"></a>trend <span class="op">=</span> result.trend</span>
+<span id="cb35-9"><a href="introduction.html#cb35-9" tabindex="-1"></a>seasonal <span class="op">=</span> result.seasonal</span>
+<span id="cb35-10"><a href="introduction.html#cb35-10" tabindex="-1"></a>residual <span class="op">=</span> result.resid</span>
+<span id="cb35-11"><a href="introduction.html#cb35-11" tabindex="-1"></a>t_and_r <span class="op">=</span> trend <span class="op">+</span> residual</span>
+<span id="cb35-12"><a href="introduction.html#cb35-12" tabindex="-1"></a><span class="co"># Ensure all series are aligned</span></span>
+<span id="cb35-13"><a href="introduction.html#cb35-13" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> trend.empty <span class="kw">and</span> <span class="kw">not</span> residual.empty <span class="kw">and</span> <span class="kw">not</span> seasonal.empty:</span>
+<span id="cb35-14"><a href="introduction.html#cb35-14" tabindex="-1"></a>    <span class="co"># Calculate Trend Strength</span></span>
+<span id="cb35-15"><a href="introduction.html#cb35-15" tabindex="-1"></a>    var_residual <span class="op">=</span> residual.var()</span>
+<span id="cb35-16"><a href="introduction.html#cb35-16" tabindex="-1"></a>    var_t_plus_r <span class="op">=</span> t_and_r.var()</span>
+<span id="cb35-17"><a href="introduction.html#cb35-17" tabindex="-1"></a>    var_detrended <span class="op">=</span> (data <span class="op">-</span> trend).var()</span>
+<span id="cb35-18"><a href="introduction.html#cb35-18" tabindex="-1"></a>    <span class="cf">if</span> var_detrended <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb35-19"><a href="introduction.html#cb35-19" tabindex="-1"></a>        trend_strength <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb35-20"><a href="introduction.html#cb35-20" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;Trend Strength: 0 (Detrended variance is zero)&quot;</span>)</span>
+<span id="cb35-21"><a href="introduction.html#cb35-21" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb35-22"><a href="introduction.html#cb35-22" tabindex="-1"></a>        trend_strength <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> (var_residual <span class="op">/</span> var_t_plus_r)</span>
+<span id="cb35-23"><a href="introduction.html#cb35-23" tabindex="-1"></a>        trend_strength <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, trend_strength)  <span class="co"># Avoid negative strength</span></span>
+<span id="cb35-24"><a href="introduction.html#cb35-24" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;Trend Strength: </span><span class="sc">{</span>trend_strength<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb35-25"><a href="introduction.html#cb35-25" tabindex="-1"></a>    <span class="co"># Calculate Seasonal Strength</span></span>
+<span id="cb35-26"><a href="introduction.html#cb35-26" tabindex="-1"></a>    var_seasonal <span class="op">=</span> seasonal.var()</span>
+<span id="cb35-27"><a href="introduction.html#cb35-27" tabindex="-1"></a>    <span class="cf">if</span> var_detrended <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb35-28"><a href="introduction.html#cb35-28" tabindex="-1"></a>        seasonal_strength <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb35-29"><a href="introduction.html#cb35-29" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;Seasonal Strength: 0 (Detrended variance is zero)&quot;</span>)</span>
+<span id="cb35-30"><a href="introduction.html#cb35-30" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb35-31"><a href="introduction.html#cb35-31" tabindex="-1"></a>        seasonal_strength <span class="op">=</span> var_seasonal <span class="op">/</span> var_detrended</span>
+<span id="cb35-32"><a href="introduction.html#cb35-32" tabindex="-1"></a>        seasonal_strength <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, seasonal_strength)  <span class="co"># Avoid negative strength</span></span>
+<span id="cb35-33"><a href="introduction.html#cb35-33" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;Seasonal Strength: </span><span class="sc">{</span>seasonal_strength<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb35-34"><a href="introduction.html#cb35-34" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb35-35"><a href="introduction.html#cb35-35" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Trend, Seasonal, or Residual series is empty or misaligned.&quot;</span>)</span></code></pre></div>
 <pre><code>## Trend Strength: 0.98
 ## Seasonal Strength: 0.92</code></pre>
 </div>
@@ -675,20 +679,6 @@ gitbook.start({
 });
 </script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    var src = "true";
-    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:")
-      if (/^https?:/.test(src))
-        src = src.replace(/^https?:/, '');
-    script.src = src;
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 </body>
 
 </html>
