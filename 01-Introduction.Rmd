@@ -271,21 +271,37 @@ from statsmodels.tsa.seasonal import STL
 from statsforecast import StatsForecast
 
 usair_p=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\usairlines.csv")
-df=pd.date_range(start='1/1/1990', end='3/1/2008', freq='MS')
-usair_p.index=pd.to_datetime(df)
+dates = pd.date_range(start='1990-01-01', end='2008-03-01', freq='MS')
 
+usair_p['unique_id'] = 'US_Air'      # Identifies the specific time series
+usair_p['ds'] = dates                # pd.date_range is already in datetime format!
+usair_p['y'] = usair_p['Passengers'] # Our target variable
 
+ts_data = usair_p.set_index('ds')['y']
 
-plt.plot(usair_p["Passengers"])
-plt.xlabel("Date")
-plt.ylabel("Passengers")
-plt.title("Airline Passengers")
+plt.rc("figure", figsize=(10, 6)) # Set a globally larger, nicer plot size
+ts_data.plot(
+    title="Airline Passengers", 
+    ylabel="Passengers", 
+    xlabel="Date",
+    color="#0b57d0", # A nice modern blue
+    linewidth=2
+)
 plt.show()
 
 ## Classical Decomposition
-result = seasonal_decompose(usair_p["Passengers"], model='additive', period=12)
-result.plot()
-pyplot.show()
+print("Running Classical Decomposition...")
+classical_res = seasonal_decompose(ts_data, model='additive')
+classical_res.plot()
+plt.suptitle("Classical Decomposition", y=1.02, fontsize=14)
+plt.show()
+
+print("Running STL Decomposition...")
+stl_model = STL(ts_data, robust=True)
+stl_res = stl_model.fit()
+stl_res.plot()
+plt.suptitle("STL Decomposition", y=1.02, fontsize=14)
+plt.show()
 
 
 ```
