@@ -491,7 +491,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="python-code-and-results-for-time-series-plot" class="section level2 hasAnchor" number="2.5">
 <h2><span class="header-section-number">2.5</span> Python code and results for Time Series plot<a href="introduction.html#python-code-and-results-for-time-series-plot" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The following code shows the time series plot and classical decomposition (using additive model).</p>
+<p>The following code shows the time series plot and classical decomposition (using additive model) and STL decomposition.</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="introduction.html#cb26-1" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb26-2"><a href="introduction.html#cb26-2" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb26-3"><a href="introduction.html#cb26-3" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -536,7 +536,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb32-4"><a href="introduction.html#cb32-4" tabindex="-1"></a>plt.suptitle(<span class="st">&quot;STL Decomposition&quot;</span>, y<span class="op">=</span><span class="fl">1.02</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
 <span id="cb32-5"><a href="introduction.html#cb32-5" tabindex="-1"></a>plt.show()</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-3.png" alt="" width="960" /></p>
-<p>You can also specify multiplicative by changing “additive” to “multiplicative” in the Python code. If you want to do the STL decomposition, then you can apply the following code:</p>
+<p>You can also specify multiplicative by changing “additive” to “multiplicative” in the Python code. Another way to code STL decomposition and calculating Fs and Ft (note: this Fs and Ft differ from the R package):</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="introduction.html#cb33-1" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb33-2"><a href="introduction.html#cb33-2" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb33-3"><a href="introduction.html#cb33-3" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
@@ -589,30 +589,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb40-9"><a href="introduction.html#cb40-9" tabindex="-1"></a>seasonal <span class="op">=</span> result.seasonal</span>
 <span id="cb40-10"><a href="introduction.html#cb40-10" tabindex="-1"></a>residual <span class="op">=</span> result.resid</span>
 <span id="cb40-11"><a href="introduction.html#cb40-11" tabindex="-1"></a>t_and_r <span class="op">=</span> trend <span class="op">+</span> residual</span>
-<span id="cb40-12"><a href="introduction.html#cb40-12" tabindex="-1"></a><span class="co"># Ensure all series are aligned</span></span>
-<span id="cb40-13"><a href="introduction.html#cb40-13" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> trend.empty <span class="kw">and</span> <span class="kw">not</span> residual.empty <span class="kw">and</span> <span class="kw">not</span> seasonal.empty:</span>
-<span id="cb40-14"><a href="introduction.html#cb40-14" tabindex="-1"></a>    <span class="co"># Calculate Trend Strength</span></span>
-<span id="cb40-15"><a href="introduction.html#cb40-15" tabindex="-1"></a>    var_residual <span class="op">=</span> residual.var()</span>
-<span id="cb40-16"><a href="introduction.html#cb40-16" tabindex="-1"></a>    var_t_plus_r <span class="op">=</span> t_and_r.var()</span>
-<span id="cb40-17"><a href="introduction.html#cb40-17" tabindex="-1"></a>    var_detrended <span class="op">=</span> (data <span class="op">-</span> trend).var()</span>
-<span id="cb40-18"><a href="introduction.html#cb40-18" tabindex="-1"></a>    <span class="cf">if</span> var_detrended <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb40-19"><a href="introduction.html#cb40-19" tabindex="-1"></a>        trend_strength <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb40-20"><a href="introduction.html#cb40-20" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;Trend Strength: 0 (Detrended variance is zero)&quot;</span>)</span>
-<span id="cb40-21"><a href="introduction.html#cb40-21" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb40-22"><a href="introduction.html#cb40-22" tabindex="-1"></a>        trend_strength <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> (var_residual <span class="op">/</span> var_t_plus_r)</span>
-<span id="cb40-23"><a href="introduction.html#cb40-23" tabindex="-1"></a>        trend_strength <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, trend_strength)  <span class="co"># Avoid negative strength</span></span>
-<span id="cb40-24"><a href="introduction.html#cb40-24" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;Trend Strength: </span><span class="sc">{</span>trend_strength<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span>
-<span id="cb40-25"><a href="introduction.html#cb40-25" tabindex="-1"></a>    <span class="co"># Calculate Seasonal Strength</span></span>
-<span id="cb40-26"><a href="introduction.html#cb40-26" tabindex="-1"></a>    var_seasonal <span class="op">=</span> seasonal.var()</span>
-<span id="cb40-27"><a href="introduction.html#cb40-27" tabindex="-1"></a>    <span class="cf">if</span> var_detrended <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb40-28"><a href="introduction.html#cb40-28" tabindex="-1"></a>        seasonal_strength <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb40-29"><a href="introduction.html#cb40-29" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;Seasonal Strength: 0 (Detrended variance is zero)&quot;</span>)</span>
-<span id="cb40-30"><a href="introduction.html#cb40-30" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb40-31"><a href="introduction.html#cb40-31" tabindex="-1"></a>        seasonal_strength <span class="op">=</span> var_seasonal <span class="op">/</span> var_detrended</span>
-<span id="cb40-32"><a href="introduction.html#cb40-32" tabindex="-1"></a>        seasonal_strength <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, seasonal_strength)  <span class="co"># Avoid negative strength</span></span>
-<span id="cb40-33"><a href="introduction.html#cb40-33" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;Seasonal Strength: </span><span class="sc">{</span>seasonal_strength<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span>
-<span id="cb40-34"><a href="introduction.html#cb40-34" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb40-35"><a href="introduction.html#cb40-35" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Trend, Seasonal, or Residual series is empty or misaligned.&quot;</span>)</span></code></pre></div>
+<span id="cb40-12"><a href="introduction.html#cb40-12" tabindex="-1"></a>t_and_r <span class="op">=</span> trend <span class="op">+</span> residual</span>
+<span id="cb40-13"><a href="introduction.html#cb40-13" tabindex="-1"></a><span class="co"># Ensure all series are aligned</span></span>
+<span id="cb40-14"><a href="introduction.html#cb40-14" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> trend.empty <span class="kw">and</span> <span class="kw">not</span> residual.empty <span class="kw">and</span> <span class="kw">not</span> seasonal.empty:</span>
+<span id="cb40-15"><a href="introduction.html#cb40-15" tabindex="-1"></a>    <span class="co"># Calculate Trend Strength</span></span>
+<span id="cb40-16"><a href="introduction.html#cb40-16" tabindex="-1"></a>    var_residual <span class="op">=</span> residual.var()</span>
+<span id="cb40-17"><a href="introduction.html#cb40-17" tabindex="-1"></a>    var_t_plus_r <span class="op">=</span> t_and_r.var()</span>
+<span id="cb40-18"><a href="introduction.html#cb40-18" tabindex="-1"></a>    var_detrended <span class="op">=</span> (data <span class="op">-</span> trend).var()</span>
+<span id="cb40-19"><a href="introduction.html#cb40-19" tabindex="-1"></a>    <span class="cf">if</span> var_detrended <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb40-20"><a href="introduction.html#cb40-20" tabindex="-1"></a>        trend_strength <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb40-21"><a href="introduction.html#cb40-21" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;Trend Strength: 0 (Detrended variance is zero)&quot;</span>)</span>
+<span id="cb40-22"><a href="introduction.html#cb40-22" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb40-23"><a href="introduction.html#cb40-23" tabindex="-1"></a>        trend_strength <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> (var_residual <span class="op">/</span> var_t_plus_r)</span>
+<span id="cb40-24"><a href="introduction.html#cb40-24" tabindex="-1"></a>        trend_strength <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, trend_strength)  <span class="co"># Avoid negative strength</span></span>
+<span id="cb40-25"><a href="introduction.html#cb40-25" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;Trend Strength: </span><span class="sc">{</span>trend_strength<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb40-26"><a href="introduction.html#cb40-26" tabindex="-1"></a>    <span class="co"># Calculate Seasonal Strength</span></span>
+<span id="cb40-27"><a href="introduction.html#cb40-27" tabindex="-1"></a>    var_seasonal <span class="op">=</span> seasonal.var()</span>
+<span id="cb40-28"><a href="introduction.html#cb40-28" tabindex="-1"></a>    <span class="cf">if</span> var_detrended <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb40-29"><a href="introduction.html#cb40-29" tabindex="-1"></a>        seasonal_strength <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb40-30"><a href="introduction.html#cb40-30" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;Seasonal Strength: 0 (Detrended variance is zero)&quot;</span>)</span>
+<span id="cb40-31"><a href="introduction.html#cb40-31" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb40-32"><a href="introduction.html#cb40-32" tabindex="-1"></a>        seasonal_strength <span class="op">=</span> var_seasonal <span class="op">/</span> var_detrended</span>
+<span id="cb40-33"><a href="introduction.html#cb40-33" tabindex="-1"></a>        seasonal_strength <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, seasonal_strength)  <span class="co"># Avoid negative strength</span></span>
+<span id="cb40-34"><a href="introduction.html#cb40-34" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;Seasonal Strength: </span><span class="sc">{</span>seasonal_strength<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb40-35"><a href="introduction.html#cb40-35" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb40-36"><a href="introduction.html#cb40-36" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Trend, Seasonal, or Residual series is empty or misaligned.&quot;</span>)</span></code></pre></div>
 <pre><code>## Trend Strength: 0.98
 ## Seasonal Strength: 0.92</code></pre>
 </div>

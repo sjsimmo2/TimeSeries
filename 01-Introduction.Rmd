@@ -257,7 +257,7 @@ autoplot(Pass_impute,color=col_vector) + labs(y="Airline Passengers")
 
 ## Python code and results for Time Series plot
 
-The following code shows the time series plot and classical decomposition (using additive model).
+The following code shows the time series plot and classical decomposition (using additive model) and STL decomposition.
 
 ```{python}
 
@@ -306,7 +306,7 @@ plt.show()
 
 ```
 
- You can also specify multiplicative by changing "additive" to "multiplicative" in the Python code.  If you want to do the STL decomposition, then you can apply the following code:
+ You can also specify multiplicative by changing "additive" to "multiplicative" in the Python code.  Another way to code STL decomposition and calculating Fs and Ft (note: this Fs and Ft differ from the R package):
 
 
 ```{python STL decomposition}
@@ -337,6 +337,7 @@ dcmp.fitted_[0, 0].model_.plot(subplots=True, grid=True)
 plt.tight_layout()
 plt.show()
 
+
 ## The following code calculates the Fs and Ft (many thanks to Fred!)
 
 data = usair_p["Passengers"]
@@ -347,6 +348,7 @@ result = stl.fit()
 trend = result.trend
 seasonal = result.seasonal
 residual = result.resid
+t_and_r = trend + residual
 t_and_r = trend + residual
 # Ensure all series are aligned
 if not trend.empty and not residual.empty and not seasonal.empty:
@@ -372,6 +374,8 @@ if not trend.empty and not residual.empty and not seasonal.empty:
         print(f"Seasonal Strength: {seasonal_strength:.2f}")
 else:
     print("Trend, Seasonal, or Residual series is empty or misaligned.")
+
+
 
 ```
 
