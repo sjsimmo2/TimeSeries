@@ -23,7 +23,7 @@
 <meta name="author" content="by Dr. Susan Simmons" />
 
 
-<meta name="date" content="2026-09-17" />
+<meta name="date" content="2026-09-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -536,26 +536,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb32-4"><a href="introduction.html#cb32-4" tabindex="-1"></a>plt.suptitle(<span class="st">&quot;STL Decomposition&quot;</span>, y<span class="op">=</span><span class="fl">1.02</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
 <span id="cb32-5"><a href="introduction.html#cb32-5" tabindex="-1"></a>plt.show()</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-3.png" alt="" width="960" /></p>
-<p>You can also specify multiplicative by changing “additive” to “multiplicative” in the Python code. Another way to code STL decomposition and calculating Fs and Ft (note: this Fs and Ft differ from the R package):</p>
+<p>You can also specify multiplicative by changing “additive” to “multiplicative” in the Python code above. Another way to code STL decomposition and calculating Fs and Ft is shown below:</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="introduction.html#cb33-1" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb33-2"><a href="introduction.html#cb33-2" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb33-3"><a href="introduction.html#cb33-3" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot</span>
 <span id="cb33-4"><a href="introduction.html#cb33-4" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
 <span id="cb33-5"><a href="introduction.html#cb33-5" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> STL</span>
-<span id="cb33-6"><a href="introduction.html#cb33-6" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
-<span id="cb33-7"><a href="introduction.html#cb33-7" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
-<span id="cb33-8"><a href="introduction.html#cb33-8" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
-<span id="cb33-9"><a href="introduction.html#cb33-9" tabindex="-1"></a></span>
-<span id="cb33-10"><a href="introduction.html#cb33-10" tabindex="-1"></a></span>
-<span id="cb33-11"><a href="introduction.html#cb33-11" tabindex="-1"></a><span class="co">## STL Decomposition</span></span>
+<span id="cb33-6"><a href="introduction.html#cb33-6" tabindex="-1"></a><span class="im">import</span> tsfeatures <span class="im">as</span> tsf</span>
+<span id="cb33-7"><a href="introduction.html#cb33-7" tabindex="-1"></a></span>
+<span id="cb33-8"><a href="introduction.html#cb33-8" tabindex="-1"></a>usair_p<span class="op">=</span>pd.read_csv(<span class="st">&quot;Q:</span><span class="ch">\\</span><span class="st">My Drive</span><span class="ch">\\</span><span class="st">Fall 2017 - Time Series</span><span class="ch">\\</span><span class="st">DataR</span><span class="ch">\\</span><span class="st">usairlines.csv&quot;</span>)</span>
+<span id="cb33-9"><a href="introduction.html#cb33-9" tabindex="-1"></a>df<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">&#39;1/1/1990&#39;</span>, end<span class="op">=</span><span class="st">&#39;3/1/2008&#39;</span>, freq<span class="op">=</span><span class="st">&#39;MS&#39;</span>)</span>
+<span id="cb33-10"><a href="introduction.html#cb33-10" tabindex="-1"></a>usair_p.index<span class="op">=</span>pd.to_datetime(df)</span>
+<span id="cb33-11"><a href="introduction.html#cb33-11" tabindex="-1"></a></span>
 <span id="cb33-12"><a href="introduction.html#cb33-12" tabindex="-1"></a></span>
-<span id="cb33-13"><a href="introduction.html#cb33-13" tabindex="-1"></a><span class="im">from</span> statsforecast.models <span class="im">import</span> MSTL</span>
+<span id="cb33-13"><a href="introduction.html#cb33-13" tabindex="-1"></a><span class="co">## STL Decomposition</span></span>
 <span id="cb33-14"><a href="introduction.html#cb33-14" tabindex="-1"></a></span>
-<span id="cb33-15"><a href="introduction.html#cb33-15" tabindex="-1"></a>d <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: usair_p.index, <span class="st">&#39;y&#39;</span>: usair_p[<span class="st">&#39;Passengers&#39;</span>]}</span>
-<span id="cb33-16"><a href="introduction.html#cb33-16" tabindex="-1"></a>usair_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d)</span>
-<span id="cb33-17"><a href="introduction.html#cb33-17" tabindex="-1"></a></span>
-<span id="cb33-18"><a href="introduction.html#cb33-18" tabindex="-1"></a>dcmp <span class="op">=</span> StatsForecast(models <span class="op">=</span> [MSTL(season_length <span class="op">=</span> <span class="dv">12</span>)], freq <span class="op">=</span> <span class="st">&#39;M&#39;</span>)</span>
-<span id="cb33-19"><a href="introduction.html#cb33-19" tabindex="-1"></a>dcmp.fit(df <span class="op">=</span> usair_sf)</span></code></pre></div>
+<span id="cb33-15"><a href="introduction.html#cb33-15" tabindex="-1"></a><span class="im">from</span> statsforecast.models <span class="im">import</span> MSTL</span>
+<span id="cb33-16"><a href="introduction.html#cb33-16" tabindex="-1"></a></span>
+<span id="cb33-17"><a href="introduction.html#cb33-17" tabindex="-1"></a>d <span class="op">=</span> {<span class="st">&#39;unique_id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;ds&#39;</span>: usair_p.index, <span class="st">&#39;y&#39;</span>: usair_p[<span class="st">&#39;Passengers&#39;</span>]}</span>
+<span id="cb33-18"><a href="introduction.html#cb33-18" tabindex="-1"></a>usair_sf <span class="op">=</span> pd.DataFrame(data <span class="op">=</span> d)</span>
+<span id="cb33-19"><a href="introduction.html#cb33-19" tabindex="-1"></a></span>
+<span id="cb33-20"><a href="introduction.html#cb33-20" tabindex="-1"></a>dcmp <span class="op">=</span> StatsForecast(models <span class="op">=</span> [MSTL(season_length <span class="op">=</span> <span class="dv">12</span>)], freq <span class="op">=</span> <span class="st">&#39;M&#39;</span>)</span>
+<span id="cb33-21"><a href="introduction.html#cb33-21" tabindex="-1"></a>dcmp.fit(df <span class="op">=</span> usair_sf)</span></code></pre></div>
 <pre><code>## StatsForecast(models=[MSTL])</code></pre>
 <div class="sourceCode" id="cb35"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="introduction.html#cb35-1" tabindex="-1"></a>result <span class="op">=</span> dcmp.fitted_[<span class="dv">0</span>,<span class="dv">0</span>].model_</span>
 <span id="cb35-2"><a href="introduction.html#cb35-2" tabindex="-1"></a>result</span></code></pre></div>
@@ -578,44 +580,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb39"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb39-1"><a href="introduction.html#cb39-1" tabindex="-1"></a>plt.tight_layout()</span>
 <span id="cb39-2"><a href="introduction.html#cb39-2" tabindex="-1"></a>plt.show()</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/STL%20decomposition-7.png" alt="" width="672" /></p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="introduction.html#cb40-1" tabindex="-1"></a><span class="co">## The following code calculates the Fs and Ft (many thanks to Fred!)</span></span>
+<div class="sourceCode" id="cb40"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="introduction.html#cb40-1" tabindex="-1"></a>stl_feat<span class="op">=</span>tsf.tsfeatures(usair_sf, freq<span class="op">=</span><span class="dv">12</span>, features<span class="op">=</span>[tsf.stl_features])</span>
 <span id="cb40-2"><a href="introduction.html#cb40-2" tabindex="-1"></a></span>
-<span id="cb40-3"><a href="introduction.html#cb40-3" tabindex="-1"></a>data <span class="op">=</span> usair_p[<span class="st">&quot;Passengers&quot;</span>]</span>
-<span id="cb40-4"><a href="introduction.html#cb40-4" tabindex="-1"></a><span class="co"># Perform STL decomposition</span></span>
-<span id="cb40-5"><a href="introduction.html#cb40-5" tabindex="-1"></a>stl <span class="op">=</span> STL(data, period<span class="op">=</span><span class="dv">12</span>)  <span class="co"># Adjust period as needed for your data</span></span>
-<span id="cb40-6"><a href="introduction.html#cb40-6" tabindex="-1"></a>result <span class="op">=</span> stl.fit()</span>
-<span id="cb40-7"><a href="introduction.html#cb40-7" tabindex="-1"></a><span class="co"># Extract components</span></span>
-<span id="cb40-8"><a href="introduction.html#cb40-8" tabindex="-1"></a>trend <span class="op">=</span> result.trend</span>
-<span id="cb40-9"><a href="introduction.html#cb40-9" tabindex="-1"></a>seasonal <span class="op">=</span> result.seasonal</span>
-<span id="cb40-10"><a href="introduction.html#cb40-10" tabindex="-1"></a>residual <span class="op">=</span> result.resid</span>
-<span id="cb40-11"><a href="introduction.html#cb40-11" tabindex="-1"></a>t_and_r <span class="op">=</span> trend <span class="op">+</span> residual</span>
-<span id="cb40-12"><a href="introduction.html#cb40-12" tabindex="-1"></a>t_and_r <span class="op">=</span> trend <span class="op">+</span> residual</span>
-<span id="cb40-13"><a href="introduction.html#cb40-13" tabindex="-1"></a><span class="co"># Ensure all series are aligned</span></span>
-<span id="cb40-14"><a href="introduction.html#cb40-14" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> trend.empty <span class="kw">and</span> <span class="kw">not</span> residual.empty <span class="kw">and</span> <span class="kw">not</span> seasonal.empty:</span>
-<span id="cb40-15"><a href="introduction.html#cb40-15" tabindex="-1"></a>    <span class="co"># Calculate Trend Strength</span></span>
-<span id="cb40-16"><a href="introduction.html#cb40-16" tabindex="-1"></a>    var_residual <span class="op">=</span> residual.var()</span>
-<span id="cb40-17"><a href="introduction.html#cb40-17" tabindex="-1"></a>    var_t_plus_r <span class="op">=</span> t_and_r.var()</span>
-<span id="cb40-18"><a href="introduction.html#cb40-18" tabindex="-1"></a>    var_detrended <span class="op">=</span> (data <span class="op">-</span> trend).var()</span>
-<span id="cb40-19"><a href="introduction.html#cb40-19" tabindex="-1"></a>    <span class="cf">if</span> var_detrended <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb40-20"><a href="introduction.html#cb40-20" tabindex="-1"></a>        trend_strength <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb40-21"><a href="introduction.html#cb40-21" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;Trend Strength: 0 (Detrended variance is zero)&quot;</span>)</span>
-<span id="cb40-22"><a href="introduction.html#cb40-22" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb40-23"><a href="introduction.html#cb40-23" tabindex="-1"></a>        trend_strength <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> (var_residual <span class="op">/</span> var_t_plus_r)</span>
-<span id="cb40-24"><a href="introduction.html#cb40-24" tabindex="-1"></a>        trend_strength <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, trend_strength)  <span class="co"># Avoid negative strength</span></span>
-<span id="cb40-25"><a href="introduction.html#cb40-25" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;Trend Strength: </span><span class="sc">{</span>trend_strength<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span>
-<span id="cb40-26"><a href="introduction.html#cb40-26" tabindex="-1"></a>    <span class="co"># Calculate Seasonal Strength</span></span>
-<span id="cb40-27"><a href="introduction.html#cb40-27" tabindex="-1"></a>    var_seasonal <span class="op">=</span> seasonal.var()</span>
-<span id="cb40-28"><a href="introduction.html#cb40-28" tabindex="-1"></a>    <span class="cf">if</span> var_detrended <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb40-29"><a href="introduction.html#cb40-29" tabindex="-1"></a>        seasonal_strength <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb40-30"><a href="introduction.html#cb40-30" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;Seasonal Strength: 0 (Detrended variance is zero)&quot;</span>)</span>
-<span id="cb40-31"><a href="introduction.html#cb40-31" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb40-32"><a href="introduction.html#cb40-32" tabindex="-1"></a>        seasonal_strength <span class="op">=</span> var_seasonal <span class="op">/</span> var_detrended</span>
-<span id="cb40-33"><a href="introduction.html#cb40-33" tabindex="-1"></a>        seasonal_strength <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, seasonal_strength)  <span class="co"># Avoid negative strength</span></span>
-<span id="cb40-34"><a href="introduction.html#cb40-34" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;Seasonal Strength: </span><span class="sc">{</span>seasonal_strength<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span>
-<span id="cb40-35"><a href="introduction.html#cb40-35" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb40-36"><a href="introduction.html#cb40-36" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Trend, Seasonal, or Residual series is empty or misaligned.&quot;</span>)</span></code></pre></div>
-<pre><code>## Trend Strength: 0.98
-## Seasonal Strength: 0.92</code></pre>
+<span id="cb40-3"><a href="introduction.html#cb40-3" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Ft is: &quot;</span>, stl_feat.iloc[<span class="dv">0</span>, <span class="dv">3</span>])</span></code></pre></div>
+<pre><code>## Ft is:  0.9759958895670928</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="introduction.html#cb42-1" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Fs is : &quot;</span>, stl_feat.iloc[<span class="dv">0</span>,<span class="dv">9</span>])</span></code></pre></div>
+<pre><code>## Fs is :  0.9186599292214835</code></pre>
 </div>
 <div id="sas-code-for-time-series-plot-and-decomposition" class="section level2 hasAnchor" number="2.6">
 <h2><span class="header-section-number">2.6</span> SAS code for time series plot and decomposition<a href="introduction.html#sas-code-for-time-series-plot-and-decomposition" class="anchor-section" aria-label="Anchor link to header"></a></h2>

@@ -306,7 +306,7 @@ plt.show()
 
 ```
 
- You can also specify multiplicative by changing "additive" to "multiplicative" in the Python code.  Another way to code STL decomposition and calculating Fs and Ft (note: this Fs and Ft differ from the R package):
+You can also specify multiplicative by changing "additive" to "multiplicative" in the Python code above.  Another way to code STL decomposition and calculating Fs and Ft is shown below:
 
 
 ```{python STL decomposition}
@@ -315,6 +315,8 @@ import matplotlib.pyplot as plt
 from matplotlib import pyplot
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.seasonal import STL
+import tsfeatures as tsf
+
 usair_p=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\usairlines.csv")
 df=pd.date_range(start='1/1/1990', end='3/1/2008', freq='MS')
 usair_p.index=pd.to_datetime(df)
@@ -338,43 +340,10 @@ plt.tight_layout()
 plt.show()
 
 
-## The following code calculates the Fs and Ft (many thanks to Fred!)
+stl_feat=tsf.tsfeatures(usair_sf, freq=12, features=[tsf.stl_features])
 
-data = usair_p["Passengers"]
-# Perform STL decomposition
-stl = STL(data, period=12)  # Adjust period as needed for your data
-result = stl.fit()
-# Extract components
-trend = result.trend
-seasonal = result.seasonal
-residual = result.resid
-t_and_r = trend + residual
-t_and_r = trend + residual
-# Ensure all series are aligned
-if not trend.empty and not residual.empty and not seasonal.empty:
-    # Calculate Trend Strength
-    var_residual = residual.var()
-    var_t_plus_r = t_and_r.var()
-    var_detrended = (data - trend).var()
-    if var_detrended == 0:
-        trend_strength = 0
-        print("Trend Strength: 0 (Detrended variance is zero)")
-    else:
-        trend_strength = 1 - (var_residual / var_t_plus_r)
-        trend_strength = max(0, trend_strength)  # Avoid negative strength
-        print(f"Trend Strength: {trend_strength:.2f}")
-    # Calculate Seasonal Strength
-    var_seasonal = seasonal.var()
-    if var_detrended == 0:
-        seasonal_strength = 0
-        print("Seasonal Strength: 0 (Detrended variance is zero)")
-    else:
-        seasonal_strength = var_seasonal / var_detrended
-        seasonal_strength = max(0, seasonal_strength)  # Avoid negative strength
-        print(f"Seasonal Strength: {seasonal_strength:.2f}")
-else:
-    print("Trend, Seasonal, or Residual series is empty or misaligned.")
-
+print("Ft is: ", stl_feat.iloc[0, 3])
+print("Fs is : ", stl_feat.iloc[0,9])
 
 
 ```
