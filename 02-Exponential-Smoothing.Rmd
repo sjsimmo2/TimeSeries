@@ -371,7 +371,7 @@ plot_series(steel_df,
 
 
 ```{python}
-steel_SES = StatsForecast(freq="Y",
+steel_SES = StatsForecast(freq="6MS",
     models=[AutoETS(model="ANN", alias="SES")])
 
 steel_model = steel_SES.forecast(df=steel_train, h=9, level=[80, 95], fitted=True)
@@ -391,8 +391,6 @@ print("Optimal parameters:")
 print("alpha:", alpha)
 print("Initial level:", level_0)
 
-
-
 ```
 
 
@@ -408,7 +406,7 @@ fig
 
 ```
 
-
+![steel exports](Q:/My Drive/Fall 2017 - Time Series/Lessons/Lessons 2022/TimeSeries/Steel_for.png)
 
 ```{python resids}
 df = steel_test.assign(
@@ -455,7 +453,7 @@ forecast["hat"]=yhat['AutoETS']
 forecast["unique_id"]="1"
 sns.lineplot(air_train,x="ds", y="y", label="Train")
 sns.lineplot(air_test, x="ds", y="y", label="Test")
-sns.lineplot(forecast,x="ds", y="hat", label="Forecast",)
+sns.lineplot(forecast,x="ds", y="hat", label="Forecast",color="blue")
 plt.show()
 
 ### Damped trend
@@ -476,7 +474,7 @@ forecast["hat"]=yhat['AutoETS']
 forecast["unique_id"]="1"
 sns.lineplot(air_train,x="ds", y="y", label="Train")
 sns.lineplot(air_test, x="ds", y="y", label="Test")
-sns.lineplot(forecast,x="ds", y="hat", label="Forecast",)
+sns.lineplot(forecast,x="ds", y="hat", label="Forecast",color="blue")
 plt.show()
 
 
@@ -505,7 +503,7 @@ forecast["hat"]=yhat['AutoETS']
 forecast["unique_id"]="1"
 sns.lineplot(air_train,x="ds", y="y", label="Train")
 sns.lineplot(air_test, x="ds", y="y", label="Test")
-sns.lineplot(forecast,x="ds", y="hat", label="Forecast",)
+sns.lineplot(forecast,x="ds", y="hat", label="Forecast",color="blue")
 plt.show()
 
 ### Multiplicative Seasonality
@@ -525,7 +523,7 @@ forecast["hat"]=yhat['AutoETS']
 forecast["unique_id"]="1"
 sns.lineplot(air_train,x="ds", y="y", label="Train")
 sns.lineplot(air_test, x="ds", y="y", label="Test")
-sns.lineplot(forecast,x="ds", y="hat", label="Forecast",)
+sns.lineplot(forecast,x="ds", y="hat", label="Forecast",color="blue")
 plt.show()
 
 ### AutoETS
@@ -545,7 +543,7 @@ forecast["hat"]=yhat['AutoETS']
 forecast["unique_id"]="1"
 sns.lineplot(air_train,x="ds", y="y", label="Train")
 sns.lineplot(air_test, x="ds", y="y", label="Test")
-sns.lineplot(forecast,x="ds", y="hat", label="Forecast",)
+sns.lineplot(forecast,x="ds", y="hat", label="Forecast",color="blue")
 plt.show()
 
 
@@ -569,8 +567,8 @@ forecast["hat2"]=yhat['Multiplicative']
 forecast["unique_id"]="1"
 sns.lineplot(air_train,x="ds", y="y", label="Train")
 sns.lineplot(air_test, x="ds", y="y", label="Test")
-sns.lineplot(forecast,x="ds", y="hat1", label="Additive")
-sns.lineplot(forecast,x="ds", y="hat2", label="Multiplicative")
+sns.lineplot(forecast,x="ds", y="hat1", label="Additive",color="blue")
+sns.lineplot(forecast,x="ds", y="hat2", label="Multiplicative",color="red")
 plt.show()
 
 ```
