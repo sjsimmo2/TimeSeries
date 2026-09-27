@@ -267,67 +267,156 @@ The following Python codes will produce exponential smoothing models.  The expon
 
 ```{python simple exponential smoothing}
 
+import warnings
+warnings.filterwarnings("ignore")
+import os
+os.environ["NIXTLA_ID_AS_COL"] = "true"
 import numpy as np
+np.set_printoptions(suppress=True)
+np.random.seed(1)
+import random
+random.seed(1)
 import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib import pyplot
+pd.set_option("max_colwidth", 100)
+pd.set_option("display.precision", 3)
+from utilsforecast.plotting import plot_series as plot_series_utils
 import seaborn as sns
-from statsforecast.models import ETS
-from statsforecast import StatsForecast
-from statsforecast.utils import AirPassengers
-from statsmodels.tsa.tsatools import detrend
-from sklearn.metrics import mean_squared_error
-from statsmodels.tsa.api import ExponentialSmoothing, SimpleExpSmoothing, Holt
-from statsforecast.models import AutoETS
+sns.set_style("whitegrid")
+import matplotlib.pyplot as plt
+plt.style.use("ggplot")
+plt.rcParams.update({
+    "figure.figsize": (8, 5),
+    "figure.dpi": 100,
+    "savefig.dpi": 300,
+    "figure.constrained_layout.use": True,
+    "axes.titlesize": 12,
+    "axes.labelsize": 10,
+    "xtick.labelsize": 9,
+    "ytick.labelsize": 9,
+    "legend.fontsize": 9,
+    "legend.title_fontsize": 10,
+    "grid.alpha": 1.0,
+})
+import matplotlib as mpl
+from cycler import cycler
+mpl.rcParams['axes.prop_cycle'] = cycler(color=["#000000", "#000000"])
+from fpppy.utils import plot_series
 
+mpl.colormaps.register(
+    mpl.colors.ListedColormap(
+        ["#000000", "#2f2fff"], name="black_and_blue"),
+    force=True,
+)
+mpl.colormaps.register(
+    mpl.colors.ListedColormap(
+        ["#000000", "#D55E00"], name="black_and_orange"),
+    force=True,
+)
+mpl.colormaps.register(
+    mpl.colors.ListedColormap(
+        ["#000000", "#000000"], name="black"),
+    force=True,
+)
+mpl.colormaps.register(
+    mpl.colors.ListedColormap(
+        ["#000000", "#0072B2", "#D55E00"],
+        name='black_and_2color',
+    ),
+    force=True
+)
+mpl.colormaps.register(
+    mpl.colors.ListedColormap(
+        ["#000000", "#D55E00", "#0072B2", "#009E73"],
+        name='black_and_3color',
+    ),
+    force=True
+)
+mpl.colormaps.register(
+    mpl.colors.ListedColormap(
+        ["#000000", "#D55E00", "#0072B2", "#009E73", "#CC79A7"],
+        name='black_and_4color',
+    ),
+    force=True
+)
+mpl.colormaps.register(
+    mpl.colors.ListedColormap(
+        ["#D55E00", "#0072B2", "#009E73", "#CC79A7"],
+        name='r_colors',
+    ),
+    force=True
+)
+
+from IPython.display import display, Markdown, Image
+from statsforecast import StatsForecast
+from statsforecast.models import AutoETS
+from utilsforecast.evaluation import evaluate
+from utilsforecast.losses import rmse, mae, mape, mase
 
 steel=pd.read_csv("Q:\\My Drive\\Fall 2017 - Time Series\\DataR\\steel.csv")
-df = pd.date_range(start='1932-07-01', end='1980-07-01', freq='6ME')
-steel.index=pd.to_datetime(df)
+ds = pd.date_range(start="1932-07-01", periods=len(steel), freq="6MS")
 
-steel_train=steel.head(87)
-steel_test = steel.tail(9)
+steel_df = pd.DataFrame({"unique_id": "steel", "ds": ds,
+                         "y": steel["steelshp"].values})
 
-fit = SimpleExpSmoothing(steel_train['steelshp']).fit()
-fit.params['smoothing_level']
+steel_train=steel_df.head(87)
+steel_test = steel_df.tail(9)
 
-fcast = fit.forecast(9)
-fcast
+plot_series(steel_df,
+    xlabel="Date [6M]", ylabel="Steel", title="Exports: Steel")
 
-plt.plot(steel_train["steelshp"],color="black")
-plt.plot(fcast,color="blue")
-plt.show()
-
-##### Using Statsforecast
-
-
-d = {'unique_id': 1, 'ds': steel.index, 'y': steel['steelshp']}
-steel_sf = pd.DataFrame(data = d)
-
-steel_train=steel_sf.head(87)
-steel_test = steel_sf.tail(9)
-
-steel_SES = StatsForecast(models = [AutoETS(model=["A","N","N"],  alias="AutoETS", season_length=2)], freq = '6ME')
-steel_model = steel_SES.fit(df = steel_train)
-
-result = steel_SES.fitted_[0,0].model_['par']
-result
-
-
-y_hat1=steel_model.predict(h=9)
-yhat=y_hat1.reset_index(drop=True)
-forecast=pd.Series(pd.date_range("1976-01-31", freq="6ME", periods=9))
-forecast=pd.DataFrame(forecast)
-forecast.columns=["ds"]
-forecast["hat"]=yhat['AutoETS']
-forecast["unique_id"]="1"
-sns.lineplot(steel_train,x="ds", y="y", label="Train")
-sns.lineplot(steel_test, x="ds", y="y", label="Test")
-sns.lineplot(forecast,x="ds", y="hat", label="Forecast",)
-plt.show()
 
 ```
 
+![steel exports](Q:/My Drive/Fall 2017 - Time Series/Lessons/Lessons 2022/TimeSeries/steel_pic.png)
+
+
+```{python}
+steel_SES = StatsForecast(freq="Y",
+    models=[AutoETS(model="ANN", alias="SES")])
+
+steel_model = steel_SES.forecast(df=steel_train, h=9, level=[80, 95], fitted=True)
+steel_model['ds'] = steel_test['ds'].values
+steel_model.head()
+
+fitted_vals = steel_SES.forecast_fitted_values()
+fitted_vals.head()
+
+# Save model fit(s)
+steel_SES.fit(steel_train)
+# Save model fit(s) and return forecasts
+steel_model = steel_SES.fit_predict(df=steel_train, h=9, level=[80, 95])
+params = steel_SES.fitted_[0, 0].model_["fit"].x
+alpha, level_0 = np.round(params, 4)
+print("Optimal parameters:")
+print("alpha:", alpha)
+print("Initial level:", level_0)
+
+
+
+```
+
+
+
+Plotting forecast: 
+
+```{python}
+fig = plot_series(steel_df, steel_model, level=[80, 95],
+    xlabel="Date [6M]", ylabel="Steel", title="Exports: Steel",
+    palette="black_and_blue")
+fig.axes[0].plot("ds", "SES", data=fitted_vals, color="#D55E00")
+fig
+
+```
+
+
+
+```{python resids}
+df = steel_test.assign(
+    forecast=steel_model["SES"].to_numpy(),
+    resid=lambda x: x["y"] - x["forecast"]
+)
+df.head()
+```
 
 The Holt models in Python:
 
